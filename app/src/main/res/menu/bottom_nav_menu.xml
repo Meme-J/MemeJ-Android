@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/ic_home_black_24dp"
+        android:title="@string/title_home" />
+    <item
+        android:id="@+id/navigation_explore"
+        android:icon="@drawable/ic_explore"
+        android:title="@string/explore" />
+    <item
+        android:id="@+id/navigation_memeWorld"
+        android:icon="@drawable/ic_meme_world"
+        android:title="@string/memeworld" />
+
+    <item
+        android:id="@+id/navigation_myMemes"
+        android:icon="@drawable/ic_my_meme"
+        android:title="@string/my_memes" />
+    <item
+        android:id="@+id/navigation_myDrafts"
+        android:icon="@drawable/ic_my_drafts"
+        android:title="@string/my_drafts" />
+
+
+</menu>

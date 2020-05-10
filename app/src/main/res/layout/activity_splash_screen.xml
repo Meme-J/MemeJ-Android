@@ -1,0 +1,22 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--    #replace this image View-->
+    <ImageView
+        android:id="@+id/ss_img"
+        android:layout_width="@dimen/splash_img_dim"
+        android:layout_height="@dimen/splash_img_dim"
+        android:layout_centerInParent="true"
+        android:src="@drawable/ic_meme_world" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ss_img"
+        android:layout_centerHorizontal="true"
+        android:fontFamily="cursive"
+        android:text="@string/app_name"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="32sp" />
+</RelativeLayout>
