@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<!--create overlay/ get such an image from the internet-->
+<!--The meme template will have data binding acroos it-->
+<!--The card will be clickable holding the image-->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/margins"
+    android:orientation="vertical">
+
+    <com.google.android.material.card.MaterialCardView xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/meme_templete_std_height"
+        android:elevation="4dp"
+        app:cardCornerRadius="@dimen/margins">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/meme_templete_std_height">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/cv_memeGroup"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/meme_templete_std_height"
+                android:layout_centerInParent="true"
+                android:src="@drawable/test_image" />
+
+
+        </RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:id="@+id/memeTagAddMeme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margins"
+        android:gravity="center"
+        android:text="@string/memetag"
+        android:textSize="@dimen/text_size"
+        android:textStyle="bold" />
+
+
+</LinearLayout>

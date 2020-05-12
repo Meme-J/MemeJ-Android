@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/addMemeTb"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorPrimary"
+            app:navigationIcon="@drawable/ic_arrow"
+            app:title="Select template"
+            app:titleTextColor="@color/white" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+    <EditText
+        android:id="@+id/et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margins"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:layout_marginEnd="@dimen/margins"
+        android:layout_marginBottom="@dimen/margins"
+        android:hint="@string/search_hint"
+        android:paddingStart="40dp"
+        android:paddingTop="12dp"
+        android:paddingEnd="40dp" />
+
+    <!--    <SearchView-->
+    <!--        android:id="@+id/addMemeSearch"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_below="@id/addMemeTb"-->
+    <!--        android:layout_margin="@dimen/margins"-->
+    <!--        android:searchHintIcon="@string/search_hint" />-->
+
+    <!--        //Create template memes, default first meme is no template-->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_memeGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/et"
+        android:layout_margin="@dimen/margins"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager" />
+
+
+</RelativeLayout>

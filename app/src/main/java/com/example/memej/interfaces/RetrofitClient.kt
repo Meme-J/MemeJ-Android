@@ -30,6 +30,7 @@ object RetrofitClient {
         }.build()
 
 
+    //Use OkHttp Client
     val instanceAuth: Auth by lazy {
         //Return retrofit builders
         val retrofit = Retrofit.Builder()
@@ -39,6 +40,17 @@ object RetrofitClient {
             .client(okHttpClient)
             .build()
         retrofit.create(Auth::class.java)
+
+    }
+
+    //Test Api for memes
+    fun makeCallsForMemes(): memes {
+        return Retrofit.Builder()
+            .baseUrl("https://api.jsonbin.io/b/")
+            .addConverterFactory(MoshiConverterFactory.create())
+            .addCallAdapterFactory(CoroutineCallAdapterFactory())
+            .client(okHttpClient)
+            .build().create(memes::class.java)
 
     }
 

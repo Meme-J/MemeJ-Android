@@ -1,17 +1,18 @@
 package com.example.memej
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupWithNavController
 import com.example.memej.ui.MemeWorld.MemeWorldFragment
 import com.example.memej.ui.MyDrafts.MyDraftsFragment
 import com.example.memej.ui.explore.ExploreFragment
 import com.example.memej.ui.home.HomeFragment
+import com.example.memej.ui.memeTemplate.SelectMemeTemplateActivity
 import com.example.memej.ui.myMemes.MyMemesFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
 
@@ -59,7 +60,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
 
-        val navController = findNavController(R.id.nav_host_fragment)
+        //   val navController = findNavController(R.id.nav_host_fragment)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(
@@ -72,14 +73,14 @@ class MainActivity : AppCompatActivity() {
             )
         )
 //        setupActionBarWithNavController(navController, appBarConfiguration)
-        navView.setupWithNavController(navController)
+        //navView.setupWithNavController(navController)
 
         //For opening the first time
         //Default
         if (savedInstanceState == null) {
             val fragment = HomeFragment()
             supportFragmentManager.beginTransaction()
-                .replace(R.id.container, fragment, fragment.javaClass.getSimpleName())
+                .replace(R.id.container, fragment, fragment.javaClass.simpleName)
                 .commit()
         }
 
@@ -87,10 +88,17 @@ class MainActivity : AppCompatActivity() {
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
 
+        //OnClickListener On FAB
+        val fab: FloatingActionButton = findViewById(R.id.fab_add)
+        fab.setOnClickListener {
+            val i = Intent(this, SelectMemeTemplateActivity::class.java)
+            startActivity(i)
+
+        }
+
     }
 
 
-    //Create methods to navigate
 
 
 }
