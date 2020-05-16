@@ -1,33 +1,53 @@
 package com.example.memej.interfaces
 
-import com.example.memej.responses.DefaultResponse
+import com.example.memej.entities.LoginBody
+import com.example.memej.entities.UserBody
 import com.example.memej.responses.LoginResponse
+import com.example.memej.responses.SignUpResponse
 import retrofit2.Call
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
+import retrofit2.http.Body
+import retrofit2.http.Headers
 import retrofit2.http.POST
 
 interface Auth {
 
 
     //Register
-    @FormUrlEncoded
-    @POST("createUser")
-    fun createUser(
-        @Field("name") name: String,
-        @Field("userName") username: String,
-        @Field("email") email: String,
-        @Field("password") pwd: String
+    //@FormUrlEncoded
+//    @Headers("Content-Type:application/json")
+//    @POST("api/user/signup")
+//    fun createUser(
+//        @Field("name") name: String,
+//        @Field("username") username: String,
+//        @Field("email") email: String,
+//        @Field("password") pwd: String
+//
+//    ): Call<SignUpResponse>
 
-    ): Call<DefaultResponse>
+    //SignUo User
+    @Headers("Content-Type:application/json")
+    @POST("api/user/signup")
+    fun createUser(
+        @Body info: UserBody
+    ): Call<SignUpResponse>
+
+
+    //Login
+    @Headers("Content-Type:application/json")
+    @POST("api/user/login")
+    fun loginUser(
+        @Body info: LoginBody
+    ): Call<LoginResponse>
+
 
     //Login User
-    @FormUrlEncoded
-    @POST("userLogin")
-    fun userLogin(
-        @Field("userName") username: String,
-        @Field("password") pwd: String
-    ): Call<LoginResponse>
+//    @FormUrlEncoded
+//    @Headers("Content-Type:application/json")
+//    @POST("userLogin")
+//    fun userLogin(
+//        @Field("username") username: String,
+//        @Field("password") pwd: String
+//    ): Call<LoginResponse>
 
 
 }

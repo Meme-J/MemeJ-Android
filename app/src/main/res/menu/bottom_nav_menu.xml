@@ -19,9 +19,9 @@
         android:icon="@drawable/ic_my_meme"
         android:title="@string/my_memes" />
     <item
-        android:id="@+id/navigation_myDrafts"
-        android:icon="@drawable/ic_my_drafts"
-        android:title="@string/my_drafts" />
+        android:id="@+id/navigation_profile"
+        android:icon="@drawable/ic_person_black_24dp"
+        android:title="@string/me" />
 
 
 </menu>

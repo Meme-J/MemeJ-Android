@@ -8,12 +8,12 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.navigation.ui.AppBarConfiguration
 import com.example.memej.Utils.Communicator
 import com.example.memej.ui.MemeWorld.MemeWorldFragment
-import com.example.memej.ui.MyDrafts.MyDraftsFragment
 import com.example.memej.ui.explore.ExploreFragment
 import com.example.memej.ui.home.EditMemeContainerFragment
 import com.example.memej.ui.home.HomeFragment
 import com.example.memej.ui.memeTemplate.SelectMemeTemplateActivity
 import com.example.memej.ui.myMemes.MyMemesFragment
+import com.example.memej.ui.profile.ProfileFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
@@ -49,8 +49,8 @@ class MainActivity : AppCompatActivity(), Communicator {
 
                     return@OnNavigationItemSelectedListener true
                 }
-                R.id.navigation_myDrafts -> {
-                    openFragment(MyDraftsFragment())
+                R.id.navigation_profile -> {
+                    openFragment(ProfileFragment())
                     return@OnNavigationItemSelectedListener true
                 }
             }
@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity(), Communicator {
                 R.id.navigation_explore,
                 R.id.navigation_memeWorld,
                 R.id.navigation_myMemes,
-                R.id.navigation_myDrafts
+                R.id.navigation_profile
             )
         )
 //        setupActionBarWithNavController(navController, appBarConfiguration)
@@ -102,6 +102,9 @@ class MainActivity : AppCompatActivity(), Communicator {
         //Function for passing data intent
         val frag = HomeFragment()
         supportFragmentManager.beginTransaction().replace(R.id.container, frag).commit()
+
+        //Replacing with profile fragmnet
+        //Check what is the current fragment
 
     }
 

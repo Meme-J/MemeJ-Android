@@ -3,25 +3,31 @@ package com.example.memej.ui.auth
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
-import android.view.View
+import android.util.Log
 import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.os.bundleOf
 import com.example.memej.MainActivity
 import com.example.memej.R
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.auth.api.signin.GoogleSignInResult
-import com.google.android.gms.common.SignInButton
+import com.example.memej.Utils.SaveSharedPreference
+import com.example.memej.entities.LoginBody
+import com.example.memej.interfaces.RetrofitClient
+import com.example.memej.responses.LoginResponse
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.google.android.material.textview.MaterialTextView
+import retrofit2.Call
+import retrofit2.Response
+
 
 class LoginActivity : AppCompatActivity() {
+
+    //Instanec of Shared Preferences
 
 
     lateinit var etUsername: TextInputEditText
@@ -45,12 +51,12 @@ class LoginActivity : AppCompatActivity() {
         val pb_login = findViewById<ProgressBar>(R.id.pb_login)
 
         //Functions for Google SignIn
-        val googleSignInOptions: GoogleSignInOptions = GoogleSignInOptions
-            .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestEmail()
-            .build()
-
-        val mGoogleApiClient = GoogleSignIn.getClient(this, googleSignInOptions)
+//        val googleSignInOptions: GoogleSignInOptions = GoogleSignInOptions
+//            .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+//            .requestEmail()
+//            .build()
+//
+//        val mGoogleApiClient = GoogleSignIn.getClient(this, googleSignInOptions)
 
 
 //        val googleApiClient = GoogleApi
@@ -68,8 +74,9 @@ class LoginActivity : AppCompatActivity() {
                 //Check for internet connection now
                 if (isNetworkConnected()) {
                     //Validate the network call
-                    pb_login.visibility = View.VISIBLE
-                    //postLogin()
+                    Log.e("K", "In Okay state")
+                    postLogin()
+
                 }
                 //In case their is no internet connection
                 else {
@@ -82,15 +89,58 @@ class LoginActivity : AppCompatActivity() {
 
         }
 
-
-        val b2: SignInButton = findViewById(R.id.Gsign_in_button)
-        b2.setOnClickListener {
-            //Use Google Sign In
+        val ts: MaterialTextView = findViewById(R.id.tv_signUpInstead)
+        ts.setOnClickListener {
+            val i = Intent(this, SignUpActivity::class.java)
+            startActivity(i)
+        }
+//        val b2: SignInButton = findViewById(R.id.Gsign_in_button)
+//        b2.setOnClickListener {
+        //Use Google Sign In
 //            val intent: Intent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient)
 //            startActivityForResult(intent, RC_SIGN_IN)
 
-        }
+    }
 
+    private fun postLogin() {
+        //Account id = sth
+        val service = RetrofitClient.getAuthInstance()
+        val inf = LoginBody(
+            etUsername.text.toString(),
+            etPassword.text.toString()
+        )
+        Log.e("K", "In PL")
+
+        service.loginUser(inf).enqueue(object : retrofit2.Callback<LoginResponse> {
+            override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+                Toast.makeText(
+                    this@LoginActivity,
+                    t.message,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+            override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
+                if (response.body()?.msg == "Login successful.") {
+                    Toast.makeText(this@LoginActivity, "Login successful", Toast.LENGTH_SHORT)
+                        .show()
+                    //Set looged in status true
+                    //Store the access token on every login
+                    goToMainActivity()
+                } else {
+                    Toast.makeText(this@LoginActivity, response.body()?.msg, Toast.LENGTH_SHORT)
+                        .show()
+
+                }
+            }
+        })
+    }
+
+    private fun goToMainActivity() {
+        SaveSharedPreference().setLoggedIn(applicationContext, true)
+        val i = Intent(this, MainActivity::class.java)
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(i)
 
     }
 
@@ -107,31 +157,31 @@ class LoginActivity : AppCompatActivity() {
 //            handleSignInResult(result!!)
 //        }
 //    }
-
-    private fun handleSignInResult(signInResult: GoogleSignInResult) {
-        if (signInResult.isSuccess) {
-            // Authenticated
-            val account: GoogleSignInAccount? = signInResult.signInAccount
-            //Get Intents
-            if (account != null) {
-                //Create bundle to pass information
-                val intent = Intent(this@LoginActivity, MainActivity::class.java)
-                val bundleLogin = bundleOf(
-                    "name" to account.displayName,
-                    "email" to account.email,
-                    "url" to account.photoUrl.toString()
-                )
-
-                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                startActivity(intent)
-                finish()
-
-            }
-        } else {
-            //When not able to get the account
-        }
-    }
+//
+//    private fun handleSignInResult(signInResult: GoogleSignInResult) {
+//        if (signInResult.isSuccess) {
+//            // Authenticated
+//            val account: GoogleSignInAccount? = signInResult.signInAccount
+//            //Get Intents
+//            if (account != null) {
+//                //Create bundle to pass information
+//                val intent = Intent(this@LoginActivity, MainActivity::class.java)
+//                val bundleLogin = bundleOf(
+//                    "name" to account.displayName,
+//                    "email" to account.email,
+//                    "url" to account.photoUrl.toString()
+//                )
+//
+//                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+//                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+//                startActivity(intent)
+//                finish()
+//
+//            }
+//        } else {
+//            //When not able to get the account
+//        }
+//    }
 
 
     private fun validateDetail(): Boolean {
@@ -151,7 +201,7 @@ class LoginActivity : AppCompatActivity() {
     private fun isNetworkConnected(): Boolean {
 
         val connectivityManager =
-            this?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val activeNetwork = connectivityManager.activeNetwork
         val networkCapabilities = connectivityManager.getNetworkCapabilities(activeNetwork)
         return networkCapabilities != null &&

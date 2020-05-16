@@ -28,6 +28,7 @@ class TemplateViewModel : ViewModel() {
         Log.e("K", "in INIT End")
     }
 
+    //This id the memeGroupId
     fun getPosts(id: Int): LiveData<PagedList<memeTemplate>> = postsLiveData
 
 //      initializedPagedListBuilder fetches the

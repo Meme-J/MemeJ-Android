@@ -36,6 +36,7 @@
     <string name="memetag">memeTag</string>
     <string name="add_a_tag">Add a tag</string>
     <string name="add_a_line">Add a line</string>
+    <string name="me">Me</string>
 
 
     <string-array name="testSearch">

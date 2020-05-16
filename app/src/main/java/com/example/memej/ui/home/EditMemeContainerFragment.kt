@@ -1,6 +1,7 @@
 package com.example.memej.ui.home
 
 
+import android.content.Context
 import android.graphics.*
 import android.os.Bundle
 import android.text.Editable
@@ -12,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import com.bumptech.glide.Glide
 import com.example.memej.R
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.textview.MaterialTextView
@@ -24,8 +26,6 @@ class EditMemeContainerFragment : Fragment() {
     lateinit var arg: Bundle
     private lateinit var img: ShapeableImageView
     lateinit var s: EditText
-    private lateinit var bitmap: Bitmap
-    private lateinit var canvas: Canvas
 
 
     companion object {
@@ -87,6 +87,12 @@ class EditMemeContainerFragment : Fragment() {
         Log.e("K", "Paint is {$c1} and s is {$s}")
 
         //Load image
+        Glide.with(this)
+            .load(arg.getString("image_url"))
+            .into(img)
+
+
+        //Img is the holder image now
 
 
 //        val staticLayout = StaticLayout.Builder
@@ -100,9 +106,11 @@ class EditMemeContainerFragment : Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 //Recrete  canvas everytime
                 val line = s.toString()
-                canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
-
-                canvas.drawText(line, 160F, 160F, paint)
+                // canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
+                //1 is the gresId
+                val bmp = drawTextToBitmap(context, line)
+                val can = Canvas(bmp)
+                can.drawText(line, 160F, 160F, paint)
 
             }
 
@@ -112,10 +120,47 @@ class EditMemeContainerFragment : Fragment() {
 
         })
         //Try a rect
-        canvas.drawRect(0F, 0F, 80F, 80F, paint)
+        //   canvas.drawRect(0F, 0F, 80F, 80F, paint)
 
 
         return root
+    }
+
+    private fun drawTextToBitmap(context: Context?, line: String): Bitmap {
+        //Use res Id as the holder of image view
+        val res = context?.resources
+        val scale = res?.displayMetrics?.density
+        var bitmap = BitmapFactory.decodeResource(res, R.id.post_image)
+
+        if (bitmap == null) {
+            //Not able to encode image
+            bitmap = Bitmap.createBitmap(300, 300, Bitmap.Config.ARGB_8888)
+        }
+        var bitmapConfig = bitmap.config
+        // set default bitmap config if none
+        if (bitmapConfig == null) {
+            bitmapConfig = Bitmap.Config.ARGB_8888
+        }
+
+
+        // resource bitmaps are imutable,
+        // so we need to convert it to mutable one
+        bitmap = bitmap.copy(bitmapConfig, true)
+//        val canvas = Canvas(bitmap)
+//        // new antialised Paint
+//        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+//        paint.color = Color.parseColor("#FFFFFF")
+//        paint.textSize = 15F
+
+//        val fontFace = ResourcesCompat.getFont(requireContext(), R.font.acrobat)
+
+        //Clear the canvas before drawing
+/*
+        canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
+        canvas.drawText(line, 140F, 140F, paint)
+*/
+
+        return bitmap
     }
 
 

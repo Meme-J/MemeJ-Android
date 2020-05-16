@@ -1,4 +1,4 @@
-package com.example.memej.ui.MyDrafts
+package com.example.memej.ui.profile
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,24 +8,24 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.example.memej.R
 
-class MyDraftsFragment : Fragment() {
+class ProfileFragment : Fragment() {
 
     companion object {
-        fun newInstance() = MyDraftsFragment()
+        fun newInstance() = ProfileFragment()
     }
 
-    private lateinit var viewModel: MyDraftsViewModel
+    private lateinit var viewModel: ProfileViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.my_drafts_fragment, container, false)
+        return inflater.inflate(R.layout.profile_fragment, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(MyDraftsViewModel::class.java)
+        viewModel = ViewModelProviders.of(this).get(ProfileViewModel::class.java)
         // TODO: Use the ViewModel
     }
 

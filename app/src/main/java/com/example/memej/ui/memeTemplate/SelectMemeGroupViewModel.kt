@@ -42,6 +42,6 @@ class SelectMemeGroupViewModel : ViewModel() {
                 return MemeGroupDataSource(viewModelScope)
             }
         }
-        return LivePagedListBuilder<String, memeGroup>(dataSourceFactory, config)
+        return LivePagedListBuilder(dataSourceFactory, config)
     }
 }
