@@ -8,5 +8,14 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!--    <style name="DefaultStyle">-->
+    <!--        <item name="android:background">@color/background_color</item>-->
+    <!--        <item name="android:layout_gravity">center</item>-->
+    <!--        <item name="android:layout_margin">@dimen/margin_value</item>-->
+    <!--        <item name="android:padding">@dimen/padding_value</item>-->
+    <!--        <item name="android:layout_width">match_parent</item>-->
+    <!--        <item name="android:layout_height">@dimen/height_value</item>-->
+    <!--    </style>-->
+
 
 </resources>

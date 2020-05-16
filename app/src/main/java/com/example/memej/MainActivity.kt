@@ -4,17 +4,20 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.navigation.ui.AppBarConfiguration
+import com.example.memej.Utils.Communicator
 import com.example.memej.ui.MemeWorld.MemeWorldFragment
 import com.example.memej.ui.MyDrafts.MyDraftsFragment
 import com.example.memej.ui.explore.ExploreFragment
+import com.example.memej.ui.home.EditMemeContainerFragment
 import com.example.memej.ui.home.HomeFragment
 import com.example.memej.ui.memeTemplate.SelectMemeTemplateActivity
 import com.example.memej.ui.myMemes.MyMemesFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), Communicator {
 
     private fun openFragment(fragment: Fragment) {
         val transaction = supportFragmentManager.beginTransaction()
@@ -96,9 +99,23 @@ class MainActivity : AppCompatActivity() {
 
         }
 
+        //Function for passing data intent
+        val frag = HomeFragment()
+        supportFragmentManager.beginTransaction().replace(R.id.container, frag).commit()
+
     }
 
+    override fun passDataFromHome(bundle: Bundle) {
 
+        val transaction = this.supportFragmentManager.beginTransaction()
+        val frag2 = EditMemeContainerFragment()
+        frag2.arguments = bundle
+
+        transaction.replace(R.id.container, frag2)
+        transaction.addToBackStack(null)
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+        transaction.commit()
+    }
 
 
 }

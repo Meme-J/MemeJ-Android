@@ -1,42 +1,38 @@
 package com.example.memej.ui.memeTemplate
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.memej.R
 import com.example.memej.adapters.MemeGroupAdapter
-import com.example.memej.adapters.OnItemClickListener
+import com.example.memej.adapters.OnItemClickListenerTemplate
 import com.example.memej.entities.memeGroup
 import kotlinx.android.synthetic.main.activity_select_meme_template.*
 
-class SelectMemeTemplateActivity : AppCompatActivity(), OnItemClickListener {
+class SelectMemeTemplateActivity : AppCompatActivity(), OnItemClickListenerTemplate {
 
 
     private lateinit var memeGroupAdapter: MemeGroupAdapter
     lateinit var viewmodel: SelectMemeGroupViewModel
     private lateinit var rv: RecyclerView
 
-    override fun onItemClicked(mg: memeGroup) {
-        Toast.makeText(this, "Tag ${mg.tag} ", Toast.LENGTH_LONG)
-            .show()
+    //Communicator for passing data
+    override fun onItemClickedForTemplate(mg: memeGroup) {
+//        Toast.makeText(this, "Tag ${mg.tag} ", Toast.LENGTH_LONG)
+//            .show()
         //Navigate to the next Item
         //Manage a request to get the desired tag
         //Pass tag intent to the next fragmnet
-        val bundle = bundleOf(
-            "tag_name" to mg.tag,
-            "tag_id" to mg.memeGroupId
-        )
-        //ViewModel for onClick
-        //To get what is required
-//        val i = Intent(this, MemeTempatesFragment.javaClass)
-//        startActivity(i,bundle)
 
+        val i = Intent(this, TemplateActivity::class.java)
+        i.putExtra("tag", mg.tag)
+        i.putExtra("id", mg.memeGroupId)
+        startActivity(i)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,4 +80,6 @@ class SelectMemeTemplateActivity : AppCompatActivity(), OnItemClickListener {
         rv.layoutManager = GridLayoutManager(this, 2)
         rv.adapter = memeGroupAdapter
     }
+
+
 }

@@ -8,4 +8,11 @@
     <dimen name="heading_sizeLarge">28sp</dimen>
     <dimen name="text_size">18sp</dimen>
     <dimen name="meme_templete_std_height">256dp</dimen>
+    <dimen name="edit_meme_card_height">600dp</dimen>
+    <dimen name="edit_meme_card_width">350dp</dimen>
+    <dimen name="edit_width">350px</dimen>
+    <dimen name="edit_height">400px</dimen>
+    <dimen name="add_line">240dp</dimen>
+    <dimen name="exp_card_width">350dp</dimen>
+    <dimen name="exp_card_height">500dp</dimen>
 </resources>

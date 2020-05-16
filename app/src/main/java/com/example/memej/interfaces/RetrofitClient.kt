@@ -14,6 +14,7 @@ object RetrofitClient {
 
     const val BASE_URL = "https://www.json-generator.com/api/json/get/"
 
+    val url = "https://memej.herokuapp.com/"
 
     //OkHttp Client
     //Create OkHttp Client as well

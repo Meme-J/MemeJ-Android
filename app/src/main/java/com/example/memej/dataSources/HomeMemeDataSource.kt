@@ -2,31 +2,31 @@ package com.example.memej.dataSources
 
 import android.util.Log
 import androidx.paging.PageKeyedDataSource
-import com.example.memej.entities.memeTemplate
+import com.example.memej.entities.homeMeme
 import com.example.memej.interfaces.RetrofitClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
-class MemeTemplateDataSource(private val scope: CoroutineScope) :
-    PageKeyedDataSource<String, memeTemplate>() {
+class HomeMemeDataSource(private val scope: CoroutineScope) :
+    PageKeyedDataSource<String, homeMeme>() {
 
     //External variable to point to api client
     private val apiService = RetrofitClient.makeCallsForMemes()
 
     override fun loadInitial(
         params: LoadInitialParams<String>,
-        callback: LoadInitialCallback<String, memeTemplate>
+        callback: LoadInitialCallback<String, homeMeme>
     ) {
         scope.launch {
             try {
-                val response = apiService.fetchMemeTemplates(loadSize = params.requestedLoadSize)
+                val response = apiService.fetchEditableMemes(loadSize = params.requestedLoadSize)
                 when {
                     response.isSuccessful -> {
                         val listing = response.body()?.data
-                        val memeTemplatePosts = listing?.children?.map { it.data }
+                        val homePosts = listing?.children?.map { it.data }
                         callback.onResult(
-                            memeTemplatePosts ?: listOf(),
+                            homePosts ?: listOf(),
                             listing?.before,
                             listing?.after
                         )
@@ -38,17 +38,13 @@ class MemeTemplateDataSource(private val scope: CoroutineScope) :
         }
     }
 
-    override fun loadAfter(
-        params: LoadParams<String>,
-        callback: LoadCallback<String, memeTemplate>
-    ) {
+    override fun loadAfter(params: LoadParams<String>, callback: LoadCallback<String, homeMeme>) {
         scope.launch {
             try {
                 val response =
-                    apiService.fetchMemeTemplates(
+                    apiService.fetchEditableMemes(
                         loadSize = params.requestedLoadSize,
                         after = params.key
-
                     )
                 when {
                     response.isSuccessful -> {
@@ -64,14 +60,11 @@ class MemeTemplateDataSource(private val scope: CoroutineScope) :
         }
     }
 
-    override fun loadBefore(
-        params: LoadParams<String>,
-        callback: LoadCallback<String, memeTemplate>
-    ) {
+    override fun loadBefore(params: LoadParams<String>, callback: LoadCallback<String, homeMeme>) {
         scope.launch {
             try {
                 val response =
-                    apiService.fetchMemeTemplates(
+                    apiService.fetchEditableMemes(
                         loadSize = params.requestedLoadSize,
                         before = params.key
                     )
@@ -95,6 +88,6 @@ class MemeTemplateDataSource(private val scope: CoroutineScope) :
         super.invalidate()
         scope.cancel()
     }
-}
 
-//Write this class when you have api
+
+}

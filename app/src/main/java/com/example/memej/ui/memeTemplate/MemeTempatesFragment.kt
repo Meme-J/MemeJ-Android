@@ -25,7 +25,7 @@ class MemeTempatesFragment : Fragment() {
 
         //Test
         val t = root.findViewById<MaterialTextView>(R.id.memeTag)
-        // t.text = this.arguments?.getString("tag_name")
+
 
 
         return root
@@ -34,7 +34,13 @@ class MemeTempatesFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(MemeTempatesViewModel::class.java)
-        // TODO: Use the ViewModel
+        //Is it easier to search with memeGroupId/ or with tag?
+        //Int value
+
+
+
+
+
     }
 
 }

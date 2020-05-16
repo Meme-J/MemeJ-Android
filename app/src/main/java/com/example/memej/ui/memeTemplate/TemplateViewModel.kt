@@ -1,4 +1,4 @@
-package com.example.memej.ui.home
+package com.example.memej.ui.memeTemplate
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -7,12 +7,14 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.DataSource
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
-import com.example.memej.dataSources.HomeMemeDataSource
-import com.example.memej.entities.homeMeme
+import com.example.memej.dataSources.MemeTemplateDataSource
+import com.example.memej.entities.memeTemplate
 
-class HomeViewModel : ViewModel() {
+class TemplateViewModel : ViewModel() {
 
-    var postsLiveData: LiveData<PagedList<homeMeme>>
+
+    //This is the observer class
+    var postsLiveData: LiveData<PagedList<memeTemplate>>
 
     init {
         Log.e("K", "in INIT Start")
@@ -26,20 +28,21 @@ class HomeViewModel : ViewModel() {
         Log.e("K", "in INIT End")
     }
 
-    fun getPosts(): LiveData<PagedList<homeMeme>> = postsLiveData
+    fun getPosts(id: Int): LiveData<PagedList<memeTemplate>> = postsLiveData
 
 //      initializedPagedListBuilder fetches the
 //    pagedlist from our data source.
 //    In our viewmodel also we pass the viewModelScope to the PostsDataSource factory.
 
     private fun initializedPagedListBuilder(config: PagedList.Config):
-            LivePagedListBuilder<String, homeMeme> {
+            LivePagedListBuilder<String, memeTemplate> {
         Log.e("K", "in IPLB")
-        val dataSourceFactory = object : DataSource.Factory<String, homeMeme>() {
-            override fun create(): DataSource<String, homeMeme> {
-                return HomeMemeDataSource(viewModelScope)
+        val dataSourceFactory = object : DataSource.Factory<String, memeTemplate>() {
+            override fun create(): DataSource<String, memeTemplate> {
+                return MemeTemplateDataSource(viewModelScope)
             }
         }
-        return LivePagedListBuilder<String, homeMeme>(dataSourceFactory, config)
+        return LivePagedListBuilder(dataSourceFactory, config)
     }
+
 }

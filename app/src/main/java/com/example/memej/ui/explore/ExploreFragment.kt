@@ -20,7 +20,13 @@ class ExploreFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.explore_fragment, container, false)
+        val root = inflater.inflate(R.layout.explore_fragment, container, false)
+
+        //Load Everything into the holders
+        //Same as Edit
+
+
+        return root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
