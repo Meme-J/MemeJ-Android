@@ -8,6 +8,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -34,7 +35,7 @@ class LoginActivity : AppCompatActivity() {
     lateinit var etPassword: TextInputEditText
     lateinit var t1: TextInputLayout
     lateinit var t2: TextInputLayout
-
+    lateinit var pb: ProgressBar
     private val RC_SIGN_IN = 9001
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,7 +49,7 @@ class LoginActivity : AppCompatActivity() {
         t1 = findViewById(R.id.tilUsername)
         t2 = findViewById(R.id.tilPassword)
 
-        val pb_login = findViewById<ProgressBar>(R.id.pb_login)
+        pb = findViewById(R.id.pb_login)
 
         //Functions for Google SignIn
 //        val googleSignInOptions: GoogleSignInOptions = GoogleSignInOptions
@@ -75,6 +76,7 @@ class LoginActivity : AppCompatActivity() {
                 if (isNetworkConnected()) {
                     //Validate the network call
                     Log.e("K", "In Okay state")
+                    pb.visibility = View.VISIBLE
                     postLogin()
 
                 }
@@ -137,6 +139,8 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun goToMainActivity() {
+        //Turn of the progress bar
+        pb.visibility = View.GONE
         SaveSharedPreference().setLoggedIn(applicationContext, true)
         val i = Intent(this, MainActivity::class.java)
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK)

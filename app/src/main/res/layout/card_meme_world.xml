@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/margins"
+    android:background="@color/white">
+
+    <!--    A timestamp, and an image-->
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cv"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/meme_worl_height"
+        android:layout_centerInParent="true"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="@dimen/margins">
+
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/memeWorld_image"
+            android:layout_width="@dimen/meme_world_width"
+            android:layout_height="@dimen/meme_worl_height"
+            android:layout_gravity="center"
+            android:src="@drawable/test_image" />
+
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/memeWorldTimeStamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/cv"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="@dimen/margins"
+        android:textColor="@color/colorPrimaryDark"
+        tools:text="2020-05-12T21:44:04.883Z" />
+
+
+</RelativeLayout>

@@ -77,5 +77,12 @@ object RetrofitClient {
 
     }
 
+    fun profileCalls(): Profile {
+        return Retrofit.Builder()
+            .baseUrl("https://api.jsonbin.io/b/")
+            .addConverterFactory(MoshiConverterFactory.create())
+            .addCallAdapterFactory(CoroutineCallAdapterFactory())
+            .build().create(Profile::class.java)
+    }
 
 }

@@ -4,6 +4,7 @@ import com.example.memej.responses.ExploreMemes
 import com.example.memej.responses.homeMemeApiResponse
 import com.example.memej.responses.memeGroupApiResponse
 import com.example.memej.responses.memeTemplateApiResponse
+import com.example.memej.responses.memeWorldResponses.memeWorldResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -44,6 +45,17 @@ interface memes {
     //Get the Explore Fragment Memes
     @GET("")
     suspend fun fetchExploreMemes(): Response<List<ExploreMemes>>
+
+
+    //Get the memes of the memeWorld
+    @GET("api/meme/completememes")
+    suspend fun fetchMemeWorldMemes(
+        @Query("limit") loadSize: Int = 5,              //Test it with this value
+        @Query("after") after: String? = null,
+        @Query("before") before: String? = null,
+        @Query("lastMemeId") lastMemeId: String? = null
+
+    ): Response<List<memeWorldResponse>>
 
 
 

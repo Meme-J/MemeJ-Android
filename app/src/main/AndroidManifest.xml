@@ -15,10 +15,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.auth.SignUpActivity">
-
-
-        </activity>
+        <activity android:name=".ui.profile.ChooseAvatar" />
+        <activity android:name=".ui.home.SettingsScreen" />
+        <activity android:name=".ui.auth.SignUpActivity" />
         <activity android:name=".ui.memeTemplate.TemplateActivity" />
         <activity android:name=".ui.memeTemplate.SelectMemeTemplateActivity" />
         <activity android:name=".ui.auth.LoginActivity" />
@@ -31,8 +30,11 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name">
-
+            android:label="@string/app_name"
+            android:parentActivityName="com.example.memej.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.memej.MainActivity" />
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />

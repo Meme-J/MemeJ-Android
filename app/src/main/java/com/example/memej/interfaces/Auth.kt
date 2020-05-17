@@ -40,14 +40,7 @@ interface Auth {
     ): Call<LoginResponse>
 
 
-    //Login User
-//    @FormUrlEncoded
-//    @Headers("Content-Type:application/json")
-//    @POST("userLogin")
-//    fun userLogin(
-//        @Field("username") username: String,
-//        @Field("password") pwd: String
-//    ): Call<LoginResponse>
-
-
+    //Logout the user
+    @POST("")
+    fun logout(): Call<Void?>?
 }

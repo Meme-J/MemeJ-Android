@@ -13,6 +13,10 @@
     <dimen name="edit_width">350px</dimen>
     <dimen name="edit_height">400px</dimen>
     <dimen name="add_line">240dp</dimen>
-    <dimen name="exp_card_width">350dp</dimen>
-    <dimen name="exp_card_height">500dp</dimen>
+    <dimen name="exp_card_width">320dp</dimen>
+    <dimen name="exp_card_height">540dp</dimen>
+    <dimen name="meme_worl_height">400dp</dimen>
+    <dimen name="meme_world_width">350dp</dimen>
+    <dimen name="std_height_settings">40dp</dimen>
+    <dimen name="image_profile_attr">120dp</dimen>
 </resources>

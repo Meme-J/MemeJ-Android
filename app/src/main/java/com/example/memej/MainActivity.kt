@@ -11,11 +11,13 @@ import com.example.memej.ui.MemeWorld.MemeWorldFragment
 import com.example.memej.ui.explore.ExploreFragment
 import com.example.memej.ui.home.EditMemeContainerFragment
 import com.example.memej.ui.home.HomeFragment
+import com.example.memej.ui.home.SettingsScreen
 import com.example.memej.ui.memeTemplate.SelectMemeTemplateActivity
 import com.example.memej.ui.myMemes.MyMemesFragment
 import com.example.memej.ui.profile.ProfileFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.imageview.ShapeableImageView
 
 class MainActivity : AppCompatActivity(), Communicator {
 
@@ -99,11 +101,18 @@ class MainActivity : AppCompatActivity(), Communicator {
 
         }
 
+        //Top Settings Intent
+        val btn_settings = findViewById<ShapeableImageView>(R.id.settings_btn)
+        btn_settings.setOnClickListener {
+            val i = Intent(this, SettingsScreen::class.java)
+            startActivity(i)
+        }
+
         //Function for passing data intent
         val frag = HomeFragment()
         supportFragmentManager.beginTransaction().replace(R.id.container, frag).commit()
 
-        //Replacing with profile fragmnet
+        //Replacing with profile fragment
         //Check what is the current fragment
 
     }

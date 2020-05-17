@@ -37,6 +37,11 @@
     <string name="add_a_tag">Add a tag</string>
     <string name="add_a_line">Add a line</string>
     <string name="me">Me</string>
+    <string name="change_avatar">Change Avatar</string>
+    <string name="logout">Logout</string>
+    <string name="choose_your_avatar">Choose your avatar</string>
+    <string name="total_memes">Total Memes</string>
+    <string name="total_likes">Total Likes</string>
 
 
     <string-array name="testSearch">

@@ -14,12 +14,15 @@
             app:title="@string/app_name"
             app:titleTextColor="#ffffff" />
 
-        <androidx.core.widget.ContentLoadingProgressBar
+        <ProgressBar
             android:id="@+id/pb_login"
+            style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+
+            android:visibility="visible" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilUsername"
@@ -66,6 +69,7 @@
             android:layout_centerInParent="true"
             android:layout_marginTop="8dp"
             android:background="@color/colorPrimary"
+            android:elevation="@dimen/margins"
             android:text="@string/login"
             android:textColor="@color/white" />
 
