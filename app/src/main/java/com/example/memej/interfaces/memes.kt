@@ -1,12 +1,15 @@
 package com.example.memej.interfaces
 
 import com.example.memej.responses.ExploreMemes
-import com.example.memej.responses.homeMemeApiResponse
+import com.example.memej.responses.homeMememResponses.homeMemeApiResponse
 import com.example.memej.responses.memeGroupApiResponse
 import com.example.memej.responses.memeTemplateApiResponse
 import com.example.memej.responses.memeWorldResponses.memeWorldResponse
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.Header
+import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface memes {
@@ -34,16 +37,15 @@ interface memes {
     ): retrofit2.Response<memeTemplateApiResponse>
 
     //Get memes of home
-    @GET("5ebd67338284f36af7bb1f5b")
-    suspend fun fetchEditableMemes(
+
+
+    @POST("api/meme/ongoing")
+    fun fetchEditableMemes(
         @Query("limit") loadSize: Int = 30,
-        @Query("after") after: String? = null,
-        @Query("before") before: String? = null
-    ): retrofit2.Response<homeMemeApiResponse>
+        @Header("Authorization") accessToken: String?
+    ): Call<homeMemeApiResponse>
 
 
-    //Get the Explore Fragment Memes
-    @GET("")
     suspend fun fetchExploreMemes(): Response<List<ExploreMemes>>
 
 
@@ -56,9 +58,6 @@ interface memes {
         @Query("lastMemeId") lastMemeId: String? = null
 
     ): Response<List<memeWorldResponse>>
-
-
-
 
 
 }

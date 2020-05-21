@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rel_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="?attr/actionBarSize"
+    android:layout_marginBottom="56dp">
+
+
+    <androidx.cardview.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="@dimen/edit_meme_card_width"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:elevation="40dp"
+        app:cardCornerRadius="@dimen/margins">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margins"
+                android:orientation="vertical">
+
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/userPost_edit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="4"
+                    android:text="@string/users" />
+
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tagPost_edit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margins"
+                    android:layout_marginBottom="@dimen/margins"
+                    android:text="@string/memetag"
+                    android:textSize="@dimen/text_size" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/meme_templete_std_height"
+                    android:layout_margin="@dimen/margins"
+                    android:elevation="4dp"
+                    app:cardCornerRadius="@dimen/margins">
+
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/imagePostEdit"
+                        android:layout_width="@dimen/meme_templete_std_height"
+                        android:layout_height="@dimen/meme_templete_std_height"
+                        android:layout_centerInParent="true" />
+
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.textview.MaterialTextView
+                    style="@style/timestamp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_margin="@dimen/margins"
+                    android:text="@string/sample_timestamp" />
+
+                <!--                Style Picker-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margins"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/choose_color"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/margins"
+                        android:text="@string/choose_color" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/choose_font"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/margins"
+                        android:text="@string/choose_font" />
+                </LinearLayout>
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margins"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/lineAddedEt"
+                        android:layout_width="@dimen/add_line"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margins"
+                        android:layout_marginTop="4dp"
+                        android:hint="@string/add_a_line"
+                        android:maxLines="4"
+                        android:minLines="1"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/send_post_edit"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_gravity="end"
+                        android:background="@drawable/ic_send"
+                        android:enabled="false"
+                        app:layout_constraintEnd_toEndOf="parent" />
+
+
+                </RelativeLayout>
+
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                    android:id="@+id/auto_completeTag"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margins"
+                    android:layout_marginTop="@dimen/margins"
+                    android:layout_marginBottom="16dp"
+                    android:hint="@string/add_a_tag" />
+
+
+            </LinearLayout>
+        </ScrollView>
+
+
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>

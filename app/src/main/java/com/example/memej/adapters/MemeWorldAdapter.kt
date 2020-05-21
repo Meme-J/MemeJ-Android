@@ -8,12 +8,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.memej.R
 import com.example.memej.Utils.DiffUtils.DiffUtilsMemeWorld
-import com.example.memej.responses.memeWorldResponses.memeWorldResponse
+import com.example.memej.responses.memeWorldResponses.Meme
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.textview.MaterialTextView
 
 class MemeWorldAdapter(val itemClickListener: OnItemClickListenerMemeWorld) :
-    PagedListAdapter<memeWorldResponse, MemeWorldAdapter.MyViewHolder>(DiffUtilsMemeWorld()) {
+    PagedListAdapter<Meme, MemeWorldAdapter.MyViewHolder>(DiffUtilsMemeWorld()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val view =
@@ -39,20 +39,20 @@ class MemeWorldAdapter(val itemClickListener: OnItemClickListenerMemeWorld) :
         //The add tag and send will be in the other hand request
         //Implement Child Recycler View for the user post (Horizontal)
 
-        fun bindPost(_memeWorld: memeWorldResponse, clickListener: OnItemClickListenerMemeWorld) {
+        fun bindPost(_meme: Meme, clickListener: OnItemClickListenerMemeWorld) {
 
-            with(_memeWorld) {
+            with(_meme) {
                 //memeTags.text = tag
                 //Load image
                 //This is where the glide is loaded
-
-                memeTime.text = memes[2].toString()             //To get the tag
+                //Check this loader
+                memeTime.text = _meme.lastUpdated             //To get the tag
                 Glide.with(itemView)
-                    .load(memes[1])
+                    .load(_meme.imageUrl)
                     .into(memeImage)
 
                 itemView.setOnClickListener {
-                    clickListener.onItemClicked(_memeWorld)
+                    clickListener.onItemClicked(_meme)
                 }
             }
         }
@@ -62,7 +62,7 @@ class MemeWorldAdapter(val itemClickListener: OnItemClickListenerMemeWorld) :
 }
 
 interface OnItemClickListenerMemeWorld {
-    fun onItemClicked(_memeWorld: memeWorldResponse)
+    fun onItemClicked(_meme: Meme)
 }
 
 

@@ -1,5 +1,6 @@
 package com.example.memej.dataSources
 
+import android.content.Context
 import android.util.Log
 import androidx.paging.PageKeyedDataSource
 import com.example.memej.entities.memeGroup
@@ -9,21 +10,23 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
 //Create a scope
-class MemeGroupDataSource(private val scope: CoroutineScope) :
+class MemeGroupDataSource(private val scope: CoroutineScope, private val context: Context) :
     PageKeyedDataSource<String, memeGroup>() {
 
     //External variable to point to api client
-    private val apiService = RetrofitClient.makeCallsForMemes()
+    private val apiService = RetrofitClient.makeCallsForMemes(context)
 
     override fun loadInitial(
         params: LoadInitialParams<String>,
         callback: LoadInitialCallback<String, memeGroup>
     ) {
+        Log.e("DATA SOURCE", "Load Initial ")
         scope.launch {
             try {
                 val response = apiService.fetchMemeGroups(loadSize = params.requestedLoadSize)
                 when {
                     response.isSuccessful -> {
+                        Log.e("DATA SOURCE", "Success 1 ")
                         val listing = response.body()?.data
                         val memeGroupPosts = listing?.children?.map { it.data }
                         callback.onResult(

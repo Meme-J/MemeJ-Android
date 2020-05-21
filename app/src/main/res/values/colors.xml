@@ -9,5 +9,6 @@
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
     <color name="base_yellow">#FFFFE0</color>
+    <color name="red_heart">#d11a10</color>
 
 </resources>

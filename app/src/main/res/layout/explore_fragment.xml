@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,112 +8,20 @@
     android:layout_marginBottom="56dp"
     tools:context=".ui.explore.ExploreFragment">
 
-    <androidx.cardview.widget.CardView
-        android:layout_width="@dimen/exp_card_width"
-        android:layout_height="@dimen/exp_card_height"
-        android:layout_centerInParent="true"
-        android:elevation="@dimen/margins"
-        app:cardCornerRadius="@dimen/margins">
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/margins"
+        android:gravity="center"
+        android:text="@string/swipe_to_get_next"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="18sp" />
 
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margins"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/margins"
-                    android:orientation="horizontal">
-
-                    <!--            User list recylerView-->
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rv_usersListPost"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:scrollbars="horizontal" />
-
-                </LinearLayout>
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/post_tag_exp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/margins"
-                    android:text="@string/memetag"
-                    android:textSize="@dimen/text_size" />
-
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/meme_templete_std_height"
-                    android:elevation="4dp"
-                    app:cardCornerRadius="@dimen/margins">
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/meme_templete_std_height">
-
-                        <com.google.android.material.imageview.ShapeableImageView
-                            android:id="@+id/post_image_exp"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/meme_templete_std_height"
-                            android:layout_centerInParent="true"
-                            android:src="@drawable/test_image" />
-
-
-                    </RelativeLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <EditText
-                        android:id="@+id/exp_line"
-                        android:layout_width="@dimen/add_line"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:hint="@string/add_a_line"
-                        android:maxLines="4"
-                        android:minLines="1"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-
-                    <Button
-                        android:id="@+id/send_button"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:gravity="bottom"
-                        android:background="@drawable/ic_send"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                    android:id="@+id/addTag_exp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:maxLines="1"
-                    android:layout_marginTop="@dimen/margins"
-                    android:layout_marginBottom="@dimen/margins"
-                    android:hint="@string/add_a_tag" />
-
-
-            </LinearLayout>
-        </ScrollView>
-
-
-    </androidx.cardview.widget.CardView>
+    <com.mindorks.placeholderview.SwipePlaceHolderView
+        android:id="@+id/swipeView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 
 </RelativeLayout>

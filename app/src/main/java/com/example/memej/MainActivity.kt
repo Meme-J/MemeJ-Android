@@ -12,11 +12,9 @@ import com.example.memej.ui.explore.ExploreFragment
 import com.example.memej.ui.home.EditMemeContainerFragment
 import com.example.memej.ui.home.HomeFragment
 import com.example.memej.ui.home.SettingsScreen
-import com.example.memej.ui.memeTemplate.SelectMemeTemplateActivity
 import com.example.memej.ui.myMemes.MyMemesFragment
 import com.example.memej.ui.profile.ProfileFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.imageview.ShapeableImageView
 
 class MainActivity : AppCompatActivity(), Communicator {
@@ -94,12 +92,12 @@ class MainActivity : AppCompatActivity(), Communicator {
 
 
         //OnClickListener On FAB
-        val fab: FloatingActionButton = findViewById(R.id.fab_add)
-        fab.setOnClickListener {
-            val i = Intent(this, SelectMemeTemplateActivity::class.java)
-            startActivity(i)
-
-        }
+//        val fab: FloatingActionButton = findViewById(R.id.fab_add)
+//        fab.setOnClickListener {
+//            val i = Intent(this, SelectMemeTemplateActivity::class.java)
+//            startActivity(i)
+//
+//        }
 
         //Top Settings Intent
         val btn_settings = findViewById<ShapeableImageView>(R.id.settings_btn)

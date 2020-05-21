@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.memej.MainActivity
 import com.example.memej.R
 import com.example.memej.Utils.SaveSharedPreference
+import com.example.memej.Utils.SessionManager
 import com.example.memej.entities.LoginBody
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.LoginResponse
@@ -36,7 +37,7 @@ class LoginActivity : AppCompatActivity() {
     lateinit var t1: TextInputLayout
     lateinit var t2: TextInputLayout
     lateinit var pb: ProgressBar
-    private val RC_SIGN_IN = 9001
+    private lateinit var sessionManager: SessionManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,7 +51,7 @@ class LoginActivity : AppCompatActivity() {
         t2 = findViewById(R.id.tilPassword)
 
         pb = findViewById(R.id.pb_login)
-
+        sessionManager = SessionManager(this)
         //Functions for Google SignIn
 //        val googleSignInOptions: GoogleSignInOptions = GoogleSignInOptions
 //            .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -106,6 +107,8 @@ class LoginActivity : AppCompatActivity() {
 
     private fun postLogin() {
         //Account id = sth
+        val tokenA: String
+        val tokenR: String
         val service = RetrofitClient.getAuthInstance()
         val inf = LoginBody(
             etUsername.text.toString(),
@@ -128,6 +131,20 @@ class LoginActivity : AppCompatActivity() {
                         .show()
                     //Set looged in status true
                     //Store the access token on every login
+                    //Get the access token on login
+                    sessionManager.saveAuth_access_Token(
+                        LoginResponse(
+                            response.body()!!.msg,
+                            response.body()!!.user
+                        ).user.accessToken
+                    )
+                    sessionManager.saveAuth_refresh_Token(
+                        (LoginResponse(
+                            response.body()!!.msg,
+                            response.body()!!.user
+                        )).user.refreshToken
+                    )
+
                     goToMainActivity()
                 } else {
                     Toast.makeText(this@LoginActivity, response.body()?.msg, Toast.LENGTH_SHORT)

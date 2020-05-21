@@ -56,6 +56,8 @@ class SettingsScreen : AppCompatActivity() {
                 //Apply required if statemnet
                 //Use response body message
                 SaveSharedPreference().setLoggedIn(applicationContext, false)
+                //Invalidate access tokens
+
                 val i = Intent(this@SettingsScreen, LoginActivity::class.java)
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(i)

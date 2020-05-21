@@ -27,8 +27,6 @@
     <string name="my_drafts">My Drafts</string>
     <string name="memeworld">memeWorld</string>
     <string name="explore">Explore</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="continue_signin_with_google_instead">Continue SignIn with Google Instead</string>
     <string name="search_hint">Search by tags</string>
@@ -42,6 +40,14 @@
     <string name="choose_your_avatar">Choose your avatar</string>
     <string name="total_memes">Total Memes</string>
     <string name="total_likes">Total Likes</string>
+    <string name="sample_timestamp">2020-05-12T21:44:04.883Z</string>
+    <string name="_1000">1000</string>
+    <string name="_0">0</string>
+    <string name="choose_font">Choose Font</string>
+    <string name="choose_color">Choose color</string>
+    <string name="time">Time</string>
+    <string name="users">users</string>
+    <string name="swipe_to_get_next">Swipe to get next</string>
 
 
     <string-array name="testSearch">
@@ -54,6 +60,22 @@
         <item>Chocolate</item>
         <item>Banana</item>
         <item>Mango</item>
+    </string-array>
+
+    <array name="themeColors">
+        <item>@color/green_500</item>
+        <item>@color/blue_500</item>
+        <item>@color/red_500</item>
+        <item>@color/grey_500</item>
+        <item>@color/orange_500</item>
+    </array>
+
+    <string-array name="font_types">
+        <item>Arial</item>
+        <item>Long Fox</item>
+        <item>Bomb</item>
+        <item>Robot Reaver</item>
+        <item>Fonty</item>
     </string-array>
 
 </resources>

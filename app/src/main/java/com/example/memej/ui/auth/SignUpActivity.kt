@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.memej.MainActivity
 import com.example.memej.R
 import com.example.memej.Utils.SaveSharedPreference
+import com.example.memej.Utils.SessionManager
 import com.example.memej.entities.UserBody
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.SignUpResponse
@@ -34,7 +35,7 @@ class SignUpActivity : AppCompatActivity() {
     lateinit var temail: TextInputLayout
     lateinit var tpassword: TextInputLayout
 
-
+    lateinit var sessionManager: SessionManager
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up)
@@ -49,6 +50,8 @@ class SignUpActivity : AppCompatActivity() {
         tpassword = findViewById(R.id.tilPassword)
         temail = findViewById(R.id.tilEmail)
 
+
+        sessionManager = SessionManager(this)
         val b: MaterialButton = findViewById(R.id.signUp_btn)
         b.setOnClickListener {
             //Valiate the details
@@ -104,6 +107,19 @@ class SignUpActivity : AppCompatActivity() {
                         Toast.LENGTH_SHORT
                     ).show()
                     //GEt the access token and the id
+                    //Save the acess tokens
+//                    sessionManager.saveAuth_access_Token(
+//                        SignUpResponse(
+//                            response.body()!!.msg,
+//                            response.body()!!.user
+//                        ).user.accessToken
+//                    )
+//                    sessionManager.saveAuth_refresh_Token(
+//                        (LoginResponse(
+//                            response.body()!!.msg,
+//                            response.body()!!.user
+//                        )).user.refreshToken
+//                    )
 
                     goToMainActivity()
                 } else {
