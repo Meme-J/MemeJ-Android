@@ -1,9 +1,9 @@
 package com.example.memej.Utils.DiffUtils
 
 import androidx.recyclerview.widget.DiffUtil
-import com.example.memej.responses.memeWorldResponses.Meme
+import com.example.memej.responses.memeWorldResponses.Meme_World
 
-class DiffUtilsMemeWorld : DiffUtil.ItemCallback<Meme>() {
+class DiffUtilsMemeWorld : DiffUtil.ItemCallback<Meme_World>() {
 //    override fun areItemsTheSame(oldItem: memeGroup, newItem: memeGroup): Boolean {
 //        return oldItem.memeGroupId == newItem.memeGroupId
 //    }
@@ -13,16 +13,16 @@ class DiffUtilsMemeWorld : DiffUtil.ItemCallback<Meme>() {
 //                && oldItem.tag == newItem.tag
 //    }
 
-    override fun areItemsTheSame(oldItem: Meme, newItem: Meme): Boolean {
-        return oldItem.id == newItem.id
+    override fun areItemsTheSame(oldItem: Meme_World, newItem: Meme_World): Boolean {
+        return oldItem._id == newItem._id
     }
 
     override fun areContentsTheSame(
-        oldItem: Meme,
-        newItem: Meme
+        oldItem: Meme_World,
+        newItem: Meme_World
     ): Boolean {
-        return oldItem.id == newItem.id
-                && oldItem.stage == newItem.stage
+        return oldItem._id == newItem._id
+                && oldItem.placeholders == newItem.placeholders
 
     }
 }

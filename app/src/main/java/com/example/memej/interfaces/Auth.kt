@@ -3,9 +3,11 @@ package com.example.memej.interfaces
 import com.example.memej.entities.LoginBody
 import com.example.memej.entities.UserBody
 import com.example.memej.responses.LoginResponse
+import com.example.memej.responses.ProfileResponse
 import com.example.memej.responses.SignUpResponse
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.Header
 import retrofit2.http.Headers
 import retrofit2.http.POST
 
@@ -40,7 +42,12 @@ interface Auth {
     ): Call<LoginResponse>
 
 
+    @POST("api/user/profile")
+    fun getUser(
+        @Header("Authorization") accessToken: String?
+    ): Call<ProfileResponse>
+
     //Logout the user
-    @POST("")
-    fun logout(): Call<Void?>?
+//    @POST("")
+//    fun logout(): Call<Void?>?
 }

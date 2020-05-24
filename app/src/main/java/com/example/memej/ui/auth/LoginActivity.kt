@@ -23,6 +23,7 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.textview.MaterialTextView
+import kotlinx.android.synthetic.main.activity_login.*
 import retrofit2.Call
 import retrofit2.Response
 
@@ -123,6 +124,8 @@ class LoginActivity : AppCompatActivity() {
                     t.message,
                     Toast.LENGTH_SHORT
                 ).show()
+                pb_login.visibility = View.GONE
+
             }
 
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
@@ -147,6 +150,8 @@ class LoginActivity : AppCompatActivity() {
 
                     goToMainActivity()
                 } else {
+                    //Stop the spinner
+                    pb_login.visibility = View.GONE
                     Toast.makeText(this@LoginActivity, response.body()?.msg, Toast.LENGTH_SHORT)
                         .show()
 

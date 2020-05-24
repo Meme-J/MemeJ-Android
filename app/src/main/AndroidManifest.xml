@@ -22,7 +22,9 @@
         <activity android:name=".ui.memeTemplate.TemplateActivity" />
         <activity android:name=".ui.memeTemplate.SelectMemeTemplateActivity" />
         <activity android:name=".ui.auth.LoginActivity" />
-        <activity android:name=".ui.auth.SplashScreen">
+        <activity
+            android:name=".ui.auth.SplashScreen"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -40,6 +42,20 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
+
+        <!--        Provider for sharing-->
+
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.example.memej.FileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"></meta-data>
+        </provider>
+
     </application>
 
 </manifest>

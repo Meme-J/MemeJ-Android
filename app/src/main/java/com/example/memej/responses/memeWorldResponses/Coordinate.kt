@@ -5,10 +5,9 @@ import com.squareup.moshi.Json
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class User(
-    @Json(name = "_id")
-    val id: String, // 5ebb18141f22b62ebb8dd2e4
-    @Json(name = "username")
-    val username: String // KavyaVmatsal
+data class Coordinate(
+    @Json(name = "x")
+    val x: Int, // 1
+    @Json(name = "y")
+    val y: Int // 2
 ) : Parcelable
-

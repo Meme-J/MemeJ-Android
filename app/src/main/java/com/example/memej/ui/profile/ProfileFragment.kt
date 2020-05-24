@@ -1,6 +1,5 @@
 package com.example.memej.ui.profile
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.example.memej.R
-import kotlinx.android.synthetic.main.profile_fragment.view.*
 
 class ProfileFragment : Fragment() {
 
@@ -28,13 +26,13 @@ class ProfileFragment : Fragment() {
 
 
         //get refernces to everything
-        root.edit_avatar.setOnClickListener {
-            //Open a set of hosted images
-            //Make sure to shift ot to the paid verdion
-            val i = Intent(activity, ChooseAvatar::class.java)
-            startActivity(i)
-
-        }
+//        root.edit_avatar.setOnClickListener {
+//            //Open a set of hosted images
+//            //Make sure to shift ot to the paid verdion
+//            val i = Intent(activity, ChooseAvatar::class.java)
+//            startActivity(i)
+//
+//        }
 
 
 

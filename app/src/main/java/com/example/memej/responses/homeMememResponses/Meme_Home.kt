@@ -4,8 +4,8 @@ import com.squareup.moshi.Json
 
 data class Meme_Home(
 
-    @Json(name = "_id")
-    val id: String, // 5ec14e55fdba9567b44adec1
+    // @Json(name = "_id")
+    val _id: String, // 5ec14e55fdba9567b44adec1
     @Json(name = "lastUpdated")
     val lastUpdated: String, // 2020-05-17T14:46:45.350Z
 

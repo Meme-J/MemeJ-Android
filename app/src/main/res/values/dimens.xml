@@ -19,4 +19,6 @@
     <dimen name="meme_world_width">350dp</dimen>
     <dimen name="std_height_settings">40dp</dimen>
     <dimen name="image_profile_attr">120dp</dimen>
+    <dimen name="editHt">80dp</dimen>
+    <dimen name="btn_size">40dp</dimen>
 </resources>

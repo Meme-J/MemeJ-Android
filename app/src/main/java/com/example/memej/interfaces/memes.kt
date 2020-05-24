@@ -1,16 +1,14 @@
 package com.example.memej.interfaces
 
-import com.example.memej.responses.ExploreMemes
+import com.example.memej.entities.searchBody
+import com.example.memej.responses.LikeOrNotResponse
+import com.example.memej.responses.SearchResponse
 import com.example.memej.responses.homeMememResponses.homeMemeApiResponse
 import com.example.memej.responses.memeGroupApiResponse
 import com.example.memej.responses.memeTemplateApiResponse
-import com.example.memej.responses.memeWorldResponses.memeWorldResponse
+import com.example.memej.responses.memeWorldResponses.memeApiResponses
 import retrofit2.Call
-import retrofit2.Response
-import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.POST
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface memes {
 //To use pagination, we need to create data sources
@@ -45,19 +43,28 @@ interface memes {
         @Header("Authorization") accessToken: String?
     ): Call<homeMemeApiResponse>
 
-
-    suspend fun fetchExploreMemes(): Response<List<ExploreMemes>>
+    //Get search suggestions
+    @POST("api/meme/autocomplete")
+    fun getSuggestions(
+        @Header("Authorization") accessToken: String?
+        , @Body info: searchBody
+    ): Call<SearchResponse>
 
 
     //Get the memes of the memeWorld
-    @GET("api/meme/completememes")
-    suspend fun fetchMemeWorldMemes(
+    @POST("api/meme/complete")
+    fun fetchMemeWorldMemes(
         @Query("limit") loadSize: Int = 5,              //Test it with this value
-        @Query("after") after: String? = null,
-        @Query("before") before: String? = null,
-        @Query("lastMemeId") lastMemeId: String? = null
+        @Header("Authorization") accessToken: String?
+    ): Call<memeApiResponses>
 
-    ): Response<List<memeWorldResponse>>
+
+    //Like or dislike a meme
+    @POST("api/meme/like")
+    fun likeMeme(
+        @Body memeId: String,
+        @Header("Authorization") accessToken: String?
+    ): Call<LikeOrNotResponse>
 
 
 }

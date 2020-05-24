@@ -6,4 +6,6 @@ interface Communicator {
 
     fun passDataFromHome(bundle: Bundle)
 
+    fun passDataToMemeWorld(bundle: Bundle)
+
 }

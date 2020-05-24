@@ -62,7 +62,7 @@ class HomeFragment : Fragment(), OnItemClickListenerHome {
         return root
     }
 
-    //
+
     private fun initializingList() {
 
         Log.e("HF", "Initialzed config")
@@ -118,7 +118,7 @@ class HomeFragment : Fragment(), OnItemClickListenerHome {
 
 //        Toast.makeText(context, _homeMeme.users.toString(), Toast.LENGTH_LONG).show()
         val bundle = bundleOf(
-            "id" to _homeMeme.id,
+            "id" to _homeMeme._id,
             "lastUpdated" to _homeMeme.lastUpdated,
             "numPlaceHolders" to _homeMeme.numPlaceholders,
             "placeHolders" to _homeMeme.placeholders,
@@ -134,6 +134,7 @@ class HomeFragment : Fragment(), OnItemClickListenerHome {
         )
         Log.e("HF", "" + _homeMeme.lastUpdated.toString())
 
+        Log.e("HF", "" + _homeMeme._id.toString())
         comm.passDataFromHome(bundle)
 
     }

@@ -11,43 +11,8 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 object RetrofitClient {
 
 
-
-
     val url = "https://memej.herokuapp.com/"
 
-
-    //OkHttp Client
-    //Create OkHttp Client as well
-//    private val okHttpClient = OkHttpClient.Builder()
-//        .addInterceptor { chain ->
-//            val original = chain.request()
-//
-//            //Header value
-//            val requestBuilder = original.newBuilder()
-//                .addHeader("Auhorization", AUTH)
-//                .method(original.method, original.body)
-//
-//            val request = requestBuilder.build()
-//            chain.proceed(request)
-//        }.build()
-
-
-
-
-
-
-//    //Use OkHttp Client
-//    val instanceAuth: Auth by lazy {
-//        //Return retrofit builders
-//        val retrofit = Retrofit.Builder()
-//            .baseUrl(url)
-//            .addConverterFactory(MoshiConverterFactory.create())
-//            .addCallAdapterFactory(CoroutineCallAdapterFactory())
-//            .client(client)
-//            .build()
-//        retrofit.create(Auth::class.java)
-//
-//    }
 
     fun getAuthInstance(): Auth {
         return Retrofit.Builder()
