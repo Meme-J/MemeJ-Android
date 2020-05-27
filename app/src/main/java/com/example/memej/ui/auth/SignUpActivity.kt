@@ -6,11 +6,14 @@ import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
+import android.util.Log
+import android.view.View
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.memej.MainActivity
 import com.example.memej.R
 import com.example.memej.Utils.SaveSharedPreference
+import com.example.memej.Utils.SessionManager
 import com.example.memej.entities.UserBody
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.SignUpResponse
@@ -34,7 +37,8 @@ class SignUpActivity : AppCompatActivity() {
     lateinit var temail: TextInputLayout
     lateinit var tpassword: TextInputLayout
 
-
+    lateinit var pb: ProgressBar
+    lateinit var sessionManager: SessionManager
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up)
@@ -49,23 +53,27 @@ class SignUpActivity : AppCompatActivity() {
         tpassword = findViewById(R.id.tilPassword)
         temail = findViewById(R.id.tilEmail)
 
+
+        pb = findViewById(R.id.pb_signUp)
+        sessionManager = SessionManager(this)
         val b: MaterialButton = findViewById(R.id.signUp_btn)
         b.setOnClickListener {
             //Valiate the details
-            // if (validateDetails()) {
-            //Check internet connection
-            if (isNetworkConnected()) {
-                postSignUp()
-            } else {
-                AlertDialog.Builder(this).setTitle("No Internet Connection")
-                    .setMessage("Please check your internet connection and try again")
-                    .setPositiveButton(android.R.string.ok) { _, _ -> }
-                    .setIcon(android.R.drawable.ic_dialog_alert).show()
+            if (validateDetails()) {
+                //Check internet connection
+                if (isNetworkConnected()) {
+                    pb.visibility = View.VISIBLE
+                    postSignUp()
+                } else {
+                    AlertDialog.Builder(this).setTitle("No Internet Connection")
+                        .setMessage("Please check your internet connection and try again")
+                        .setPositiveButton(android.R.string.ok) { _, _ -> }
+                        .setIcon(android.R.drawable.ic_dialog_alert).show()
+
+                }
+
 
             }
-
-
-            //}
 
         }
 
@@ -87,9 +95,13 @@ class SignUpActivity : AppCompatActivity() {
             etEmail.text.toString(),
             etPassword.text.toString()
         )
+        Log.e("SignUp", regInfo.toString())
+
         service.createUser(regInfo).enqueue(object : retrofit2.Callback<SignUpResponse> {
             override fun onFailure(call: Call<SignUpResponse>, t: Throwable) {
-                Toast.makeText(this@SignUpActivity, t.message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@SignUpActivity, t.message.toString(), Toast.LENGTH_SHORT).show()
+                Log.e("signUp", t.message.toString())
+                pb.visibility = View.GONE
             }
 
             override fun onResponse(
@@ -98,19 +110,37 @@ class SignUpActivity : AppCompatActivity() {
             ) {
                 if (response.body()?.msg == "Registeration successful") {
                     //Code for successful creation of user
+                    Log.e("signUp", response.body()!!.msg.toString())
                     Toast.makeText(
                         this@SignUpActivity,
                         "Registration Successful",
                         Toast.LENGTH_SHORT
                     ).show()
                     //GEt the access token and the id
+                    //Save the acess tokens
+//                    sessionManager.saveAuth_access_Token(
+//                        SignUpResponse(
+//                            response.body()!!.msg,
+//                            response.body()!!.user
+//                        ).user.accessToken
+//                    )
+//                    sessionManager.saveAuth_refresh_Token(
+//                        (LoginResponse(
+//                            response.body()!!.msg,
+//                            response.body()!!.user
+//                        )).user.refreshToken
+//                    )
 
-                    goToMainActivity()
+                    goToLoginActivity()
                 } else {
 
                     Toast.makeText(this@SignUpActivity, response.body()?.msg, Toast.LENGTH_SHORT)
                         .show()
-
+                    Log.e(
+                        "signUp",
+                        response.message() + response.body()?.msg + response.errorBody().toString()
+                    )
+                    pb.visibility = View.GONE
                 }
 
             }
@@ -119,9 +149,9 @@ class SignUpActivity : AppCompatActivity() {
 
     }
 
-    private fun goToMainActivity() {
+    private fun goToLoginActivity() {
         SaveSharedPreference().setLoggedIn(applicationContext, true)
-        val i = Intent(this, MainActivity::class.java)
+        val i = Intent(this, LoginActivity::class.java)
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
         startActivity(i)
     }
@@ -130,34 +160,37 @@ class SignUpActivity : AppCompatActivity() {
         var isValid = true
 
 
-        val nameTemp = etName.toString().replace("\\s".toRegex(), "")
         if (etName.length() == 0) {
             tName.error = getString(R.string.name_empty)
             isValid = false
-        } else if (nameTemp.length < 2 || nameTemp.length > 31) {
-            tName.error = getString(R.string.name_length)
-            isValid = false
-        } else if (!validateName(etName.toString())) {
+        } else if (!validateName(etName.text.toString())) {
             tName.error = getString(R.string.name_invalid)
             isValid = false
+        } else {
+            tName.error = null
         }
 
         if (etUsername.length() == 0) {
             tUname.error = getString(R.string.username_empty)
             isValid = false
-        } else if (!validateUsername(etUsername.toString())) {
+        } else if (!validateUsername(etUsername.text.toString())) {
             tUname.error = getString(R.string.username_invalid)
             isValid = false
+        } else {
+            tUname.error = null
         }
 
 
         if (etEmail.length() == 0) {
             temail.error = getString(R.string.email_empty)
             isValid = false
-        } else if (!validateEmail(etEmail.toString())) {
+        } else if (!validateEmail(etEmail.text.toString())) {
             temail.error = getString(R.string.email_invalid)
             isValid = false
+        } else {
+            temail.error = null
         }
+
 
 
         if (etPassword.length() == 0) {
@@ -169,6 +202,8 @@ class SignUpActivity : AppCompatActivity() {
         } else if (etPassword.length() > 16) {
             tpassword.error = getString(R.string.pwd_length_max)
             isValid = false
+        } else {
+            tilPassword.error = null
         }
 
 
@@ -178,8 +213,13 @@ class SignUpActivity : AppCompatActivity() {
 
     private fun validateName(string: String): Boolean {
         //Check if the name has only alphabets and not special characters or numbers
+
+        Log.e("This", "char is " + string)
         for (c in string) {
+            Log.e("This", "char is " + c)
             if (c !in 'A'..'Z' && c !in 'a'..'z' && c != ' ') {
+
+                Log.e("This", "in if")
                 return false
             }
         }
@@ -198,8 +238,9 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun validateEmail(email: String): Boolean {
-        val EMAIL_REGEX = "^[A-Za-z](.*)([@])(.{1,})(\\.)(.{1,})"
-        return EMAIL_REGEX.toRegex().matches(email)
+        val EMAIL_REGEX = "^[A-Za-z](.*)([@]{1})(.{1,})(\\.)(.{1,})"
+        val validator = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"
+        return validator.toRegex().matches(email)
     }
 
     private fun isNetworkConnected(): Boolean {

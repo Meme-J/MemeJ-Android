@@ -1,5 +1,6 @@
 package com.example.memej.dataSources
 
+import android.content.Context
 import android.util.Log
 import androidx.paging.PageKeyedDataSource
 import com.example.memej.entities.memeTemplate
@@ -8,11 +9,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
-class MemeTemplateDataSource(private val scope: CoroutineScope) :
+class MemeTemplateDataSource(private val scope: CoroutineScope, private val context: Context) :
     PageKeyedDataSource<String, memeTemplate>() {
 
     //External variable to point to api client
-    private val apiService = RetrofitClient.makeCallsForMemes()
+    private val apiService = RetrofitClient.makeCallsForMemes(context)
 
     override fun loadInitial(
         params: LoadInitialParams<String>,

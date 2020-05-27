@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true">
+
+            <LinearLayout xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margins"
+                android:orientation="vertical"
+                tools:context=".ui.memeTemplate.MemeTempatesFragment">
+
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="@dimen/margins"
+                    android:elevation="40dp"
+                    app:cardCornerRadius="16dp">
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/margins"
+                        android:orientation="vertical">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/list_view_users"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/margins"
+                            android:text="users" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/list_view_tags"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/margins"
+                            android:text="tags"
+                            android:textSize="@dimen/text_size"
+                            android:textStyle="bold" />
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/meme_templete_std_height"
+                            android:elevation="4dp"
+                            app:cardCornerRadius="@dimen/margins">
+
+
+                            <com.google.android.material.imageview.ShapeableImageView
+                                android:id="@+id/post_image_mw"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/meme_worl_height"
+                                android:layout_centerInParent="true"
+                                android:src="@drawable/test_image" />
+
+
+                        </com.google.android.material.card.MaterialCardView>
+
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/timeStamp_memeW"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end"
+                            android:layout_margin="@dimen/margins"
+                            android:text="@string/sample_timestamp" />
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/margins"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:id="@+id/like_completed_meme_btn"
+                                    android:layout_width="@dimen/util_size"
+                                    android:layout_height="@dimen/util_size"
+                                    android:elevation="0dp"
+                                    android:src="@drawable/ic_like_empty" />
+
+                                <TextView
+                                    android:id="@+id/num_likes_completed_meme"
+                                    android:layout_width="40dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/margins"
+                                    android:gravity="center"
+                                    android:text="@string/_0"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <Button
+                                android:id="@+id/share_completed_meme"
+                                android:layout_width="@dimen/util_size"
+                                android:layout_height="@dimen/util_size"
+                                android:layout_marginStart="16dp"
+                                android:background="@drawable/ic_share"
+                                android:elevation="0dp" />
+
+                            <Button
+                                android:id="@+id/download_completed_meme"
+                                android:layout_width="@dimen/util_size"
+                                android:layout_height="@dimen/util_size"
+                                android:layout_marginStart="16dp"
+                                android:background="@drawable/ic_arrow_downward_black_24dp"
+                                android:elevation="0dp" />
+
+
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+
+
+                </androidx.cardview.widget.CardView>
+            </LinearLayout>
+        </ScrollView>
+    </RelativeLayout>
+
+
+</layout>

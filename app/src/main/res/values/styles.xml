@@ -1,12 +1,13 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar.Bridge">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+
 
     <!--    <style name="DefaultStyle">-->
     <!--        <item name="android:background">@color/background_color</item>-->
@@ -17,5 +18,33 @@
     <!--        <item name="android:layout_height">@dimen/height_value</item>-->
     <!--    </style>-->
 
+
+    <style name="timestamp" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="color">@color/colorPrimary</item>
+        <item name="android:textSize">14sp</item>
+        <item name="textAllCaps">false</item>
+
+    </style>
+
+    <!--    Arial Style-->
+    <style name="arial_font">
+        <item name="fontFamily">@font/arial</item>
+    </style>
+
+    <style name="bomb_font">
+        <item name="fontFamily">@font/bomb_font</item>
+    </style>
+
+    <style name="long_fox_font">
+        <item name="fontFamily">@font/long_fox_font</item>
+    </style>
+
+    <style name="robot_reavers_font">
+        <item name="fontFamily">@font/romot_reavers_font</item>
+    </style>
+
+    <style name="fonty_fonts">
+        <item name="fontFamily">@font/fonty_font</item>
+    </style>
 
 </resources>

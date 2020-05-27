@@ -1,12 +1,14 @@
 package com.example.memej.interfaces
 
-import com.example.memej.responses.ExploreMemes
-import com.example.memej.responses.homeMemeApiResponse
+import com.example.memej.entities.searchBody
+import com.example.memej.responses.LikeOrNotResponse
+import com.example.memej.responses.SearchResponse
+import com.example.memej.responses.homeMememResponses.homeMemeApiResponse
 import com.example.memej.responses.memeGroupApiResponse
 import com.example.memej.responses.memeTemplateApiResponse
-import retrofit2.Response
-import retrofit2.http.GET
-import retrofit2.http.Query
+import com.example.memej.responses.memeWorldResponses.memeApiResponses
+import retrofit2.Call
+import retrofit2.http.*
 
 interface memes {
 //To use pagination, we need to create data sources
@@ -33,20 +35,38 @@ interface memes {
     ): retrofit2.Response<memeTemplateApiResponse>
 
     //Get memes of home
-    @GET("5ebd67338284f36af7bb1f5b")
-    suspend fun fetchEditableMemes(
+
+
+    //Memes of Home
+    @POST("api/meme/ongoing")
+    fun fetchEditableMemes(
         @Query("limit") loadSize: Int = 30,
-        @Query("after") after: String? = null,
-        @Query("before") before: String? = null
-    ): retrofit2.Response<homeMemeApiResponse>
+        @Header("Authorization") accessToken: String?
+    ): Call<homeMemeApiResponse>
+
+    //Get search suggestions
+    @POST("api/meme/autocomplete")
+    fun getSuggestions(
+        @Header("Authorization") accessToken: String?
+        , @Body info: searchBody
+    ): Call<SearchResponse>
 
 
-    //Get the Explore Fragment Memes
-    @GET("")
-    suspend fun fetchExploreMemes(): Response<List<ExploreMemes>>
+    //Get the memes of the memeWorld
+    @POST("api/meme/complete")
+    fun fetchMemeWorldMemes(
+        @Query("limit") loadSize: Int = 30,              //Test it with this value
+        @Header("Authorization") accessToken: String?
+    ): Call<memeApiResponses>
 
 
-
+    //Like or dislike a meme
+    @Headers("Content-Type:application/json")
+    @POST("api/meme/like")
+    fun likeMeme(
+        @Body memeId: String,
+        @Header("Authorization") accessToken: String?
+    ): Call<LikeOrNotResponse>
 
 
 }

@@ -1,5 +1,7 @@
 package com.example.memej.ui.home
 
+//import com.example.memej.adapters.OnItemClickListenerHome
+//import com.example.memej.database.HomeMemeDataBase
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,14 +10,17 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.paging.DataSource
+import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.memej.R
 import com.example.memej.Utils.Communicator
 import com.example.memej.adapters.HomeMemeAdapter
 import com.example.memej.adapters.OnItemClickListenerHome
-import com.example.memej.entities.homeMeme
+import com.example.memej.dataSources.HomeMemeDataSource
+import com.example.memej.responses.homeMememResponses.Meme_Home
 
 class HomeFragment : Fragment(), OnItemClickListenerHome {
 
@@ -29,80 +34,127 @@ class HomeFragment : Fragment(), OnItemClickListenerHome {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        homeViewModel =
-            ViewModelProviders.of(this).get(HomeViewModel::class.java)
+
+//        homeViewModel =
+//            ViewModelProviders.of(this).get(HomeViewModel::class.java)
         root = inflater.inflate(R.layout.fragment_home, container, false)
 
-
+        Log.e("HomeFrag", "Initialzing the rv, adapter")
         rv = root.findViewById(R.id.rv_home)
-
-        //Initialize the adapter
         homeMemeAdapter = HomeMemeAdapter(this)
-//        Log.e("K", "RV Initialized")
-//        //Observe for changes
-        observeLiveData()
-        Log.e("K", "Returns from observe Live data")
 
-        //Get data
-        initializeList()
-        Log.e("K", "Returns from Initialized list")
+        Log.e("HomeFrag", homeMemeAdapter.itemCount.toString())
 
-        //Ovveride methods for onClick
-        //Initialze The communicator
+        //This is the method originally
+        initializingList()
+
+//        root.findViewById<SwipeRefreshLayout>(R.id.swl_home).setOnRefreshListener {
+//            initializingList()
+//            swl_home.isRefreshing = false
+//        }
+        Log.e("HF", "Doing Good")
+
         comm = activity as Communicator
 
 
         return root
     }
 
-    private fun observeLiveData() {
-        //observe live data emitted by view model
-        Log.e("K", "In OLD")
 
-        homeViewModel.getPosts().observe(viewLifecycleOwner, Observer {
-            homeMemeAdapter.submitList(it)
-        })
-    }
+    private fun initializingList() {
 
-    private fun initializeList() {
-        Log.e("K", "In IL")
+        Log.e("HF", "Initialzed config")
+        //Create Config
+        val config = PagedList.Config.Builder()
+            .setPageSize(30)
+            .setEnablePlaceholders(false)
+            .build()
 
-        rv.layoutManager = LinearLayoutManager(context)
-        rv.adapter = homeMemeAdapter
-    }
 
-    override fun onItemClicked(_homeMeme: homeMeme) {
-        //Get a lot of changes done
-        //1) Create a text box with the required texts
-        //Load the iamge into a dialog ( Something like that)
-        //Rendering commands stored in DisplayList
-        //Send it to the edit_meme_container_class
-        //Create a bundle to send everything
-        val b = bundleOf(
-            "image_url" to _homeMeme.img_url,
-            "memeGroupId" to _homeMeme.memeGroupId,
-            "memeId" to _homeMeme.memeId,
-            "timestamp" to _homeMeme.timestamp,
-            "tag" to _homeMeme.tag,
-            "memeCheckCount" to _homeMeme.memeCheckCount,
-            "num_tb" to _homeMeme.num_tb,
-            "x1" to _homeMeme.x1,
-            "y1" to _homeMeme.y1,
-            "x2" to _homeMeme.x2,
-            "y2" to _homeMeme.y2,
-            "c1" to _homeMeme.c1,
-            "c2" to _homeMeme.c2
-            //Implementation to get the profile as well
+        Log.e("HF", "Initialzed Live Data")
+
+        //Use Live Data
+        val liveData = initializedPagedListBuilder(config)?.build()
+        Log.e(
+            "HF",
+            "Retrunrs and gives live data" + liveData + " " + liveData?.value + " " + liveData.toString()
         )
 
-        //Change the color of the back activity to some
+        //Populate the adapter
 
-//        root.findNavController()
-//            .navigate(R.id.action_navigation_home_to_editMemeContainerFragment)
+        liveData?.observe(viewLifecycleOwner, Observer<PagedList<Meme_Home>> { pagedList ->
+            Log.e("HF", "In the observer")
+            Log.e(
+                "HF",
+                "VAlue sth paged list is given by {$pagedList}" + pagedList.dataSource + " " + pagedList.config + " " + pagedList.isDetached
+            )
 
-//        Pass this bundle
-        comm.passDataFromHome(b)
+            homeMemeAdapter.submitList(pagedList)
+        })
+
+        Log.e("HF", "Initialzed rv, adapter")
+        rv.layoutManager = LinearLayoutManager(context)
+        rv.adapter = homeMemeAdapter
+        Log.e("HF", "Is somewhere")
+
+
     }
+
+    private fun initializedPagedListBuilder(config: PagedList.Config?): LivePagedListBuilder<String, Meme_Home>? {
+
+        val dataSourceFactory = object : DataSource.Factory<String, Meme_Home>() {
+            override fun create(): DataSource<String, Meme_Home> {
+                Log.e("K", "in inialtialzed page list builder")
+
+                return HomeMemeDataSource(requireContext())
+            }
+        }
+        return config?.let { LivePagedListBuilder(dataSourceFactory, it) }
+    }
+
+    override fun onItemClicked(_homeMeme: Meme_Home) {
+        Log.e("HF", "Item Clicked")
+
+//        Toast.makeText(context, _homeMeme.users.toString(), Toast.LENGTH_LONG).show()
+        val bundle = bundleOf(
+            "id" to _homeMeme._id,
+            "lastUpdated" to _homeMeme.lastUpdated,
+            "numPlaceHolders" to _homeMeme.numPlaceholders,
+            "placeHolders" to _homeMeme.placeholders,
+            "stage" to _homeMeme.stage,
+            "tags" to _homeMeme.tags,
+            "users" to _homeMeme.users,
+            "templateIdCoordinates" to _homeMeme.templateId.coordinates,
+            "image" to _homeMeme.templateId.imageUrl,
+            "imageUrl" to _homeMeme.templateId._id,
+            "imageTags" to _homeMeme.templateId.tags,
+            "imageName" to _homeMeme.templateId.name
+
+        )
+        Log.e("HF", "" + _homeMeme.lastUpdated.toString())
+
+        Log.e("HF", "" + _homeMeme._id.toString())
+
+        Log.e("HF", "" + _homeMeme.templateId._id.toString())
+        Log.e("HF", "" + _homeMeme.templateId.imageUrl.toString())
+
+        comm.passDataFromHome(bundle)
+
+    }
+
+//With Room
+//    private fun initializedPagedListBuilder(config: PagedList.Config):
+//            LivePagedListBuilder<Int, Meme_Home> {
+//
+//        val database = HomeMemeDataBase.create(requireContext())
+//        val livePageListBuilder = LivePagedListBuilder<Int, Meme_Home>(
+//            database.postDao().posts(),
+//            config)
+//        //Attach a boundary callnack
+//       // livePageListBuilder.setBoundaryCallback(HomeMemeBoundaryCallback(database))
+//        return livePageListBuilder
+//    }
 
 
 }
+

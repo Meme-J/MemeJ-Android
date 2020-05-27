@@ -3,28 +3,37 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@id/homeFragment">
 
-    <!--    <fragment-->
-    <!--        android:id="@+id/navigation_home"-->
-    <!--        android:name="com.example.memej.ui.home.HomeFragment"-->
-    <!--        tools:layout="@layout/fragment_home" />-->
+
     <fragment
-        android:id="@+id/navigation_home"
+        android:id="@+id/homeFragment"
         android:name="com.example.memej.ui.home.HomeFragment"
+        android:label="Home"
         tools:layout="@layout/fragment_home">
         <action
-            android:id="@+id/action_navigation_home_to_editMemeContainerFragment"
-            app:destination="@id/editMemeContainerFragment">
-
-
-        </action>
+            android:id="@+id/action_homeFragment_to_editMemeContainerFragment"
+            app:destination="@id/editMemeContainerFragment"
+            app:enterAnim="@anim/fragment_close_enter"
+            app:exitAnim="@anim/fragment_close_exit"
+            app:launchSingleTop="true" />
     </fragment>
     <fragment
         android:id="@+id/editMemeContainerFragment"
+        android:label="Edit meme"
         android:name="com.example.memej.ui.home.EditMemeContainerFragment"
-        android:label="EditMemeContainerFragment"
-        tools:layout="@layout/edit_meme_container_fragment" />
+        tools:layout="@layout/edit_meme_container_fragment">
 
 
+    </fragment>
+    <fragment
+        android:id="@+id/exploreFragment"
+        android:name="com.example.memej.ui.explore.ExploreFragment"
+        android:label="Explore"
+        tools:layout="@layout/explore_fragment" />
+    <fragment
+        android:id="@+id/memeWorldFragment"
+        android:name="com.example.memej.ui.MemeWorld.MemeWorldFragment"
+        android:label="Meme World"
+        tools:layout="@layout/meme_world_fragment" />
 </navigation>

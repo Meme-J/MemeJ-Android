@@ -18,6 +18,13 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    sourceSets {
+        main {
+            assets.srcDirs = ['src/main/assets', 'src/main/assets/']
+            res.srcDirs = ['src/main/res', 'src/main/res/drawable']
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -130,6 +137,12 @@ dependencies {
     //Circular Image View
     implementation 'com.mikhaellopez:circularimageview:4.2.0'
 
+    def nav_version = "1.0.0-alpha05"
+    implementation "android.arch.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "android.arch.navigation:navigation-ui-ktx:$nav_version"
+    // Dynamic Feature Module Support
+//    implementation "androidx.navigation:navigation-dynamic-features-fragment:$nav_version"
+
     //navigation component
     implementation 'androidx.navigation:navigation-fragment-ktx:2.2.2'
     implementation 'androidx.navigation:navigation-ui-ktx:2.2.2'
@@ -144,4 +157,29 @@ dependencies {
     //GSON
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'com.squareup.retrofit2:converter-gson:2.6.2'
+
+
+    //BitBeauty
+    implementation 'com.github.wwdablu:bitbeauty:0.1.0'
+
+    //Expandable Card View
+    implementation 'com.alespero:expandable-cardview:0.6'
+
+    //Color Picker
+    implementation 'com.github.dhaval2404:colorpicker:1.0'
+
+    //Font Support
+    // compile "com.android.support:support-compat:28.0.0"
+
+    implementation "com.squareup.moshi:moshi-adapters:1.5.0"
+    implementation "com.squareup.moshi:moshi-kotlin:1.6.0"
+
+    //Timber
+    implementation 'com.jakewharton.timber:timber:4.7.1'
+
+    implementation 'com.squareup.moshi:moshi:1.8.0'
+    kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.8.0'
+
+    implementation 'com.mindorks:placeholderview:0.7.1'
+
 }

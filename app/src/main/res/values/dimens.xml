@@ -7,12 +7,21 @@
     <dimen name="splash_img_dim">80dp</dimen>
     <dimen name="heading_sizeLarge">28sp</dimen>
     <dimen name="text_size">18sp</dimen>
-    <dimen name="meme_templete_std_height">256dp</dimen>
+    <dimen name="meme_templete_std_height">300dp</dimen>
     <dimen name="edit_meme_card_height">600dp</dimen>
     <dimen name="edit_meme_card_width">350dp</dimen>
     <dimen name="edit_width">350px</dimen>
     <dimen name="edit_height">400px</dimen>
     <dimen name="add_line">240dp</dimen>
-    <dimen name="exp_card_width">350dp</dimen>
-    <dimen name="exp_card_height">500dp</dimen>
+    <dimen name="exp_card_width">320dp</dimen>
+    <dimen name="exp_card_height">540dp</dimen>
+    <dimen name="meme_worl_height">400dp</dimen>
+    <dimen name="meme_world_width">350dp</dimen>
+    <dimen name="std_height_settings">40dp</dimen>
+    <dimen name="image_profile_attr">120dp</dimen>
+    <dimen name="editHt">80dp</dimen>
+    <dimen name="btn_size">40dp</dimen>
+    <dimen name="util_size">30dp</dimen>
+    <dimen name="profile_icons">50dp</dimen>
+
 </resources>

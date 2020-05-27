@@ -1,5 +1,6 @@
 package com.example.memej.ui.memeTemplate
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
@@ -10,7 +11,7 @@ import androidx.paging.PagedList
 import com.example.memej.dataSources.MemeTemplateDataSource
 import com.example.memej.entities.memeTemplate
 
-class TemplateViewModel : ViewModel() {
+class TemplateViewModel(val context: Context) : ViewModel() {
 
 
     //This is the observer class
@@ -40,7 +41,7 @@ class TemplateViewModel : ViewModel() {
         Log.e("K", "in IPLB")
         val dataSourceFactory = object : DataSource.Factory<String, memeTemplate>() {
             override fun create(): DataSource<String, memeTemplate> {
-                return MemeTemplateDataSource(viewModelScope)
+                return MemeTemplateDataSource(viewModelScope, context)
             }
         }
         return LivePagedListBuilder(dataSourceFactory, config)

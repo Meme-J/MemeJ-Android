@@ -8,12 +8,14 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.memej.MainActivity
 import com.example.memej.R
 import com.example.memej.Utils.SaveSharedPreference
+import com.example.memej.Utils.SessionManager
 import com.example.memej.entities.LoginBody
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.LoginResponse
@@ -21,6 +23,7 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.textview.MaterialTextView
+import kotlinx.android.synthetic.main.activity_login.*
 import retrofit2.Call
 import retrofit2.Response
 
@@ -34,8 +37,8 @@ class LoginActivity : AppCompatActivity() {
     lateinit var etPassword: TextInputEditText
     lateinit var t1: TextInputLayout
     lateinit var t2: TextInputLayout
-
-    private val RC_SIGN_IN = 9001
+    lateinit var pb: ProgressBar
+    private lateinit var sessionManager: SessionManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,8 +51,8 @@ class LoginActivity : AppCompatActivity() {
         t1 = findViewById(R.id.tilUsername)
         t2 = findViewById(R.id.tilPassword)
 
-        val pb_login = findViewById<ProgressBar>(R.id.pb_login)
-
+        pb = findViewById(R.id.pb_login)
+        sessionManager = SessionManager(this)
         //Functions for Google SignIn
 //        val googleSignInOptions: GoogleSignInOptions = GoogleSignInOptions
 //            .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -75,6 +78,7 @@ class LoginActivity : AppCompatActivity() {
                 if (isNetworkConnected()) {
                     //Validate the network call
                     Log.e("K", "In Okay state")
+                    pb.visibility = View.VISIBLE
                     postLogin()
 
                 }
@@ -118,6 +122,8 @@ class LoginActivity : AppCompatActivity() {
                     t.message,
                     Toast.LENGTH_SHORT
                 ).show()
+                pb_login.visibility = View.GONE
+
             }
 
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
@@ -126,8 +132,24 @@ class LoginActivity : AppCompatActivity() {
                         .show()
                     //Set looged in status true
                     //Store the access token on every login
+                    //Get the access token on login
+                    sessionManager.saveAuth_access_Token(
+                        LoginResponse(
+                            response.body()!!.msg,
+                            response.body()!!.user
+                        ).user.accessToken
+                    )
+                    sessionManager.saveAuth_refresh_Token(
+                        (LoginResponse(
+                            response.body()!!.msg,
+                            response.body()!!.user
+                        )).user.refreshToken
+                    )
+
                     goToMainActivity()
                 } else {
+                    //Stop the spinner
+                    pb_login.visibility = View.GONE
                     Toast.makeText(this@LoginActivity, response.body()?.msg, Toast.LENGTH_SHORT)
                         .show()
 
@@ -137,6 +159,8 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun goToMainActivity() {
+        //Turn of the progress bar
+        pb.visibility = View.GONE
         SaveSharedPreference().setLoggedIn(applicationContext, true)
         val i = Intent(this, MainActivity::class.java)
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK)
