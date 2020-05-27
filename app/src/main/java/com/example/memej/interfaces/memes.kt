@@ -37,6 +37,7 @@ interface memes {
     //Get memes of home
 
 
+    //Memes of Home
     @POST("api/meme/ongoing")
     fun fetchEditableMemes(
         @Query("limit") loadSize: Int = 30,
@@ -54,12 +55,13 @@ interface memes {
     //Get the memes of the memeWorld
     @POST("api/meme/complete")
     fun fetchMemeWorldMemes(
-        @Query("limit") loadSize: Int = 5,              //Test it with this value
+        @Query("limit") loadSize: Int = 30,              //Test it with this value
         @Header("Authorization") accessToken: String?
     ): Call<memeApiResponses>
 
 
     //Like or dislike a meme
+    @Headers("Content-Type:application/json")
     @POST("api/meme/like")
     fun likeMeme(
         @Body memeId: String,

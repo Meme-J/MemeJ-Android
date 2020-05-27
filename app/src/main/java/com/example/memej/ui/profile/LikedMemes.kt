@@ -1,11 +1,10 @@
-package com.example.memej.ui.MemeWorld
+package com.example.memej.ui.profile
 
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -14,20 +13,21 @@ import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.memej.R
 import com.example.memej.Utils.Communicator
 import com.example.memej.adapters.MemeWorldAdapter
 import com.example.memej.adapters.OnItemClickListenerMemeWorld
-import com.example.memej.dataSources.MemeWorldDataSourcae
+import com.example.memej.dataSources.LikedMemesDataSource
 import com.example.memej.responses.memeWorldResponses.Meme_World
 
-class MemeWorldFragment : Fragment(), OnItemClickListenerMemeWorld {
+class LikedMemes : Fragment(), OnItemClickListenerMemeWorld {
 
     companion object {
-        fun newInstance() = MemeWorldFragment()
+        fun newInstance() = LikedMemes()
     }
 
-    private lateinit var memeWorldViewModel: MemeWorldViewModel
+    private lateinit var viewModel: LikedMemesViewModel
     private lateinit var rv: RecyclerView
     private lateinit var memeWorldAdapter: MemeWorldAdapter
     lateinit var root: View
@@ -37,37 +37,32 @@ class MemeWorldFragment : Fragment(), OnItemClickListenerMemeWorld {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        root = inflater.inflate(R.layout.meme_world_fragment, container, false)
+        root = inflater.inflate(R.layout.liked_memes_fragment, container, false)
+        //All will be like meme world
 
 
-        rv = root.findViewById(R.id.rv_memeWorld)
+        rv = root.findViewById(R.id.rv_likedMemes)
         memeWorldAdapter = MemeWorldAdapter(requireContext(), this)
 
         initializingList()
 
 
-//        val swl = root
-//            .findViewById<SwipeRefreshLayout>(R.id.swl_meme_world)
-//        swl.setOnRefreshListener {
-//
-//            initializingList()
-//
-//            swl.isRefreshing = false
-//        }
+        val swl = root
+            .findViewById<SwipeRefreshLayout>(R.id.swl_liked_memes)
+        swl.setOnRefreshListener {
+
+            initializingList()
+
+            swl.isRefreshing = false
+        }
 
         comm = activity as Communicator
 
 
+
+
         return root
     }
-
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        memeWorldViewModel = ViewModelProviders.of(this).get(MemeWorldViewModel::class.java)
-        // TODO: Use the ViewModel
-    }
-
 
     private fun initializingList() {
 
@@ -113,40 +108,24 @@ class MemeWorldFragment : Fragment(), OnItemClickListenerMemeWorld {
             override fun create(): DataSource<String, Meme_World> {
                 Log.e("K", "in inialtialzed page list builder")
 
-                return MemeWorldDataSourcae(requireContext())
+                return LikedMemesDataSource(requireContext())
             }
         }
         return config?.let { LivePagedListBuilder(dataSourceFactory, it) }
     }
 
-    override fun onItemClicked(_homeMeme: Meme_World) {
-        //Meme World Container
-        val bundle = bundleOf(
-            "id" to _homeMeme._id,
-            "lastUpdated" to _homeMeme.lastUpdated,
-            "likedBy" to _homeMeme.likedBy,
-            "likes" to _homeMeme.likes,
-            "placeholders" to _homeMeme.placeholders,
-            "meme" to _homeMeme.templateId.numPlaceholders,
-            "tags" to _homeMeme.tags,
-            "users" to _homeMeme.users,
-            "templateIdCoordinates" to _homeMeme.templateId.coordinates,
-            "imageUrl" to _homeMeme.templateId.imageUrl,
-            "imageTags" to _homeMeme.templateId.tags,
-            "imageName" to _homeMeme.templateId.name,
-            "textSize" to _homeMeme.templateId.textSize,
-            "textColor" to _homeMeme.templateId.textColorCode
-        )
-        Log.e("HF", "" + _homeMeme.lastUpdated.toString())
 
-        Log.e("HF", "" + _homeMeme._id.toString())
-
-        Log.e("HF", "" + _homeMeme.templateId._id.toString())
-        Log.e("HF", "" + _homeMeme.templateId.imageUrl.toString())
-
-        comm.passDataToMemeWorld(bundle)
-
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        viewModel = ViewModelProviders.of(this).get(LikedMemesViewModel::class.java)
+        // TODO: Use the ViewModel
     }
 
+    override fun onItemClicked(_meme: Meme_World) {
+        //Check who has liked
+        Log.e("Liked Memes", _meme.templateId.name.toString())
+//        Log.e("Liked Memes", _meme.likedBy.toString())
+
+    }
 
 }

@@ -47,6 +47,14 @@ interface Auth {
         @Header("Authorization") accessToken: String?
     ): Call<ProfileResponse>
 
+
+    @POST("api/user/accessToken")
+    fun getAccessToken(
+        //USe Refresh token here            //Passed as String
+        @Body refreshToken: String
+    ): Call<LoginResponse>
+
+
     //Logout the user
 //    @POST("")
 //    fun logout(): Call<Void?>?

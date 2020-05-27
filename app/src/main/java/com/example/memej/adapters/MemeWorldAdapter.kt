@@ -22,9 +22,7 @@ import com.example.memej.Utils.DiffUtils.DiffUtilsMemeWorld
 import com.example.memej.Utils.SessionManager
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.LikeOrNotResponse
-import com.example.memej.responses.ProfileResponse
 import com.example.memej.responses.memeWorldResponses.Meme_World
-import com.example.memej.responses.memeWorldResponses.User
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.textview.MaterialTextView
 import retrofit2.Call
@@ -114,14 +112,14 @@ class MemeWorldAdapter(val context: Context, val itemClickListener: OnItemClickL
                 //Get instance for the username and id
 
                 //Function to get the user
-                getProfileOfUser(_meme)
+                //getProfileOfUser(_meme)
 
                 //Like the meme
-                memeLike.setOnClickListener {
+                itemView.findViewById<ImageView>(R.id.like_img).setOnClickListener {
                     //Like the meme
-                    Log.e("Like", "Like clicked")
 
-                    //For some reason, it is always returning null
+
+                    Log.e("Like Meme", "In Adapter Like")
                     service.likeMeme(
                         _meme._id,
                         accessToken = "Bearer ${sessionManager.fetchAcessToken()}"
@@ -129,7 +127,6 @@ class MemeWorldAdapter(val context: Context, val itemClickListener: OnItemClickL
                         .enqueue(object : Callback<LikeOrNotResponse> {
                             override fun onFailure(call: Call<LikeOrNotResponse>, t: Throwable) {
                                 //Not able to get
-
                                 Log.e("Like Fail", t.message.toString())
                             }
 
@@ -140,19 +137,20 @@ class MemeWorldAdapter(val context: Context, val itemClickListener: OnItemClickL
                                 //Get the response
                                 if (response.body()?.msg == "Meme unliked successfully.") {
 
-                                    _meme.likes = _meme.likes - 1
+                                    //Get the call the likes API
+//                                    _meme.likes = _meme.likes - 1
                                     memLikesNum.text = _meme.likes.toString()
                                     //Set drawable into working
                                     memeLike.setImageResource(R.drawable.ic_like_empty)
 
-                                    //Get user instance and convert it in mutable list
-                                    val likers: MutableList<User> = _meme.likedBy.toMutableList()
-                                    val u = getProfileOfUser(_meme)
-                                    likers.remove(u)
-                                    _meme.likedBy = likers.toList<User>()
-                                    Log.e("disLike Pass", response.body()?.msg.toString())
+//                                    //Get user instance and convert it in mutable list
+//                                    val likers: MutableList<User> = _meme.likedBy.toMutableList()
+//                                    val u = UserInstance(context)
+//                                    likers.remove(u)
+//                                    _meme.likedBy = likers.toList<User>()
+//                                    Log.e("disLike Pass", response.body()?.msg.toString())
                                 } else if (response.body()?.msg == "Meme liked successfully.") {
-                                    _meme.likes = _meme.likes + 1
+//                                    _meme.likes = _meme.likes + 1
                                     memLikesNum.text = _meme.likes.toString()
                                     memLikesNum.setTextColor(Color.RED)
                                     //Set drawable into working
@@ -161,12 +159,12 @@ class MemeWorldAdapter(val context: Context, val itemClickListener: OnItemClickL
                                     //Append the users list
                                     //Append in the user list of the ones who liked
                                     //Get user instance and convert it in mutable list
-                                    val likers: MutableList<User> = _meme.likedBy.toMutableList()
-                                    //Instance of users
-                                    val u = getProfileOfUser(_meme)
-                                    likers.add(u)
-                                    _meme.likedBy = likers.toList<User>()
-                                    Log.e("Like pass", response.body()?.msg.toString())
+//                                    val likers: MutableList<User> = _meme.likedBy.toMutableList()
+//                                    //Instance of users
+//                                    val u = getProfileOfUser(_meme)
+//                                    likers.add(u)
+//                                    _meme.likedBy = likers.toList<User>()
+//                                    Log.e("Like pass", response.body()?.msg.toString())
                                 }
 
                             }
@@ -181,55 +179,55 @@ class MemeWorldAdapter(val context: Context, val itemClickListener: OnItemClickL
             }
         }
 
-        private fun getProfileOfUser(_meme: Meme_World): User {
-
-            var username: String? = ""
-            var userId: String? = ""
-
-            apiservice.getUser(accessToken = "Bearer ${sessionManager.fetchAcessToken()}")
-                .enqueue(object : Callback<ProfileResponse> {
-                    override fun onFailure(call: Call<ProfileResponse>, t: Throwable) {
-                        Log.e("MW", "Van not get profile, loaded default")
-
-                        memLikesNum.text = _meme.likes.toString()
-                        memeLike.setImageResource(R.drawable.ic_like_empty)
-                    }
-
-                    override fun onResponse(
-                        call: Call<ProfileResponse>,
-                        response: Response<ProfileResponse>
-                    ) {
-                        Log.e("MW", "Profile")
-
-                        //Get the id, username
-                        val u = User(
-                            response.body()?.id.toString(),
-                            response.body()?.username.toString()
-                        )
-
-                        username = response.body()?.id.toString()
-                        userId = response.body()?.username.toString()
-
-                        if (_meme.likedBy.contains(u)) {
-                            Log.e("MW", "has liked")
-
-                            //Already liked by the person
-                            memLikesNum.text = _meme.likes.toString()
-                            memLikesNum.setTextColor(Color.RED)
-                            //Set drawable into working
-                            memeLike.setImageResource(R.drawable.ic_favorite)
-                        } else {
-                            memLikesNum.text = _meme.likes.toString()
-                            Log.e("MW", "hasnt liked")
-
-                            memeLike.setImageResource(R.drawable.ic_like_empty)
-                        }
-
-                    }
-                })
-            //return user
-            return User(userId.toString(), username.toString())
-        }
+//        private fun getProfileOfUser(_meme: Meme_World): User {
+//
+//            var username: String? = ""
+//            var userId: String? = ""
+//
+//            apiservice.getUser(accessToken = "Bearer ${sessionManager.fetchAcessToken()}")
+//                .enqueue(object : Callback<ProfileResponse> {
+//                    override fun onFailure(call: Call<ProfileResponse>, t: Throwable) {
+//                        Log.e("MW", "Van not get profile, loaded default")
+//
+//                        memLikesNum.text = _meme.likes.toString()
+//                        memeLike.setImageResource(R.drawable.ic_like_empty)
+//                    }
+//
+//                    override fun onResponse(
+//                        call: Call<ProfileResponse>,
+//                        response: Response<ProfileResponse>
+//                    ) {
+//                        Log.e("MW", "Profile")
+//
+//                        //Get the id, username
+//                        val u = User(
+//                            response.body()?._id.toString(),
+//                            response.body()?.username.toString()
+//                        )
+//
+//                        username = response.body()?._id.toString()
+//                        userId = response.body()?.username.toString()
+//
+//                        if (_meme.likedBy.contains(u)) {
+//                            Log.e("MW", "has liked")
+//
+//                            //Already liked by the person
+//                            memLikesNum.text = _meme.likes.toString()
+//                            memLikesNum.setTextColor(Color.RED)
+//                            //Set drawable into working
+//                            memeLike.setImageResource(R.drawable.ic_favorite)
+//                        } else {
+//                            memLikesNum.text = _meme.likes.toString()
+//                            Log.e("MW", "hasnt liked")
+//
+//                            memeLike.setImageResource(R.drawable.ic_like_empty)
+//                        }
+//
+//                    }
+//                })
+//            //return user
+//            return User(userId.toString(), username.toString())
+//        }
 
 
         private fun getCompleteImage(bitmap: Bitmap?, canvas: Canvas, _meme: Meme_World) {

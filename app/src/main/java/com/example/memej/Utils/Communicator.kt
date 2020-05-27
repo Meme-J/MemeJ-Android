@@ -8,4 +8,6 @@ interface Communicator {
 
     fun passDataToMemeWorld(bundle: Bundle)
 
+    fun goToLikedMemesPage()
+
 }

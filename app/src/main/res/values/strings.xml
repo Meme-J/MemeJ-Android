@@ -19,7 +19,6 @@
     <string name="name_length">Name should be between 2 to 20 characters</string>
     <string name="pwd_length_min">Password must be at least 6 characters</string>
     <string name="pwd_length_max">Password can not be greater than 16 characters</string>
-    <string name="name">Name</string>
     <string name="search">Search</string>
     <string name="image_tag">#Image Tag</string>
     <string name="my_memes">My memes</string>
@@ -49,6 +48,7 @@
     <string name="swipe_to_get_next">Swipe to get next</string>
     <string name="settings">Settings</string>
     <string name="username">Username</string>
+    <string name="name">Name</string>
 
 
     <string-array name="testSearch">

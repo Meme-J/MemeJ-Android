@@ -108,8 +108,6 @@ class LoginActivity : AppCompatActivity() {
 
     private fun postLogin() {
         //Account id = sth
-        val tokenA: String
-        val tokenR: String
         val service = RetrofitClient.getAuthInstance()
         val inf = LoginBody(
             etUsername.text.toString(),

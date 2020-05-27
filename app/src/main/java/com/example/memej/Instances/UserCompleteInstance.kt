@@ -5,12 +5,10 @@ import android.util.Log
 import com.example.memej.Utils.SessionManager
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.ProfileResponse
-import com.example.memej.responses.memeWorldResponses.User
 import retrofit2.Call
-import retrofit2.Callback
 import retrofit2.Response
 
-fun UserInstance(context: Context): User {
+fun UserCompleteInstance(context: Context): ProfileResponse.Profile {
 
 
     val apiservice = RetrofitClient.getAuthInstance()
@@ -19,10 +17,12 @@ fun UserInstance(context: Context): User {
 
     var username: String? = ""
     var userId: String? = ""
+    var name: String? = ""
+    var email: String? = ""
 
     apiservice.getUser(accessToken = "Bearer ${sessionManager.fetchAcessToken()}")
         .enqueue(
-            object : Callback<ProfileResponse> {
+            object : retrofit2.Callback<ProfileResponse> {
                 override fun onFailure(call: Call<ProfileResponse>, t: Throwable) {
                     Log.e("MW", "Van not get profile, loaded default")
 
@@ -32,21 +32,21 @@ fun UserInstance(context: Context): User {
                     call: Call<ProfileResponse>,
                     response: Response<ProfileResponse>
                 ) {
-                    Log.e("MW", "Profile")
 
                     //Get the id, username
-                    val u = User(
-                        response.body()?.profile?._id.toString(),
-                        response.body()?.profile?.username.toString()
-                    )
 
                     username = response.body()?.profile?._id.toString()
                     userId = response.body()?.profile?.username.toString()
-
-
+                    name = response.body()?.profile?.name.toString()
+                    email = response.body()?.profile?.email.toString()
                 }
             })
 
-    return User(userId.toString(), username.toString())
+    return ProfileResponse.Profile(
+        userId.toString(),
+        username.toString(),
+        name.toString(),
+        email.toString()
+    )
 }
 

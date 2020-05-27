@@ -5,9 +5,10 @@
     android:layout_height="match_parent"
     tools:context=".ui.myMemes.MyMemesFragment">
 
-    <TextView
-        android:layout_width="match_parent"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_my_memes"
         android:layout_height="match_parent"
-        android:text="Hello" />
-
+        android:layout_width="match_parent"
+        android:layout_margin="@dimen/margins"
+        tools:listitem="@layout/card_meme_world" />
 </FrameLayout>

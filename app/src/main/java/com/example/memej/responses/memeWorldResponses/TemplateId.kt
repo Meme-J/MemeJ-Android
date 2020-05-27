@@ -5,8 +5,7 @@ import com.squareup.moshi.Json
 data class TemplateId(
     @Json(name = "coordinates")
     val coordinates: List<Coordinate>,
-    @Json(name = "_id")
-    val id: String, // 5ebd5e6a5a360f3999c998a8
+    val _id: String, // 5ebd5e6a5a360f3999c998a8
     @Json(name = "imageUrl")
     val imageUrl: String, // image.com
     @Json(name = "name")

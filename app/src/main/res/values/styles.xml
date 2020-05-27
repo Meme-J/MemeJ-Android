@@ -8,6 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+
     <!--    <style name="DefaultStyle">-->
     <!--        <item name="android:background">@color/background_color</item>-->
     <!--        <item name="android:layout_gravity">center</item>-->

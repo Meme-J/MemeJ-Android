@@ -24,7 +24,7 @@
                     android:layout_height="match_parent"
                     android:layout_margin="@dimen/margins"
                     android:elevation="40dp"
-                    app:cardCornerRadius="@dimen/margins">
+                    app:cardCornerRadius="16dp">
 
 
                     <LinearLayout
@@ -89,8 +89,8 @@
 
                                 <ImageView
                                     android:id="@+id/like_completed_meme_btn"
-                                    android:layout_width="50dp"
-                                    android:layout_height="50dp"
+                                    android:layout_width="@dimen/util_size"
+                                    android:layout_height="@dimen/util_size"
                                     android:elevation="0dp"
                                     android:src="@drawable/ic_like_empty" />
 
@@ -106,16 +106,16 @@
 
                             <Button
                                 android:id="@+id/share_completed_meme"
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
+                                android:layout_width="@dimen/util_size"
+                                android:layout_height="@dimen/util_size"
                                 android:layout_marginStart="16dp"
                                 android:background="@drawable/ic_share"
                                 android:elevation="0dp" />
 
                             <Button
                                 android:id="@+id/download_completed_meme"
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
+                                android:layout_width="@dimen/util_size"
+                                android:layout_height="@dimen/util_size"
                                 android:layout_marginStart="16dp"
                                 android:background="@drawable/ic_arrow_downward_black_24dp"
                                 android:elevation="0dp" />

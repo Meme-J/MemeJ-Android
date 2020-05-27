@@ -27,6 +27,7 @@ import com.example.memej.ui.home.EditMemeContainerFragment
 import com.example.memej.ui.home.HomeFragment
 import com.example.memej.ui.home.SettingsScreen
 import com.example.memej.ui.myMemes.MyMemesFragment
+import com.example.memej.ui.profile.LikedMemes
 import com.example.memej.ui.profile.ProfileFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -180,6 +181,15 @@ class MainActivity : AppCompatActivity(), Communicator {
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
         transaction.commit()
 
+    }
+
+    override fun goToLikedMemesPage() {
+        val transaction = this.supportFragmentManager.beginTransaction()
+        val frag2 = LikedMemes()
+        transaction.replace(R.id.container, frag2)
+        transaction.addToBackStack(null)
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+        transaction.commit()
     }
 
 }

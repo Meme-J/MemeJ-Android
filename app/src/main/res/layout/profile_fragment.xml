@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--//Create a data class to store this as well-->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="?attr/actionBarSize"
     android:layout_marginBottom="56dp">
 
     <!--    /Image View For Profile-->
@@ -41,12 +42,15 @@
         android:id="@+id/username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
         android:gravity="center"
-        android:text="Username"
+        android:layout_marginTop="@dimen/margins"
+        android:text="@string/username"
         android:textColor="@color/black"
         android:textSize="24sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <com.google.android.material.textview.MaterialTextView
@@ -54,25 +58,85 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/username"
+        android:layout_marginTop="@dimen/margins"
         android:gravity="center"
-        android:text="Name"
+        android:text="@string/name"
         android:textSize="24sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/username"
+        tools:layout_editor_absoluteY="45dp" />
 
     <View
         android:id="@+id/v1"
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:layout_below="@id/name"
-        android:layout_marginStart="@dimen/margins"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="@dimen/margins"
+        android:layout_marginTop="@dimen/margins"
         android:background="@color/black"
-        android:padding="@dimen/margins" />
+        android:padding="@dimen/margins"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/name"
+        tools:layout_editor_absoluteY="90dp" />
 
-    <com.google.android.material.textview.MaterialTextView
+    <ImageView
+        android:id="@+id/likedMemes"
+        android:layout_width="@dimen/profile_icons"
+        android:layout_height="@dimen/profile_icons"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="38dp"
+        app:layout_constraintStart_toEndOf="@+id/totaLikes"
+        app:layout_constraintTop_toBottomOf="@+id/v1"
+        app:srcCompat="@drawable/ic_star_black_24dp" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="@dimen/profile_icons"
+        android:layout_height="@dimen/profile_icons"
+        android:layout_marginTop="38dp"
+        android:layout_marginEnd="40dp"
+        app:layout_constraintEnd_toStartOf="@+id/totaLikes"
+        app:layout_constraintTop_toBottomOf="@+id/v1"
+        app:srcCompat="@drawable/ic_my_drafts" />
+
+    <ImageView
+        android:id="@+id/totaLikes"
+        android:layout_width="@dimen/profile_icons"
+        android:layout_height="@dimen/profile_icons"
+        android:layout_marginTop="38dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/v1"
+        app:srcCompat="@drawable/ic_favorite" />
+
+    <TextView
+        android:id="@+id/textViewTotalMemes"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="21dp"
+        android:layout_marginEnd="80dp"
+        android:gravity="center"
+        android:text="@string/_0"
+        android:textSize="@dimen/text_size"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/textViewTotalLikes"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
 
-</RelativeLayout>
+    <TextView
+
+        android:id="@+id/textViewTotalLikes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="21dp"
+        android:text="@string/_0"
+        android:textSize="@dimen/text_size"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/totaLikes" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

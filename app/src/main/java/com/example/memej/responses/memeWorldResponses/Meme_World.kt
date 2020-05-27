@@ -10,7 +10,7 @@ data class Meme_World(
     @Json(name = "lastUpdated")
     val lastUpdated: String, // 2020-05-17T14:48:52.261Z
     @Json(name = "likedBy")
-    var likedBy: List<User>,
+    val likedBy: List<User>,
     @Json(name = "likes")
     var likes: Int, // 0
     @Json(name = "placeholders")

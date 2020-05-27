@@ -15,14 +15,12 @@ import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.memej.R
 import com.example.memej.Utils.Communicator
 import com.example.memej.adapters.HomeMemeAdapter
 import com.example.memej.adapters.OnItemClickListenerHome
 import com.example.memej.dataSources.HomeMemeDataSource
 import com.example.memej.responses.homeMememResponses.Meme_Home
-import kotlinx.android.synthetic.main.fragment_home.*
 
 class HomeFragment : Fragment(), OnItemClickListenerHome {
 
@@ -50,10 +48,10 @@ class HomeFragment : Fragment(), OnItemClickListenerHome {
         //This is the method originally
         initializingList()
 
-        root.findViewById<SwipeRefreshLayout>(R.id.swl_home).setOnRefreshListener {
-            initializingList()
-            swl_home.isRefreshing = false
-        }
+//        root.findViewById<SwipeRefreshLayout>(R.id.swl_home).setOnRefreshListener {
+//            initializingList()
+//            swl_home.isRefreshing = false
+//        }
         Log.e("HF", "Doing Good")
 
         comm = activity as Communicator
@@ -83,6 +81,7 @@ class HomeFragment : Fragment(), OnItemClickListenerHome {
         )
 
         //Populate the adapter
+
         liveData?.observe(viewLifecycleOwner, Observer<PagedList<Meme_Home>> { pagedList ->
             Log.e("HF", "In the observer")
             Log.e(
@@ -127,7 +126,7 @@ class HomeFragment : Fragment(), OnItemClickListenerHome {
             "users" to _homeMeme.users,
             "templateIdCoordinates" to _homeMeme.templateId.coordinates,
             "image" to _homeMeme.templateId.imageUrl,
-            "imageUrl" to _homeMeme.templateId.id,
+            "imageUrl" to _homeMeme.templateId._id,
             "imageTags" to _homeMeme.templateId.tags,
             "imageName" to _homeMeme.templateId.name
 
@@ -135,6 +134,10 @@ class HomeFragment : Fragment(), OnItemClickListenerHome {
         Log.e("HF", "" + _homeMeme.lastUpdated.toString())
 
         Log.e("HF", "" + _homeMeme._id.toString())
+
+        Log.e("HF", "" + _homeMeme.templateId._id.toString())
+        Log.e("HF", "" + _homeMeme.templateId.imageUrl.toString())
+
         comm.passDataFromHome(bundle)
 
     }
