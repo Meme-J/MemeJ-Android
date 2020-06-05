@@ -9,11 +9,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.memej.R
 import com.example.memej.Utils.DiffUtils.DiffUtilsMemeGroup
-import com.example.memej.entities.memeGroup
+import com.example.memej.responses.template.EmptyTemplateResponse
 import com.google.android.material.imageview.ShapeableImageView
 
 class MemeGroupAdapter(val itemClickListener: OnItemClickListenerTemplate) :
-    PagedListAdapter<memeGroup, MemeGroupAdapter.MyViewHolder>(DiffUtilsMemeGroup()) {
+    PagedListAdapter<EmptyTemplateResponse.Template, MemeGroupAdapter.MyViewHolder>(
+        DiffUtilsMemeGroup()
+    ) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.card_meme_template, parent, false)
@@ -33,15 +35,17 @@ class MemeGroupAdapter(val itemClickListener: OnItemClickListenerTemplate) :
         val memeGroupImage = itemView.findViewById<ShapeableImageView>(R.id.cv_memeGroup)
 
 
-        fun bindPost(_memeGroup: memeGroup, clickListener: OnItemClickListenerTemplate) {
+        fun bindPost(
+            _memeGroup: EmptyTemplateResponse.Template,
+            clickListener: OnItemClickListenerTemplate
+        ) {
 
             with(_memeGroup) {
-                memeGroupTag.text = tag
+                memeGroupTag.text = tags.toString()
                 //Load image
                 //This is where the glide is loaded
                 Glide.with(itemView)
-                    .load(img_url)
-                    .centerCrop()
+                    .load(_memeGroup.imageUrl)
                     .into(memeGroupImage)
 
                 itemView.setOnClickListener {
@@ -55,7 +59,7 @@ class MemeGroupAdapter(val itemClickListener: OnItemClickListenerTemplate) :
 }
 
 interface OnItemClickListenerTemplate {
-    fun onItemClickedForTemplate(_memeGroup: memeGroup)
+    fun onItemClickedForTemplate(_memeGroup: EmptyTemplateResponse.Template)
 }
 
 

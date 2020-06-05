@@ -25,6 +25,7 @@ import kotlinx.android.synthetic.main.activity_sign_up.*
 import retrofit2.Call
 import retrofit2.Response
 
+
 class SignUpActivity : AppCompatActivity() {
 
     lateinit var etName: TextInputEditText
@@ -89,18 +90,19 @@ class SignUpActivity : AppCompatActivity() {
     private fun postSignUp() {
         //Create instances
         val service = RetrofitClient.getAuthInstance()
+
         val regInfo = UserBody(
             etName.text.toString(),
             etUserame.text.toString(),
             etEmail.text.toString(),
             etPassword.text.toString()
         )
-        Log.e("SignUp", regInfo.toString())
+        Log.e("SignUp inf ", regInfo.toString())
 
         service.createUser(regInfo).enqueue(object : retrofit2.Callback<SignUpResponse> {
             override fun onFailure(call: Call<SignUpResponse>, t: Throwable) {
                 Toast.makeText(this@SignUpActivity, t.message.toString(), Toast.LENGTH_SHORT).show()
-                Log.e("signUp", t.message.toString())
+                Log.e("signUp failed", t.message.toString() + "In faiure")
                 pb.visibility = View.GONE
             }
 
@@ -108,43 +110,43 @@ class SignUpActivity : AppCompatActivity() {
                 call: Call<SignUpResponse>,
                 response: Response<SignUpResponse>
             ) {
+
                 if (response.body()?.msg == "Registeration successful") {
-                    //Code for successful creation of user
-                    Log.e("signUp", response.body()!!.msg.toString())
                     Toast.makeText(
                         this@SignUpActivity,
                         "Registration Successful",
                         Toast.LENGTH_SHORT
                     ).show()
-                    //GEt the access token and the id
-                    //Save the acess tokens
-//                    sessionManager.saveAuth_access_Token(
-//                        SignUpResponse(
-//                            response.body()!!.msg,
-//                            response.body()!!.user
-//                        ).user.accessToken
-//                    )
-//                    sessionManager.saveAuth_refresh_Token(
-//                        (LoginResponse(
-//                            response.body()!!.msg,
-//                            response.body()!!.user
-//                        )).user.refreshToken
-//                    )
 
                     goToLoginActivity()
                 } else {
 
-                    Toast.makeText(this@SignUpActivity, response.body()?.msg, Toast.LENGTH_SHORT)
-                        .show()
-                    Log.e(
-                        "signUp",
-                        response.message() + response.body()?.msg + response.errorBody().toString()
-                    )
+                    if (response.body()?.msg != null) {
+                        Toast.makeText(
+                            this@SignUpActivity,
+                            response.body()?.msg.toString(),
+                            Toast.LENGTH_SHORT
+                        )
+                            .show()
+                    } else {
+                        Log.e(
+                            "SIGN UP RESP",
+                            response.body().toString() + response.body()?.msg + response.errorBody()
+                                .toString()
+                        )
+                        Toast.makeText(
+                            this@SignUpActivity,
+                            "Unable to create account at the moment",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
                     pb.visibility = View.GONE
                 }
 
             }
-        })
+        }
+        )
 
 
     }

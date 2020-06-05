@@ -46,15 +46,6 @@ class MemeWorldFragment : Fragment(), OnItemClickListenerMemeWorld {
         initializingList()
 
 
-//        val swl = root
-//            .findViewById<SwipeRefreshLayout>(R.id.swl_meme_world)
-//        swl.setOnRefreshListener {
-//
-//            initializingList()
-//
-//            swl.isRefreshing = false
-//        }
-
         comm = activity as Communicator
 
 

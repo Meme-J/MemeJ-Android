@@ -1,20 +1,36 @@
 package com.example.memej.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.memej.R
-import com.example.memej.responses.memeWorldResponses.SuggestionsResponse
+import com.example.memej.responses.SearchResponse
 import com.google.android.material.textview.MaterialTextView
 
-class SearchAdapter : RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
+class SearchAdapter(val itemClickListener: onClickSearch) :
+    RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
 
-    var searchItems: List<SuggestionsResponse> = listOf()
+    var searchItems: List<SearchResponse.Suggestion> = listOf()
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         val sugH = itemView.findViewById<MaterialTextView>(R.id.tv_sug)
+
+        fun bindPost(_sug: SearchResponse.Suggestion, itemClickListener: onClickSearch) {
+            Log.e("Search Adapter", "In fun bind")
+
+            sugH.text = _sug.tag
+            Log.e("Search Adapter", "Assigned")
+
+            //Implement on Item Search
+            itemView.setOnClickListener {
+                itemClickListener.getSuggestion(_sug)
+            }
+
+        }
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -29,8 +45,22 @@ class SearchAdapter : RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.sugH.text = searchItems[position].tag
+
+        //get the thing
+        Log.e("Search Adapter", searchItems[position].tag + " " + position)
+        holder.bindPost(searchItems[position], itemClickListener)
+    }
+
+    fun setAdapterSearch(suggestion: List<SearchResponse.Suggestion>) {
+        this.searchItems = suggestion
+        notifyDataSetChanged()
     }
 
 
 }
+
+
+interface onClickSearch {
+    fun getSuggestion(_sug: SearchResponse.Suggestion)
+}
+

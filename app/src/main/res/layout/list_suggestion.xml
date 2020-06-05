@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--<layout>-->
+
+<!--    <data>-->
+
+<!--        <variable-->
+<!--            name="model"-->
+<!--            type="com.example.memej.responses.SearchResponse.Suggestion"/>-->
+
+<!--    </data>-->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="true"
     android:backgroundTint="@color/colorPrimary">
 
     <com.google.android.material.textview.MaterialTextView
@@ -10,8 +22,8 @@
         android:layout_height="40dp"
         android:layout_margin="@dimen/margins"
         android:padding="@dimen/margins"
-        android:text="@string/app_name"
+        android:text="@string/suggestion"
         android:textColor="@color/black" />
 
 
-</RelativeLayout>
+</RelativeLayout><!--</layout>-->

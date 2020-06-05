@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/rel_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginTop="?attr/actionBarSize"
     android:layout_marginBottom="56dp">
 
+    <ProgressBar
+        android:id="@+id/pb_edit_fragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
 
     <androidx.cardview.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="@dimen/edit_meme_card_width"
@@ -14,6 +22,7 @@
         android:layout_margin="12dp"
         android:elevation="40dp"
         app:cardCornerRadius="@dimen/margins">
+
 
         <ScrollView
             android:layout_width="match_parent"
@@ -25,23 +34,26 @@
                 android:layout_margin="@dimen/margins"
                 android:orientation="vertical">
 
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/userPost_edit"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_edit_user"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:maxLines="4"
-                    android:text="@string/users" />
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                    tools:listitem="@layout/layout_user" />
 
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tagPost_edit"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_edit_tag"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margins"
-                    android:layout_marginBottom="@dimen/margins"
-                    android:text="@string/memetag"
-                    android:textSize="@dimen/text_size" />
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                    tools:listitem="@layout/layout_user" />
+
 
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
@@ -50,13 +62,24 @@
                     android:elevation="4dp"
                     app:cardCornerRadius="@dimen/margins">
 
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp">
 
-                    <com.google.android.material.imageview.ShapeableImageView
-                        android:id="@+id/imagePostEdit"
-                        android:layout_width="@dimen/meme_templete_std_height"
-                        android:layout_height="@dimen/meme_templete_std_height"
-                        android:layout_centerInParent="true" />
+                        <ProgressBar
+                            android:id="@+id/loading_panel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:indeterminate="true" />
 
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:id="@+id/imagePostEdit"
+                            android:layout_width="@dimen/meme_templete_std_height"
+                            android:layout_height="@dimen/meme_templete_std_height"
+                            android:layout_centerInParent="true" />
+
+                    </RelativeLayout>
 
                 </com.google.android.material.card.MaterialCardView>
 
@@ -69,26 +92,26 @@
                     android:text="@string/sample_timestamp" />
 
                 <!--                Style Picker-->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/margins"
-                    android:orientation="horizontal">
+                <!--                <LinearLayout-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:layout_margin="@dimen/margins"-->
+                <!--                    android:orientation="horizontal">-->
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/choose_color"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/margins"
-                        android:text="@string/choose_color" />
+                <!--                    <com.google.android.material.textview.MaterialTextView-->
+                <!--                        android:id="@+id/choose_color"-->
+                <!--                        android:layout_width="wrap_content"-->
+                <!--                        android:layout_height="wrap_content"-->
+                <!--                        android:layout_margin="@dimen/margins"-->
+                <!--                        android:text="@string/choose_color" />-->
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/choose_font"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/margins"
-                        android:text="@string/choose_font" />
-                </LinearLayout>
+                <!--                    <com.google.android.material.textview.MaterialTextView-->
+                <!--                        android:id="@+id/choose_font"-->
+                <!--                        android:layout_width="wrap_content"-->
+                <!--                        android:layout_height="wrap_content"-->
+                <!--                        android:layout_margin="@dimen/margins"-->
+                <!--                        android:text="@string/choose_font" />-->
+                <!--                </LinearLayout>-->
 
 
                 <RelativeLayout
@@ -123,16 +146,37 @@
 
                 </RelativeLayout>
 
-                <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                    android:id="@+id/auto_completeTag"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_insertedTags"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/margins"
-                    android:layout_marginTop="@dimen/margins"
-                    android:layout_marginBottom="16dp"
-                    android:hint="@string/add_a_tag" />
+                    tools:listitem="@layout/layout_tag" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/auto_completeTag"
+                        android:layout_width="@dimen/add_line"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margins"
+                        android:layout_marginTop="@dimen/margins"
+                        android:layout_marginBottom="16dp"
+                        android:hint="@string/add_a_tag" />
 
 
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/tag_edit"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_gravity="end"
+                        android:background="@drawable/ic_check_black_24dp"
+                        android:enabled="false"
+                        app:layout_constraintEnd_toEndOf="parent" />
+                </RelativeLayout>
             </LinearLayout>
         </ScrollView>
 

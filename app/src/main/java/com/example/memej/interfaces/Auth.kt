@@ -14,21 +14,9 @@ import retrofit2.http.POST
 interface Auth {
 
 
-    //Register
-    //@FormUrlEncoded
-//    @Headers("Content-Type:application/json")
-//    @POST("api/user/signup")
-//    fun createUser(
-//        @Field("name") name: String,
-//        @Field("username") username: String,
-//        @Field("email") email: String,
-//        @Field("password") pwd: String
-//
-//    ): Call<SignUpResponse>
-
-    //SignUo User
+    //SignUp User
     @Headers("Content-Type:application/json")
-    @POST("api/user/signup")
+    @POST("/api/user/signup")
     fun createUser(
         @Body info: UserBody
     ): Call<SignUpResponse>

@@ -7,7 +7,6 @@ import com.example.memej.Utils.TokenAuthenticator
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 object RetrofitClient {
@@ -28,15 +27,13 @@ object RetrofitClient {
     }
 
 
-
     fun getAuthInstance(): Auth {
         Log.e("Retrofit Client", " Auth ")
 
         return Retrofit.Builder()
-
-            .addConverterFactory(GsonConverterFactory.create())
-            .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .baseUrl(url)
+            .addConverterFactory(MoshiConverterFactory.create())
+            .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .build()
             .create(Auth::class.java)
     }

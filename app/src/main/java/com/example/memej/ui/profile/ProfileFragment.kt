@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
@@ -61,11 +60,11 @@ class ProfileFragment : Fragment() {
 
         //Get the total memes created.
 
-        root.findViewById<ImageView>(R.id.likedMemes).setOnClickListener {
-            // Run an api call
-            //Replace with the Liked Memes Fragment, where all the operations will take place like meme world feature
-            comm.goToLikedMemesPage()
-        }
+//        root.findViewById<ImageView>(R.id.likedMemes).setOnClickListener {
+//            // Run an api call
+//            //Replace with the Liked Memes Fragment, where all the operations will take place like meme world feature
+//            comm.goToLikedMemesPage()
+//        }
 
 
 
@@ -90,6 +89,7 @@ class ProfileFragment : Fragment() {
                         response.body()?.profile?.username
                     root.findViewById<MaterialTextView>(R.id.name).text =
                         response.body()?.profile?.name
+                    //   val db = context?.let { UserDatabase.create(it) }
 
                 }
             })

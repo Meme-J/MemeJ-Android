@@ -1,21 +1,21 @@
 package com.example.memej.ui.memeTemplate
 
-import android.content.Context
+import android.app.Application
 import android.util.Log
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import androidx.paging.DataSource
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.example.memej.dataSources.MemeGroupDataSource
-import com.example.memej.entities.memeGroup
+import com.example.memej.responses.template.EmptyTemplateResponse
 
-class SelectMemeGroupViewModel(val context: Context) : ViewModel() {
+class SelectMemeGroupViewModel(application: Application) : AndroidViewModel(application) {
 
 
     //This is the observer class
-    var postsLiveData: LiveData<PagedList<memeGroup>>
+    var postsLiveData: LiveData<PagedList<EmptyTemplateResponse.Template>>
+    var context = application.applicationContext
 
     init {
         Log.e("K", "in INIT Start")
@@ -29,18 +29,20 @@ class SelectMemeGroupViewModel(val context: Context) : ViewModel() {
         Log.e("K", "in INIT End")
     }
 
-    fun getPosts(): LiveData<PagedList<memeGroup>> = postsLiveData
+    fun getPosts(): LiveData<PagedList<EmptyTemplateResponse.Template>> = postsLiveData
 
 //      initializedPagedListBuilder fetches the
 //    pagedlist from our data source.
 //    In our viewmodel also we pass the viewModelScope to the PostsDataSource factory.
 
     private fun initializedPagedListBuilder(config: PagedList.Config):
-            LivePagedListBuilder<String, memeGroup> {
+            LivePagedListBuilder<String, EmptyTemplateResponse.Template> {
         Log.e("K", "in IPLB")
-        val dataSourceFactory = object : DataSource.Factory<String, memeGroup>() {
-            override fun create(): DataSource<String, memeGroup> {
-                return MemeGroupDataSource(viewModelScope, context)
+        val dataSourceFactory =
+            object : DataSource.Factory<String, EmptyTemplateResponse.Template>() {
+                override fun create(): DataSource<String, EmptyTemplateResponse.Template> {
+
+                    return MemeGroupDataSource(context)
             }
         }
         return LivePagedListBuilder(dataSourceFactory, config)
