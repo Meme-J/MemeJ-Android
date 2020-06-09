@@ -10,4 +10,8 @@ interface Communicator {
 
     fun goToLikedMemesPage()
 
+    fun goToMemesByTagPage(bundle: Bundle)
+
+    fun goBackToHomePage()
+
 }

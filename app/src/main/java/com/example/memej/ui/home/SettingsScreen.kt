@@ -26,6 +26,7 @@ class SettingsScreen : AppCompatActivity() {
             SaveSharedPreference().setLoggedIn(applicationContext, false)
             val i = Intent(this@SettingsScreen, LoginActivity::class.java)
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+            finishAffinity()
             startActivity(i)
 
 //            logout()

@@ -2,16 +2,22 @@ package com.example.memej.Utils.DiffUtils
 
 
 import androidx.recyclerview.widget.DiffUtil
-import com.example.memej.entities.memeGroup
+import com.example.memej.responses.template.EmptyTemplateResponse
 
-class DiffUtilsMemeGroup : DiffUtil.ItemCallback<memeGroup>() {
-    override fun areItemsTheSame(oldItem: memeGroup, newItem: memeGroup): Boolean {
-        return oldItem.memeGroupId == newItem.memeGroupId
+class DiffUtilsMemeGroup : DiffUtil.ItemCallback<EmptyTemplateResponse.Template>() {
+    override fun areItemsTheSame(
+        oldItem: EmptyTemplateResponse.Template,
+        newItem: EmptyTemplateResponse.Template
+    ): Boolean {
+        return oldItem._id == newItem._id
     }
 
-    override fun areContentsTheSame(oldItem: memeGroup, newItem: memeGroup): Boolean {
-        return oldItem.img_url == newItem.img_url
-                && oldItem.tag == newItem.tag
+    override fun areContentsTheSame(
+        oldItem: EmptyTemplateResponse.Template,
+        newItem: EmptyTemplateResponse.Template
+    ): Boolean {
+        return oldItem.imageUrl == newItem.imageUrl
+                && oldItem._id == newItem._id
     }
 
 }

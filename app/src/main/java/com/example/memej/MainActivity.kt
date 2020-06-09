@@ -4,6 +4,7 @@ import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.SearchView
@@ -13,25 +14,33 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.onNavDestinationSelected
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.memej.Utils.Communicator
 import com.example.memej.Utils.SessionManager
 import com.example.memej.adapters.SearchAdapter
+import com.example.memej.adapters.onClickSearch
+import com.example.memej.entities.searchBody
+import com.example.memej.interfaces.RetrofitClient
+import com.example.memej.responses.SearchResponse
 import com.example.memej.ui.MemeWorld.CompletedMemeActivity
 import com.example.memej.ui.MemeWorld.MemeWorldFragment
 import com.example.memej.ui.explore.ExploreFragment
 import com.example.memej.ui.home.EditMemeContainerFragment
 import com.example.memej.ui.home.HomeFragment
 import com.example.memej.ui.home.SettingsScreen
+import com.example.memej.ui.memeTemplate.SelectMemeTemplateActivity
+import com.example.memej.ui.memes.MemeByTag
 import com.example.memej.ui.myMemes.MyMemesFragment
 import com.example.memej.ui.profile.LikedMemes
 import com.example.memej.ui.profile.ProfileFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import retrofit2.Call
+import retrofit2.Response
 
-class MainActivity : AppCompatActivity(), Communicator {
+
+class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
 
     private fun openFragment(fragment: Fragment) {
         val transaction = supportFragmentManager.beginTransaction()
@@ -74,13 +83,23 @@ class MainActivity : AppCompatActivity(), Communicator {
 
     lateinit var sessionManager: SessionManager
     lateinit var rv: RecyclerView
-    lateinit var adapter: SearchAdapter
     lateinit var navController: NavController
+    lateinit var adapter: SearchAdapter
+
+    //Initialzie the toolbar
+    lateinit var toolbar: androidx.appcompat.widget.Toolbar
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val navView: BottomNavigationView = findViewById(R.id.nav_view)
 
+        //Set up the toolbar
+        toolbar = findViewById(R.id.toolbar_main)
+        setSupportActionBar(toolbar)
+
+
+        val navView: BottomNavigationView = findViewById(R.id.nav_view)
+        sessionManager = SessionManager(this)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(
@@ -92,44 +111,44 @@ class MainActivity : AppCompatActivity(), Communicator {
                 R.id.navigation_profile
             )
         )
-        //nav controller
-        navController = findNavController(R.id.nav_host_fragment)
-        setupActionBarWithNavController(navController, appBarConfiguration)
-        navView.setupWithNavController(navController)
 
-        //For opening the first time
-        //Default
+//        val host = NavHostFragment.create(R.navigation.mobile_navigation)
+        navController = findNavController(R.id.nav_host_fragment)
+        //Setting up the main activity navigation
+
+//        supportFragmentManager.beginTransaction().replace(R.id.container, host)
+//            .setPrimaryNavigationFragment(host).commit()
+
+
+        //Default Fragment
         if (savedInstanceState == null) {
             val fragment = HomeFragment()
             supportFragmentManager.beginTransaction()
                 .replace(R.id.container, fragment, fragment.javaClass.simpleName)
                 .commit()
         }
-
-
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+
+        //Initilaize th adapter of serach
+        adapter = SearchAdapter(this)
+        rv = findViewById(R.id.rv_suggestions)
+        rv.layoutManager = LinearLayoutManager(this)
+        rv.adapter = adapter
+
 
 
         //OnClickListener On FAB
-//        val fab: FloatingActionButton = findViewById(R.id.fab_add)
-//        fab.setOnClickListener {
-//            val i = Intent(this, SelectMemeTemplateActivity::class.java)
-//            startActivity(i)
-//
-//        }
+        val fab: FloatingActionButton = findViewById(R.id.fab_add)
+        fab.setOnClickListener {
+            val i = Intent(this, SelectMemeTemplateActivity::class.java)
+            startActivity(i)
 
-        //Top Settings Intent
-//        val btn_settings = findViewById<ShapeableImageView>(R.id.settings_btn)
-//        btn_settings.setOnClickListener {
-//            val i = Intent(this, SettingsScreen::class.java)
-//            startActivity(i)
-//        }
+        }
+
 
         //Function for passing data intent
         val frag = HomeFragment()
         supportFragmentManager.beginTransaction().replace(R.id.container, frag).commit()
-
-        //Implement search View
 
 
     }
@@ -137,28 +156,92 @@ class MainActivity : AppCompatActivity(), Communicator {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.top_options_menu, menu)
         // Associate searchable configuration with the SearchView
-        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        (menu!!.findItem(R.id.navigation_search).actionView as SearchView).apply {
-            setSearchableInfo(searchManager.getSearchableInfo(componentName))
-        }
 
-        val searchView = menu.findItem(R.id.navigation_search)
-        val settings = menu.findItem(R.id.settings_btn)
-        settings.onNavDestinationSelected(navController)
+
+        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        val searchView = menu!!.findItem(R.id.navigation_search).actionView as SearchView
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
+
+
+//Cursor Formation
+        // searchView.queryHint("Search")
+//
+//        val columNames =
+//            arrayOf(SearchManager.SUGGEST_COLUMN_TEXT_1)
+//        val viewIds = intArrayOf(android.R.id.text1)
+//         adap= SimpleCursorAdapter(
+//            this,
+//            android.R.layout.simple_list_item_1, null, columNames, viewIds
+//        )
+//        searchView.setOnSuggestionListener(getOnSuggestionClickListener())
+
+
+        searchView.setOnQueryTextListener(getOnQueryTextListener(this, adapter))
+
         return true
     }
+
+    private fun getOnQueryTextListener(
+        mainActivity: MainActivity,
+        adapter: SearchAdapter
+    ): SearchView.OnQueryTextListener? {
+        return object : SearchView.OnQueryTextListener {
+
+            //Separate method for this
+            override fun onQueryTextSubmit(s: String): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(s: String): Boolean {
+                if (s.length < 1) {
+                    return false            //When it is not Able fetch
+                }
+
+                Log.e("Search", s)
+                val service = RetrofitClient.makeCallsForMemes(this@MainActivity)
+                val body = searchBody(s, "ongoing")
+                service.getSuggestions(
+                    accessToken = "Bearer " + sessionManager.fetchAcessToken(),
+                    info = body
+                ).enqueue(object : retrofit2.Callback<SearchResponse> {
+                    override fun onFailure(call: Call<SearchResponse>, t: Throwable) {
+                        Log.e("Search", "Failded to load the serach suggestions")
+
+                    }
+
+                    override fun onResponse(
+                        call: Call<SearchResponse>,
+                        response: Response<SearchResponse>
+                    ) {
+                        Log.e("Searc ", "Resp" + response.body())
+                        adapter.setAdapterSearch(response.body()!!.suggestions)
+                        adapter.notifyDataSetChanged()
+                        rv.adapter = adapter
+                    }
+                })
+
+
+                return true
+            }
+        }
+    }
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val i = Intent(this, SettingsScreen::class.java)
 
         when (item.itemId) {
             R.id.settings_btn -> startActivity(i)
+
+
             else ->
                 return super.onOptionsItemSelected(item)
         }
         return true
     }
 
+
+    //Communicator Classes
     override fun passDataFromHome(bundle: Bundle) {
 
         val transaction = this.supportFragmentManager.beginTransaction()
@@ -192,4 +275,31 @@ class MainActivity : AppCompatActivity(), Communicator {
         transaction.commit()
     }
 
+    override fun goToMemesByTagPage(bundle: Bundle) {
+        val transaction = this.supportFragmentManager.beginTransaction()
+        val frag2 = MemeByTag()
+
+        frag2.arguments = bundle
+        transaction.replace(R.id.container, frag2)
+        transaction.addToBackStack(null)
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+        transaction.commit()
+
+    }
+
+    override fun goBackToHomePage() {
+        val transaction = this.supportFragmentManager.beginTransaction()
+        val frag2 = HomeFragment()
+        transaction.replace(R.id.container, frag2)
+        transaction.addToBackStack(null)
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+        transaction.commit()
+    }
+
+    override fun getSuggestion(_sug: SearchResponse.Suggestion) {
+        //OnClick Listener
+
+    }
+
 }
+

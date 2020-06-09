@@ -19,6 +19,12 @@ import com.example.memej.Utils.SessionManager
 import com.example.memej.entities.LoginBody
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.LoginResponse
+import com.google.android.gms.auth.api.Auth
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.auth.api.signin.GoogleSignInResult
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.SignInButton
+import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -28,7 +34,7 @@ import retrofit2.Call
 import retrofit2.Response
 
 
-class LoginActivity : AppCompatActivity() {
+class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedListener {
 
     //Instanec of Shared Preferences
 
@@ -39,6 +45,12 @@ class LoginActivity : AppCompatActivity() {
     lateinit var t2: TextInputLayout
     lateinit var pb: ProgressBar
     private lateinit var sessionManager: SessionManager
+
+
+    //parameters for google signIn
+    lateinit var signInBtn: SignInButton
+    lateinit var googleApiClient: GoogleApiClient
+    private val RC_SIGNIN = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,20 +65,26 @@ class LoginActivity : AppCompatActivity() {
 
         pb = findViewById(R.id.pb_login)
         sessionManager = SessionManager(this)
+
         //Functions for Google SignIn
-//        val googleSignInOptions: GoogleSignInOptions = GoogleSignInOptions
-//            .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-//            .requestEmail()
-//            .build()
+
+        val googleSignInOptions: GoogleSignInOptions = GoogleSignInOptions
+            .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestEmail()
+            .build()
+
+        ///Create the api for login
+        val service = RetrofitClient.getAuthInstance()
+        googleApiClient = GoogleApiClient.Builder(this).enableAutoManage(this, this)
+            .addApi(Auth.GOOGLE_SIGN_IN_API, googleSignInOptions).build()
+
+//        signInBtn = findViewById(R.id.google_login)
+//        signInBtn.setOnClickListener{
+//            val i = Auth.GoogleSignInApi.getSignInIntent(googleApiClient)
+//            startActivityForResult(i, RC_SIGNIN)
 //
-//        val mGoogleApiClient = GoogleSignIn.getClient(this, googleSignInOptions)
-
-
-//        val googleApiClient = GoogleApi
-//            .Builder(this)
-//            .enableAutoManage(this,GoogleApiClient.OnConnectionFailedListener())
-//            .addApi(Auth.GOOGLE_SIGN_IN_API, googleSignInOptions)
-//            .build()
+//            //Overridden method on activty result
+//        }
 
 
         //OnClick on the Login button
@@ -113,7 +131,7 @@ class LoginActivity : AppCompatActivity() {
             etUsername.text.toString(),
             etPassword.text.toString()
         )
-        Log.e("K", "In PL")
+        Log.e("login", "info" + inf.toString())
 
         service.loginUser(inf).enqueue(object : retrofit2.Callback<LoginResponse> {
             override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
@@ -126,7 +144,9 @@ class LoginActivity : AppCompatActivity() {
 
             }
 
+
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
+
                 if (response.body()?.msg == "Login successful.") {
                     Toast.makeText(this@LoginActivity, "Login successful", Toast.LENGTH_SHORT)
                         .show()
@@ -160,6 +180,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun goToMainActivity() {
         //Turn of the progress bar
+
         pb.visibility = View.GONE
         SaveSharedPreference().setLoggedIn(applicationContext, true)
         val i = Intent(this, MainActivity::class.java)
@@ -173,14 +194,23 @@ class LoginActivity : AppCompatActivity() {
 //      Log.d("ConnectionResult", connectionResult.toString())
 //    }
 
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
-//
-//        if (requestCode == RC_SIGN_IN) {
-//            val result: GoogleSignInResult? = Auth.GoogleSignInApi.getSignInResultFromIntent(data)
-//            handleSignInResult(result!!)
-//        }
-//    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == RC_SIGNIN) {
+            val result: GoogleSignInResult? = Auth.GoogleSignInApi.getSignInResultFromIntent(data)
+            if (result != null) {
+                if (result.isSuccess) {
+                    //Intent to the main activity with all the requirements
+
+                    goToMainActivity()
+                }
+
+            } else {
+                Toast.makeText(this, "Unable to login", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 //
 //    private fun handleSignInResult(signInResult: GoogleSignInResult) {
 //        if (signInResult.isSuccess) {
@@ -230,6 +260,10 @@ class LoginActivity : AppCompatActivity() {
         val networkCapabilities = connectivityManager.getNetworkCapabilities(activeNetwork)
         return networkCapabilities != null &&
                 networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+    }
+
+    override fun onConnectionFailed(p0: ConnectionResult) {
+        TODO("Not yet implemented")
     }
 
 

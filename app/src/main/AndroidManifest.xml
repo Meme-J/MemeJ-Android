@@ -10,21 +10,52 @@
 
     <application
         android:allowBackup="true"
-        tools:ignore="LockedOrientationActivity"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".ui.MemeWorld.CompletedMemeActivity"></activity>
-        <activity android:name=".ui.home.SettingsScreen" />
-        <activity android:name=".ui.auth.SignUpActivity" />
+        android:theme="@style/AppTheme"
+        tools:ignore="LockedOrientationActivity"
+        tools:replace="android:icon">
+        <activity android:name=".ui.profile.UserProfile"></activity>
+        <activity android:name=".ui.home.Searchable">
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:value=".MainActivity" />
+        </activity> <!-- <activity android:name=".ui.MemeWorld.CompletedMemeActivity" /> -->
+        <activity
+            android:name=".ui.home.SettingsScreen"
+            android:screenOrientation="portrait"
+            android:theme="@style/LoginSignUp"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.auth.SignUpActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/LoginSignUp"
+            android:windowSoftInputMode="adjustResize" />
+
         <activity android:name=".ui.memeTemplate.TemplateActivity" />
-        <activity android:name=".ui.memeTemplate.SelectMemeTemplateActivity" />
-        <activity android:name=".ui.auth.LoginActivity" />
+
+        <activity
+            android:name=".ui.memeTemplate.SelectMemeTemplateActivity"
+            android:label="Select Template"
+            android:screenOrientation="portrait"
+            android:theme="@style/DarkTheme"
+            android:windowSoftInputMode="adjustResize">
+
+        </activity>
+
+        <activity
+            android:name=".ui.auth.LoginActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/LoginSignUp"
+            android:windowSoftInputMode="adjustResize" />
+
+
         <activity
             android:name=".ui.auth.SplashScreen"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,22 +63,25 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
+            android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait"
-            android:parentActivityName=".MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.memej.MainActivity" />
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
-        </activity>
-
-        <!--        Provider for sharing-->
-
-
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.memej.MainActivity" />
+        </activity> <!-- Provider for sharing -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.memej.FileProvider"
@@ -55,9 +89,8 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
+                android:resource="@xml/file_paths" />
         </provider>
-
     </application>
 
 </manifest>

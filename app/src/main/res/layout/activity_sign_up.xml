@@ -108,6 +108,7 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/signUp_btn"
                     android:layout_width="100dp"
+                    app:cornerRadius="50dp"
                     android:layout_height="@dimen/btn_size"
                     android:layout_below="@id/tilPassword"
                     android:layout_marginTop="8dp"

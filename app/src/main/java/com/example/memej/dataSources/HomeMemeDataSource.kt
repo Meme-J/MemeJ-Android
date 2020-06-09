@@ -41,10 +41,8 @@ class HomeMemeDataSource(val context: Context) :
 
                     val homePosts = listing?.memes
                     Log.e("DATA SOURCE", "Home post object" + homePosts + " " + homePosts?.size)
-                    Log.e("DATA SOURCE", "Success 1 ")
 
                     if (homePosts != null) {
-                        Log.e("DATA SOURCE", "Homeposts is not null ")
 
                         callback.onResult(
 

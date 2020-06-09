@@ -10,5 +10,5 @@
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:layout_margin="@dimen/margins"
-        tools:listitem="@layout/card_meme_world" />
+        tools:listitem="@layout/card_home_meme" />
 </FrameLayout>

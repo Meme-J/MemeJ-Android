@@ -1,27 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/base_yellow"
     android:layout_marginTop="?attr/actionBarSize"
-    android:layout_marginBottom="56dp"
-    tools:context=".ui.explore.ExploreFragment">
+    tools:context=".MainActivity">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/margins"
-        android:gravity="center"
-        android:text="@string/swipe_to_get_next"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="18sp" />
-
-    <com.mindorks.placeholderview.SwipePlaceHolderView
-        android:id="@+id/swipeView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
+    <com.yuyakaido.android.cardstackview.CardStackView
+        android:id="@+id/stack_view"
+        android:layout_width="380dp"
+        android:layout_height="620dp"
+        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="12dp" />
 
 </RelativeLayout>

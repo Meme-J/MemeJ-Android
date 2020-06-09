@@ -1,8 +1,11 @@
 package com.example.memej.interfaces
 
+import com.example.memej.entities.profileSearchBody
 import com.example.memej.responses.NumLikes
+import com.example.memej.responses.UserProfileResponse
 import com.example.memej.responses.memeWorldResponses.memeApiResponses
 import retrofit2.Call
+import retrofit2.http.Body
 import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Query
@@ -27,5 +30,13 @@ interface profile {
     ): Call<memeApiResponses>
 
     //Get user is defined in auth
+
+    //Get the profile of some user
+    //##other user
+    @POST("api/user/profile")
+    fun getProfileFromUsername(
+        @Body info: profileSearchBody
+    ): Call<UserProfileResponse>
+
 
 }

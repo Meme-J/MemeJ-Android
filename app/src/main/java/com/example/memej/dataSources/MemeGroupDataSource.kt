@@ -3,94 +3,102 @@ package com.example.memej.dataSources
 import android.content.Context
 import android.util.Log
 import androidx.paging.PageKeyedDataSource
-import com.example.memej.entities.memeGroup
+import com.example.memej.Utils.SessionManager
 import com.example.memej.interfaces.RetrofitClient
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
+import com.example.memej.responses.template.EmptyTemplateResponse
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 //Create a scope
-class MemeGroupDataSource(private val scope: CoroutineScope, private val context: Context) :
-    PageKeyedDataSource<String, memeGroup>() {
+class MemeGroupDataSource(val context: Context) :
+    PageKeyedDataSource<String, EmptyTemplateResponse.Template>() {
+
 
     //External variable to point to api client
     private val apiService = RetrofitClient.makeCallsForMemes(context)
+    private val sessionManager = SessionManager(context)
 
     override fun loadInitial(
         params: LoadInitialParams<String>,
-        callback: LoadInitialCallback<String, memeGroup>
+        callback: LoadInitialCallback<String, EmptyTemplateResponse.Template>
     ) {
-        Log.e("DATA SOURCE", "Load Initial ")
-        scope.launch {
-            try {
-                val response = apiService.fetchMemeGroups(loadSize = params.requestedLoadSize)
-                when {
-                    response.isSuccessful -> {
-                        Log.e("DATA SOURCE", "Success 1 ")
-                        val listing = response.body()?.data
-                        val memeGroupPosts = listing?.children?.map { it.data }
+        Log.e("DATA SOURCE", "In load Intial ")
+        apiService.getTemplate(
+            loadSize = params.requestedLoadSize,
+            accessToken = "Bearer ${sessionManager.fetchAcessToken()}"
+        )
+            .enqueue(object : Callback<EmptyTemplateResponse> {
+                override fun onFailure(call: Call<EmptyTemplateResponse>, t: Throwable) {
+                    Log.e("DATA SOURCE", "Failed 1 to fetch data!" + t.message.toString())
+                }
+
+                override fun onResponse(
+                    call: Call<EmptyTemplateResponse>,
+                    response: Response<EmptyTemplateResponse>
+                ) {
+                    val listing = response.body()
+
+                    val homePosts = listing?.templates
+                    Log.e("DATA SOURCE", "Home post object" + homePosts + " " + homePosts?.size)
+
+                    if (homePosts != null) {
+
                         callback.onResult(
-                            memeGroupPosts ?: listOf(),
-                            listing?.before,
-                            listing?.after
+
+                            homePosts,
+                            null,       //Last Key
+                            null         //Before value
+
                         )
                     }
                 }
-            } catch (exception: Exception) {
-                Log.e("PostsDataSource", "Failed1 to fetch data!")
             }
-        }
+            )
+
     }
 
-    override fun loadAfter(params: LoadParams<String>, callback: LoadCallback<String, memeGroup>) {
-        scope.launch {
-            try {
-                val response =
-                    apiService.fetchMemeGroups(
-                        loadSize = params.requestedLoadSize,
-                        after = params.key
-                    )
-                when {
-                    response.isSuccessful -> {
-                        val listing = response.body()?.data
-                        val items = listing?.children?.map { it.data }
-                        callback.onResult(items ?: listOf(), listing?.after)
-                    }
+    override fun loadAfter(
+        params: LoadParams<String>,
+        callback: LoadCallback<String, EmptyTemplateResponse.Template>
+    ) {
+
+
+        Log.e("DATA SOURCE", "In load After")
+        apiService.getTemplate(
+            loadSize = params.requestedLoadSize,
+            accessToken = sessionManager.fetchAcessToken()
+        )
+            .enqueue(object : Callback<EmptyTemplateResponse> {
+                override fun onFailure(call: Call<EmptyTemplateResponse>, t: Throwable) {
+                    Log.e("DATA SOURCE", "Failed 2 to fetch data!")
                 }
 
-            } catch (exception: Exception) {
-                Log.e("PostsDataSource", "Failed2 to fetch data!")
-            }
-        }
-    }
+                override fun onResponse(
+                    call: Call<EmptyTemplateResponse>,
+                    response: Response<EmptyTemplateResponse>
+                ) {
+                    val listing = response.body()
 
-    override fun loadBefore(params: LoadParams<String>, callback: LoadCallback<String, memeGroup>) {
-        scope.launch {
-            try {
-                val response =
-                    apiService.fetchMemeGroups(
-                        loadSize = params.requestedLoadSize,
-                        before = params.key
-                    )
-                when {
-                    response.isSuccessful -> {
-                        val listing = response.body()?.data
-                        val items = listing?.children?.map { it.data }
-                        callback.onResult(items ?: listOf(), listing?.after)
+                    val homePosts = listing?.templates
+                    Log.e("DATA SOURCE", "Success 2 ")
+
+                    if (homePosts != null) {
+                        callback.onResult(
+                            homePosts,
+                            null
+                        )
                     }
                 }
-
-            } catch (exception: Exception) {
-                Log.e("PostsDataSource", "Failed3 to fetch data!")
-            }
-        }
-
+            })
     }
 
-    //Invalidate Scope
-    override fun invalidate() {
-        super.invalidate()
-        scope.cancel()
+
+    override fun loadBefore(
+        params: LoadParams<String>,
+        callback: LoadCallback<String, EmptyTemplateResponse.Template>
+    ) {
+
     }
 
 

@@ -1,26 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!--    <com.google.android.material.appbar.AppBarLayout-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        app:layout_constraintTop_toTopOf="parent"-->
-    <!--        android:gravity="center"-->
-    <!--        android:id="@+id/ab"-->
-    <!--        android:layout_height="?attr/actionBarSize">-->
 
-    <!--        <Toolbar-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="?attr/actionBarSize"-->
-    <!--            android:background="@color/colorPrimary"-->
-    <!--            android:gravity="fill"-->
-    <!--            android:id="@+id/toolbar_main"-->
-    <!--            app:layout_constraintTop_toTopOf="parent" />-->
-    <!--    </com.google.android.material.appbar.AppBarLayout>-->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_main"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        android:elevation="8dp"
+        android:gravity="fill"
+        app:layout_constraintTop_toTopOf="parent"
+        app:titleTextColor="@color/white" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_suggestions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="?attr/actionBarSize"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:listitem="@layout/list_suggestion" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav_view"
@@ -39,20 +42,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margins"
+        android:background="@color/colorAccent"
+        android:backgroundTint="@color/colorAccent"
+        android:backgroundTintMode="add"
         android:src="@drawable/ic_add"
         app:layout_constraintBottom_toTopOf="@id/nav_view"
         app:layout_constraintEnd_toEndOf="parent" />
 
-
-    <!--    Get the results and load-->
-    <!--    <ListView-->
-    <!--        android:id="@+id/listViewSearchResult"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-    <!--        app:layout_constraintTop_toBottomOf="parent"-->
-    <!--        app:layout_constraintVertical_weight="1" />-->
 
     <fragment
         android:id="@+id/nav_host_fragment"

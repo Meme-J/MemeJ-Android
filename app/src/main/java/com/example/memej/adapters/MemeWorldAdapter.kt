@@ -56,9 +56,7 @@ class MemeWorldAdapter(val context: Context, val itemClickListener: OnItemClickL
         val sessionManager = SessionManager(context)
         val service = RetrofitClient.makeCallsForMemes(context)
 
-        //val userRv = itemView.findViewById<RecyclerView>(R.id.rv_usersListPost)
-        //Below may provoke error because of hidden view
-        // val memeTags = itemView.findViewById<MaterialTextView>(R.id.post_tag)
+
         val memeImage = itemView.findViewById<ShapeableImageView>(R.id.cv_post)
         val memeTime = itemView.findViewById<MaterialTextView>(R.id.meme_timestamp)
         val memLikesNum = itemView.findViewById<TextView>(R.id.post_likes_num)

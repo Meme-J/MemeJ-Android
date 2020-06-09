@@ -12,12 +12,12 @@ class ConvertorType {
 
     @TypeConverter
     fun getLikedByUserId(user: HomeUsers): String? {
-        return user.id
+        return user._id
     }
 
     @TypeConverter
     fun getUserId(user: HomeUsers): String? {
-        return user.id
+        return user._id
     }
 
     @TypeConverter
