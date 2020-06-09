@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import com.example.memej.MainActivity
 import com.example.memej.R
 import com.example.memej.Utils.SaveSharedPreference
 import com.example.memej.databinding.ActivitySettingsScreenBinding
@@ -13,13 +14,20 @@ class SettingsScreen : AppCompatActivity() {
 
 
     lateinit var binding: ActivitySettingsScreenBinding
+    lateinit var toolbar: androidx.appcompat.widget.Toolbar
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_settings_screen)
-
+        toolbar = binding.tbSettings
         //Implement add avatar
+
+        toolbar.setNavigationOnClickListener {
+            val i = Intent(this, MainActivity::class.java)
+            startActivity(i)
+
+        }
 
         binding.settingsLogout.setOnClickListener {
             //Set logged in status as false

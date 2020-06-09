@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
-import com.example.memej.Instances.LoadImage
 import com.example.memej.R
 import com.example.memej.Utils.DiffUtils.DiffUtilsHomeMeme
 import com.example.memej.responses.homeMememResponses.Meme_Home
@@ -73,7 +72,7 @@ class HomeMemeAdapter(val itemClickListener: OnItemClickListenerHome) :
 
                         //Get the Object Image
                         Log.e("ADPATER HOME", _homeMeme.stage.toString())
-                        LoadImage().getOngoingImage(canvas, resource, _homeMeme)
+                        // LoadImage().getOngoingImage(canvas, resource, _homeMeme)
 
 
                     }

@@ -14,4 +14,10 @@ interface Communicator {
 
     fun goBackToHomePage()
 
+    fun goToSearchResult(bundle: Bundle)
+
+    fun goToProfilePage()
+
+    fun openLikedMemeFromActivity(bundle: Bundle)
+
 }

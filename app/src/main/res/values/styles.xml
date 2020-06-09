@@ -25,6 +25,14 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="Containertheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorDimBlack</item>
+        <item name="colorPrimaryDark">@color/black</item>
+        <item name="backgroundColor">@color/colorDimBlack</item>
+        <item name="android:elevation">4dp</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:screenOrientation">portrait</item>
+    </style>
 
     <style name="timestamp" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="color">@color/colorPrimary</item>

@@ -19,10 +19,8 @@ class SearchAdapter(val itemClickListener: onClickSearch) :
         val sugH = itemView.findViewById<MaterialTextView>(R.id.tv_sug)
 
         fun bindPost(_sug: SearchResponse.Suggestion, itemClickListener: onClickSearch) {
-            Log.e("Search Adapter", "In fun bind")
 
             sugH.text = _sug.tag
-            Log.e("Search Adapter", "Assigned")
 
             //Implement on Item Search
             itemView.setOnClickListener {

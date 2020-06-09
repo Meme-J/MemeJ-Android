@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/frame_layout_meme_world"
     android:layout_width="match_parent"
@@ -9,6 +9,13 @@
     android:layout_marginBottom="56dp"
     tools:context=".ui.MemeWorld.MemeWorldFragment">
 
+    <ProgressBar
+        android:id="@+id/pb_meme_world"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_memeWorld"
@@ -18,4 +25,4 @@
         tools:listitem="@layout/card_meme_world" />
 
 
-</FrameLayout>
+</RelativeLayout>

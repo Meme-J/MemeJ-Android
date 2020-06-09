@@ -52,6 +52,7 @@
     <string name="suggestion">Suggestion</string>
     <string name="tag">#tag</string>
     <string name="lines">Go back to home</string>
+    <string name="swipe_for_more">Swipe for more</string>
 
 
     <string-array name="testSearch">

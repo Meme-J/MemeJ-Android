@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -19,6 +20,7 @@ import com.example.memej.Utils.Communicator
 import com.example.memej.adapters.HomeMemeAdapter
 import com.example.memej.adapters.OnItemClickListenerHome
 import com.example.memej.dataSources.HomeMemeDataSource
+import com.example.memej.entities.queryBody
 import com.example.memej.responses.homeMememResponses.Meme_Home
 
 class HomeFragment : Fragment(), OnItemClickListenerHome {
@@ -28,6 +30,8 @@ class HomeFragment : Fragment(), OnItemClickListenerHome {
     private lateinit var homeMemeAdapter: HomeMemeAdapter
     lateinit var root: View
     lateinit var comm: Communicator
+    var tagToBeSearched: String = ""           //This will be null in case called from Home
+    lateinit var pb: ProgressBar
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -37,12 +41,13 @@ class HomeFragment : Fragment(), OnItemClickListenerHome {
 //        homeViewModel =
 //            ViewModelProviders.of(this).get(HomeViewModel::class.java)
         root = inflater.inflate(R.layout.fragment_home, container, false)
-
+        pb = root.findViewById(R.id.pb_home)
         rv = root.findViewById(R.id.rv_home)
         homeMemeAdapter = HomeMemeAdapter(this)
 
+
         //This is the method originally
-        initializingList()
+        initializingList(tagToBeSearched)
 
 
         comm = activity as Communicator
@@ -52,13 +57,12 @@ class HomeFragment : Fragment(), OnItemClickListenerHome {
     }
 
 
-    private fun initializingList() {
+    private fun initializingList(tagToBeSearched: String) {
 
         val config = PagedList.Config.Builder()
             .setPageSize(30)
             .setEnablePlaceholders(false)
             .build()
-
 
 
         //Use Live Data
@@ -82,7 +86,9 @@ class HomeFragment : Fragment(), OnItemClickListenerHome {
         val dataSourceFactory = object : DataSource.Factory<String, Meme_Home>() {
             override fun create(): DataSource<String, Meme_Home> {
 
-                return HomeMemeDataSource(requireContext())
+                //From Home, query is blank
+                val inf = queryBody("")
+                return HomeMemeDataSource(requireContext(), inf, pb = pb)
             }
         }
         return config?.let { LivePagedListBuilder(dataSourceFactory, it) }

@@ -5,16 +5,27 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.text.*
-import android.util.Log
 import androidx.core.graphics.withTranslation
 import com.example.memej.responses.homeMememResponses.Meme_Home
+import com.example.memej.responses.memeWorldResponses.Meme_World
 
 class LoadImage {
 
 
+    fun getCompleteImage(canvas: Canvas, bitmap: Bitmap, response: Meme_World) {
+        for (i in 0..response.templateId.numPlaceholders - 1) {
+            //get the previou types
+            val paint =
+                getTextPaint(response.templateId.textColorCode[i], response.templateId.textSize[i])
+            val pl = response.placeholders[i]
+            val x = response.templateId.coordinates.elementAt(i).x
+            val y = response.templateId.coordinates.elementAt(i).y
+            canvas.drawMultilineText(pl, paint, 500, x.toFloat(), y.toFloat())
+            canvas.save()
+        }
+    }
+
     fun getOngoingImage(canvas: Canvas, bitmap: Bitmap, response: Meme_Home) {
-        //Get the stage
-        Log.e("LoadImage", response.stage.toString())
 
         for (i in 0..response.stage - 1) {
             //get the previou types
@@ -73,7 +84,7 @@ class LoadImage {
     }
 
 
-    private fun getTextPaint(color: String, size: Int): TextPaint {
+    fun getTextPaint(color: String, size: Int): TextPaint {
         //Where color is the string in #HEX code
 
         val paint = TextPaint()
@@ -90,7 +101,7 @@ class LoadImage {
         return paint
     }
 
-    private fun setSize(size: Int): Float {
+    fun setSize(size: Int): Float {
         val size_req = size.toFloat()
         return size_req
 

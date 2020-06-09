@@ -12,5 +12,6 @@
     <color name="red_heart">#d11a10</color>
     <color name="tags">#f0e68c</color>
     <color name="colorDimBlack">#191919</color>
+    <color name="gray">#a9a9a9</color>
 
 </resources>

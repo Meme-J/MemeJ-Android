@@ -1,7 +1,9 @@
 package com.example.memej.dataSources
 
 import android.content.Context
-import android.util.Log
+import android.view.View
+import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.paging.PageKeyedDataSource
 import com.example.memej.Utils.SessionManager
 import com.example.memej.interfaces.RetrofitClient
@@ -11,7 +13,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class LikedMemesDataSource(val context: Context) :
+class LikedMemesDataSource(val context: Context, val pb: ProgressBar) :
     PageKeyedDataSource<String, Meme_World>() {
 
 
@@ -22,14 +24,15 @@ class LikedMemesDataSource(val context: Context) :
         params: LoadInitialParams<String>,
         callback: LoadInitialCallback<String, Meme_World>
     ) {
-        Log.e("DATA SOURCE", "In load Intial ")
+
         apiService.getLikedMemes(
             loadSize = params.requestedLoadSize,
             accessToken = "Bearer ${sessionManager.fetchAcessToken()}"
         )
             .enqueue(object : Callback<memeApiResponses> {
                 override fun onFailure(call: Call<memeApiResponses>, t: Throwable) {
-                    Log.e("DATA SOURCE", "Failed 1 to fetch data!" + t.message.toString())
+                    Toast.makeText(context, t.message.toString(), Toast.LENGTH_SHORT).show()
+                    pb.visibility = View.GONE
                 }
 
                 override fun onResponse(
@@ -37,18 +40,8 @@ class LikedMemesDataSource(val context: Context) :
                     response: Response<memeApiResponses>
                 ) {
                     val listing = response.body()
-                    Log.e("DATA SOURCE", " " + listing?.lastMemeId)
-
                     val memeWorldPosts = listing?.memes
-                    Log.e(
-                        "DATA SOURCE",
-                        "Home post object" + memeWorldPosts + " " + memeWorldPosts?.size
-                    )
-                    Log.e("DATA SOURCE", "Success 1 ")
-
-
                     if (memeWorldPosts != null) {
-                        Log.e("DATA SOURCE", "Homeposts is not null ")
 
                         callback.onResult(
 
@@ -57,6 +50,10 @@ class LikedMemesDataSource(val context: Context) :
                             listing.lastMemeId         //Before value
 
                         )
+                    } else {
+                        Toast.makeText(context, response.errorBody().toString(), Toast.LENGTH_SHORT)
+                            .show()
+                        pb.visibility = View.GONE
                     }
                 }
             }
@@ -70,14 +67,14 @@ class LikedMemesDataSource(val context: Context) :
     ) {
 
 
-        Log.e("DATA SOURCE", "In load After")
         apiService.getLikedMemes(
             loadSize = params.requestedLoadSize,
             accessToken = sessionManager.fetchAcessToken()
         )
             .enqueue(object : Callback<memeApiResponses> {
                 override fun onFailure(call: Call<memeApiResponses>, t: Throwable) {
-                    Log.e("DATA SOURCE", "Failed 2 to fetch data!")
+                    Toast.makeText(context, t.message.toString(), Toast.LENGTH_SHORT).show()
+                    pb.visibility = View.GONE
                 }
 
                 override fun onResponse(
@@ -87,15 +84,19 @@ class LikedMemesDataSource(val context: Context) :
                     val listing = response.body()
 
                     val memePosts = listing?.memes
-                    Log.e("DATA SOURCE", "Success 2 ")
 
                     if (memePosts != null) {
                         callback.onResult(
                             memePosts,
                             listing.lastMemeId
                         )
+                    } else {
+                        Toast.makeText(context, response.errorBody().toString(), Toast.LENGTH_SHORT)
+                            .show()
+                        pb.visibility = View.GONE
                     }
                 }
+
             })
     }
 

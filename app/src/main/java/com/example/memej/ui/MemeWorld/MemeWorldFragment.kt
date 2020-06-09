@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -19,6 +20,7 @@ import com.example.memej.Utils.Communicator
 import com.example.memej.adapters.MemeWorldAdapter
 import com.example.memej.adapters.OnItemClickListenerMemeWorld
 import com.example.memej.dataSources.MemeWorldDataSourcae
+import com.example.memej.entities.queryBody
 import com.example.memej.responses.memeWorldResponses.Meme_World
 
 class MemeWorldFragment : Fragment(), OnItemClickListenerMemeWorld {
@@ -32,6 +34,8 @@ class MemeWorldFragment : Fragment(), OnItemClickListenerMemeWorld {
     private lateinit var memeWorldAdapter: MemeWorldAdapter
     lateinit var root: View
     lateinit var comm: Communicator
+    var tagRequired: String = ""
+    lateinit var pb: ProgressBar
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,7 +46,8 @@ class MemeWorldFragment : Fragment(), OnItemClickListenerMemeWorld {
 
         rv = root.findViewById(R.id.rv_memeWorld)
         memeWorldAdapter = MemeWorldAdapter(requireContext(), this)
-
+        pb = root.findViewById(R.id.pb_meme_world)
+        pb.visibility = View.VISIBLE
         initializingList()
 
 
@@ -103,8 +108,8 @@ class MemeWorldFragment : Fragment(), OnItemClickListenerMemeWorld {
         val dataSourceFactory = object : DataSource.Factory<String, Meme_World>() {
             override fun create(): DataSource<String, Meme_World> {
                 Log.e("K", "in inialtialzed page list builder")
-
-                return MemeWorldDataSourcae(requireContext())
+                val inf = queryBody(tagRequired)
+                return MemeWorldDataSourcae(requireContext(), inf, pb)
             }
         }
         return config?.let { LivePagedListBuilder(dataSourceFactory, it) }
@@ -128,12 +133,6 @@ class MemeWorldFragment : Fragment(), OnItemClickListenerMemeWorld {
             "textSize" to _homeMeme.templateId.textSize,
             "textColor" to _homeMeme.templateId.textColorCode
         )
-        Log.e("HF", "" + _homeMeme.lastUpdated.toString())
-
-        Log.e("HF", "" + _homeMeme._id.toString())
-
-        Log.e("HF", "" + _homeMeme.templateId._id.toString())
-        Log.e("HF", "" + _homeMeme.templateId.imageUrl.toString())
 
         comm.passDataToMemeWorld(bundle)
 

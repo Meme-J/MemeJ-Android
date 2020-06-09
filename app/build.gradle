@@ -188,6 +188,7 @@ dependencies {
 
     implementation 'com.outsbook.libs:canvaseditor:1.0.0'
     implementation 'com.google.android.gms:play-services-auth:18.0.0'
+    implementation 'com.github.jd-alexander:LikeButton:0.2.3'
 
 
 }
