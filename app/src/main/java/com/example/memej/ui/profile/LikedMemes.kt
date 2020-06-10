@@ -1,130 +1,134 @@
 package com.example.memej.ui.profile
 
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import android.widget.ProgressBar
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
-import androidx.paging.DataSource
-import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.example.memej.MainActivity
 import com.example.memej.R
 import com.example.memej.Utils.Communicator
 import com.example.memej.adapters.MemeWorldAdapter
 import com.example.memej.adapters.OnItemClickListenerMemeWorld
-import com.example.memej.dataSources.LikedMemesDataSource
 import com.example.memej.responses.memeWorldResponses.Meme_World
+import com.example.memej.ui.MemeWorld.CompletedMemeActivity
+import com.example.memej.viewModels.LikedMemesViewModel
 
-class LikedMemes : Fragment(), OnItemClickListenerMemeWorld {
+class LikedMemes : AppCompatActivity(), OnItemClickListenerMemeWorld, Communicator {
 
-    companion object {
-        fun newInstance() = LikedMemes()
-    }
 
-    private lateinit var viewModel: LikedMemesViewModel
+    private val viewModel: LikedMemesViewModel by viewModels()
     private lateinit var rv: RecyclerView
     private lateinit var memeWorldAdapter: MemeWorldAdapter
     lateinit var root: View
     lateinit var comm: Communicator
+    lateinit var pb: ProgressBar
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        root = inflater.inflate(R.layout.liked_memes_fragment, container, false)
-        //All will be like meme world
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.liked_memes_fragment)
+
+        pb = findViewById(R.id.pb_liked_memes)
+        rv = findViewById(R.id.rv_likedMemes)
+
+        //Reinstantiate the toolbar properties
+        val toolbar: androidx.appcompat.widget.Toolbar = findViewById(R.id.tb_likedMemes)
+        toolbar.setNavigationOnClickListener {
+            val i = Intent(this, MainActivity::class.java)
+            startActivity(i)
+        }
+
+        //Instantiate ViewModel
+        memeWorldAdapter = MemeWorldAdapter(this, this)
+        initList()
 
 
-        rv = root.findViewById(R.id.rv_likedMemes)
-        memeWorldAdapter = MemeWorldAdapter(requireContext(), this)
-
-        initializingList()
-
-
-        val swl = root
-            .findViewById<SwipeRefreshLayout>(R.id.swl_liked_memes)
+        val swl = findViewById<SwipeRefreshLayout>(R.id.swl_liked_memes)
         swl.setOnRefreshListener {
-
-            initializingList()
-
+            initList()
             swl.isRefreshing = false
         }
 
-        comm = activity as Communicator
 
-
-
-
-        return root
     }
 
-    private fun initializingList() {
+    private fun initList() {
 
-        Log.e("HF", "Initialzed config")
-        //Create Config
-        val config = PagedList.Config.Builder()
-            .setPageSize(30)
-            .setEnablePlaceholders(false)
-            .build()
-
-
-        Log.e("HF", "Initialzed Live Data")
-
-        //Use Live Data
-        val liveData = initializedPagedListBuilder(config)?.build()
-        Log.e(
-            "HF",
-            "Retrunrs and gives live data" + liveData + " " + liveData?.value + " " + liveData.toString()
-        )
-
-        //Populate the adapter
-        liveData?.observe(viewLifecycleOwner, Observer<PagedList<Meme_World>> { pagedList ->
-            Log.e("HF", "In the observer")
-            Log.e(
-                "HF",
-                "VAlue sth paged list is given by {$pagedList}" + pagedList.dataSource + " " + pagedList.config + " " + pagedList.isDetached
-            )
-
+        viewModel.getPosts(pb = pb).observe(this, Observer<PagedList<Meme_World>> { pagedList ->
             memeWorldAdapter.submitList(pagedList)
         })
 
-        Log.e("HF", "Initialzed rv, adapter")
-        rv.layoutManager = LinearLayoutManager(context)
+
+        rv.layoutManager = LinearLayoutManager(this)
         rv.adapter = memeWorldAdapter
-        Log.e("HF", "Is somewhere")
-
-
-    }
-
-    private fun initializedPagedListBuilder(config: PagedList.Config?): LivePagedListBuilder<String, Meme_World>? {
-
-        val dataSourceFactory = object : DataSource.Factory<String, Meme_World>() {
-            override fun create(): DataSource<String, Meme_World> {
-                Log.e("K", "in inialtialzed page list builder")
-
-                return LikedMemesDataSource(requireContext())
-            }
-        }
-        return config?.let { LivePagedListBuilder(dataSourceFactory, it) }
+        pb.visibility = View.GONE
     }
 
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(LikedMemesViewModel::class.java)
-        // TODO: Use the ViewModel
+    override fun onItemClicked(_homeMeme: Meme_World) {
+        //Replace with the same as Meme World
+        //Meme World Container
+        val bundle = bundleOf(
+            "id" to _homeMeme._id,
+            "lastUpdated" to _homeMeme.lastUpdated,
+            "likedBy" to _homeMeme.likedBy,
+            "likes" to _homeMeme.likes,
+            "placeholders" to _homeMeme.placeholders,
+            "meme" to _homeMeme.templateId.numPlaceholders,
+            "tags" to _homeMeme.tags,
+            "users" to _homeMeme.users,
+            "templateIdCoordinates" to _homeMeme.templateId.coordinates,
+            "imageUrl" to _homeMeme.templateId.imageUrl,
+            "imageTags" to _homeMeme.templateId.tags,
+            "imageName" to _homeMeme.templateId.name,
+            "textSize" to _homeMeme.templateId.textSize,
+            "textColor" to _homeMeme.templateId.textColorCode
+        )
+
+        openLikedMemeFromActivity(bundle)
+
     }
 
-    override fun onItemClicked(_meme: Meme_World) {
-        //Check who has liked
-        Log.e("Liked Memes", _meme.templateId.name.toString())
-//        Log.e("Liked Memes", _meme.likedBy.toString())
+    override fun passDataFromHome(bundle: Bundle) {
+
+    }
+
+    override fun passDataToMemeWorld(bundle: Bundle) {
+    }
+
+    override fun goToLikedMemesPage() {
+    }
+
+    override fun goToMemesByTagPage(bundle: Bundle) {
+    }
+
+    override fun goBackToHomePage() {
+    }
+
+    override fun goToSearchResult(bundle: Bundle) {
+    }
+
+    override fun goToProfilePage() {
+    }
+
+    override fun openLikedMemeFromActivity(bundle: Bundle) {
+        //Replace with the new meme World Frgment
+        val transaction = this.supportFragmentManager.beginTransaction()
+        val frag2 = CompletedMemeActivity()     //This is Fragmnet
+        frag2.arguments = bundle
+
+        transaction.replace(R.id.container_likedMemes, frag2)
+        transaction.addToBackStack(null)
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+        transaction.commit()
 
     }
 

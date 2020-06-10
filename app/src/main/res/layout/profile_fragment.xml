@@ -39,13 +39,22 @@
     <!--        android:text="@string/choose_your_avatar" />-->
 
 
+    <ProgressBar
+        android:id="@+id/pb_profile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="256dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margins"
         android:gravity="center"
-        android:text="@string/username"
         android:textColor="@color/black"
         android:textSize="24sp"
         android:textStyle="bold"
@@ -61,7 +70,6 @@
         android:layout_below="@id/username"
         android:layout_marginTop="@dimen/margins"
         android:gravity="center"
-        android:text="@string/name"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -84,11 +92,22 @@
 
 
     <ImageView
+        android:id="@+id/likedMemes"
+        android:layout_width="@dimen/profile_icons"
+        android:layout_height="@dimen/profile_icons"
+        android:layout_marginStart="96dp"
+        android:layout_marginTop="38dp"
+        app:layout_constraintStart_toEndOf="@+id/totaLikes"
+        app:layout_constraintTop_toBottomOf="@+id/v1"
+        app:srcCompat="@drawable/ic_star_black_24dp" />
+
+    <ImageView
         android:id="@+id/totaLikes"
         android:layout_width="@dimen/profile_icons"
         android:layout_height="@dimen/profile_icons"
         android:layout_marginTop="36dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.318"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/v1"
         app:srcCompat="@drawable/ic_favorite" />
@@ -98,13 +117,13 @@
         android:id="@+id/textViewTotalLikes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
         android:text="@string/_0"
-        android:textSize="@dimen/text_size"
         android:textStyle="bold"
+        android:textSize="@dimen/text_size"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.34"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/totaLikes" />
+        app:layout_constraintTop_toBottomOf="@id/totaLikes" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

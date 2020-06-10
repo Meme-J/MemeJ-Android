@@ -1,5 +1,4 @@
-package com.example.memej.ui.home
-
+package com.example.memej.ui.memeTemplate
 
 import android.content.Intent
 import android.graphics.*
@@ -9,47 +8,44 @@ import android.os.Bundle
 import android.text.*
 import android.util.Log
 import android.view.View
-import android.widget.AdapterView.OnItemClickListener
-import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.ProgressBar
-import android.widget.Toast
-import androidx.activity.viewModels
+import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.collection.lruCache
 import androidx.core.graphics.withTranslation
-import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
-import com.example.memej.Instances.ProjectResources
-import com.example.memej.Instances.projectResources
 import com.example.memej.MainActivity
 import com.example.memej.R
+import com.example.memej.Utils.Communicator2
 import com.example.memej.Utils.SessionManager
-import com.example.memej.adapters.*
-import com.example.memej.databinding.EditMemeContainerFragmentBinding
+import com.example.memej.adapters.TagAdapter
+import com.example.memej.adapters.TagEditAdapter
+import com.example.memej.adapters.onTagClickType
 import com.example.memej.entities.editMemeBody
 import com.example.memej.entities.searchBody
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.SearchResponse
 import com.example.memej.responses.editMemeApiResponse
 import com.example.memej.responses.homeMememResponses.Coordinates
-import com.example.memej.responses.homeMememResponses.HomeUsers
-import com.example.memej.viewModels.EditMemeContainerViewModel
+import com.example.memej.viewModels.NewMemeContainerViewModel
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.imageview.ShapeableImageView
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+class NewMemeContainer : AppCompatActivity(), onTagClickType {
 
-class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagClickType {
+    companion object {
+        fun newInstance() = NewMemeContainer()
+    }
 
-    private val viewModel: EditMemeContainerViewModel by viewModels()
-    private lateinit var root: EditMemeContainerFragmentBinding
+
+    private lateinit var viewModel: NewMemeContainerViewModel
     lateinit var arg: Bundle
     private lateinit var img: ShapeableImageView
     lateinit var edt: EditText
@@ -60,37 +56,43 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
     var sendButton: Boolean = false
     var saveCount: Int? = 0
     lateinit var sessionManager: SessionManager
+    lateinit var comm: Communicator2
     lateinit var pb: ProgressBar
+    lateinit var tagCheck: MaterialButton
+
     lateinit var adapterTagsAdded: TagEditAdapter
     lateinit var stringAdapter: ArrayAdapter<String>
     lateinit var mutableList: MutableList<String>
-    lateinit var tagCheck: MaterialButton
+    lateinit var rvTagEdits: RecyclerView
+    lateinit var HorizontalLayoutInsertedTags: LinearLayoutManager
+    lateinit var adapterTagAdded: TagEditAdapter
 
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        root = DataBindingUtil.setContentView(this, R.layout.edit_meme_container_fragment)
-        projectResources = ProjectResources(resources)
-
-        type_face = resources.getFont(R.font.arial)
+        setContentView(R.layout.new_meme_container_fragment)
 
         arg = intent?.getBundleExtra("bundle")!!
 
-        img = root.imagePostEdit
-        edt = root.lineAddedEt
-        tagCheck = root.tagEdit
+        img = findViewById(R.id.imagePostNew)
+        edt = findViewById(R.id.lineAddedEtNew)
+        tagCheck = findViewById(R.id.tag_editNew)
+
+        rvTagEdits = findViewById<RecyclerView>(R.id.rv_insertedTagsNew)
+        HorizontalLayoutInsertedTags = LinearLayoutManager(
+            this,
+            LinearLayoutManager.HORIZONTAL,
+            false
+        )
+
+        adapterTagAdded = TagEditAdapter()
 
         initializeEditFrame(arg)
+
+
         sessionManager = SessionManager(this)
-        pb = root.pbEditFragment
+        pb = findViewById(R.id.pb_new_fragment)
 
-        //Init
-        adapterTagsAdded = TagEditAdapter()
-        mutableList = mutableListOf()           //Empty
-
-        //root.rel_layout.setBackgroundColor(getColorWithAlpha(Color.DKGRAY, 0.2f));
 
         // val colors = root.findViewById<MaterialTextView>(R.id.choose_color)
         // val font = root.findViewById<MaterialTextView>(R.id.choose_font)
@@ -111,7 +113,6 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
                         )    // Pass Default Color
                         .setColorListener { color, colorHex ->
                             // Handle Color Selection
-
                             //Set the paint brush to be valued for this color
                             //Pass the color hex
                             paint_chosen = setPaint(colorHex)
@@ -158,17 +159,14 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
             }
 
         */
-
-
-        //Tags list
-        //Init the adapter
+//
         stringAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line)
 
 
-        val tagsEt = root.autoCompleteTag
+        val tagsEt = findViewById<AutoCompleteTextView>(R.id.auto_completeTagNew)
 
         val onItemClickTag =
-            OnItemClickListener { adapterView, view, i, l ->
+            AdapterView.OnItemClickListener { adapterView, view, i, l ->
 
                 mutableList.add(adapterView.getItemAtPosition(i).toString())
                 setInTagRv()
@@ -178,12 +176,14 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
         tagsEt.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 //Activation of button
+                //find the button
+                val tagCheck = findViewById<ImageView>(R.id.tag_editNew)
                 if (tagsEt.length() != 0) {
-                    root.tagEdit.isEnabled =
+                    tagCheck.isEnabled =
                         true
                 } else if (tagsEt.length() == 0) {
 
-                    root.tagEdit.isEnabled =
+                    tagCheck.isEnabled =
                         false
                 }
             }
@@ -207,7 +207,7 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
         }
 
         //Send button
-        val btn = root.sendPostEdit
+        val btn = findViewById<MaterialButton>(R.id.send_post_new)
         btn.setOnClickListener {
             sendPost(edt.text.toString())
         }
@@ -215,14 +215,8 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
 
     }
 
+
     private fun setInTagRv() {
-        val rvTagEdits = root.rvInsertedTags
-        val HorizontalLayoutInsertedTags: LinearLayoutManager = LinearLayoutManager(
-            this,
-            LinearLayoutManager.HORIZONTAL,
-            false
-        )
-        val adapterTagAdded = TagEditAdapter()
         Log.e("Edit", "Values in Mutable list" + mutableList.toString())
         adapterTagAdded.tagAdded = mutableList
         rvTagEdits.layoutManager = HorizontalLayoutInsertedTags
@@ -255,12 +249,11 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
                     }
                     Log.e("Edit", str.toString())
                     val actv =
-                        root.autoCompleteTag
-
+                        findViewById<AutoCompleteTextView>(R.id.auto_completeTagNew)
 
                     stringAdapter =
                         ArrayAdapter(
-                            this@EditMemeContainerFragment,
+                            this@NewMemeContainer,
                             android.R.layout.simple_dropdown_item_1line,
                             str
                         )
@@ -275,6 +268,7 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
     private fun sendPost(line: String) {
         //Show the progress bar
         pb.visibility = View.VISIBLE
+
         val service = RetrofitClient.makeCallsForMemes(this)
         val inf = editMemeBody(arg.getString("id")!!, line, mutableList)
 
@@ -282,7 +276,7 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
             .enqueue(object : Callback<editMemeApiResponse> {
                 override fun onFailure(call: Call<editMemeApiResponse>, t: Throwable) {
                     Toast.makeText(
-                        this@EditMemeContainerFragment,
+                        this@NewMemeContainer,
                         t.message.toString(),
                         Toast.LENGTH_LONG
                     ).show()
@@ -296,18 +290,20 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
                     //Response will be good if the meme is created
                     if (response.body()!!.msg == "Meme Edited successfully") {
                         Toast.makeText(
-                            this@EditMemeContainerFragment,
+                            this@NewMemeContainer,
                             response.body()!!.msg,
                             Toast.LENGTH_LONG
                         ).show()
                         pb.visibility = View.GONE
                         //Go back to the main activity
-                        val i = Intent(this@EditMemeContainerFragment, MainActivity::class.java)
+                        //On Creating a new meme retrn to the main activty of return to the parent activity
+                        //Intent back to main activty
+                        val i = Intent(this@NewMemeContainer, MainActivity::class.java)
                         startActivity(i)
 
                     } else {
                         Toast.makeText(
-                            this@EditMemeContainerFragment,
+                            this@NewMemeContainer,
                             response.body()!!.msg,
                             Toast.LENGTH_LONG
                         ).show()
@@ -321,52 +317,30 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
 
 
     private fun initializeEditFrame(arg: Bundle) {
-
-        //Layout Manager
+        //Layout
         val HorizontalLayout: LinearLayoutManager = LinearLayoutManager(
             this,
             LinearLayoutManager.HORIZONTAL,
             false
         )
-        //Load image tags
-
+        //Load template tags
         val txt = arg.getStringArrayList("tags")
-        val txt2 = arg.getStringArrayList("imageTags")
 
-        //This is a array basically
-        //Create an array list  to call these tags
 
-        //Check for these being blank in case of initialization/add meme
         val tagsStr = mutableListOf<String>()
+        //No image tags for init
         for (i in txt!!) {
-            tagsStr.add(i)
-        }
-        for (i in txt2!!) {
             tagsStr.add(i)
         }
 
         //Get the rv and adapter for the user and the tags already existing
-        val rvTag = root.rvEditTag
+        val rvTag = findViewById<RecyclerView>(R.id.rv_edit_tag)
         val tagAdapter = TagAdapter(this)
         tagAdapter.tagType = tagsStr
         rvTag.layoutManager = HorizontalLayout
         rvTag.adapter = tagAdapter
 
-
-        //Populate the users in the same way
-        val u = arg.getParcelableArrayList<HomeUsers>("users")
-        val userStr = mutableListOf<String>()
-        for (i in u!!) {
-            userStr.add(i.username)
-        }
-
-        //SecondLayout
-        val HorizontalUser = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        val rvUser = root.rvEditUser
-        val userAdater = UserAdapter(this)
-        userAdater.userType = userStr
-        rvUser.layoutManager = HorizontalUser
-        rvUser.adapter = userAdater
+        //There are no users
 
 
         getImage()
@@ -390,61 +364,31 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
 
                     img.setImageBitmap(resource)
 
-                    getCompleteImage(resource, canvas, arg)
+                    //No need of complete Image
+                    getCompleteCoordinatesToBeUsed(resource, canvas, arg)
 
                 }
             })
 
     }
 
-    private fun getCompleteImage(
+    private fun getCompleteCoordinatesToBeUsed(
         bitmap: Bitmap?, canvas: Canvas, arg: Bundle
     ) {
 
-
-        //Extract every placeholder, color, textSize
-        //Use the num of placeholders in the  meme image to view those
-        //Set paint and size
-
         //Create a path to track undo and changes
-        val currentStage = arg.getInt("stage")
+        val numPlaceHolders = arg.getInt("numPlaceholders")
 
-
-        for (i in 0..currentStage - 1) {
-
-            //Use static layout to encounter the multiline issues
-            //get the width as a parameter          //Keep it as a standard of 300.
-
-//            val paint =
-//                setPaint(
-//                    arg.getStringArrayList("paint")!!.elementAt(i),
-//                    arg.getIntegerArrayList("size")!!.elementAt(i)
-//                )
-            val paint = getTextPaint(
-                arg.getStringArrayList("paint")!!.elementAt(i),
-                arg.getIntegerArrayList("size")!!.elementAt(i)
-            )
-
-            val pl = arg.getStringArrayList("placeHolders")!![i]
-
-            val x =
-                arg.getParcelableArrayList<Coordinates>("templateIdCoordinates")!!.elementAt(i).x
-            val y =
-                arg.getParcelableArrayList<Coordinates>("templateIdCoordinates")!!.elementAt(i).y
-
-            canvas.drawMultilineText(pl, paint, 300, x.toFloat(), y.toFloat())
-
-            //canvas.drawText(pl, x.toFloat(), y.toFloat(), setPaint("#000000", size = s))
-        }
         val xN =
-            arg.getParcelableArrayList<Coordinates>("templateIdCoordinates")!!
-                .elementAt(currentStage).x
+            arg.getParcelableArrayList<Coordinates>("coordinate")!!
+                .elementAt(0).x
         val yN =
-            arg.getParcelableArrayList<Coordinates>("templateIdCoordinates")!!
-                .elementAt(currentStage).y
+            arg.getParcelableArrayList<Coordinates>("coordinate")!!
+                .elementAt(0).y
+
         val currentPaint = getTextPaint(
-            arg.getStringArrayList("paint")!!.elementAt(currentStage),
-            arg.getIntegerArrayList("size")!!.elementAt(currentStage)
+            arg.getStringArrayList("textColorCode")!!.elementAt(0),
+            arg.getIntegerArrayList("textSize")!!.elementAt(0)
         )
         canvas.save()
 
@@ -601,15 +545,14 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
         currentPaint: TextPaint
     ) {
         //        val newCanvas = CanvasEditorView(requireContext())
-//        val layoutParams = RelativeLayout.LayoutParams(
-//            RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT
-//        )
-//        layoutParams.setMargins(pxToDp(xN),pxToDp(yN),0,0)
-//        newCanvas.layoutParams = layoutParams
+        //        val layoutParams = RelativeLayout.LayoutParams(
+        //            RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT
+        //        )
+        //        layoutParams.setMargins(pxToDp(xN),pxToDp(yN),0,0)
+        //        newCanvas.layoutParams = layoutParams
 
 
-        //Create an Edit Text
-
+        //Observe change on the edit etxt
         edt.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
 
@@ -625,11 +568,11 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
                 //   canvas.drawTextOnPath(s.toString(),path,0f,10f,setPaint("#000000", currentSize))
                 if (edt.text.isNotEmpty()) {
                     sendButton = true
-                    root.sendPostEdit.isEnabled =
+                    findViewById<MaterialButton>(R.id.send_post_edit).isEnabled =
                         true
                 } else if (edt.text.isEmpty()) {
                     sendButton = false
-                    root.sendPostEdit.isEnabled =
+                    findViewById<MaterialButton>(R.id.send_post_edit).isEnabled =
                         false
                 }
 
@@ -660,7 +603,8 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
                     currentPaint,
                     400,                    //Width
                     xN.toFloat(),
-                    yN.toFloat()
+                    yN.toFloat(),
+                    edt
                 )
                 //Invalidate
                 img.invalidate()
@@ -679,12 +623,14 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
         width: Int,
         x: Float,
         y: Float,
+        editText: EditText,
         start: Int = 0,
         end: Int = text.length,
         alignment: Layout.Alignment = Layout.Alignment.ALIGN_NORMAL,
         textDir: TextDirectionHeuristic = TextDirectionHeuristics.LTR,
         spacingMult: Float = 1f,
         spacingAdd: Float = 0f,
+
         breakStrategy: Int = Layout.BREAK_STRATEGY_SIMPLE,
         hyphenationFrequency: Int = Layout.HYPHENATION_FREQUENCY_NONE
     ) {
@@ -694,6 +640,7 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
             val cacheKey = "$text-$start-$end-$textPaint-$width-$alignment-$textDir-" +
                     "$spacingMult-$spacingAdd" +
                     "$breakStrategy-$hyphenationFrequency"
+
 
             val dynamicLayout = DynamicLayoutCache[cacheKey] ?: DynamicLayout.Builder
                 .obtain(text, textPaint, width)
@@ -707,11 +654,8 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
 
 
         } else {
-            Toast.makeText(
-                this@EditMemeContainerFragment,
-                "Version not supported",
-                Toast.LENGTH_SHORT
-            ).show()
+            Toast.makeText(this@NewMemeContainer, "Version not supported", Toast.LENGTH_SHORT)
+                .show()
         }
 
     }
@@ -745,7 +689,6 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
         }
     }
 
-    //Dynamic Provate Object
     private object DynamicLayoutCache {
         private const val MAX_SIZE = 50 // Arbitrary max number of cached items
         private val cache = lruCache<String, DynamicLayout>(MAX_SIZE)
@@ -796,6 +739,7 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
 
     }
 
+    //Back Behaviour maintained
     private fun getColorWithAlpha(color: Int, ratio: Float): Int {
         var newColor = 0
         val alpha = Math.round(Color.alpha(color) * ratio).toInt()
@@ -807,47 +751,8 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
     }
 
 
-    //Api not yet made
-    override fun getUserType(_user: String) {
-
-        //Use this as a query
-        //This is what will happen when the tags and users are clicked
-        //They will have a string value associated with them
-        //Make a call to get the user
-        //Activate the progress bar
-//        pb.visibility = View.VISIBLE
-//        val service = RetrofitClient.makeCallForProfileParameters(requireContext())
-//        val inf = profileSearchBody(_user)
-//        service.getProfileFromUsername(inf)
-//            .enqueue(object : retrofit2.Callback<UserProfileResponse> {
-//                override fun onFailure(call: Call<UserProfileResponse>, t: Throwable) {
-//                    Toast.makeText(context, t.message.toString(), Toast.LENGTH_SHORT).show()
-//                        pb.visibility = View.GONE
-//                    Log.e("K", t.message.toString())
-//                }
-//
-//                override fun onResponse(
-//                    call: Call<UserProfileResponse>,
-//                    response: Response<UserProfileResponse>
-//                ) {
-//                    //Start an activity to the profile of this newly found user
-//                      pb.visibility = View.GONE
-//                    val i = Intent(context, UserProfile::class.java)
-//                    val bundle = bundleOf(
-//                        //This will have username, name, number of likes
-//                    )
-//                    i.putExtra("Response",bundle)
-//                    startActivity(i)
-//                }
-//            })
-
-    }
-
     override fun getTagType(_tag: String) {
-
+        TODO("Not yet implemented")
     }
-
 
 }
-
-

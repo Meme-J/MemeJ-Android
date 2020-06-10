@@ -9,6 +9,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".Utils.ApplicationUtil"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
@@ -18,7 +19,27 @@
         android:theme="@style/AppTheme"
         tools:ignore="LockedOrientationActivity"
         tools:replace="android:icon">
-        <activity android:name=".ui.profile.UserProfile"></activity>
+        <activity
+            android:name=".ui.BaseActivityHost"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
+        <!-- Edit this -->
+        <activity
+            android:name=".ui.home.SearchResultActivity"
+            android:label="Select Template"
+            android:screenOrientation="portrait"
+            android:theme="@style/DarkTheme"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.memeTemplate.NewMemeContainer"
+            android:screenOrientation="portrait"
+            android:theme="@style/Containertheme"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.home.EditMemeContainerFragment"
+            android:screenOrientation="portrait"
+            android:theme="@style/Containertheme"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".ui.profile.UserProfile" />
         <activity android:name=".ui.home.Searchable">
             <meta-data
                 android:name="android.app.default_searchable"
@@ -27,43 +48,41 @@
         <activity
             android:name=".ui.home.SettingsScreen"
             android:screenOrientation="portrait"
-            android:theme="@style/LoginSignUp"
+            android:theme="@style/DarkTheme"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.profile.LikedMemes"
+            android:screenOrientation="portrait"
+            android:theme="@style/DarkTheme"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.auth.SignUpActivity"
             android:screenOrientation="portrait"
             android:theme="@style/LoginSignUp"
             android:windowSoftInputMode="adjustResize" />
-
         <activity android:name=".ui.memeTemplate.TemplateActivity" />
-
         <activity
             android:name=".ui.memeTemplate.SelectMemeTemplateActivity"
             android:label="Select Template"
             android:screenOrientation="portrait"
             android:theme="@style/DarkTheme"
-            android:windowSoftInputMode="adjustResize">
-
-        </activity>
-
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.auth.LoginActivity"
             android:screenOrientation="portrait"
             android:theme="@style/LoginSignUp"
             android:windowSoftInputMode="adjustResize" />
-
-
         <activity
             android:name=".ui.auth.SplashScreen"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
+            android:noHistory="true"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"

@@ -2,8 +2,12 @@ package com.example.memej.dataSources
 
 import android.content.Context
 import android.util.Log
+import android.view.View
+import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.paging.PageKeyedDataSource
 import com.example.memej.Utils.SessionManager
+import com.example.memej.entities.queryBody
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.memeWorldResponses.Meme_World
 import com.example.memej.responses.memeWorldResponses.memeApiResponses
@@ -11,7 +15,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MemeWorldDataSourcae(val context: Context) :
+class MemeWorldDataSourcae(val context: Context, val searchQuery: queryBody, val pb: ProgressBar) :
     PageKeyedDataSource<String, Meme_World>() {
 
 
@@ -25,37 +29,40 @@ class MemeWorldDataSourcae(val context: Context) :
         Log.e("DATA SOURCE", "In load Intial ")
         apiService.fetchMemeWorldMemes(
             loadSize = params.requestedLoadSize,
-            accessToken = "Bearer ${sessionManager.fetchAcessToken()}"
+            accessToken = "Bearer ${sessionManager.fetchAcessToken()}",
+            tag = searchQuery
         )
             .enqueue(object : Callback<memeApiResponses> {
                 override fun onFailure(call: Call<memeApiResponses>, t: Throwable) {
                     Log.e("DATA SOURCE", "Failed 1 to fetch data!" + t.message.toString())
+                    Toast.makeText(context, t.message.toString(), Toast.LENGTH_SHORT).show()
+                    pb.visibility = View.GONE
                 }
 
                 override fun onResponse(
                     call: Call<memeApiResponses>,
                     response: Response<memeApiResponses>
                 ) {
-                    val listing = response.body()
-                    Log.e("DATA SOURCE", " " + listing?.lastMemeId)
 
-                    val memeWorldPosts = listing?.memes
-                    Log.e(
-                        "DATA SOURCE",
-                        "Home post object" + memeWorldPosts + " " + memeWorldPosts?.size
-                    )
-                    Log.e("DATA SOURCE", "Success 1 ")
+                    if (response.isSuccessful) {
+                        val listing = response.body()
 
-                    if (memeWorldPosts != null) {
-                        Log.e("DATA SOURCE", "Homeposts is not null ")
+                        val memeWorldPosts = listing?.memes
 
-                        callback.onResult(
+                        if (memeWorldPosts != null) {
 
-                            memeWorldPosts,
-                            null,       //Last Key
-                            listing.lastMemeId         //Before value
+                            callback.onResult(
 
-                        )
+                                memeWorldPosts,
+                                null,       //Last Key
+                                listing.lastMemeId         //Before value
+
+                            )
+                        }
+                    } else {
+                        Toast.makeText(context, response.errorBody().toString(), Toast.LENGTH_SHORT)
+                            .show()
+                        pb.visibility = View.GONE
                     }
                 }
             }
@@ -72,27 +79,37 @@ class MemeWorldDataSourcae(val context: Context) :
         Log.e("DATA SOURCE", "In load After")
         apiService.fetchMemeWorldMemes(
             loadSize = params.requestedLoadSize,
-            accessToken = sessionManager.fetchAcessToken()
+            accessToken = sessionManager.fetchAcessToken(),
+            tag = searchQuery
         )
             .enqueue(object : Callback<memeApiResponses> {
                 override fun onFailure(call: Call<memeApiResponses>, t: Throwable) {
                     Log.e("DATA SOURCE", "Failed 2 to fetch data!")
+                    Toast.makeText(context, t.message.toString(), Toast.LENGTH_SHORT).show()
+                    pb.visibility = View.GONE
                 }
 
                 override fun onResponse(
                     call: Call<memeApiResponses>,
                     response: Response<memeApiResponses>
                 ) {
-                    val listing = response.body()
 
-                    val memePosts = listing?.memes
-                    Log.e("DATA SOURCE", "Success 2 ")
+                    if (response.isSuccessful) {
+                        val listing = response.body()
 
-                    if (memePosts != null) {
-                        callback.onResult(
-                            memePosts,
-                            listing.lastMemeId
-                        )
+                        val memePosts = listing?.memes
+                        Log.e("DATA SOURCE", "Success 2 ")
+
+                        if (memePosts != null) {
+                            callback.onResult(
+                                memePosts,
+                                listing.lastMemeId
+                            )
+                        }
+                    } else {
+                        Toast.makeText(context, response.errorBody().toString(), Toast.LENGTH_SHORT)
+                            .show()
+                        pb.visibility = View.GONE
                     }
                 }
             })

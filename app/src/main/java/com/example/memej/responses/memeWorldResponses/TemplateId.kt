@@ -13,9 +13,9 @@ data class TemplateId(
     @Json(name = "numPlaceholders")
     val numPlaceholders: Int, // 4
     @Json(name = "textSize")
-    val textSize: List<Any>, // 4
+    val textSize: List<Int>, // 4
     @Json(name = "textColorCode")
-    val textColorCode: List<Any>, // 4
+    val textColorCode: List<String>, // 4
 
     @Json(name = "tags")
     val tags: List<String>,

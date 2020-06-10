@@ -5,11 +5,11 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.Paint
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.text.*
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -17,31 +17,46 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.FileProvider
+import androidx.core.graphics.withTranslation
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
+import com.example.memej.Instances.LoadImage
 import com.example.memej.Instances.UserInstance
 import com.example.memej.R
 import com.example.memej.Utils.SessionManager
+import com.example.memej.adapters.TagAdapter
+import com.example.memej.adapters.UserAdapter
+import com.example.memej.adapters.onTagClickType
+import com.example.memej.adapters.onUserClickType
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.LikeOrNotResponse
 import com.example.memej.responses.homeMememResponses.Coordinates
+import com.example.memej.responses.homeMememResponses.HomeUsers
 import com.example.memej.responses.memeWorldResponses.User
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.textview.MaterialTextView
+import kotlinx.android.synthetic.main.activity_base_host.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
 
-class CompletedMemeActivity : Fragment() {
+class CompletedMemeActivity : Fragment(), onUserClickType, onTagClickType {
 
     lateinit var root: View
     lateinit var arg: Bundle
     lateinit var memeUrl: String
     lateinit var memeCanvasUrl: String
+    lateinit var rvTag: RecyclerView
+    lateinit var rvUser: RecyclerView
+    lateinit var image: ImageView
+    lateinit var likes: TextView
 
     //RequestCode
     var MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 101
@@ -52,22 +67,21 @@ class CompletedMemeActivity : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        root = inflater.inflate(R.layout.activity_completed_meme, container, false)
-        //Extract the bundles
+        root = inflater.inflate(R.layout.activity_completed_meme, base_activty_host, false)
         arg = this.requireArguments()
-        //Create a argument
         memeUrl = arg.getString("imageUrl").toString()
-        initalizeTheMemePost(arg)
+        rvTag = root.findViewWithTag(R.id.rv_complete_user_tag)
+        rvUser = root.findViewWithTag(R.id.rv_complete_user)
+        image = root.findViewById<ImageView>(R.id.like_completed_meme_btn)
+        likes = root.findViewById<TextView>(R.id.num_likes_completed_meme)
 
-        //Onclick for likeing/disliking
+        initalizeTheMemePost()
+
+
         root.findViewById<ImageView>(R.id.like_completed_meme_btn).setOnClickListener {
-
             likeDislike()
-
         }
 
-
-        //This chnage should be visible everytime a change is made
 
 
         root.findViewById<Button>(R.id.share_completed_meme).setOnClickListener {
@@ -145,10 +159,6 @@ class CompletedMemeActivity : Fragment() {
         val service = RetrofitClient.makeCallsForMemes(requireContext())
         val sessionManager = SessionManager(requireContext())
 
-        //Likers list
-        var user_likers = arg.getParcelableArrayList<User>("likedBy")?.toList()
-
-        Log.e("Like", "In Like")
         service.likeMeme(
             arg.getString("id").toString(),
             accessToken = "Bearer ${sessionManager.fetchAcessToken()}"
@@ -156,7 +166,7 @@ class CompletedMemeActivity : Fragment() {
             .enqueue(object : Callback<LikeOrNotResponse> {
                 override fun onFailure(call: Call<LikeOrNotResponse>, t: Throwable) {
                     //Not able to get
-                    Log.e("Like", t.message.toString())
+                    Toast.makeText(context, t.message.toString(), Toast.LENGTH_SHORT).show()
                 }
 
                 override fun onResponse(
@@ -165,37 +175,26 @@ class CompletedMemeActivity : Fragment() {
                 ) {
                     //Get the response
                     if (response.body()?.msg == "Meme unliked successfully.") {
-                        //Reduce a number of like here as the previous value
 
-                        root.findViewById<TextView>(R.id.num_likes_completed_meme)?.text =
-                            (arg.getInt("likes") - 1).toString()
-                        root.findViewById<TextView>(R.id.num_likes_completed_meme)
-                            ?.setTextColor(Color.GRAY)
+                        likes.text =
+                            arg.getString("likes")
+                        likes.setTextColor(Color.GRAY)
+
                         //Set drawable into working
-                        root.findViewById<ImageView>(R.id.like_completed_meme_btn)
-                            .setImageResource(R.drawable.ic_like_empty)
+                        image.setImageResource(R.drawable.ic_like_empty)
+                        image.setBackgroundResource(R.drawable.ic_like_empty)
 
 
-                        val likers: MutableList<User> = user_likers!!.toMutableList()
-                        val u = UserInstance(requireContext())
-                        likers.remove(u)
-                        user_likers = likers.toList<User>()
-                        Log.e("disLike", response.body()?.msg.toString())
                     } else if (response.body()?.msg == "Meme liked successfully.") {
 
-                        root.findViewById<TextView>(R.id.num_likes_completed_meme)?.text =
-                            (arg.getInt("likes") + 1).toString()
-                        root.findViewById<TextView>(R.id.num_likes_completed_meme)
-                            ?.setTextColor(Color.RED)
-                        //Set drawable into working
-                        root.findViewById<ImageView>(R.id.like_completed_meme_btn)
-                            .setImageResource(R.drawable.ic_favorite)
+                        likes.text =
+                            arg.getString("likes")
 
-                        val likers: MutableList<User> = user_likers!!.toMutableList()
-                        val u: User = UserInstance(requireContext())
-                        likers.add(u)
-                        user_likers = likers.toList<User>()
-                        Log.e("Like", response.body()?.msg.toString())
+                        //Set drawable into workin
+                        likes.setTextColor(Color.RED)
+                        image.setImageResource(R.drawable.ic_favorite)
+                        image.setBackgroundResource(R.drawable.ic_favorite)
+
                     }
 
                 }
@@ -203,31 +202,45 @@ class CompletedMemeActivity : Fragment() {
     }
 
 
-    private fun initalizeTheMemePost(arg: Bundle) {
+    private fun initalizeTheMemePost() {
 
-        //Get the users list
+        //Set the tags
+        val txt = arg.getStringArrayList("tags")
+        val txt2 = arg.getStringArrayList("imageTags")
 
-        //Load Users
-        val u = arg.getParcelableArrayList<User>("users")
-        var str = ""
-        val i = 0
-
-        for (i in 0 until u?.size!! - 1) {
-            str += u.elementAt(i)?.username + " "
-        }
-        root.findViewById<MaterialTextView>(R.id.list_view_users).text = str
-
-        //Load the tags
-        val txt = arg.getStringArrayList("tags").toString()
-        val txt2 = arg.getStringArrayList("imageTags").toString()
         //This is a array basically
-        txt.replace("\\[", "")
-        txt.replace("\\[", "")
-        txt2.replace("\\]", "")
-        txt2.replace("\\]", "")
-        val tags = txt + "\n" + txt2
+        //Create an array list  to call these tags
 
-        root.findViewById<MaterialTextView>(R.id.list_view_tags).text = tags
+        //Check for these being blank in case of initialization/add meme
+        val tagsStr = mutableListOf<String>()
+        for (i in txt!!) {
+            tagsStr.add(i)
+        }
+        for (i in txt2!!) {
+            tagsStr.add(i)
+        }
+
+        //Get the rv and adapter for the user and the tags already existing
+        val rvTag = root.findViewById<RecyclerView>(R.id.rv_edit_tag)
+        val tagAdapter = TagAdapter(this)
+        tagAdapter.tagType = tagsStr
+        rvTag.layoutManager = GridLayoutManager(context, 2)
+        rvTag.adapter = tagAdapter
+
+
+        //Populate the users in the same way
+        val u = arg.getParcelableArrayList<HomeUsers>("users")
+        val userStr = mutableListOf<String>()
+        for (i in u!!) {
+            userStr.add(i.username)
+        }
+
+        val rvUser = root.findViewById<RecyclerView>(R.id.rv_edit_user)
+        val userAdater = UserAdapter(this)
+        userAdater.userType = userStr
+        rvUser.layoutManager = GridLayoutManager(context, 2)
+        rvUser.adapter = userAdater
+
 
         //Set time stamp
         root.findViewById<MaterialTextView>(R.id.timeStamp_memeW).text =
@@ -242,45 +255,52 @@ class CompletedMemeActivity : Fragment() {
                 }
 
                 override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                    var bitmap = Bitmap.createBitmap(resource)
-                    var canvas = Canvas(bitmap)
 
                     val memeImage = root.findViewById<ShapeableImageView>(R.id.post_image_mw)
+                    val canvas = Canvas(resource)
+
                     memeImage.draw(canvas)
-                    memeImage.setImageBitmap(bitmap)
 
-
-                    //We have the canvas and bitmap initialized. Retrueve the previous drawings on it
-                    getCompleteImage(bitmap, canvas)
-
+                    memeImage.setImageBitmap(resource)
+                    getCompleteImage(resource, canvas)
                 }
             })
 
-        //Gte My Profile Instance
-        val userInstance = UserInstance(requireContext())
+
         //Check if the post is liked already or not
+        val userInstance = UserInstance(requireContext())
+
 
         //Check if you have liked the meme or not previously
         val user_likers = arg.getParcelableArrayList<User>("likedBy")
-        if (user_likers!!.contains(userInstance)) {
-            //Color and number and image
-            //Already liked by the person
-
-            root.findViewById<TextView>(R.id.num_likes_completed_meme)?.text =
-                arg.getString("likes")
-            root.findViewById<TextView>(R.id.num_likes_completed_meme)?.setTextColor(Color.RED)
-            //Set drawable into working
-            root.findViewById<ImageView>(R.id.like_completed_meme_btn)
-                .setImageResource(R.drawable.ic_favorite)
+        if (user_likers != null) {
+            if (user_likers.contains(userInstance)) {
+                //Color and number and image
+                //Already liked by the person
 
 
-        } else {
+                likes.text =
+                    arg.getString("likes")
 
-            root.findViewById<TextView>(R.id.num_likes_completed_meme)?.text =
-                arg.getString("likes")
+                likes.setTextColor(Color.RED)
+                //Set drawable into working
+                image.setImageResource(R.drawable.ic_favorite)
+                image.setBackgroundResource(R.drawable.ic_favorite)
+
+
+            } else {
+
+
+                likes.text =
+                    arg.getString("likes")
+
+                //Set drawable into working
+                image.setImageResource(R.drawable.ic_like_empty)
+                image.setBackgroundResource(R.drawable.ic_like_empty)
+
+            }
         }
 
-        //Initailize a meme
     }
 
 
@@ -296,10 +316,8 @@ class CompletedMemeActivity : Fragment() {
         //Get Co-ordinates
         val coordinates = arg.getParcelableArrayList<Coordinates>("templateIdCoordinates")
 
-
-        val i = 0
-        while (i < arg.getInt("numPlaceHolders") - 1) {
-            val paint = setPaint(
+        for (i in 0..arg.getInt("numPlaceHolders") - 1) {
+            val paint = LoadImage().getTextPaint(
                 arg.getStringArrayList("textColor")?.get(i).toString(),
                 arg.getIntegerArrayList("textSize")?.get(i)!!.toInt()
             )
@@ -307,35 +325,59 @@ class CompletedMemeActivity : Fragment() {
             val pl = placeHolders_array?.get(i)?.toString()
             val xi = coordinates?.elementAt(i)?.x
             val yi = coordinates?.elementAt(i)?.y
-            //Add color hex code. All black now
-            //Paint on canvas
-            canvas.drawText(pl.toString(), xi!!.toFloat(), yi!!.toFloat(), paint)
+
+            //Draw The static Multiliner
+            if (xi != null) {
+                if (yi != null) {
+                    canvas.drawMultilineText(pl.toString(), paint, 400, xi.toFloat(), yi.toFloat())
+                }
+            }
         }
 
-        //Save the canvas
         canvas.save()
-        //We have the desired bitmap
     }
 
 
-    //Function to get paint again. This will be true for the value default color and the one chosen by the user
-    private fun setPaint(color: String, size: Int): Paint {
-        //Where color is the string in #HEX code
-        val paint = Paint()
-        paint.color = Color.parseColor(color)
-        paint.strokeWidth =
-            setSize(size)                                       //Standard Chosen
-        paint.style = Paint.Style.FILL                            //Default to be set
-        paint.isAntiAlias = true
-        paint.isDither = true
+    fun Canvas.drawMultilineText(
+        text: CharSequence,
+        textPaint: TextPaint,
+        width: Int,
+        x: Float,
+        y: Float,
+        start: Int = 0,
+        end: Int = text.length,
+        alignment: Layout.Alignment = Layout.Alignment.ALIGN_NORMAL,
+        textDir: TextDirectionHeuristic = TextDirectionHeuristics.LTR,
+        spacingMult: Float = 1f,
+        spacingAdd: Float = 0f,
+        breakStrategy: Int = Layout.BREAK_STRATEGY_SIMPLE,
+        hyphenationFrequency: Int = Layout.HYPHENATION_FREQUENCY_NONE
+    ) {
 
 
-        return paint
+        val staticLayout = StaticLayout.Builder
+            .obtain(text, start, end, textPaint, width)
+            .setAlignment(alignment)
+            .setTextDirection(textDir)
+            .setLineSpacing(spacingAdd, spacingMult)
+            .setBreakStrategy(breakStrategy)
+            .build()
+        staticLayout.draw(this, x, y)
     }
 
-    private fun setSize(size: Int): Float {
-        val size_req = size.toFloat()
-        return size_req
+    fun StaticLayout.draw(canvas: Canvas, x: Float, y: Float) {
+
+
+        canvas.withTranslation(x, y) {
+            draw(this)
+        }
+    }
+
+    override fun getUserType(_user: String) {
+
+    }
+
+    override fun getTagType(_tag: String) {
 
     }
 

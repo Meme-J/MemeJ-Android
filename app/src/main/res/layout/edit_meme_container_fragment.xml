@@ -1,186 +1,190 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/rel_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginTop="?attr/actionBarSize"
-    android:layout_marginBottom="56dp">
-
-    <ProgressBar
-        android:id="@+id/pb_edit_fragment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:visibility="gone" />
-
-    <androidx.cardview.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="@dimen/edit_meme_card_width"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_gravity="center"
-        android:layout_margin="12dp"
-        android:elevation="40dp"
-        app:cardCornerRadius="@dimen/margins">
+<layout>
 
 
-        <ScrollView
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/rel_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/purple">
+
+        <ProgressBar
+            android:id="@+id/pb_edit_fragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone" />
+
+        <androidx.cardview.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:layout_margin="20dp"
+            android:elevation="40dp"
+            app:cardCornerRadius="@dimen/margins">
 
-            <LinearLayout
+
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margins"
-                android:orientation="vertical">
+                android:layout_height="wrap_content">
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_edit_user"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?android:attr/selectableItemBackground"
-                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                    tools:listitem="@layout/layout_user" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_edit_tag"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?android:attr/selectableItemBackground"
-                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                    tools:listitem="@layout/layout_user" />
-
-
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/meme_templete_std_height"
                     android:layout_margin="@dimen/margins"
-                    android:elevation="4dp"
-                    app:cardCornerRadius="@dimen/margins">
+                    android:orientation="vertical">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_edit_user"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?android:attr/selectableItemBackground"
+                        android:scrollbars="horizontal"
+                        tools:listitem="@layout/layout_user" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_edit_tag"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?android:attr/selectableItemBackground"
+                        android:scrollbars="horizontal"
+                        tools:listitem="@layout/layout_user" />
+
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/meme_templete_std_height"
+                        android:layout_margin="@dimen/margins"
+                        android:elevation="4dp"
+                        app:cardCornerRadius="@dimen/margins">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="300dp">
+
+                            <ProgressBar
+                                android:id="@+id/loading_panel"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:indeterminate="true" />
+
+                            <com.google.android.material.imageview.ShapeableImageView
+                                android:id="@+id/imagePostEdit"
+                                android:layout_width="@dimen/meme_templete_std_height"
+                                android:layout_height="@dimen/meme_templete_std_height"
+                                android:layout_centerInParent="true" />
+
+                        </RelativeLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        style="@style/timestamp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_margin="@dimen/margins"
+                        android:text="@string/sample_timestamp" />
+
+                    <!--                Style Picker-->
+                    <!--                <LinearLayout-->
+                    <!--                    android:layout_width="match_parent"-->
+                    <!--                    android:layout_height="wrap_content"-->
+                    <!--                    android:layout_margin="@dimen/margins"-->
+                    <!--                    android:orientation="horizontal">-->
+
+                    <!--                    <com.google.android.material.textview.MaterialTextView-->
+                    <!--                        android:id="@+id/choose_color"-->
+                    <!--                        android:layout_width="wrap_content"-->
+                    <!--                        android:layout_height="wrap_content"-->
+                    <!--                        android:layout_margin="@dimen/margins"-->
+                    <!--                        android:text="@string/choose_color" />-->
+
+                    <!--                    <com.google.android.material.textview.MaterialTextView-->
+                    <!--                        android:id="@+id/choose_font"-->
+                    <!--                        android:layout_width="wrap_content"-->
+                    <!--                        android:layout_height="wrap_content"-->
+                    <!--                        android:layout_margin="@dimen/margins"-->
+                    <!--                        android:text="@string/choose_font" />-->
+                    <!--                </LinearLayout>-->
+
 
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="300dp">
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margins"
+                        android:orientation="horizontal">
 
-                        <ProgressBar
-                            android:id="@+id/loading_panel"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            android:indeterminate="true" />
+                        <EditText
+                            android:id="@+id/lineAddedEt"
+                            android:layout_width="@dimen/add_line"
+                            android:layout_height="@dimen/boxHt"
+                            android:layout_marginStart="@dimen/margins"
+                            android:layout_marginTop="4dp"
+                            android:hint="@string/add_a_line"
+                            android:maxLines="4"
+                            android:minLines="1"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-                        <com.google.android.material.imageview.ShapeableImageView
-                            android:id="@+id/imagePostEdit"
-                            android:layout_width="@dimen/meme_templete_std_height"
-                            android:layout_height="@dimen/meme_templete_std_height"
-                            android:layout_centerInParent="true" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/send_post_edit"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_gravity="end"
+                            android:background="@drawable/ic_send"
+                            android:enabled="false"
+                            app:layout_constraintEnd_toEndOf="parent" />
+
 
                     </RelativeLayout>
 
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.textview.MaterialTextView
-                    style="@style/timestamp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:layout_margin="@dimen/margins"
-                    android:text="@string/sample_timestamp" />
-
-                <!--                Style Picker-->
-                <!--                <LinearLayout-->
-                <!--                    android:layout_width="match_parent"-->
-                <!--                    android:layout_height="wrap_content"-->
-                <!--                    android:layout_margin="@dimen/margins"-->
-                <!--                    android:orientation="horizontal">-->
-
-                <!--                    <com.google.android.material.textview.MaterialTextView-->
-                <!--                        android:id="@+id/choose_color"-->
-                <!--                        android:layout_width="wrap_content"-->
-                <!--                        android:layout_height="wrap_content"-->
-                <!--                        android:layout_margin="@dimen/margins"-->
-                <!--                        android:text="@string/choose_color" />-->
-
-                <!--                    <com.google.android.material.textview.MaterialTextView-->
-                <!--                        android:id="@+id/choose_font"-->
-                <!--                        android:layout_width="wrap_content"-->
-                <!--                        android:layout_height="wrap_content"-->
-                <!--                        android:layout_margin="@dimen/margins"-->
-                <!--                        android:text="@string/choose_font" />-->
-                <!--                </LinearLayout>-->
-
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margins"
-                    android:orientation="horizontal">
-
-                    <EditText
-                        android:id="@+id/lineAddedEt"
-                        android:layout_width="@dimen/add_line"
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_insertedTags"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/margins"
-                        android:layout_marginTop="4dp"
-                        android:hint="@string/add_a_line"
-                        android:maxLines="4"
-                        android:minLines="1"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        android:scrollbars="horizontal"
+                        tools:listitem="@layout/layout_tag" />
 
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/send_post_edit"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_alignParentEnd="true"
-                        android:layout_gravity="end"
-                        android:background="@drawable/ic_send"
-                        android:enabled="false"
-                        app:layout_constraintEnd_toEndOf="parent" />
-
-
-                </RelativeLayout>
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_insertedTags"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    tools:listitem="@layout/layout_tag" />
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <AutoCompleteTextView
-                        android:id="@+id/auto_completeTag"
-                        android:layout_width="@dimen/add_line"
+                    <RelativeLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/margins"
-                        android:layout_marginTop="@dimen/margins"
-                        android:layout_marginBottom="16dp"
-                        android:hint="@string/add_a_tag" />
+                        android:orientation="horizontal">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/auto_completeTag"
+                            android:layout_width="@dimen/add_line"
+                            android:layout_height="@dimen/boxHt"
+                            android:layout_marginStart="@dimen/margins"
+                            android:layout_marginTop="@dimen/margins"
+                            android:layout_marginBottom="16dp"
+                            android:hint="@string/add_a_tag" />
 
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/tag_edit"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_alignParentEnd="true"
-                        android:layout_gravity="end"
-                        android:background="@drawable/ic_check_black_24dp"
-                        android:enabled="false"
-                        app:layout_constraintEnd_toEndOf="parent" />
-                </RelativeLayout>
-            </LinearLayout>
-        </ScrollView>
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/tag_edit"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_gravity="end"
+                            android:background="@drawable/ic_check_black_24dp"
+                            android:enabled="false"
+                            app:layout_constraintEnd_toEndOf="parent" />
+                    </RelativeLayout>
+                </LinearLayout>
+            </ScrollView>
 
 
-    </androidx.cardview.widget.CardView>
+        </androidx.cardview.widget.CardView>
 
-</RelativeLayout>
+    </RelativeLayout>
+</layout>

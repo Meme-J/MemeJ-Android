@@ -3,7 +3,6 @@ package com.example.memej.responses
 
 import android.os.Parcelable
 import androidx.room.Entity
-import androidx.room.PrimaryKey
 import com.squareup.moshi.Json
 import kotlinx.android.parcel.Parcelize
 
@@ -15,7 +14,7 @@ data class ProfileResponse(
     @Parcelize
     @Entity
     data class Profile(
-        @PrimaryKey(autoGenerate = true)
+
         @Json(name = "email")
         val email: String, // test3@email.com
         val _id: String, // 5ec63c1cec83c400172ef024

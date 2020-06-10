@@ -1,19 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/frame_layout_meme_world"
+    android:id="@+id/container_likedMemes"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginBottom="56dp"
     tools:context=".ui.MemeWorld.MemeWorldFragment">
 
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/abAdd"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/tb_likedMemes"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:navigationContentDescription="@string/lines"
+            app:navigationIcon="@drawable/ic_arrow"
+            app:title="Liked Memes"
+            app:titleTextColor="@color/white" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ProgressBar
+        android:id="@+id/pb_liked_memes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swl_liked_memes"
+        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_marginTop="?attr/actionBarSize"
+        android:padding="@dimen/margins">
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_likedMemes"
+            android:padding="@dimen/margins"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margins"
@@ -21,4 +47,4 @@
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
-</FrameLayout>
+</RelativeLayout>

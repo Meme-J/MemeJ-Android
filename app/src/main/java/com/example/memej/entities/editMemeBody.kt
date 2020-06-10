@@ -8,5 +8,8 @@ data class editMemeBody(
     @Json(name = "memeId")
     val memeId: String,                          // 5ebac5fc9434062d5b276ccd
     @Json(name = "placeholderText")
-    val placeholderText: String                  // Kavya is my only love
+    val placeholderText: String,                  // Kavya is my only love
+    @Json(name = "tags")
+    val tags: List<String>                  // Kavya is my only love
+
 )

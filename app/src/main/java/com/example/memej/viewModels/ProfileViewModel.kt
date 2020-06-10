@@ -1,7 +1,7 @@
-package com.example.memej.ui.explore
+package com.example.memej.viewModels
 
 import androidx.lifecycle.ViewModel
 
-class ExploreViewModel : ViewModel() {
+class ProfileViewModel : ViewModel() {
     // TODO: Implement the ViewModel
 }

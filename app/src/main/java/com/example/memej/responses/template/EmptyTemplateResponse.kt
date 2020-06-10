@@ -1,7 +1,7 @@
 package com.example.memej.responses.template
 
 
-import com.example.memej.responses.memeWorldResponses.Coordinate
+import com.example.memej.responses.homeMememResponses.Coordinates
 import com.squareup.moshi.Json
 
 data class EmptyTemplateResponse(
@@ -10,7 +10,7 @@ data class EmptyTemplateResponse(
 ) {
     data class Template(
         @Json(name = "coordinates")
-        val coordinates: List<Coordinate>,
+        val coordinates: List<Coordinates>,
         @Json(name = "_id")
         val _id: String, // 5ed672e0942f0f11e7927fb4
         @Json(name = "imageUrl")

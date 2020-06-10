@@ -41,7 +41,14 @@ class MemeGroupAdapter(val itemClickListener: OnItemClickListenerTemplate) :
         ) {
 
             with(_memeGroup) {
-                memeGroupTag.text = tags.toString()
+
+                val arrayTags = tags
+                var str = ""
+                for (s in arrayTags) {
+                    str += s + " "
+                }
+                memeGroupTag.text = str
+
                 //Load image
                 //This is where the glide is loaded
                 Glide.with(itemView)

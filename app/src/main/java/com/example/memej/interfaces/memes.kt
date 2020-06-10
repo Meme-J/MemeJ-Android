@@ -1,6 +1,7 @@
 package com.example.memej.interfaces
 
 import com.example.memej.entities.editMemeBody
+import com.example.memej.entities.queryBody
 import com.example.memej.entities.searchBody
 import com.example.memej.responses.LikeOrNotResponse
 import com.example.memej.responses.SearchResponse
@@ -22,10 +23,12 @@ interface memes {
     @POST("api/meme/ongoing")
     fun fetchEditableMemes(
         @Query("limit") loadSize: Int = 30,
-        @Header("Authorization") accessToken: String?
+        @Header("Authorization") accessToken: String?,
+        @Body tags: queryBody                 //Default for normal calling, but a separate string incase a new param called
     ): Call<homeMemeApiResponse>
 
-    //Get search suggestions
+
+    //Get search suggestions of memes
     @POST("api/meme/autocomplete")
     fun getSuggestions(
         @Header("Authorization") accessToken: String?
@@ -37,7 +40,8 @@ interface memes {
     @POST("api/meme/complete")
     fun fetchMemeWorldMemes(
         @Query("limit") loadSize: Int = 30,              //Test it with this value
-        @Header("Authorization") accessToken: String?
+        @Header("Authorization") accessToken: String?,
+        @Body tag: queryBody
     ): Call<memeApiResponses>
 
 
@@ -69,6 +73,7 @@ interface memes {
         @Body inf: String,
         @Header("Authorization") accessToken: String?
     ): Call<EmptyTemplateResponse.Template>          //same as empty template response
+
 
     //Get the tags for memes
     @POST("api/meme/autocomplete")

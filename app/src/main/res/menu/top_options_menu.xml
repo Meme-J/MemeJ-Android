@@ -6,9 +6,8 @@
         android:icon="@drawable/ic_search"
         android:title="@string/search"
         android:visible="true"
-
         app:actionViewClass="android.widget.SearchView"
-        app:showAsAction="collapseActionView|always" />
+        app:showAsAction="collapseActionView|ifRoom" />
 
     <item
         android:id="@+id/settings_btn"
