@@ -36,6 +36,7 @@
         <!--            android:paddingTop="12dp"-->
         <!--            android:paddingEnd="40dp" />-->
 
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_memeGroup"
             android:layout_width="match_parent"

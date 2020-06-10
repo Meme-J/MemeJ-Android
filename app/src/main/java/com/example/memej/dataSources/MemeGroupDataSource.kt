@@ -2,6 +2,9 @@ package com.example.memej.dataSources
 
 import android.content.Context
 import android.util.Log
+import android.view.View
+import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.paging.PageKeyedDataSource
 import com.example.memej.Utils.SessionManager
 import com.example.memej.interfaces.RetrofitClient
@@ -11,7 +14,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 //Create a scope
-class MemeGroupDataSource(val context: Context) :
+class MemeGroupDataSource(val context: Context, val pb: ProgressBar) :
     PageKeyedDataSource<String, EmptyTemplateResponse.Template>() {
 
 
@@ -23,35 +26,43 @@ class MemeGroupDataSource(val context: Context) :
         params: LoadInitialParams<String>,
         callback: LoadInitialCallback<String, EmptyTemplateResponse.Template>
     ) {
-        Log.e("DATA SOURCE", "In load Intial ")
+
         apiService.getTemplate(
             loadSize = params.requestedLoadSize,
             accessToken = "Bearer ${sessionManager.fetchAcessToken()}"
         )
             .enqueue(object : Callback<EmptyTemplateResponse> {
                 override fun onFailure(call: Call<EmptyTemplateResponse>, t: Throwable) {
-                    Log.e("DATA SOURCE", "Failed 1 to fetch data!" + t.message.toString())
+                    Toast.makeText(context, t.message.toString(), Toast.LENGTH_SHORT).show()
+                    pb.visibility = View.GONE
                 }
 
                 override fun onResponse(
                     call: Call<EmptyTemplateResponse>,
                     response: Response<EmptyTemplateResponse>
                 ) {
-                    val listing = response.body()
 
-                    val homePosts = listing?.templates
-                    Log.e("DATA SOURCE", "Home post object" + homePosts + " " + homePosts?.size)
+                    if (response.isSuccessful) {
+                        val listing = response.body()
 
-                    if (homePosts != null) {
+                        val homePosts = listing?.templates
 
-                        callback.onResult(
+                        if (homePosts != null) {
 
-                            homePosts,
-                            null,       //Last Key
-                            null         //Before value
+                            callback.onResult(
 
-                        )
+                                homePosts,
+                                null,       //Last Key
+                                null         //Before value
+
+                            )
+                        }
+                        pb.visibility = View.GONE
+                    } else {
+                        Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show()
+                        pb.visibility = View.GONE
                     }
+
                 }
             }
             )
@@ -64,30 +75,36 @@ class MemeGroupDataSource(val context: Context) :
     ) {
 
 
-        Log.e("DATA SOURCE", "In load After")
         apiService.getTemplate(
             loadSize = params.requestedLoadSize,
-            accessToken = sessionManager.fetchAcessToken()
+            accessToken = "Bearer ${sessionManager.fetchAcessToken()}"
         )
             .enqueue(object : Callback<EmptyTemplateResponse> {
                 override fun onFailure(call: Call<EmptyTemplateResponse>, t: Throwable) {
-                    Log.e("DATA SOURCE", "Failed 2 to fetch data!")
+                    Toast.makeText(context, t.message.toString(), Toast.LENGTH_SHORT).show()
+                    pb.visibility = View.GONE
                 }
 
                 override fun onResponse(
                     call: Call<EmptyTemplateResponse>,
                     response: Response<EmptyTemplateResponse>
                 ) {
-                    val listing = response.body()
+                    if (response.isSuccessful) {
+                        val listing = response.body()
 
-                    val homePosts = listing?.templates
-                    Log.e("DATA SOURCE", "Success 2 ")
+                        val homePosts = listing?.templates
+                        Log.e("DATA SOURCE", "Success 2 ")
 
-                    if (homePosts != null) {
-                        callback.onResult(
-                            homePosts,
-                            null
-                        )
+                        if (homePosts != null) {
+                            callback.onResult(
+                                homePosts,
+                                null
+                            )
+                        }
+                        pb.visibility = View.GONE
+                    } else {
+                        Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show()
+                        pb.visibility = View.GONE
                     }
                 }
             })

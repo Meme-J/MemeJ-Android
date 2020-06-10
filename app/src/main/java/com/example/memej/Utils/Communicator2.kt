@@ -12,4 +12,5 @@ interface Communicator2 {
     fun passDataToEdit(bundle: Bundle)
 
     fun passDtataToComplete(bundle: Bundle)
+
 }

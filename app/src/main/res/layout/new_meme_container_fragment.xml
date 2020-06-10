@@ -4,8 +4,7 @@
     android:id="@+id/rel_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="?attr/actionBarSize"
-    android:layout_marginBottom="56dp">
+    android:background="@color/purple">
 
     <ProgressBar
         android:id="@+id/pb_new_fragment"
@@ -15,11 +14,11 @@
         android:visibility="gone" />
 
     <androidx.cardview.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="@dimen/edit_meme_card_width"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_gravity="center"
-        android:layout_margin="12dp"
+        android:layout_margin="20dp"
         android:elevation="40dp"
         app:cardCornerRadius="@dimen/margins">
 
@@ -40,7 +39,7 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackground"
-                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                    android:scrollbars="horizontal"
                     tools:listitem="@layout/layout_user" />
 
                 <com.google.android.material.card.MaterialCardView
@@ -111,7 +110,7 @@
                     <EditText
                         android:id="@+id/lineAddedEtNew"
                         android:layout_width="@dimen/add_line"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/boxHt"
                         android:layout_marginStart="@dimen/margins"
                         android:layout_marginTop="4dp"
                         android:hint="@string/add_a_line"
@@ -146,17 +145,18 @@
                     android:orientation="horizontal">
 
                     <AutoCompleteTextView
-                        android:id="@+id/auto_completeTag"
+                        android:id="@+id/auto_completeTagNew"
                         android:layout_width="@dimen/add_line"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/boxHt"
                         android:layout_marginStart="@dimen/margins"
                         android:layout_marginTop="@dimen/margins"
+
                         android:layout_marginBottom="16dp"
                         android:hint="@string/add_a_tag" />
 
 
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/tag_edit"
+                        android:id="@+id/tag_editNew"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:layout_alignParentEnd="true"

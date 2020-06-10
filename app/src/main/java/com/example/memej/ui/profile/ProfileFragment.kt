@@ -1,5 +1,6 @@
 package com.example.memej.ui.profile
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,7 +10,7 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.fragment.app.viewModels
 import com.example.memej.R
 import com.example.memej.Utils.Communicator
 import com.example.memej.Utils.PreferenceUtil
@@ -30,7 +31,7 @@ class ProfileFragment : Fragment() {
     }
 
     private lateinit var root: View
-    private lateinit var viewModel: ProfileViewModel
+    private val viewModel: ProfileViewModel by viewModels()
     private lateinit var comm: Communicator
     private lateinit var sessionManager: SessionManager
     lateinit var pb: ProgressBar
@@ -51,16 +52,14 @@ class ProfileFragment : Fragment() {
         getUser()           //This all are necessary
         getLikes()
         callLikes()
-        //Call User is not required
 
-        //Get the total loves, an API to be called evrytime
-        //Get the total memes created.
 
         pb.visibility = View.GONE
+
         root.findViewById<ImageView>(R.id.likedMemes).setOnClickListener {
-            // Run an api call
-            //Replace with the Liked Memes Fragment, where all the operations will take place like meme world feature
-            comm.goToLikedMemesPage()
+            //Start intent to the Liked Memes Activty
+            val i = Intent(activity, LikedMemes::class.java)
+            startActivity(i)
         }
 
 
@@ -158,13 +157,5 @@ class ProfileFragment : Fragment() {
             })
     }
 
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(ProfileViewModel::class.java)
-        //Get this viemodel into working
-
-
-    }
 
 }

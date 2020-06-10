@@ -38,6 +38,7 @@ class HomeMemeDataSource(val context: Context, val searchquery: queryBody, val p
                     Log.e("DATA SOURCE", "Failed 1 to fetch data!" + t.message.toString())
                     Toast.makeText(context, t.message.toString(), Toast.LENGTH_SHORT).show()
                     pb.visibility = View.GONE
+
                 }
 
                 override fun onResponse(

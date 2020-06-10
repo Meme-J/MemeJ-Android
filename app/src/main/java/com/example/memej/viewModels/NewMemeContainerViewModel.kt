@@ -1,4 +1,4 @@
-package com.example.memej.ui.memeTemplate
+package com.example.memej.viewModels
 
 import androidx.lifecycle.ViewModel
 

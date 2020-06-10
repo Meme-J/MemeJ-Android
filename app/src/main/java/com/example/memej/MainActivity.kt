@@ -22,7 +22,6 @@ import com.example.memej.responses.SearchResponse
 import com.example.memej.ui.MemeWorld.CompletedMemeActivity
 import com.example.memej.ui.MemeWorld.MemeWorldFragment
 import com.example.memej.ui.explore.ExploreFragment
-import com.example.memej.ui.home.EditMemeContainerFragment
 import com.example.memej.ui.home.HomeFragment
 import com.example.memej.ui.home.Searchable
 import com.example.memej.ui.home.SettingsScreen
@@ -281,18 +280,14 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
         return true
     }
 
+    //Exit app
+    override fun onBackPressed(): Unit {
+        finish()
+    }
 
     //Communicator Classes
     override fun passDataFromHome(bundle: Bundle) {
 
-        val transaction = this.supportFragmentManager.beginTransaction()
-        val frag2 = EditMemeContainerFragment()
-        frag2.arguments = bundle
-
-        transaction.replace(R.id.container, frag2)
-        transaction.addToBackStack(null)
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-        transaction.commit()
     }
 
     override fun passDataToMemeWorld(bundle: Bundle) {

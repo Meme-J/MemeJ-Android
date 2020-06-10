@@ -1,27 +1,22 @@
 package com.example.memej.ui.MemeWorld
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
-import androidx.paging.DataSource
-import androidx.paging.LivePagedListBuilder
-import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.memej.R
 import com.example.memej.Utils.Communicator
 import com.example.memej.adapters.MemeWorldAdapter
 import com.example.memej.adapters.OnItemClickListenerMemeWorld
-import com.example.memej.dataSources.MemeWorldDataSourcae
-import com.example.memej.entities.queryBody
 import com.example.memej.responses.memeWorldResponses.Meme_World
+import com.example.memej.viewModels.MemeWorldViewModel
 
 class MemeWorldFragment : Fragment(), OnItemClickListenerMemeWorld {
 
@@ -29,7 +24,7 @@ class MemeWorldFragment : Fragment(), OnItemClickListenerMemeWorld {
         fun newInstance() = MemeWorldFragment()
     }
 
-    private lateinit var memeWorldViewModel: MemeWorldViewModel
+    private val memeWorldViewModel: MemeWorldViewModel by viewModels()
     private lateinit var rv: RecyclerView
     private lateinit var memeWorldAdapter: MemeWorldAdapter
     lateinit var root: View
@@ -48,8 +43,9 @@ class MemeWorldFragment : Fragment(), OnItemClickListenerMemeWorld {
         memeWorldAdapter = MemeWorldAdapter(requireContext(), this)
         pb = root.findViewById(R.id.pb_meme_world)
         pb.visibility = View.VISIBLE
-        initializingList()
 
+        observeList()
+        initList()
 
         comm = activity as Communicator
 
@@ -58,62 +54,19 @@ class MemeWorldFragment : Fragment(), OnItemClickListenerMemeWorld {
     }
 
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        memeWorldViewModel = ViewModelProviders.of(this).get(MemeWorldViewModel::class.java)
-        // TODO: Use the ViewModel
-    }
-
-
-    private fun initializingList() {
-
-        Log.e("HF", "Initialzed config")
-        //Create Config
-        val config = PagedList.Config.Builder()
-            .setPageSize(30)
-            .setEnablePlaceholders(false)
-            .build()
-
-
-        Log.e("HF", "Initialzed Live Data")
-
-        //Use Live Data
-        val liveData = initializedPagedListBuilder(config)?.build()
-        Log.e(
-            "HF",
-            "Retrunrs and gives live data" + liveData + " " + liveData?.value + " " + liveData.toString()
-        )
-
-        //Populate the adapter
-        liveData?.observe(viewLifecycleOwner, Observer<PagedList<Meme_World>> { pagedList ->
-            Log.e("HF", "In the observer")
-            Log.e(
-                "HF",
-                "VAlue sth paged list is given by {$pagedList}" + pagedList.dataSource + " " + pagedList.config + " " + pagedList.isDetached
-            )
-
-            memeWorldAdapter.submitList(pagedList)
-        })
-
-        Log.e("HF", "Initialzed rv, adapter")
+    private fun initList() {
         rv.layoutManager = LinearLayoutManager(context)
         rv.adapter = memeWorldAdapter
-        Log.e("HF", "Is somewhere")
-
+        pb.visibility = View.GONE
 
     }
 
-    private fun initializedPagedListBuilder(config: PagedList.Config?): LivePagedListBuilder<String, Meme_World>? {
-
-        val dataSourceFactory = object : DataSource.Factory<String, Meme_World>() {
-            override fun create(): DataSource<String, Meme_World> {
-                Log.e("K", "in inialtialzed page list builder")
-                val inf = queryBody(tagRequired)
-                return MemeWorldDataSourcae(requireContext(), inf, pb)
-            }
-        }
-        return config?.let { LivePagedListBuilder(dataSourceFactory, it) }
+    private fun observeList() {
+        memeWorldViewModel.getPosts(pr = pb).observe(viewLifecycleOwner, Observer {
+            memeWorldAdapter.submitList(it)
+        })
     }
+
 
     override fun onItemClicked(_homeMeme: Meme_World) {
         //Meme World Container

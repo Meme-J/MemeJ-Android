@@ -41,6 +41,7 @@ import com.example.memej.responses.homeMememResponses.HomeUsers
 import com.example.memej.responses.memeWorldResponses.User
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.textview.MaterialTextView
+import kotlinx.android.synthetic.main.activity_base_host.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -66,12 +67,9 @@ class CompletedMemeActivity : Fragment(), onUserClickType, onTagClickType {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        root = inflater.inflate(R.layout.activity_completed_meme, container, false)
-        //Extract the bundles
+        root = inflater.inflate(R.layout.activity_completed_meme, base_activty_host, false)
         arg = this.requireArguments()
-        //Create a argument
         memeUrl = arg.getString("imageUrl").toString()
-        //Init the rvs
         rvTag = root.findViewWithTag(R.id.rv_complete_user_tag)
         rvUser = root.findViewWithTag(R.id.rv_complete_user)
         image = root.findViewById<ImageView>(R.id.like_completed_meme_btn)
@@ -80,12 +78,8 @@ class CompletedMemeActivity : Fragment(), onUserClickType, onTagClickType {
         initalizeTheMemePost()
 
 
-        //Onclick for likeing/disliking
         root.findViewById<ImageView>(R.id.like_completed_meme_btn).setOnClickListener {
-
-            //Call the inheroted animation
             likeDislike()
-
         }
 
 

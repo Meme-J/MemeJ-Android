@@ -14,4 +14,7 @@
     <color name="colorDimBlack">#191919</color>
     <color name="gray">#a9a9a9</color>
 
+    <color name="purple">#BB86FC</color>
+    <color name="deepPurp">#3700B3</color>
+    <color name="lightPurp">#6200EE</color>
 </resources>

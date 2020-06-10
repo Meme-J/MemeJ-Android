@@ -2,6 +2,7 @@ package com.example.memej.ui.home
 
 //import com.example.memej.adapters.OnItemClickListenerHome
 //import com.example.memej.database.HomeMemeDataBase
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,28 +10,24 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.paging.DataSource
-import androidx.paging.LivePagedListBuilder
-import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.memej.R
 import com.example.memej.Utils.Communicator
 import com.example.memej.adapters.HomeMemeAdapter
 import com.example.memej.adapters.OnItemClickListenerHome
-import com.example.memej.dataSources.HomeMemeDataSource
-import com.example.memej.entities.queryBody
 import com.example.memej.responses.homeMememResponses.Meme_Home
+import com.example.memej.viewModels.HomeViewModel
 
 class HomeFragment : Fragment(), OnItemClickListenerHome {
 
-    private lateinit var homeViewModel: HomeViewModel
+    private val homeViewModel: HomeViewModel by viewModels()
     private lateinit var rv: RecyclerView
     private lateinit var homeMemeAdapter: HomeMemeAdapter
     lateinit var root: View
     lateinit var comm: Communicator
-    var tagToBeSearched: String = ""           //This will be null in case called from Home
     lateinit var pb: ProgressBar
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,16 +35,14 @@ class HomeFragment : Fragment(), OnItemClickListenerHome {
         savedInstanceState: Bundle?
     ): View? {
 
-//        homeViewModel =
-//            ViewModelProviders.of(this).get(HomeViewModel::class.java)
         root = inflater.inflate(R.layout.fragment_home, container, false)
         pb = root.findViewById(R.id.pb_home)
         rv = root.findViewById(R.id.rv_home)
+
         homeMemeAdapter = HomeMemeAdapter(this)
 
-
-        //This is the method originally
-        initializingList(tagToBeSearched)
+        observeList()
+        initList()
 
 
         comm = activity as Communicator
@@ -56,43 +51,19 @@ class HomeFragment : Fragment(), OnItemClickListenerHome {
         return root
     }
 
-
-    private fun initializingList(tagToBeSearched: String) {
-
-        val config = PagedList.Config.Builder()
-            .setPageSize(30)
-            .setEnablePlaceholders(false)
-            .build()
-
-
-        //Use Live Data
-        val liveData = initializedPagedListBuilder(config)?.build()
-
-        //Populate the adapter
-
-        liveData?.observe(viewLifecycleOwner, Observer<PagedList<Meme_Home>> { pagedList ->
-
-            homeMemeAdapter.submitList(pagedList)
-        })
-
+    private fun initList() {
         rv.layoutManager = LinearLayoutManager(context)
         rv.adapter = homeMemeAdapter
-
+        pb.visibility = View.GONE
 
     }
 
-    private fun initializedPagedListBuilder(config: PagedList.Config?): LivePagedListBuilder<String, Meme_Home>? {
-
-        val dataSourceFactory = object : DataSource.Factory<String, Meme_Home>() {
-            override fun create(): DataSource<String, Meme_Home> {
-
-                //From Home, query is blank
-                val inf = queryBody("")
-                return HomeMemeDataSource(requireContext(), inf, pb = pb)
-            }
-        }
-        return config?.let { LivePagedListBuilder(dataSourceFactory, it) }
+    private fun observeList() {
+        homeViewModel.getPosts(pb = pb).observe(viewLifecycleOwner, Observer {
+            homeMemeAdapter.submitList(it)
+        })
     }
+
 
     override fun onItemClicked(_homeMeme: Meme_Home) {
 
@@ -114,7 +85,9 @@ class HomeFragment : Fragment(), OnItemClickListenerHome {
 
         )
 
-        comm.passDataFromHome(bundle)
+        val i = Intent(activity, EditMemeContainerFragment::class.java)
+        i.putExtra("bundle", bundle)
+        startActivity(i)
         //It will again go in the home bundle
     }
 

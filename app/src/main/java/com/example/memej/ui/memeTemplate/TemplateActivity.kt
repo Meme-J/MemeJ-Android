@@ -2,10 +2,10 @@ package com.example.memej.ui.memeTemplate
 
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.memej.R
@@ -13,12 +13,13 @@ import com.example.memej.adapters.MemeTemplateAdapter
 import com.example.memej.adapters.OnItemClickListenerMeme
 import com.example.memej.databinding.ActivityTemplateBinding
 import com.example.memej.entities.memeTemplate
+import com.example.memej.viewModels.TemplateViewModel
 import com.google.android.material.textview.MaterialTextView
 
 class TemplateActivity : AppCompatActivity(), OnItemClickListenerMeme {
 
     private lateinit var memeTemplate: MemeTemplateAdapter
-    lateinit var viewmodel: TemplateViewModel
+    private val viewmodel: TemplateViewModel by viewModels()
     private lateinit var rv: RecyclerView
     var meme_group_id: Int? = 0
 
@@ -37,7 +38,6 @@ class TemplateActivity : AppCompatActivity(), OnItemClickListenerMeme {
         val id: Int? = bundle?.getInt("id")
         meme_group_id = id
         //Initialze VM, rv, adapter
-        viewmodel = ViewModelProviders.of(this).get(TemplateViewModel::class.java)
         rv = b.rvMemeTemplate
         memeTemplate = MemeTemplateAdapter(this)
 

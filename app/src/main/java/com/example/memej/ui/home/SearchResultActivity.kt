@@ -4,28 +4,25 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.ProgressBar
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
-import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.memej.MainActivity
 import com.example.memej.R
-import com.example.memej.Utils.Communicator2
 import com.example.memej.adapters.HomeMemeAdapter
 import com.example.memej.adapters.MemeWorldAdapter
 import com.example.memej.adapters.OnItemClickListenerHome
 import com.example.memej.adapters.OnItemClickListenerMemeWorld
 import com.example.memej.responses.homeMememResponses.Meme_Home
 import com.example.memej.responses.memeWorldResponses.Meme_World
-import com.example.memej.ui.MemeWorld.CompletedMemeActivity
 import com.example.memej.viewModels.SearchResultActivityViewModel
 
 
 class SearchResultActivity : AppCompatActivity(), OnItemClickListenerHome,
-    OnItemClickListenerMemeWorld, Communicator2 {
+    OnItemClickListenerMemeWorld {
 
     var tagName: String? = ""              //Deafult Query
     var type: String? = "ongoing"           //Default
@@ -34,7 +31,7 @@ class SearchResultActivity : AppCompatActivity(), OnItemClickListenerHome,
     lateinit var adapterOnGoing: HomeMemeAdapter
     lateinit var adapterComplete: MemeWorldAdapter
     lateinit var pb: ProgressBar
-    lateinit var viewmodel: SearchResultActivityViewModel
+    private val viewmodel: SearchResultActivityViewModel by viewModels()
     lateinit var toolbar: androidx.appcompat.widget.Toolbar
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,7 +52,6 @@ class SearchResultActivity : AppCompatActivity(), OnItemClickListenerHome,
             startActivity(i)
         }
         //Init Viewmmodel
-        viewmodel = ViewModelProviders.of(this).get(SearchResultActivityViewModel::class.java)
         pb = findViewById(R.id.pb_template)
         pb.visibility = View.VISIBLE
         //Init RV
@@ -121,8 +117,6 @@ class SearchResultActivity : AppCompatActivity(), OnItemClickListenerHome,
             "textColor" to _homeMeme.templateId.textColorCode
         )
 
-        passDtataToComplete(bundle)
-
     }
 
 
@@ -147,45 +141,13 @@ class SearchResultActivity : AppCompatActivity(), OnItemClickListenerHome,
             "imageName" to _homeMeme.templateId.name
 
         )
-        passDataToEdit(bundle)
 
-    }
-
-    override fun passDataFromADdToNewMeme(bundle: Bundle) {
-
-    }
-
-
-    override fun returnToSelectTemplate() {
+        //Go to the edit link
+        val i = Intent(this, EditMemeContainerFragment::class.java)
+        i.putExtra("bundle", bundle)
+        startActivity(i)
 
 
     }
 
-    override fun passDataToEdit(bundle: Bundle) {
-
-        val transaction = this.supportFragmentManager.beginTransaction()
-        val frag2 = EditMemeContainerFragment()
-
-        frag2.arguments = bundle
-        transaction.replace(R.id.container, frag2)
-        transaction.addToBackStack(null)
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-        transaction.commit()
-
-
-    }
-
-    override fun passDtataToComplete(bundle: Bundle) {
-
-        val transaction = this.supportFragmentManager.beginTransaction()
-        val frag2 = CompletedMemeActivity()
-
-        frag2.arguments = bundle
-        transaction.replace(R.id.container, frag2)
-        transaction.addToBackStack(null)
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-        transaction.commit()
-
-
-    }
 }

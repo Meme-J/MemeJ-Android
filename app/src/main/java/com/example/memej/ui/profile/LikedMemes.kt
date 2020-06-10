@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.ProgressBar
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.fragment.app.FragmentTransaction
@@ -24,7 +25,7 @@ import com.example.memej.viewModels.LikedMemesViewModel
 class LikedMemes : AppCompatActivity(), OnItemClickListenerMemeWorld, Communicator {
 
 
-    private lateinit var viewModel: LikedMemesViewModel
+    private val viewModel: LikedMemesViewModel by viewModels()
     private lateinit var rv: RecyclerView
     private lateinit var memeWorldAdapter: MemeWorldAdapter
     lateinit var root: View
@@ -45,6 +46,7 @@ class LikedMemes : AppCompatActivity(), OnItemClickListenerMemeWorld, Communicat
             startActivity(i)
         }
 
+        //Instantiate ViewModel
         memeWorldAdapter = MemeWorldAdapter(this, this)
         initList()
 

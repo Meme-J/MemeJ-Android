@@ -27,7 +27,8 @@ interface memes {
         @Body tags: queryBody                 //Default for normal calling, but a separate string incase a new param called
     ): Call<homeMemeApiResponse>
 
-    //Get search suggestions
+
+    //Get search suggestions of memes
     @POST("api/meme/autocomplete")
     fun getSuggestions(
         @Header("Authorization") accessToken: String?

@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.paging.PageKeyedDataSource
+import com.example.memej.Utils.ApplicationUtil
 import com.example.memej.Utils.SessionManager
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.memeWorldResponses.Meme_World
@@ -13,12 +14,14 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+
 class LikedMemesDataSource(val context: Context, val pb: ProgressBar) :
     PageKeyedDataSource<String, Meme_World>() {
 
 
-    private val apiService = RetrofitClient.makeCallForProfileParameters(context)
-    private val sessionManager = SessionManager(context)
+    val ctx = ApplicationUtil.getContext()
+    private val apiService = RetrofitClient.makeCallForProfileParameters(ctx)
+    private val sessionManager = SessionManager(ctx)
 
     override fun loadInitial(
         params: LoadInitialParams<String>,
@@ -29,6 +32,7 @@ class LikedMemesDataSource(val context: Context, val pb: ProgressBar) :
             loadSize = params.requestedLoadSize,
             accessToken = "Bearer ${sessionManager.fetchAcessToken()}"
         )
+
             .enqueue(object : Callback<memeApiResponses> {
                 override fun onFailure(call: Call<memeApiResponses>, t: Throwable) {
                     Toast.makeText(context, t.message.toString(), Toast.LENGTH_SHORT).show()
@@ -39,17 +43,20 @@ class LikedMemesDataSource(val context: Context, val pb: ProgressBar) :
                     call: Call<memeApiResponses>,
                     response: Response<memeApiResponses>
                 ) {
-                    val listing = response.body()
-                    val memeWorldPosts = listing?.memes
-                    if (memeWorldPosts != null) {
 
-                        callback.onResult(
+                    if (response.isSuccessful) {
+                        val listing = response.body()
+                        val memeWorldPosts = listing?.memes
+                        if (memeWorldPosts != null) {
 
-                            memeWorldPosts,
-                            null,       //Last Key
-                            listing.lastMemeId         //Before value
+                            callback.onResult(
 
-                        )
+                                memeWorldPosts,
+                                null,       //Last Key
+                                listing.lastMemeId         //Before value
+
+                            )
+                        }
                     } else {
                         Toast.makeText(context, response.errorBody().toString(), Toast.LENGTH_SHORT)
                             .show()
@@ -69,7 +76,7 @@ class LikedMemesDataSource(val context: Context, val pb: ProgressBar) :
 
         apiService.getLikedMemes(
             loadSize = params.requestedLoadSize,
-            accessToken = sessionManager.fetchAcessToken()
+            accessToken = "Bearer ${sessionManager.fetchAcessToken()}"
         )
             .enqueue(object : Callback<memeApiResponses> {
                 override fun onFailure(call: Call<memeApiResponses>, t: Throwable) {
@@ -81,15 +88,18 @@ class LikedMemesDataSource(val context: Context, val pb: ProgressBar) :
                     call: Call<memeApiResponses>,
                     response: Response<memeApiResponses>
                 ) {
-                    val listing = response.body()
 
-                    val memePosts = listing?.memes
+                    if (response.isSuccessful) {
+                        val listing = response.body()
 
-                    if (memePosts != null) {
-                        callback.onResult(
-                            memePosts,
-                            listing.lastMemeId
-                        )
+                        val memePosts = listing?.memes
+
+                        if (memePosts != null) {
+                            callback.onResult(
+                                memePosts,
+                                listing.lastMemeId
+                            )
+                        }
                     } else {
                         Toast.makeText(context, response.errorBody().toString(), Toast.LENGTH_SHORT)
                             .show()

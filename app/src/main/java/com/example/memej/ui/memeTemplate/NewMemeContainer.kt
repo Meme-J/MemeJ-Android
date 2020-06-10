@@ -8,15 +8,12 @@ import android.os.Bundle
 import android.text.*
 import android.util.Log
 import android.view.View
-import android.widget.AutoCompleteTextView
-import android.widget.EditText
-import android.widget.ProgressBar
-import android.widget.Toast
+import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.collection.lruCache
 import androidx.core.graphics.withTranslation
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
@@ -26,11 +23,15 @@ import com.example.memej.R
 import com.example.memej.Utils.Communicator2
 import com.example.memej.Utils.SessionManager
 import com.example.memej.adapters.TagAdapter
+import com.example.memej.adapters.TagEditAdapter
 import com.example.memej.adapters.onTagClickType
 import com.example.memej.entities.editMemeBody
+import com.example.memej.entities.searchBody
 import com.example.memej.interfaces.RetrofitClient
+import com.example.memej.responses.SearchResponse
 import com.example.memej.responses.editMemeApiResponse
 import com.example.memej.responses.homeMememResponses.Coordinates
+import com.example.memej.viewModels.NewMemeContainerViewModel
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.imageview.ShapeableImageView
 import retrofit2.Call
@@ -45,7 +46,6 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
 
 
     private lateinit var viewModel: NewMemeContainerViewModel
-    private lateinit var root: View
     lateinit var arg: Bundle
     private lateinit var img: ShapeableImageView
     lateinit var edt: EditText
@@ -58,6 +58,14 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
     lateinit var sessionManager: SessionManager
     lateinit var comm: Communicator2
     lateinit var pb: ProgressBar
+    lateinit var tagCheck: MaterialButton
+
+    lateinit var adapterTagsAdded: TagEditAdapter
+    lateinit var stringAdapter: ArrayAdapter<String>
+    lateinit var mutableList: MutableList<String>
+    lateinit var rvTagEdits: RecyclerView
+    lateinit var HorizontalLayoutInsertedTags: LinearLayoutManager
+    lateinit var adapterTagAdded: TagEditAdapter
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,6 +76,16 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
 
         img = findViewById(R.id.imagePostNew)
         edt = findViewById(R.id.lineAddedEtNew)
+        tagCheck = findViewById(R.id.tag_editNew)
+
+        rvTagEdits = findViewById<RecyclerView>(R.id.rv_insertedTagsNew)
+        HorizontalLayoutInsertedTags = LinearLayoutManager(
+            this,
+            LinearLayoutManager.HORIZONTAL,
+            false
+        )
+
+        adapterTagAdded = TagEditAdapter()
 
         initializeEditFrame(arg)
 
@@ -142,142 +160,169 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
 
         */
 //
-//        val onItemClickListener =
-//            OnItemClickListener { adapterView, view, i, l ->
-//                Toast.makeText(
-//                    context, "Clicked item "
-//                            + adapterView.getItemAtPosition(i), Toast.LENGTH_SHORT
-//                ).show()
-//            }
+        stringAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line)
 
 
-        //Tags list
-        val tagsEt = findViewById<AutoCompleteTextView>(R.id.auto_completeTag)
-        Log.e("X", "TAge Et Clicked")
+        val tagsEt = findViewById<AutoCompleteTextView>(R.id.auto_completeTagNew)
+
+        val onItemClickTag =
+            AdapterView.OnItemClickListener { adapterView, view, i, l ->
+
+                mutableList.add(adapterView.getItemAtPosition(i).toString())
+                setInTagRv()
+                tagsEt.text = null
+            }
+
         tagsEt.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
+                //Activation of button
+                //find the button
+                val tagCheck = findViewById<ImageView>(R.id.tag_editNew)
+                if (tagsEt.length() != 0) {
+                    tagCheck.isEnabled =
+                        true
+                } else if (tagsEt.length() == 0) {
 
+                    tagCheck.isEnabled =
+                        false
+                }
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
+                getTags(s.toString())
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                //Make the call
-                Log.e("X", "In text changed" + s.toString())
-//                getTags(s.toString())
+                getTags(s.toString())
             }
         })
 
-//        tagsEt.onItemClickListener = onItemClickListener
+        tagsEt.onItemClickListener = onItemClickTag
 
+
+        tagCheck.setOnClickListener {
+            mutableList.add(tagsEt.text.toString())
+            setInTagRv()
+            tagsEt.text = null
+        }
 
         //Send button
         val btn = findViewById<MaterialButton>(R.id.send_post_new)
         btn.setOnClickListener {
-            sendPost(edt.text.toString(), tagsEt.text.toString())
+            sendPost(edt.text.toString())
         }
 
 
     }
 
-//    private fun getTags(s: String) {
-//
-//        val service = context?.let { RetrofitClient.makeCallsForMemes(it) }
-//        val inf = searchBody(s, "ongoing")
-//        service!!.getTags(accessToken = "Bearer ${sessionManager.fetchAcessToken()}", info = inf)
-//            .enqueue(object : retrofit2.Callback<SearchResponse> {
-//                override fun onFailure(call: Call<SearchResponse>, t: Throwable) {
-//                    Log.e("K", "Failed to get tags " + t.message.toString())
-//                }
-//
-//                override fun onResponse(
-//                    call: Call<SearchResponse>,
-//                    response: Response<SearchResponse>
-//                ) {
-//
-//                    Log.d(
-//                        "Async Data RemoteData",
-//                        "Got REMOTE DATA " + response.body()!!.suggestions.size
-//                    )
-//
-//                    val str = mutableListOf<String>()
-//                    val str2: List<String> = ArrayList()
-//                    for (y: SearchResponse.Suggestion in response.body()!!.suggestions) {
-//                        str.add(y.tag)
-//
-//                    }
-//
-//                    val actv =
-//                        (context as Activity).findViewById(R.id.auto_completeTag) as AutoCompleteTextView
-//
-//
-//                    val adapter: ArrayAdapter<String>
-//                    adapter =
-//                        ArrayAdapter(context!!, android.R.layout.simple_dropdown_item_1line, str)
-//
-//
-//                    actv.setAdapter(adapter)
-//                }
-//            })
-//    }
+
+    private fun setInTagRv() {
+        Log.e("Edit", "Values in Mutable list" + mutableList.toString())
+        adapterTagAdded.tagAdded = mutableList
+        rvTagEdits.layoutManager = HorizontalLayoutInsertedTags
+        rvTagEdits.adapter = adapterTagAdded
 
 
-    private fun sendPost(line: String, tag: String) {
+    }
+
+    private fun getTags(s: String) {
+
+        val service = RetrofitClient.makeCallsForMemes(this)
+        val inf = searchBody(s, "ongoing")
+        service.getTags(accessToken = "Bearer ${sessionManager.fetchAcessToken()}", info = inf)
+            .enqueue(object : retrofit2.Callback<SearchResponse> {
+                override fun onFailure(call: Call<SearchResponse>, t: Throwable) {
+
+                }
+
+                override fun onResponse(
+                    call: Call<SearchResponse>,
+                    response: Response<SearchResponse>
+                ) {
+
+                    Log.e("Edit", "In tag search response")
+
+                    val str = mutableListOf<String>()
+                    for (y: SearchResponse.Suggestion in response.body()!!.suggestions) {
+                        str.add(y.tag)
+
+                    }
+                    Log.e("Edit", str.toString())
+                    val actv =
+                        findViewById<AutoCompleteTextView>(R.id.auto_completeTagNew)
+
+                    stringAdapter =
+                        ArrayAdapter(
+                            this@NewMemeContainer,
+                            android.R.layout.simple_dropdown_item_1line,
+                            str
+                        )
+
+
+                    actv.setAdapter(stringAdapter)
+                }
+            })
+    }
+
+
+    private fun sendPost(line: String) {
         //Show the progress bar
         pb.visibility = View.VISIBLE
+
         val service = RetrofitClient.makeCallsForMemes(this)
-        val inf = arg.getString("id")?.let { editMemeBody(it, line) }
-        if (inf != null) {
-            service.editMeme(accessToken = "Bearer ${sessionManager.fetchAcessToken()}", info = inf)
-                .enqueue(object : Callback<editMemeApiResponse> {
-                    override fun onFailure(call: Call<editMemeApiResponse>, t: Throwable) {
+        val inf = editMemeBody(arg.getString("id")!!, line, mutableList)
+
+        service.editMeme(accessToken = "Bearer ${sessionManager.fetchAcessToken()}", info = inf)
+            .enqueue(object : Callback<editMemeApiResponse> {
+                override fun onFailure(call: Call<editMemeApiResponse>, t: Throwable) {
+                    Toast.makeText(
+                        this@NewMemeContainer,
+                        t.message.toString(),
+                        Toast.LENGTH_LONG
+                    ).show()
+                    pb.visibility = View.GONE
+                }
+
+                override fun onResponse(
+                    call: Call<editMemeApiResponse>,
+                    response: Response<editMemeApiResponse>
+                ) {
+                    //Response will be good if the meme is created
+                    if (response.body()!!.msg == "Meme Edited successfully") {
                         Toast.makeText(
                             this@NewMemeContainer,
-                            t.message.toString(),
+                            response.body()!!.msg,
                             Toast.LENGTH_LONG
                         ).show()
                         pb.visibility = View.GONE
+                        //Go back to the main activity
+                        //On Creating a new meme retrn to the main activty of return to the parent activity
+                        //Intent back to main activty
+                        val i = Intent(this@NewMemeContainer, MainActivity::class.java)
+                        startActivity(i)
+
+                    } else {
+                        Toast.makeText(
+                            this@NewMemeContainer,
+                            response.body()!!.msg,
+                            Toast.LENGTH_LONG
+                        ).show()
+                        pb.visibility = View.GONE
+
                     }
-
-                    override fun onResponse(
-                        call: Call<editMemeApiResponse>,
-                        response: Response<editMemeApiResponse>
-                    ) {
-                        //Response will be good if the meme is created
-                        if (response.body()!!.msg == "Meme Edited successfully") {
-                            Toast.makeText(
-                                this@NewMemeContainer,
-                                response.body()!!.msg,
-                                Toast.LENGTH_LONG
-                            ).show()
-                            pb.visibility = View.GONE
-                            //Go back to the main activity
-                            //On Creating a new meme retrn to the main activty of return to the parent activity
-                            //Intent back to main activty
-                            val i = Intent(this@NewMemeContainer, MainActivity::class.java)
-                            startActivity(i)
-
-                        } else {
-                            Toast.makeText(
-                                this@NewMemeContainer,
-                                response.body()!!.msg,
-                                Toast.LENGTH_LONG
-                            ).show()
-                            pb.visibility = View.GONE
-
-                        }
-                    }
-                })
-
-        }
+                }
+            })
 
     }
 
 
     private fun initializeEditFrame(arg: Bundle) {
-
+        //Layout
+        val HorizontalLayout: LinearLayoutManager = LinearLayoutManager(
+            this,
+            LinearLayoutManager.HORIZONTAL,
+            false
+        )
         //Load template tags
         val txt = arg.getStringArrayList("tags")
 
@@ -289,10 +334,10 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
         }
 
         //Get the rv and adapter for the user and the tags already existing
-        val rvTag = root.findViewById<RecyclerView>(R.id.rv_edit_tag)
+        val rvTag = findViewById<RecyclerView>(R.id.rv_edit_tag)
         val tagAdapter = TagAdapter(this)
         tagAdapter.tagType = tagsStr
-        rvTag.layoutManager = GridLayoutManager(this@NewMemeContainer, 2)
+        rvTag.layoutManager = HorizontalLayout
         rvTag.adapter = tagAdapter
 
         //There are no users
@@ -523,11 +568,11 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
                 //   canvas.drawTextOnPath(s.toString(),path,0f,10f,setPaint("#000000", currentSize))
                 if (edt.text.isNotEmpty()) {
                     sendButton = true
-                    root.findViewById<MaterialButton>(R.id.send_post_edit).isEnabled =
+                    findViewById<MaterialButton>(R.id.send_post_edit).isEnabled =
                         true
                 } else if (edt.text.isEmpty()) {
                     sendButton = false
-                    root.findViewById<MaterialButton>(R.id.send_post_edit).isEnabled =
+                    findViewById<MaterialButton>(R.id.send_post_edit).isEnabled =
                         false
                 }
 
@@ -563,7 +608,7 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
                 )
                 //Invalidate
                 img.invalidate()
-                root.invalidate()
+
 
             }
         })
@@ -694,6 +739,7 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
 
     }
 
+    //Back Behaviour maintained
     private fun getColorWithAlpha(color: Int, ratio: Float): Int {
         var newColor = 0
         val alpha = Math.round(Color.alpha(color) * ratio).toInt()

@@ -4,15 +4,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.ProgressBar
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.memej.MainActivity
 import com.example.memej.R
-import com.example.memej.Utils.Communicator2
 import com.example.memej.Utils.SessionManager
 import com.example.memej.adapters.MemeGroupAdapter
 import com.example.memej.adapters.OnItemClickListenerTemplate
@@ -20,12 +19,12 @@ import com.example.memej.responses.template.EmptyTemplateResponse
 import com.example.memej.viewModels.SelectMemeGroupViewModel
 import kotlinx.android.synthetic.main.activity_select_meme_template.*
 
-class SelectMemeTemplateActivity : AppCompatActivity(), OnItemClickListenerTemplate, Communicator2 {
+class SelectMemeTemplateActivity : AppCompatActivity(), OnItemClickListenerTemplate {
 
 
     private lateinit var memeGroupAdapter: MemeGroupAdapter
     private lateinit var rv: RecyclerView
-    lateinit var viewModel: SelectMemeGroupViewModel
+    private val viewModel: SelectMemeGroupViewModel by viewModels()
     lateinit var pb: ProgressBar
     lateinit var sessionManager: SessionManager
     lateinit var bundle: Bundle
@@ -65,6 +64,8 @@ class SelectMemeTemplateActivity : AppCompatActivity(), OnItemClickListenerTempl
         setContentView(R.layout.activity_select_meme_template)
 
         //BAck NAvigation
+        pb = findViewById(R.id.pb_template)
+        pb.visibility = View.VISIBLE
         toolbar = findViewById(R.id.addMemeTb)
 
         toolbar.setNavigationOnClickListener {
@@ -73,7 +74,6 @@ class SelectMemeTemplateActivity : AppCompatActivity(), OnItemClickListenerTempl
 
         }
 
-        viewModel = ViewModelProviders.of(this).get(SelectMemeGroupViewModel::class.java)
         pb = findViewById(R.id.pb_template)
         sessionManager = SessionManager(this)
 
@@ -87,7 +87,7 @@ class SelectMemeTemplateActivity : AppCompatActivity(), OnItemClickListenerTempl
     }
 
     private fun observeLiveData() {
-        viewModel.getPosts().observe(this, Observer {
+        viewModel.getPosts(pb = pb).observe(this, Observer {
             memeGroupAdapter.submitList(it)
         })
     }
@@ -96,25 +96,7 @@ class SelectMemeTemplateActivity : AppCompatActivity(), OnItemClickListenerTempl
         rv.layoutManager = GridLayoutManager(this, 2)
         rv.adapter = memeGroupAdapter
         //After this has been done, close the pb
-        findViewById<ProgressBar>(R.id.pb_template).visibility = View.GONE
-    }
-
-    override fun passDataFromADdToNewMeme(bundle: Bundle) {
-
-
-    }
-
-
-    override fun returnToSelectTemplate() {
-
-    }
-
-    override fun passDataToEdit(bundle: Bundle) {
-        TODO("Not yet implemented")
-    }
-
-    override fun passDtataToComplete(bundle: Bundle) {
-        TODO("Not yet implemented")
+        pb.visibility = View.GONE
     }
 
 
