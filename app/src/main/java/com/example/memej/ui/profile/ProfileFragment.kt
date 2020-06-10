@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.example.memej.R
 import com.example.memej.Utils.Communicator
+import com.example.memej.Utils.PreferenceUtil
 import com.example.memej.Utils.SessionManager
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.NumLikes
@@ -25,6 +26,7 @@ class ProfileFragment : Fragment() {
 
     companion object {
         fun newInstance() = ProfileFragment()
+
     }
 
     private lateinit var root: View
@@ -32,6 +34,7 @@ class ProfileFragment : Fragment() {
     private lateinit var comm: Communicator
     private lateinit var sessionManager: SessionManager
     lateinit var pb: ProgressBar
+    private val preferenceUtils = PreferenceUtil
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,21 +47,13 @@ class ProfileFragment : Fragment() {
         //Create a lifecycle owner
         pb.visibility = View.VISIBLE
 
-        getUser()
-        //Get the total loves
-        val service = RetrofitClient.makeCallForProfileParameters(requireContext())
-        service.getNumLikesRecieved(accessToken = "Bearer ${sessionManager.fetchAcessToken()}")
-            .enqueue(object : retrofit2.Callback<NumLikes> {
-                override fun onFailure(call: Call<NumLikes>, t: Throwable) {
-                }
 
-                override fun onResponse(call: Call<NumLikes>, response: Response<NumLikes>) {
-                    //Response is number of likes
-                    root.findViewById<TextView>(R.id.textViewTotalLikes).text =
-                        response.body()?.likes.toString()
-                }
-            })
+        getUser()           //This all are necessary
+        getLikes()
+        callLikes()
+        //Call User is not required
 
+        //Get the total loves, an API to be called evrytime
         //Get the total memes created.
 
         pb.visibility = View.GONE
@@ -72,7 +67,71 @@ class ProfileFragment : Fragment() {
         return root
     }
 
+    private fun getLikes() {
+
+        if (preferenceUtils.likes == 0) {
+            callLikes()
+        } else {
+            root.findViewById<TextView>(R.id.textViewTotalLikes).text =
+                preferenceUtils.likes.toString()
+
+        }
+
+
+    }
+
+    private fun callLikes() {
+
+        Log.e("Profile", "InCall Likes")
+
+        val service = RetrofitClient.makeCallForProfileParameters(requireContext())
+        service.getNumLikesRecieved(accessToken = "Bearer ${sessionManager.fetchAcessToken()}")
+            .enqueue(object : retrofit2.Callback<NumLikes> {
+                override fun onFailure(call: Call<NumLikes>, t: Throwable) {
+
+                }
+
+                override fun onResponse(call: Call<NumLikes>, response: Response<NumLikes>) {
+                    //Response is number of likes
+                    if (response.isSuccessful) {
+                        root.findViewById<TextView>(R.id.textViewTotalLikes).text =
+                            response.body()?.likes.toString()
+                        setPreferencesLikes(response.body()!!)
+                        preferenceUtils.setNumberOfLikesFromPreference(response.body()!!)
+                    }
+                }
+            })
+    }
+
+    private fun setPreferencesUser(user: ProfileResponse.Profile) {
+        preferenceUtils.setUserFromPreference(user)
+    }
+
+    private fun setPreferencesLikes(likes: NumLikes) {
+        preferenceUtils.setNumberOfLikesFromPreference(likes)
+    }
+
     private fun getUser() {
+
+        //If there is blank in the pref
+        if (preferenceUtils.username == "") {
+            callUser()
+        } else {
+
+            root.findViewById<MaterialTextView>(R.id.username).text =
+                preferenceUtils.getUserFromPrefernece().username
+            root.findViewById<MaterialTextView>(R.id.name).text =
+                preferenceUtils.getUserFromPrefernece().name
+            pb.visibility = View.GONE
+
+        }
+
+
+    }
+
+    private fun callUser() {
+
+        Log.e("Profile", "InCalling User from APi")
         val service = RetrofitClient.getAuthInstance()
         service.getUser(accessToken = "Bearer ${sessionManager.fetchAcessToken()}")
             .enqueue(object : retrofit2.Callback<ProfileResponse> {
@@ -86,12 +145,15 @@ class ProfileFragment : Fragment() {
                     response: Response<ProfileResponse>
                 ) {
                     Log.e("porf pass", response.body()?.profile.toString())
-                    root.findViewById<MaterialTextView>(R.id.username).text =
-                        response.body()?.profile?.username
-                    root.findViewById<MaterialTextView>(R.id.name).text =
-                        response.body()?.profile?.name
-                    //   val db = context?.let { UserDatabase.create(it) }
-                    pb.visibility = View.GONE
+
+                    if (response.isSuccessful) {
+                        root.findViewById<MaterialTextView>(R.id.username).text =
+                            response.body()?.profile?.username
+                        root.findViewById<MaterialTextView>(R.id.name).text =
+                            response.body()?.profile?.name
+                        pb.visibility = View.GONE
+                        setPreferencesUser(response.body()!!.profile)
+                    }
                 }
             })
     }

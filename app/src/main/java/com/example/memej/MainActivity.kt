@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
                 }
                 R.id.navigation_profile -> {
                     index = 4
-                    openFragment(ProfileFragment())
+                    openFragment(ProfileFragment.newInstance())
                     return@OnNavigationItemSelectedListener true
                 }
             }
