@@ -1,5 +1,6 @@
 package com.example.memej.ui.MemeWorld
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -29,15 +30,14 @@ class MemeWorldFragment : Fragment(), OnItemClickListenerMemeWorld {
     private lateinit var memeWorldAdapter: MemeWorldAdapter
     lateinit var root: View
     lateinit var comm: Communicator
-    var tagRequired: String = ""
     lateinit var pb: ProgressBar
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        root = inflater.inflate(R.layout.meme_world_fragment, container, false)
 
+        root = inflater.inflate(R.layout.meme_world_fragment, container, false)
 
         rv = root.findViewById(R.id.rv_memeWorld)
         memeWorldAdapter = MemeWorldAdapter(requireContext(), this)
@@ -87,7 +87,10 @@ class MemeWorldFragment : Fragment(), OnItemClickListenerMemeWorld {
             "textColor" to _homeMeme.templateId.textColorCode
         )
 
-        comm.passDataToMemeWorld(bundle)
+        val i = Intent(activity, CompletedMemeActivity::class.java)
+        i.putExtra("bundle", bundle)
+        startActivity(i)
+
 
     }
 

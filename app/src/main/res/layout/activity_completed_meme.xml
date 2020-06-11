@@ -5,8 +5,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="?attr/actionBarSize"
-        android:layout_marginBottom="?attr/actionBarSize">
+        android:background="@color/purple">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -23,7 +22,7 @@
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="@dimen/margins"
+                    android:layout_margin="20dp"
                     android:elevation="40dp"
                     app:cardCornerRadius="16dp">
 
@@ -41,7 +40,6 @@
                             android:clickable="true"
                             android:focusable="true"
                             android:foreground="?android:attr/selectableItemBackground"
-                            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                             tools:listitem="@layout/layout_user" />
 
                         <androidx.recyclerview.widget.RecyclerView
@@ -51,7 +49,6 @@
                             android:clickable="true"
                             android:focusable="true"
                             android:foreground="?android:attr/selectableItemBackground"
-                            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                             tools:listitem="@layout/layout_user" />
 
 
@@ -96,15 +93,10 @@
                                 <com.like.LikeButton
                                     android:id="@+id/star_button"
                                     android:layout_width="wrap_content"
+                                    app:icon_size="10dp"
                                     android:layout_height="wrap_content"
-                                    app:icon_size="25dp"
+                                    app:is_enabled="false"
                                     app:icon_type="heart" />
-                                <ImageView
-                                    android:id="@+id/like_completed_meme_btn"
-                                    android:layout_width="@dimen/util_size"
-                                    android:layout_height="@dimen/util_size"
-                                    android:elevation="0dp"
-                                    android:src="@drawable/ic_like_empty" />
 
                                 <TextView
                                     android:id="@+id/num_likes_completed_meme"

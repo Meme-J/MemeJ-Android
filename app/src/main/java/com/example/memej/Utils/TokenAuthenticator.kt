@@ -22,7 +22,7 @@ class TokenAuthenticator(val context: Context) : Authenticator {
 
 
         val resp = response.request.newBuilder()
-            .header("Authorization", newAccessToken.toString())
+            .header("Authorization", "Bearer " + newAccessToken.toString())
             .build()
 
         Log.e("AT", resp.toString() + " resp")

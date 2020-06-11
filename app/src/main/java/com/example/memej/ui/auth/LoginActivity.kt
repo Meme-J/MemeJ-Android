@@ -135,10 +135,12 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
 
         service.loginUser(inf).enqueue(object : retrofit2.Callback<LoginResponse> {
             override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+
+                Log.e("Login", t.message.toString())
                 Toast.makeText(
                     this@LoginActivity,
-                    t.message,
-                    Toast.LENGTH_SHORT
+                    getString(R.string.login_failed),
+                    Toast.LENGTH_LONG
                 ).show()
                 pb_login.visibility = View.GONE
 
@@ -146,31 +148,51 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
 
 
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
+                Log.e(
+                    "Login",
+                    response.message().toString() + response.code().toString() + response.body()
+                        .toString() + response.errorBody().toString()
+                )
 
-                if (response.body()?.msg == "Login successful.") {
-                    Toast.makeText(this@LoginActivity, "Login successful", Toast.LENGTH_SHORT)
-                        .show()
-                    //Set looged in status true
-                    //Store the access token on every login
-                    //Get the access token on login
-                    sessionManager.saveAuth_access_Token(
-                        LoginResponse(
-                            response.body()!!.msg,
-                            response.body()!!.user
-                        ).user.accessToken
-                    )
-                    sessionManager.saveAuth_refresh_Token(
-                        (LoginResponse(
-                            response.body()!!.msg,
-                            response.body()!!.user
-                        )).user.refreshToken
-                    )
+                if (response.isSuccessful) {
+                    if (response.body()?.msg == "Login successful.") {
+                        Toast.makeText(this@LoginActivity, "Login successful", Toast.LENGTH_SHORT)
+                            .show()
+                        Log.e("Login", response.message().toString())
 
-                    goToMainActivity()
+                        //Set looged in status true
+                        //Store the access token on every login
+                        //Get the access token on login
+                        sessionManager.saveAuth_access_Token(
+                            LoginResponse(
+                                response.body()!!.msg,
+                                response.body()!!.user
+                            ).user.accessToken
+                        )
+                        sessionManager.saveAuth_refresh_Token(
+                            (LoginResponse(
+                                response.body()!!.msg,
+                                response.body()!!.user
+                            )).user.refreshToken
+                        )
+
+                        goToMainActivity()
+                    }
+                    //Incorrect cred format
+                    else {
+                        Toast.makeText(this@LoginActivity, response.body()?.msg, Toast.LENGTH_LONG)
+                            .show()
+                        pb.visibility = View.GONE
+                    }
+
                 } else {
                     //Stop the spinner
                     pb_login.visibility = View.GONE
-                    Toast.makeText(this@LoginActivity, response.body()?.msg, Toast.LENGTH_SHORT)
+                    Toast.makeText(
+                        this@LoginActivity,
+                        response.errorBody().toString(),
+                        Toast.LENGTH_SHORT
+                    )
                         .show()
 
                 }

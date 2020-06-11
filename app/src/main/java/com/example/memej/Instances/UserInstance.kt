@@ -34,11 +34,6 @@ fun UserInstance(context: Context): User {
                 ) {
                     Log.e("MW", "Profile")
 
-                    //Get the id, username
-                    val u = User(
-                        response.body()?.profile?._id.toString(),
-                        response.body()?.profile?.username.toString()
-                    )
 
                     username = response.body()?.profile?._id.toString()
                     userId = response.body()?.profile?.username.toString()

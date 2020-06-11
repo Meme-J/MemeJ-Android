@@ -368,6 +368,9 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
         rvUser.layoutManager = HorizontalUser
         rvUser.adapter = userAdater
 
+        //Set timestamp
+        root.timestampEdit.text = arg.getString("lastUpdated")
+
 
         getImage()
 

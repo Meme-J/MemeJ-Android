@@ -10,6 +10,6 @@ data class editMemeBody(
     @Json(name = "placeholderText")
     val placeholderText: String,                  // Kavya is my only love
     @Json(name = "tags")
-    val tags: List<String>                  // Kavya is my only love
+    val tags: List<String> = listOf()       //Can be empty as well                 // Kavya is my only love
 
 )

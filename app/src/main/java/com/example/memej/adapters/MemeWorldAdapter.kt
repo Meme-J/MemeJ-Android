@@ -9,7 +9,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -17,7 +16,9 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.example.memej.Instances.LoadImage
+import com.example.memej.Instances.UserInstance
 import com.example.memej.R
+import com.example.memej.Utils.ApplicationUtil
 import com.example.memej.Utils.DiffUtils.DiffUtilsMemeWorld
 import com.example.memej.Utils.SessionManager
 import com.example.memej.interfaces.RetrofitClient
@@ -25,6 +26,7 @@ import com.example.memej.responses.LikeOrNotResponse
 import com.example.memej.responses.memeWorldResponses.Meme_World
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.textview.MaterialTextView
+import com.like.LikeButton
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -33,8 +35,8 @@ import retrofit2.Response
 class MemeWorldAdapter(val context: Context, val itemClickListener: OnItemClickListenerMemeWorld) :
     PagedListAdapter<Meme_World, MemeWorldAdapter.MyViewHolder>(DiffUtilsMemeWorld()) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
 
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
 
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.card_meme_world, parent, false)
@@ -59,18 +61,30 @@ class MemeWorldAdapter(val context: Context, val itemClickListener: OnItemClickL
         val memeImage = itemView.findViewById<ShapeableImageView>(R.id.cv_post)
         val memeTime = itemView.findViewById<MaterialTextView>(R.id.meme_timestamp)
         val memLikesNum = itemView.findViewById<TextView>(R.id.post_likes_num)
-        val memeLike = itemView.findViewById<ImageView>(R.id.like_img)
 
+        val likeDrawIo = itemView.findViewById<LikeButton>(R.id.starBtnMeme)
 
-        //The add tag and send will be in the other hand request
-        //Implement Child Recycler View for the user post (Horizontal)
 
         fun bindPost(_meme: Meme_World, clickListener: OnItemClickListenerMemeWorld) {
 
             with(_meme) {
 
+                //TimeStamp
                 memeTime.text = _meme.lastUpdated             //To get the tag
 
+                //Number of likes
+                memLikesNum.text = likes.toString()
+
+                //State of liked/not
+                val userIns = UserInstance(ApplicationUtil.getContext())
+                val user_likers = _meme.likedBy
+
+                if (user_likers != null) {
+                    likeDrawIo.isLiked = user_likers.contains(userIns)
+                }
+
+
+                //Get the image
                 Glide.with(itemView)            //Add memeImage here
                     .asBitmap()
                     .load(_meme.templateId.imageUrl)
@@ -83,7 +97,6 @@ class MemeWorldAdapter(val context: Context, val itemClickListener: OnItemClickL
                             resource: Bitmap,
                             transition: Transition<in Bitmap>?
                         ) {
-//                            var bitmap = Bitmap.createBitmap(resource)
 
                             val canvas = Canvas(resource)
 
@@ -91,58 +104,14 @@ class MemeWorldAdapter(val context: Context, val itemClickListener: OnItemClickL
                             memeImage.setImageBitmap(resource)
 
 
-                            //We have the canvas and bitmap initialized. Retrueve the previous drawings on it
                             getCompleteImage(resource, canvas, _meme)
 
                         }
                     })
 
-
-                //Check if the user has liked the meme previously or not
-                //Call the user to get his id
-                //Get instance for the username and id
-
-                //Function to get the user
-                //getProfileOfUser(_meme)
-
                 //Like the meme
-
-                itemView.findViewById<ImageView>(R.id.like_img).setOnClickListener {
-                    //Like the meme
-
-                    service.likeMeme(
-                        _meme._id,
-                        accessToken = "Bearer ${sessionManager.fetchAcessToken()}"
-                    )
-                        .enqueue(object : Callback<LikeOrNotResponse> {
-                            override fun onFailure(call: Call<LikeOrNotResponse>, t: Throwable) {
-                                //Not able to get
-                                Log.e("Like Fail", t.message.toString())
-                            }
-
-                            override fun onResponse(
-                                call: Call<LikeOrNotResponse>,
-                                response: Response<LikeOrNotResponse>
-                            ) {
-                                //Get the response
-                                if (response.body()?.msg == "Meme unliked successfully.") {
-
-                                    memLikesNum.text = _meme.likes.toString()
-                                    memLikesNum.setTextColor(Color.GRAY)
-                                    memeLike.setImageResource(R.drawable.ic_like_empty)
-                                    memeLike.setBackgroundResource(R.drawable.ic_like_empty)
-
-                                } else if (response.body()?.msg == "Meme liked successfully.") {
-
-                                    memLikesNum.text = _meme.likes.toString()
-                                    memLikesNum.setTextColor(Color.RED)
-                                    memeLike.setImageResource(R.drawable.ic_favorite)
-                                    memeLike.setBackgroundResource(R.drawable.ic_favorite)
-
-                                }
-
-                            }
-                        })
+                likeDrawIo.setOnClickListener {
+                    likeMeme(_meme)
                 }
 
 
@@ -151,6 +120,39 @@ class MemeWorldAdapter(val context: Context, val itemClickListener: OnItemClickL
                     //This listener is for the whole item
                 }
             }
+        }
+
+        private fun likeMeme(_meme: Meme_World) {
+            service.likeMeme(
+                _meme._id,
+                accessToken = "Bearer ${sessionManager.fetchAcessToken()}"
+            )
+                .enqueue(object : Callback<LikeOrNotResponse> {
+                    override fun onFailure(call: Call<LikeOrNotResponse>, t: Throwable) {
+                        //Not able to get
+                        Log.e("Like Fail", t.message.toString())
+                    }
+
+                    override fun onResponse(
+                        call: Call<LikeOrNotResponse>,
+                        response: Response<LikeOrNotResponse>
+                    ) {
+                        //Get the response
+                        if (response.body()?.msg == "Meme unliked successfully.") {
+
+                            memLikesNum.text = _meme.likes.toString()
+                            memLikesNum.setTextColor(Color.GRAY)
+                            likeDrawIo.isLiked = false
+
+                        } else if (response.body()?.msg == "Meme liked successfully.") {
+
+                            memLikesNum.text = _meme.likes.toString()
+                            memLikesNum.setTextColor(Color.RED)
+                            likeDrawIo.isLiked = true
+                        }
+
+                    }
+                })
         }
 
 

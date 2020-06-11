@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
-import com.example.memej.MainActivity
 import com.example.memej.R
 import com.example.memej.Utils.Communicator2
 import com.example.memej.Utils.SessionManager
@@ -159,7 +158,9 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
             }
 
         */
-//
+
+        //Init mutable list
+        mutableList = mutableListOf()
         stringAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line)
 
 
@@ -177,7 +178,7 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
             override fun afterTextChanged(s: Editable?) {
                 //Activation of button
                 //find the button
-                val tagCheck = findViewById<ImageView>(R.id.tag_editNew)
+                val tagCheck = findViewById<MaterialButton>(R.id.tag_editNew)
                 if (tagsEt.length() != 0) {
                     tagCheck.isEnabled =
                         true
@@ -268,18 +269,25 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
     private fun sendPost(line: String) {
         //Show the progress bar
         pb.visibility = View.VISIBLE
-
+        Log.e("send", "CP1")
         val service = RetrofitClient.makeCallsForMemes(this)
         val inf = editMemeBody(arg.getString("id")!!, line, mutableList)
+
+        Log.e("send", "CP1")
+
+        Log.e("send", inf.toString() + "input")
 
         service.editMeme(accessToken = "Bearer ${sessionManager.fetchAcessToken()}", info = inf)
             .enqueue(object : Callback<editMemeApiResponse> {
                 override fun onFailure(call: Call<editMemeApiResponse>, t: Throwable) {
+
+                    Log.e("send", "InFail")
                     Toast.makeText(
                         this@NewMemeContainer,
                         t.message.toString(),
                         Toast.LENGTH_LONG
                     ).show()
+
                     pb.visibility = View.GONE
                 }
 
@@ -287,32 +295,46 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
                     call: Call<editMemeApiResponse>,
                     response: Response<editMemeApiResponse>
                 ) {
+
+                    Log.e("send", "InResp")
                     //Response will be good if the meme is created
-                    if (response.body()!!.msg == "Meme Edited successfully") {
-                        Toast.makeText(
-                            this@NewMemeContainer,
-                            response.body()!!.msg,
-                            Toast.LENGTH_LONG
-                        ).show()
-                        pb.visibility = View.GONE
-                        //Go back to the main activity
-                        //On Creating a new meme retrn to the main activty of return to the parent activity
-                        //Intent back to main activty
-                        val i = Intent(this@NewMemeContainer, MainActivity::class.java)
-                        startActivity(i)
+                    //Log the response
+                    Log.e(
+                        "NewMeme",
+                        response.body().toString() + response.errorBody() + response.code()
+                    )
 
+                    if (response.isSuccessful) {
+
+                        Log.e("send", "InRespSuccess")
+                        if (response.body()?.msg == "Meme Edited successfully") {
+                            Toast.makeText(
+                                this@NewMemeContainer,
+                                response.body()!!.msg,
+                                Toast.LENGTH_LONG
+                            ).show()
+
+                            Log.e("send", "InGood Message")
+                            pb.visibility = View.GONE
+                            //Go back to the main activity
+                            //On Creating a new meme retrn to the main activty of return to the parent activity
+                            //Intent back to main activty
+                            val i = Intent(
+                                this@NewMemeContainer,
+                                SelectMemeTemplateActivity::class.java
+                            )
+                            startActivity(i)
+
+                        }
                     } else {
-                        Toast.makeText(
-                            this@NewMemeContainer,
-                            response.body()!!.msg,
-                            Toast.LENGTH_LONG
-                        ).show()
-                        pb.visibility = View.GONE
 
+                        Log.e("send", "InResp Fail")
                     }
                 }
+
             })
 
+        Log.e("send", "In exit retro call")
     }
 
 
@@ -568,11 +590,11 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
                 //   canvas.drawTextOnPath(s.toString(),path,0f,10f,setPaint("#000000", currentSize))
                 if (edt.text.isNotEmpty()) {
                     sendButton = true
-                    findViewById<MaterialButton>(R.id.send_post_edit).isEnabled =
+                    findViewById<MaterialButton>(R.id.send_post_new).isEnabled =
                         true
                 } else if (edt.text.isEmpty()) {
                     sendButton = false
-                    findViewById<MaterialButton>(R.id.send_post_edit).isEnabled =
+                    findViewById<MaterialButton>(R.id.send_post_new).isEnabled =
                         false
                 }
 

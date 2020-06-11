@@ -40,6 +40,7 @@ class SignUpActivity : AppCompatActivity() {
 
     lateinit var pb: ProgressBar
     lateinit var sessionManager: SessionManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up)
@@ -101,7 +102,12 @@ class SignUpActivity : AppCompatActivity() {
 
         service.createUser(regInfo).enqueue(object : retrofit2.Callback<SignUpResponse> {
             override fun onFailure(call: Call<SignUpResponse>, t: Throwable) {
-                Toast.makeText(this@SignUpActivity, t.message.toString(), Toast.LENGTH_SHORT).show()
+
+                Toast.makeText(
+                    this@SignUpActivity,
+                    getString(R.string.signin_failed),
+                    Toast.LENGTH_SHORT
+                ).show()
                 Log.e("signUp failed", t.message.toString() + "In faiure")
                 pb.visibility = View.GONE
             }
@@ -111,37 +117,41 @@ class SignUpActivity : AppCompatActivity() {
                 response: Response<SignUpResponse>
             ) {
 
-                if (response.body()?.msg == "Registeration successful") {
-                    Toast.makeText(
-                        this@SignUpActivity,
-                        "Registration Successful",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                if (response.isSuccessful) {
+                    Log.e("SignUp", "In resp success")
+                    Log.e("SignUp", response.message().toString())
+                    Log.e("SignUp", response.body()?.msg.toString())
 
-                    goToLoginActivity()
-                } else {
+                    if (response.body()?.msg == "Registeration successful") {
+                        Toast.makeText(
+                            this@SignUpActivity,
+                            "Registration Successful",
+                            Toast.LENGTH_SHORT
+                        ).show()
 
-                    if (response.body()?.msg != null) {
+                        goToLoginActivity()
+                    } else {
                         Toast.makeText(
                             this@SignUpActivity,
                             response.body()?.msg.toString(),
                             Toast.LENGTH_SHORT
-                        )
-                            .show()
-                    } else {
-                        Log.e(
-                            "SIGN UP RESP",
-                            response.body().toString() + response.body()?.msg + response.errorBody()
-                                .toString()
-                        )
-                        Toast.makeText(
-                            this@SignUpActivity,
-                            "Unable to create account at the moment",
-                            Toast.LENGTH_SHORT
                         ).show()
+
+                        pb.visibility = View.GONE
                     }
 
+                }
+                //Failing/ Error
+                else {
+                    Log.e("SignIUp", response.errorBody()!!.toString())
                     pb.visibility = View.GONE
+
+
+                    Toast.makeText(
+                        this@SignUpActivity,
+                        getString(R.string.signin_failed),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
 
             }
@@ -201,8 +211,11 @@ class SignUpActivity : AppCompatActivity() {
         } else if (etPassword.length() < 6) {
             tpassword.error = getString(R.string.pwd_length_min)
             isValid = false
-        } else if (etPassword.length() > 16) {
+        } else if (etPassword.length() > 20) {
             tpassword.error = getString(R.string.pwd_length_max)
+            isValid = false
+        } else if (!validatePassword(etPassword.text.toString())) {
+            tpassword.error = getString(R.string.pwd_invalid)
             isValid = false
         } else {
             tilPassword.error = null
@@ -227,6 +240,38 @@ class SignUpActivity : AppCompatActivity() {
         }
         return true
     }
+
+    private fun validatePassword(string: String): Boolean {
+
+        val validity = string.checkPasswordSecurity(string)
+        return validity
+
+
+    }
+
+//Validity
+
+    fun String.checkPasswordSecurity(str: String): Boolean {
+        var containsSmallLetter = false
+        var containsCapitalLetter = false
+        var containsNumber = false
+
+        for (c in str) {
+            if (c in 'a'..'z') {
+                containsSmallLetter = true
+            }
+            if (c in 'A'..'Z') {
+                containsCapitalLetter = true
+            }
+            if (c in '0'..'9') {
+                containsNumber = true
+            }
+        }
+
+
+        return (containsSmallLetter && containsCapitalLetter && containsNumber)
+    }
+
 
     //
     private fun validateUsername(string: String): Boolean {

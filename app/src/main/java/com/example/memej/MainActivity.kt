@@ -19,7 +19,6 @@ import com.example.memej.Utils.SessionManager
 import com.example.memej.adapters.SearchAdapter
 import com.example.memej.adapters.onClickSearch
 import com.example.memej.responses.SearchResponse
-import com.example.memej.ui.MemeWorld.CompletedMemeActivity
 import com.example.memej.ui.MemeWorld.MemeWorldFragment
 import com.example.memej.ui.explore.ExploreFragment
 import com.example.memej.ui.home.HomeFragment
@@ -291,15 +290,6 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
     }
 
     override fun passDataToMemeWorld(bundle: Bundle) {
-        val transaction = this.supportFragmentManager.beginTransaction()
-        val frag2 = CompletedMemeActivity()
-        frag2.arguments = bundle
-
-        transaction.replace(R.id.container, frag2)
-        transaction.addToBackStack(null)
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-        transaction.commit()
-
     }
 
     override fun goToLikedMemesPage() {

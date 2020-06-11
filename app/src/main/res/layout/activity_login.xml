@@ -52,19 +52,13 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/login_btn"
-            android:layout_width="100dp"
-            android:layout_height="@dimen/btn_size"
+            style="@style/buttonMaterialStyle"
             android:layout_below="@id/tilPassword"
             android:layout_centerInParent="true"
             android:layout_marginTop="8dp"
             android:background="@color/colorPrimary"
-            android:clickable="true"
-            android:elevation="@dimen/margins"
-            android:focusable="true"
-            android:gravity="center"
             android:text="@string/login"
-            android:textColor="@color/white"
-            android:textStyle="bold" />
+            app:cornerRadius="@dimen/margins" />
 
         <!--        <com.google.android.gms.common.SignInButton-->
         <!--            android:id="@+id/google_login"-->
@@ -98,7 +92,8 @@
                 android:layout_marginTop="@dimen/margins"
                 android:paddingStart="4dp"
                 android:text="@string/signup_instead"
-                android:textColor="@color/colorAccent" />
+                android:textColor="@color/colorAccent"
+                android:textStyle="bold" />
 
 
         </LinearLayout>

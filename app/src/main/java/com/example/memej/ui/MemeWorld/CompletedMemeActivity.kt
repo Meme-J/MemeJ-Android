@@ -1,164 +1,121 @@
 package com.example.memej.ui.MemeWorld
 
-import android.content.ClipData
-import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.Drawable
-import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.text.*
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
-import androidx.core.content.FileProvider
+import androidx.appcompat.app.AppCompatActivity
+import androidx.collection.lruCache
 import androidx.core.graphics.withTranslation
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.example.memej.Instances.LoadImage
 import com.example.memej.Instances.UserInstance
+import com.example.memej.Instances.createDialog
 import com.example.memej.R
+import com.example.memej.Utils.ApplicationUtil
 import com.example.memej.Utils.SessionManager
 import com.example.memej.adapters.TagAdapter
 import com.example.memej.adapters.UserAdapter
 import com.example.memej.adapters.onTagClickType
 import com.example.memej.adapters.onUserClickType
+import com.example.memej.databinding.ActivityCompletedMemeBinding
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.LikeOrNotResponse
 import com.example.memej.responses.homeMememResponses.Coordinates
-import com.example.memej.responses.homeMememResponses.HomeUsers
 import com.example.memej.responses.memeWorldResponses.User
-import com.google.android.material.imageview.ShapeableImageView
-import com.google.android.material.textview.MaterialTextView
-import kotlinx.android.synthetic.main.activity_base_host.*
+import com.like.LikeButton
+import com.like.OnLikeListener
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.io.File
 
-class CompletedMemeActivity : Fragment(), onUserClickType, onTagClickType {
+class CompletedMemeActivity : AppCompatActivity(), onUserClickType, onTagClickType {
 
-    lateinit var root: View
+
     lateinit var arg: Bundle
     lateinit var memeUrl: String
     lateinit var memeCanvasUrl: String
     lateinit var rvTag: RecyclerView
     lateinit var rvUser: RecyclerView
-    lateinit var image: ImageView
+    lateinit var image: LikeButton
     lateinit var likes: TextView
 
     //RequestCode
     var MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 101
+    lateinit var root: ActivityCompletedMemeBinding
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        root = inflater.inflate(R.layout.activity_completed_meme, base_activty_host, false)
-        arg = this.requireArguments()
+        root = DataBindingUtil.setContentView(this, R.layout.activity_completed_meme)
+
+        arg = intent?.getBundleExtra("bundle")!!
         memeUrl = arg.getString("imageUrl").toString()
-        rvTag = root.findViewWithTag(R.id.rv_complete_user_tag)
-        rvUser = root.findViewWithTag(R.id.rv_complete_user)
-        image = root.findViewById<ImageView>(R.id.like_completed_meme_btn)
-        likes = root.findViewById<TextView>(R.id.num_likes_completed_meme)
+        rvTag = root.rvCompleteUserTag
+        rvUser = root.rvCompleteUser
+        image = root.starButton
+        likes = root.numLikesCompletedMeme
+        val download = root.downloadCompletedMeme
+        val share = root.shareCompletedMeme
 
         initalizeTheMemePost()
 
 
-        root.findViewById<ImageView>(R.id.like_completed_meme_btn).setOnClickListener {
+        //Like Image
+        image.setOnClickListener {
             likeDislike()
         }
+        image.setOnLikeListener(object : OnLikeListener {
+            override fun liked(likeButton: LikeButton?) {
+                image.isLiked = true
 
+            }
 
+            override fun unLiked(likeButton: LikeButton?) {
+                image.isLiked = false
+            }
+        })
 
-        root.findViewById<Button>(R.id.share_completed_meme).setOnClickListener {
-            //Share this meme
-            //Convert the image into bitmap
-            val FILE_PROVIDER = "com.example.memej.FileProvider"
-            val intent = Intent(Intent.ACTION_SEND)
-            intent.type = "image/jpeg"
-            //SHare title
-            intent.putExtra(Intent.EXTRA_TITLE, "Share with:")
-
-            //get the loaclly saved url
-            val uri = Uri.parse(memeUrl.toString())
-            intent.putExtra(Intent.EXTRA_STREAM, uri)
-
-            intent.clipData = ClipData.newUri(
-                context?.contentResolver,
-                context?.getString(R.string.app_name),
-                context?.let { it1 ->
-                    FileProvider.getUriForFile(
-                        it1, FILE_PROVIDER,
-                        File(memeUrl)
-                    )
-                }
-            )
-            //Permission Flags
-            intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-
-            Log.e("Share", "In sharing" + intent.extras.toString())
-
-            context?.startActivity(Intent.createChooser(intent, null))
-
+        //Download image
+        download.setOnClickListener {
+            downloadCompletedMeme()
         }
 
-//        root.findViewById<Button>(R.id.download_completed_meme).setOnClickListener {
-//            //Set downloaders
-//            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-//                askPermissions()
-//            }
-//            //else {
-//            //downloadMeme()
-//            //        downloadImage(memeUrl)
-//            //  }
-//
-//        }
-
-        return root
+        //Share image
+        share.setOnClickListener {
+            shareMeme()
+        }
 
 
     }
 
-    private fun downloadMeme() {
+    private fun shareMeme() {
 
-        //Create a directory to store the image
-        val directory = File(Environment.DIRECTORY_PICTURES)
 
-        if (!directory.exists()) {
-            directory.mkdirs()
-        }
+    }
 
-//        val memeImage = root.findViewById<ShapeableImageView>(R.id.post_image_mw)
-//        val contentValues = ContentValues().apply {
-//            put(MediaStore.MediaColumns.DISPLAY_NAME, System.currentTimeMillis().toString())
-//            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) { //this one
-//                put(MediaStore.MediaColumns.RELATIVE_PATH, directory)
-//                put(MediaStore.MediaColumns.IS_PENDING, 1)
-//            }
-//        }
+    private fun downloadCompletedMeme() {
+
+
     }
 
 
     private fun likeDislike() {
 
-        val service = RetrofitClient.makeCallsForMemes(requireContext())
-        val sessionManager = SessionManager(requireContext())
+        val ctx = ApplicationUtil.getContext()
+        val service = RetrofitClient.makeCallsForMemes(ctx)
+        val sessionManager = SessionManager(ctx)
 
+        Log.e("Like", "InLike")
         service.likeMeme(
             arg.getString("id").toString(),
             accessToken = "Bearer ${sessionManager.fetchAcessToken()}"
@@ -166,7 +123,10 @@ class CompletedMemeActivity : Fragment(), onUserClickType, onTagClickType {
             .enqueue(object : Callback<LikeOrNotResponse> {
                 override fun onFailure(call: Call<LikeOrNotResponse>, t: Throwable) {
                     //Not able to get
-                    Toast.makeText(context, t.message.toString(), Toast.LENGTH_SHORT).show()
+                    //Lig the error, and show unable to load
+                    Log.e("Like", t.message.toString())
+                    createDialog("Unable to like meme. Please try again later").show()
+
                 }
 
                 override fun onResponse(
@@ -174,37 +134,50 @@ class CompletedMemeActivity : Fragment(), onUserClickType, onTagClickType {
                     response: Response<LikeOrNotResponse>
                 ) {
                     //Get the response
-                    if (response.body()?.msg == "Meme unliked successfully.") {
+                    if (response.isSuccessful) {
+                        if (response.body()?.msg == "Meme unliked successfully.") {
 
-                        likes.text =
-                            arg.getString("likes")
-                        likes.setTextColor(Color.GRAY)
+                            likes.text =
+                                arg.getString("likes")
+                            likes.setTextColor(Color.GRAY)
 
-                        //Set drawable into working
-                        image.setImageResource(R.drawable.ic_like_empty)
-                        image.setBackgroundResource(R.drawable.ic_like_empty)
+                            //Set drawable into working
+                            Log.e("Like Dislike", "unlike success")
 
+                            image.isLiked = false
 
-                    } else if (response.body()?.msg == "Meme liked successfully.") {
+                        } else if (response.body()?.msg == "Meme liked successfully.") {
 
-                        likes.text =
-                            arg.getString("likes")
+                            likes.text =
+                                arg.getString("likes")
 
-                        //Set drawable into workin
-                        likes.setTextColor(Color.RED)
-                        image.setImageResource(R.drawable.ic_favorite)
-                        image.setBackgroundResource(R.drawable.ic_favorite)
+                            Log.e("Like Dislike", "like success")
+                            //Set drawable into workin
+                            likes.setTextColor(Color.RED)
+                            image.isLiked = true
 
+                        }
                     }
+                    //Else do nothing
 
                 }
             })
+
+        Log.e("Like", "EndLike")
     }
 
 
     private fun initalizeTheMemePost() {
 
         //Set the tags
+        //Layout Manager
+        val HorizontalLayout: LinearLayoutManager = LinearLayoutManager(
+            this,
+            LinearLayoutManager.HORIZONTAL,
+            false
+        )
+        //Load image tags
+
         val txt = arg.getStringArrayList("tags")
         val txt2 = arg.getStringArrayList("imageTags")
 
@@ -221,32 +194,65 @@ class CompletedMemeActivity : Fragment(), onUserClickType, onTagClickType {
         }
 
         //Get the rv and adapter for the user and the tags already existing
-        val rvTag = root.findViewById<RecyclerView>(R.id.rv_edit_tag)
+        val rvTag = root.rvCompleteUserTag
         val tagAdapter = TagAdapter(this)
         tagAdapter.tagType = tagsStr
-        rvTag.layoutManager = GridLayoutManager(context, 2)
+        rvTag.layoutManager = HorizontalLayout
         rvTag.adapter = tagAdapter
 
 
         //Populate the users in the same way
-        val u = arg.getParcelableArrayList<HomeUsers>("users")
+        val u = arg.getParcelableArrayList<User>("users")
         val userStr = mutableListOf<String>()
         for (i in u!!) {
             userStr.add(i.username)
         }
 
-        val rvUser = root.findViewById<RecyclerView>(R.id.rv_edit_user)
+        //SecondLayout
+        val HorizontalUser = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        val rvUser = root.rvCompleteUser
         val userAdater = UserAdapter(this)
         userAdater.userType = userStr
-        rvUser.layoutManager = GridLayoutManager(context, 2)
+        rvUser.layoutManager = HorizontalUser
         rvUser.adapter = userAdater
 
-
         //Set time stamp
-        root.findViewById<MaterialTextView>(R.id.timeStamp_memeW).text =
-            arg.getString("lastUpdated")
+        root.timeStampMemeW.text = arg.getString("lastUpdated")
 
+        getImage()
         //Set Image
+
+
+        //Check if the post is liked already or not
+        val userInstance = UserInstance(this)
+
+
+        //Check if you have liked the meme or not previously
+        val user_likers = arg.getParcelableArrayList<User>("likedBy")
+        //Set the number of likes
+        likes.text = arg.getString("likes")
+
+        if (user_likers != null) {
+            if (user_likers.contains(userInstance)) {
+
+                likes.text =
+                    arg.getString("likes")
+
+                likes.setTextColor(Color.RED)
+                image.isLiked = false
+
+            } else {
+                likes.text =
+                    arg.getString("likes")
+                likes.setTextColor(Color.GRAY)
+                image.isLiked = false
+            }
+        }
+
+
+    }
+
+    private fun getImage() {
         Glide.with(this)
             .asBitmap()
             .load(arg.getString("imageUrl"))
@@ -256,7 +262,7 @@ class CompletedMemeActivity : Fragment(), onUserClickType, onTagClickType {
 
                 override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
 
-                    val memeImage = root.findViewById<ShapeableImageView>(R.id.post_image_mw)
+                    val memeImage = root.postImageMw
                     val canvas = Canvas(resource)
 
                     memeImage.draw(canvas)
@@ -265,42 +271,6 @@ class CompletedMemeActivity : Fragment(), onUserClickType, onTagClickType {
                     getCompleteImage(resource, canvas)
                 }
             })
-
-
-        //Check if the post is liked already or not
-        val userInstance = UserInstance(requireContext())
-
-
-        //Check if you have liked the meme or not previously
-        val user_likers = arg.getParcelableArrayList<User>("likedBy")
-        if (user_likers != null) {
-            if (user_likers.contains(userInstance)) {
-                //Color and number and image
-                //Already liked by the person
-
-
-                likes.text =
-                    arg.getString("likes")
-
-                likes.setTextColor(Color.RED)
-                //Set drawable into working
-                image.setImageResource(R.drawable.ic_favorite)
-                image.setBackgroundResource(R.drawable.ic_favorite)
-
-
-            } else {
-
-
-                likes.text =
-                    arg.getString("likes")
-
-                //Set drawable into working
-                image.setImageResource(R.drawable.ic_like_empty)
-                image.setBackgroundResource(R.drawable.ic_like_empty)
-
-            }
-        }
-
     }
 
 
@@ -335,9 +305,10 @@ class CompletedMemeActivity : Fragment(), onUserClickType, onTagClickType {
         }
 
         canvas.save()
+
     }
 
-
+    //Static Multiliners
     fun Canvas.drawMultilineText(
         text: CharSequence,
         textPaint: TextPaint,
@@ -354,8 +325,13 @@ class CompletedMemeActivity : Fragment(), onUserClickType, onTagClickType {
         hyphenationFrequency: Int = Layout.HYPHENATION_FREQUENCY_NONE
     ) {
 
+        //Use Cache Key
+        val cacheKey = "$text-$start-$end-$textPaint-$width-$alignment-$textDir-" +
+                "$spacingMult-$spacingAdd" +
+                "$breakStrategy-$hyphenationFrequency"
 
-        val staticLayout = StaticLayout.Builder
+
+        val staticLayout = StaticLayoutCache[cacheKey] ?: StaticLayout.Builder
             .obtain(text, start, end, textPaint, width)
             .setAlignment(alignment)
             .setTextDirection(textDir)
@@ -372,6 +348,21 @@ class CompletedMemeActivity : Fragment(), onUserClickType, onTagClickType {
             draw(this)
         }
     }
+
+    private object StaticLayoutCache {
+
+        private const val MAX_SIZE = 50 // Arbitrary max number of cached items
+        private val cache = lruCache<String, StaticLayout>(MAX_SIZE)
+
+        operator fun set(key: String, staticLayout: StaticLayout) {
+            cache.put(key, staticLayout)
+        }
+
+        operator fun get(key: String): StaticLayout? {
+            return cache[key]
+        }
+    }
+
 
     override fun getUserType(_user: String) {
 

@@ -24,11 +24,10 @@ class SplashScreen : AppCompatActivity() {
             //We ll write some lines of code in this to see weather the user is logged in or not
             //To redirect to signUp/Login Page or go to the home page fragment
 
-            //Refresh tokens is stored in database
 
 
             // Test for going to the login activity
-
+            //Incase save shared prefernce
             if (SaveSharedPreference().getLoggedStatus(applicationContext)) {
                 val intent = Intent(applicationContext, MainActivity::class.java)
                 startActivity(intent)
