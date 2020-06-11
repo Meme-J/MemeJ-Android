@@ -70,7 +70,7 @@ class HomeFragment : Fragment(), OnItemClickListenerHome {
         val bundle = bundleOf(
             "id" to _homeMeme._id,
             "lastUpdated" to _homeMeme.lastUpdated,
-            "numPlaceHolders" to _homeMeme.numPlaceholders,
+            "numPlaceholders" to _homeMeme.numPlaceholders,
             "placeHolders" to _homeMeme.placeholders,
             "stage" to _homeMeme.stage,
             "tags" to _homeMeme.tags,

@@ -10,7 +10,6 @@ import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.memej.MainActivity
 import com.example.memej.R
 import com.example.memej.Utils.SessionManager
 import com.example.memej.adapters.MemeGroupAdapter
@@ -67,12 +66,7 @@ class SelectMemeTemplateActivity : AppCompatActivity(), OnItemClickListenerTempl
         pb = findViewById(R.id.pb_template)
         pb.visibility = View.VISIBLE
         toolbar = findViewById(R.id.addMemeTb)
-
-        toolbar.setNavigationOnClickListener {
-            val i = Intent(this, MainActivity::class.java)
-            startActivity(i)
-
-        }
+        //Will go back as any other activity
 
         pb = findViewById(R.id.pb_template)
         sessionManager = SessionManager(this)

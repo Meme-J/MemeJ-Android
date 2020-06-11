@@ -24,7 +24,7 @@ import com.example.memej.Utils.SessionManager
 import com.example.memej.adapters.TagAdapter
 import com.example.memej.adapters.TagEditAdapter
 import com.example.memej.adapters.onTagClickType
-import com.example.memej.entities.editMemeBody
+import com.example.memej.entities.createMemeBody
 import com.example.memej.entities.searchBody
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.SearchResponse
@@ -271,13 +271,14 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
         pb.visibility = View.VISIBLE
         Log.e("send", "CP1")
         val service = RetrofitClient.makeCallsForMemes(this)
-        val inf = editMemeBody(arg.getString("id")!!, line, mutableList)
+        val inf =
+            createMemeBody(arg.getInt("numPlaceholders"), line, mutableList, arg.getString("id")!!)
 
         Log.e("send", "CP1")
 
         Log.e("send", inf.toString() + "input")
 
-        service.editMeme(accessToken = "Bearer ${sessionManager.fetchAcessToken()}", info = inf)
+        service.createMeme(accessToken = "Bearer ${sessionManager.fetchAcessToken()}", info = inf)
             .enqueue(object : Callback<editMemeApiResponse> {
                 override fun onFailure(call: Call<editMemeApiResponse>, t: Throwable) {
 
@@ -296,18 +297,21 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
                     response: Response<editMemeApiResponse>
                 ) {
 
-                    Log.e("send", "InResp")
+                    Log.e("send", "InResp" + response.toString())
                     //Response will be good if the meme is created
                     //Log the response
                     Log.e(
-                        "NewMeme",
-                        response.body().toString() + response.errorBody() + response.code()
+                        "send",
+                        response.body()
+                            .toString() + response.errorBody() + response.code() + "\n" + response.body()?.msg
+                                + " \n" + response.body()?.meme + "\n" + response.headers()
+                            .toString()
                     )
 
                     if (response.isSuccessful) {
 
                         Log.e("send", "InRespSuccess")
-                        if (response.body()?.msg == "Meme Edited successfully") {
+                        if (response.body()?.msg == "Meme created successfully") {
                             Toast.makeText(
                                 this@NewMemeContainer,
                                 response.body()!!.msg,
@@ -324,10 +328,17 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
                                 SelectMemeTemplateActivity::class.java
                             )
                             startActivity(i)
-
+                            finish()
+                        } else {
+                            Toast.makeText(
+                                this@NewMemeContainer,
+                                response.body()?.msg,
+                                Toast.LENGTH_LONG
+                            ).show()
                         }
                     } else {
 
+                        Log.e("send", response.errorBody().toString())
                         Log.e("send", "InResp Fail")
                     }
                 }

@@ -276,7 +276,8 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
         //Show the progress bar
         pb.visibility = View.VISIBLE
         val service = RetrofitClient.makeCallsForMemes(this)
-        val inf = editMemeBody(arg.getString("id")!!, line, mutableList)
+        val inf =
+            editMemeBody(arg.getString("id")!!, line, mutableList, arg.getInt("numPlaceholders"))
 
         service.editMeme(accessToken = "Bearer ${sessionManager.fetchAcessToken()}", info = inf)
             .enqueue(object : Callback<editMemeApiResponse> {

@@ -1,5 +1,6 @@
 package com.example.memej.interfaces
 
+import com.example.memej.entities.createMemeBody
 import com.example.memej.entities.editMemeBody
 import com.example.memej.entities.queryBody
 import com.example.memej.entities.searchBody
@@ -92,10 +93,18 @@ interface memes {
     ): Call<homeMemeApiResponse>
 
     //Edit memes response
+    @Headers("Content-Type:application/json")
     @POST("api/meme/edit")
     fun editMeme(
         @Header("Authorization") accessToken: String?,
         @Body info: editMemeBody
+    ): Call<editMemeApiResponse>
+
+    @Headers("Content-Type:application/json")
+    @POST("api/meme/create")
+    fun createMeme(
+        @Header("Authorization") accessToken: String?,
+        @Body info: createMemeBody
     ): Call<editMemeApiResponse>
 
     //## get my memes ( I have contributed into)

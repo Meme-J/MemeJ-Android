@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/container_select_template"
         android:layout_width="match_parent"
@@ -19,7 +19,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:navigationContentDescription="@string/lines"
-                app:navigationIcon="@drawable/ic_arrow"
                 app:title="Select template"
                 app:titleTextColor="@color/white" />
         </com.google.android.material.appbar.AppBarLayout>
@@ -37,6 +36,14 @@
         <!--            android:paddingEnd="40dp" />-->
 
 
+        <ProgressBar
+            android:id="@+id/pb_template"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp" />
+
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_memeGroup"
             android:layout_width="match_parent"
@@ -45,13 +52,6 @@
             android:layout_marginTop="?attr/actionBarSize"
             android:layout_marginEnd="@dimen/margins" />
 
-        <ProgressBar
-            android:id="@+id/pb_template"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:visibility="visible" />
 
-
-    </RelativeLayout>
+    </LinearLayout>
 </layout>
