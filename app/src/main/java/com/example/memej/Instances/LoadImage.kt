@@ -37,13 +37,6 @@ class LoadImage {
             canvas.drawMultilineText(pl, paint, 500, x.toFloat(), y.toFloat())
             canvas.save()
         }
-//        //Create a line
-//        val xN = response.templateId.coordinates.elementAt(response.stage).x.toFloat()
-//        val yN = response.templateId.coordinates.elementAt(response.stage).y.toFloat()
-//        val currentPaint = getTextPaint(
-//            response.templateId.textColorCode[response.stage],
-//            response.templateId.textSize[response.stage]
-//        )
 
     }
 

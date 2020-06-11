@@ -34,8 +34,12 @@ class MemeWorldDataSourcae(val context: Context, val searchQuery: queryBody, val
         )
             .enqueue(object : Callback<memeApiResponses> {
                 override fun onFailure(call: Call<memeApiResponses>, t: Throwable) {
-                    Log.e("DATA SOURCE", "Failed 1 to fetch data!" + t.message.toString())
-                    Toast.makeText(context, t.message.toString(), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        "Unable to get the memes. Please try again later",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    Log.e("DATA SOURCE", "Failed 2 to fetch data!" + t.message.toString())
                     pb.visibility = View.GONE
                 }
 
@@ -60,8 +64,14 @@ class MemeWorldDataSourcae(val context: Context, val searchQuery: queryBody, val
                             )
                         }
                     } else {
-                        Toast.makeText(context, response.errorBody().toString(), Toast.LENGTH_SHORT)
-                            .show()
+
+                        Toast.makeText(
+                            context,
+                            "Unable to get the memes. Please try again later",
+                            Toast.LENGTH_SHORT
+                        ).show()
+
+                        Log.e("Data Source, Meme World", response.errorBody().toString())
                         pb.visibility = View.GONE
                     }
                 }
@@ -79,13 +89,18 @@ class MemeWorldDataSourcae(val context: Context, val searchQuery: queryBody, val
         Log.e("DATA SOURCE", "In load After")
         apiService.fetchMemeWorldMemes(
             loadSize = params.requestedLoadSize,
-            accessToken = sessionManager.fetchAcessToken(),
+            accessToken = "Bearer " + sessionManager.fetchAcessToken(),
             tag = searchQuery
         )
             .enqueue(object : Callback<memeApiResponses> {
                 override fun onFailure(call: Call<memeApiResponses>, t: Throwable) {
-                    Log.e("DATA SOURCE", "Failed 2 to fetch data!")
-                    Toast.makeText(context, t.message.toString(), Toast.LENGTH_SHORT).show()
+
+                    Toast.makeText(
+                        context,
+                        "Unable to get the memes. Please try again later",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    Log.e("DATA SOURCE", "Failed 2 to fetch data!" + t.message.toString())
                     pb.visibility = View.GONE
                 }
 
@@ -106,9 +121,15 @@ class MemeWorldDataSourcae(val context: Context, val searchQuery: queryBody, val
                                 listing.lastMemeId
                             )
                         }
+
                     } else {
-                        Toast.makeText(context, response.errorBody().toString(), Toast.LENGTH_SHORT)
-                            .show()
+
+                        Toast.makeText(
+                            context,
+                            "Unable to get the memes. Please try again later",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        Log.e("Data Source, Meme World", response.errorBody().toString())
                         pb.visibility = View.GONE
                     }
                 }
@@ -122,6 +143,5 @@ class MemeWorldDataSourcae(val context: Context, val searchQuery: queryBody, val
     ) {
 
     }
-
 
 }

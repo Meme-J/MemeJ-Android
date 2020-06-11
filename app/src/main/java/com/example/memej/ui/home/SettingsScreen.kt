@@ -10,6 +10,8 @@ import com.example.memej.Utils.PreferenceUtil
 import com.example.memej.Utils.SaveSharedPreference
 import com.example.memej.databinding.ActivitySettingsScreenBinding
 import com.example.memej.ui.auth.LoginActivity
+import com.shreyaspatil.MaterialDialog.MaterialDialog
+
 
 class SettingsScreen : AppCompatActivity() {
 
@@ -33,42 +35,41 @@ class SettingsScreen : AppCompatActivity() {
 
         binding.settingsLogout.setOnClickListener {
             //Set logged in status as false
-            SaveSharedPreference().setLoggedIn(applicationContext, false)
 
-            //Remove the saved profile
-            preferenceUtils.clearPrefData()
-            val i = Intent(this@SettingsScreen, LoginActivity::class.java)
-            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-            finishAffinity()
-            startActivity(i)
+            //Ask the user
+            val mDialog = MaterialDialog.Builder(this)
+                .setTitle("Logout?")
+                .setMessage("Are you sure want to logout?")
+                .setCancelable(false)
+                .setPositiveButton(
+                    "Yes",
+                    R.drawable.ic_exit_to_app_black_24dp
+                ) { dialogInterface, which ->
+                    logout()
+                }
+                .setNegativeButton(
+                    "No",
+                    R.drawable.ic_close
+                ) { dialogInterface, which -> dialogInterface.dismiss() }
+                .build()
+            mDialog.show()
 
-//            logout()
         }
 
 
     }
 
-//    private fun logout() {
-//        val service = RetrofitClient.getAuthInstance()
-//        val logout: Call<Void?>? = service.logout()
-//        logout?.enqueue(object : Callback<Void?> {
-//
-//            override fun onFailure(call: Call<Void?>, t: Throwable) {
-//                Log.e("Logout", "Failed {$t")
-//            }
-//
-//            override fun onResponse(call: Call<Void?>, response: Response<Void?>) {
-//
-//                //Apply required if statemnet
-//                //Use response body message
-//                SaveSharedPreference().setLoggedIn(applicationContext, false)
-//                //Invalidate access tokens
-//
-//                val i = Intent(this@SettingsScreen, LoginActivity::class.java)
-//                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-//                startActivity(i)
-//
-//            }
-//        })
-//    }
+    private fun logout() {
+        SaveSharedPreference().setLoggedIn(applicationContext, false)
+
+        //Remove the saved profile
+        preferenceUtils.clearPrefData()
+        val i = Intent(this@SettingsScreen, LoginActivity::class.java)
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+        finishAffinity()
+        startActivity(i)
+
+    }
+
+
 }

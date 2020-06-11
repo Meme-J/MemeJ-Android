@@ -1,7 +1,7 @@
 package com.example.memej.Instances
 
-import android.content.Context
 import android.util.Log
+import com.example.memej.Utils.ApplicationUtil
 import com.example.memej.Utils.SessionManager
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.ProfileResponse
@@ -10,11 +10,11 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-fun UserInstance(context: Context): User {
+fun UserInstance(): User {
 
-
+    val ctx = ApplicationUtil.getContext()
     val apiservice = RetrofitClient.getAuthInstance()
-    val sessionManager = SessionManager(context)
+    val sessionManager = SessionManager(ctx)
 
 
     var username: String? = ""

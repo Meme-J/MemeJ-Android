@@ -92,11 +92,11 @@
 
                                 <com.like.LikeButton
                                     android:id="@+id/star_button"
-                                    android:layout_width="wrap_content"
+                                    android:layout_width="50dp"
+                                    android:layout_height="50dp"
                                     app:icon_size="10dp"
-                                    android:layout_height="wrap_content"
-                                    app:is_enabled="false"
-                                    app:icon_type="heart" />
+                                    app:icon_type="heart"
+                                    app:is_enabled="false" />
 
                                 <TextView
                                     android:id="@+id/num_likes_completed_meme"

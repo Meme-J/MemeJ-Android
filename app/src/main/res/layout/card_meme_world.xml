@@ -43,20 +43,21 @@
 
             <com.like.LikeButton
                 android:id="@+id/starBtnMeme"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_margin="@dimen/margins"
                 app:icon_size="10dp"
                 app:icon_type="heart" />
 
-            <TextView
-                android:id="@+id/post_likes_num"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginStart="12dp"
-                android:gravity="center"
-                android:text="0"
-                android:textStyle="bold" />
+            <!--            <TextView-->
+            <!--                android:id="@+id/post_likes_num"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_gravity="center"-->
+            <!--                android:layout_marginStart="12dp"-->
+            <!--                android:gravity="center"-->
+            <!--                android:text="0"-->
+            <!--                android:textStyle="bold" />-->
         </LinearLayout>
 
     </LinearLayout>

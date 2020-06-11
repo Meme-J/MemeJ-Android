@@ -1,11 +1,10 @@
 package com.example.memej.Instances
 
 import android.app.AlertDialog
-import com.example.memej.Utils.ApplicationUtil
+import android.content.Context
 
-fun createDialog(message: String): AlertDialog.Builder {
+fun createDialog(message: String, ctx: Context): AlertDialog.Builder {
 
-    val ctx = ApplicationUtil.getContext()
     val dialog = AlertDialog.Builder(ctx)
     dialog.setMessage(message)
     dialog.setPositiveButton(android.R.string.ok) { _, _ -> }

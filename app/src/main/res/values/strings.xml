@@ -10,6 +10,8 @@
     <string name="new_to_memejam">New to memeJam?</string>
     <string name="signup_instead"> SignUp Instead</string>
     <string name="email">Email</string>
+
+    <style name="unable_meeme_world">Unable to get memes. Please try again later</style>
     <string name="already_have_an_account">Already have an account?</string>
     <string name="username_empty">Username can not be empty</string>
     <string name="pwd_empty">Password can not be empty</string>
