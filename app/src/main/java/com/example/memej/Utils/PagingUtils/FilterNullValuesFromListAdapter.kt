@@ -1,4 +1,4 @@
-package com.example.memej.Utils
+package com.example.memej.Utils.PagingUtils
 
 import com.squareup.moshi.*
 import java.io.IOException
@@ -31,7 +31,9 @@ class FilterNullValuesFromListAdapter<T : Any> private constructor(private val d
                         return null
                     }
                     val delegate = moshi.nextAdapter<List<T?>>(this, listType, annotations)
-                    return FilterNullValuesFromListAdapter(delegate)
+                    return FilterNullValuesFromListAdapter(
+                        delegate
+                    )
                 }
             }
         }

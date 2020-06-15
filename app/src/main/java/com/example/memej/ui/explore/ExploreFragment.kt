@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DefaultItemAnimator
 import com.example.memej.R
-import com.example.memej.Utils.SessionManager
+import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.adapters.RandomMemeAdapter
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.homeMememResponses.homeMemeApiResponse
@@ -42,7 +42,8 @@ class ExploreFragment : Fragment() {
     ): View? {
 
         root = inflater.inflate(R.layout.explore_fragment, container, false)
-        sessionManager = SessionManager(requireContext())
+        sessionManager =
+            SessionManager(requireContext())
         adapter = RandomMemeAdapter()
         pb = root.findViewById(R.id.pb_explore)
         pb.visibility = View.VISIBLE

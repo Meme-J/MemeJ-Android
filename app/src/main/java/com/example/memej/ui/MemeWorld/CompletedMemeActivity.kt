@@ -27,7 +27,7 @@ import com.example.memej.Instances.LoadImage
 import com.example.memej.R
 import com.example.memej.Utils.ApplicationUtil
 import com.example.memej.Utils.PreferenceUtil
-import com.example.memej.Utils.SessionManager
+import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.adapters.TagAdapter
 import com.example.memej.adapters.UserAdapter
 import com.example.memej.adapters.onTagClickType
@@ -119,6 +119,16 @@ class CompletedMemeActivity : AppCompatActivity(), onUserClickType, onTagClickTy
     private fun downloadCompletedMeme() {
 
         checKPermissions()
+        checkDirectory()
+
+    }
+
+    private fun checkDirectory() {
+
+    }
+
+    private fun downloadMeme() {
+        //Create a new file to be stored
 
 
     }
@@ -180,6 +190,7 @@ class CompletedMemeActivity : AppCompatActivity(), onUserClickType, onTagClickTy
 
     }
 
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,
@@ -208,7 +219,8 @@ class CompletedMemeActivity : AppCompatActivity(), onUserClickType, onTagClickTy
 
         val ctx = ApplicationUtil.getContext()
         val service = RetrofitClient.makeCallsForMemes(ctx)
-        val sessionManager = SessionManager(ctx)
+        val sessionManager =
+            SessionManager(ctx)
 
         Log.e("Like", "InLike")
         val inf = likeMemeBody(

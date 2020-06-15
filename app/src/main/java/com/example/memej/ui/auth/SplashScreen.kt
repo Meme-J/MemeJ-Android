@@ -6,7 +6,7 @@ import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
 import com.example.memej.MainActivity
 import com.example.memej.R
-import com.example.memej.Utils.SaveSharedPreference
+import com.example.memej.Utils.sessionManagers.SaveSharedPreference
 
 
 class SplashScreen : AppCompatActivity() {

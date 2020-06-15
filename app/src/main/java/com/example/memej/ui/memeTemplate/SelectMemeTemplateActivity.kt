@@ -11,7 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.memej.R
-import com.example.memej.Utils.SessionManager
+import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.adapters.MemeGroupAdapter
 import com.example.memej.adapters.OnItemClickListenerTemplate
 import com.example.memej.responses.template.EmptyTemplateResponse
@@ -54,7 +54,7 @@ class SelectMemeTemplateActivity : AppCompatActivity(), OnItemClickListenerTempl
         val i = Intent(this, NewMemeContainer::class.java)
         i.putExtra("bundle", bundle)
         startActivity(i)
-
+        finish()
     }
 
 
@@ -69,7 +69,8 @@ class SelectMemeTemplateActivity : AppCompatActivity(), OnItemClickListenerTempl
         //Will go back as any other activity
 
         pb = findViewById(R.id.pb_template)
-        sessionManager = SessionManager(this)
+        sessionManager =
+            SessionManager(this)
 
         rv = findViewById(R.id.rv_memeGroup)
         memeGroupAdapter = MemeGroupAdapter(this)

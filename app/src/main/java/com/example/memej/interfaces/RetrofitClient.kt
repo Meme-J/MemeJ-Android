@@ -3,7 +3,7 @@ package com.example.memej.interfaces
 import android.content.Context
 import android.util.Log
 import com.example.memej.Utils.DiffUtils.AuthInterceptor
-import com.example.memej.Utils.TokenAuthenticator
+import com.example.memej.Utils.sessionManagers.TokenAuthenticator
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -25,7 +25,11 @@ object RetrofitClient {
             .addInterceptor(AuthInterceptor(context))
             .followRedirects(false)
             .writeTimeout(20, TimeUnit.SECONDS)
-            .authenticator(TokenAuthenticator(context))
+            .authenticator(
+                TokenAuthenticator(
+                    context
+                )
+            )
             .build()
     }
 

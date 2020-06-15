@@ -1,7 +1,7 @@
 package com.example.memej.Utils.DiffUtils
 
 import android.content.Context
-import com.example.memej.Utils.SessionManager
+import com.example.memej.Utils.sessionManagers.SessionManager
 import okhttp3.Interceptor
 import okhttp3.Response
 
@@ -9,7 +9,8 @@ import okhttp3.Response
  * Interceptor to add auth token to requests
  */
 class AuthInterceptor(context: Context) : Interceptor {
-    private val sessionManager = SessionManager(context)
+    private val sessionManager =
+        SessionManager(context)
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val requestBuilder = chain.request().newBuilder()

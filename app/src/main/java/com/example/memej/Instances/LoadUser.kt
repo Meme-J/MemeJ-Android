@@ -2,7 +2,7 @@ package com.example.memej.Instances
 
 import android.content.Context
 import android.widget.Toast
-import com.example.memej.Utils.SessionManager
+import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.ProfileResponse
 import retrofit2.Call
@@ -16,7 +16,8 @@ class LoadUser {
     fun getUserDetails(context: Context) {
 
         val service = RetrofitClient.getAuthInstance()
-        val sessionManager = SessionManager(context)
+        val sessionManager =
+            SessionManager(context)
         service.getUser(accessToken = "Bearer ${sessionManager.fetchAcessToken()}")
             .enqueue(object : retrofit2.Callback<ProfileResponse> {
                 override fun onFailure(call: Call<ProfileResponse>, t: Throwable) {

@@ -15,7 +15,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.memej.Utils.Communicator
-import com.example.memej.Utils.SessionManager
+import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.adapters.SearchAdapter
 import com.example.memej.adapters.onClickSearch
 import com.example.memej.responses.SearchResponse
@@ -100,7 +100,8 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
 
 
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
-        sessionManager = SessionManager(this)
+        sessionManager =
+            SessionManager(this)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(

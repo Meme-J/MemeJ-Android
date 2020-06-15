@@ -199,5 +199,7 @@ dependencies {
     // Lottie Animation Library
     implementation 'com.airbnb.android:lottie:3.3.0'
 
+    implementation 'com.github.iamutkarshtiwari:Ananas:1.2.3'
+    implementation 'ja.burhanrashid52:photoeditor:0.1.1'
 
 }

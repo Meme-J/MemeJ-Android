@@ -14,8 +14,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.memej.MainActivity
 import com.example.memej.R
-import com.example.memej.Utils.SaveSharedPreference
-import com.example.memej.Utils.SessionManager
+import com.example.memej.Utils.sessionManagers.SaveSharedPreference
+import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.entities.LoginBody
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.LoginResponse
@@ -64,7 +64,8 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
         t2 = findViewById(R.id.tilPassword)
 
         pb = findViewById(R.id.pb_login)
-        sessionManager = SessionManager(this)
+        sessionManager =
+            SessionManager(this)
 
         //Functions for Google SignIn
 
@@ -204,7 +205,8 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
         //Turn of the progress bar
 
         pb.visibility = View.GONE
-        SaveSharedPreference().setLoggedIn(applicationContext, true)
+        SaveSharedPreference()
+            .setLoggedIn(applicationContext, true)
         val i = Intent(this, MainActivity::class.java)
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK)
         startActivity(i)

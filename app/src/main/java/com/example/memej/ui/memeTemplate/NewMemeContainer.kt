@@ -17,10 +17,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
 import com.example.memej.R
 import com.example.memej.Utils.Communicator2
-import com.example.memej.Utils.SessionManager
+import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.adapters.TagAdapter
 import com.example.memej.adapters.TagEditAdapter
 import com.example.memej.adapters.onTagClickType
@@ -30,12 +29,16 @@ import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.SearchResponse
 import com.example.memej.responses.editMemeApiResponse
 import com.example.memej.responses.homeMememResponses.Coordinates
+import com.example.memej.textProperties.lib.ImageEditorView
+import com.example.memej.textProperties.lib.OnPhotoEditorListener
+import com.example.memej.textProperties.lib.Photo
+import com.example.memej.textProperties.lib.ViewType
 import com.example.memej.viewModels.NewMemeContainerViewModel
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.imageview.ShapeableImageView
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+
 
 class NewMemeContainer : AppCompatActivity(), onTagClickType {
 
@@ -46,7 +49,8 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
 
     private lateinit var viewModel: NewMemeContainerViewModel
     lateinit var arg: Bundle
-    private lateinit var img: ShapeableImageView
+
+    // private lateinit var img: ShapeableImageView
     lateinit var edt: EditText
     private lateinit var paint_chosen: Paint
     private lateinit var type_face: Typeface
@@ -66,6 +70,8 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
     lateinit var HorizontalLayoutInsertedTags: LinearLayoutManager
     lateinit var adapterTagAdded: TagEditAdapter
 
+    //    lateinit var photoView: PhotoEditorView
+    lateinit var photoView: ImageEditorView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,10 +79,11 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
 
         arg = intent?.getBundleExtra("bundle")!!
 
-        img = findViewById(R.id.imagePostNew)
+        //   img = findViewById(R.id.imagePostNew)
         edt = findViewById(R.id.lineAddedEtNew)
         tagCheck = findViewById(R.id.tag_editNew)
-
+//        photoView = findViewById(R.id.photoView)
+        photoView = findViewById(R.id.imageView)
         rvTagEdits = findViewById<RecyclerView>(R.id.rv_insertedTagsNew)
         HorizontalLayoutInsertedTags = LinearLayoutManager(
             this,
@@ -89,7 +96,8 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
         initializeEditFrame(arg)
 
 
-        sessionManager = SessionManager(this)
+        sessionManager =
+            SessionManager(this)
         pb = findViewById(R.id.pb_new_fragment)
 
 
@@ -375,30 +383,32 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
 
         //There are no users
 
-
         getImage()
 
 
     }
 
+
     private fun getImage() {
-        Glide.with(img)
+
+        Glide.with(this)
             .asBitmap()
             .load(arg.getString("imageUrl"))
+            .placeholder(R.drawable.icon_placeholder)
+            .error(R.drawable.icon_placeholder)
             .into(object : CustomTarget<Bitmap>() {
                 override fun onLoadCleared(placeholder: Drawable?) {
-                    //When we do not use the part
+
                 }
 
-                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                override fun onResourceReady(
+                    resource: Bitmap,
+                    transition: com.bumptech.glide.request.transition.Transition<in Bitmap>?
+                ) {
                     val canvas = Canvas(resource)
-
-                    img.draw(canvas)
-
-                    img.setImageBitmap(resource)
-
-                    //No need of complete Image
-                    getCompleteCoordinatesToBeUsed(resource, canvas, arg)
+                    photoView.source?.draw(canvas)
+                    photoView.source?.setImageBitmap(resource)
+                    getCompleteCoordinatesToBeUsed(resource, canvas)
 
                 }
             })
@@ -406,11 +416,9 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
     }
 
     private fun getCompleteCoordinatesToBeUsed(
-        bitmap: Bitmap?, canvas: Canvas, arg: Bundle
+        bitmap: Bitmap?, canvas: Canvas
     ) {
 
-        //Create a path to track undo and changes
-        val numPlaceHolders = arg.getInt("numPlaceholders")
 
         val xN =
             arg.getParcelableArrayList<Coordinates>("coordinate")!!
@@ -419,186 +427,65 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
             arg.getParcelableArrayList<Coordinates>("coordinate")!!
                 .elementAt(0).y
 
+        val xB =
+            arg.getParcelableArrayList<Coordinates>("coordinate")!!
+                .elementAt(1).x
+        val yB =
+            arg.getParcelableArrayList<Coordinates>("coordinate")!!
+                .elementAt(1).y
+
         val currentPaint = getTextPaint(
             arg.getStringArrayList("textColorCode")!!.elementAt(0),
             arg.getIntegerArrayList("textSize")!!.elementAt(0)
         )
+
         canvas.save()
+        val color = arg.getStringArrayList("textColorCode")!!.elementAt(0)
+        val size = arg.getIntegerArrayList("textSize")!!.elementAt(0)
+        val colorInt = Color.parseColor(color)
 
-        observeTextChange(bitmap, canvas, arg, xN, yN, currentPaint)
-    }
-
-    //For O Version (API 8)
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun Canvas.drawMultilineText(
-        text: CharSequence,
-        textPaint: TextPaint,
-        width: Int,
-        x: Float,
-        y: Float,
-        start: Int = 0,
-        end: Int = text.length,
-        alignment: Layout.Alignment = Layout.Alignment.ALIGN_NORMAL,
-        textDir: TextDirectionHeuristic = TextDirectionHeuristics.FIRSTSTRONG_LTR,
-        spacingMult: Float = 1f,
-        spacingAdd: Float = 0f,
-        includePad: Boolean = true,
-        ellipsizedWidth: Int = width,
-        ellipsize: TextUtils.TruncateAt? = null,
-        maxLines: Int = Int.MAX_VALUE,
-        breakStrategy: Int = Layout.BREAK_STRATEGY_SIMPLE,
-        hyphenationFrequency: Int = Layout.HYPHENATION_FREQUENCY_NONE,
-        justificationMode: Int = Layout.JUSTIFICATION_MODE_NONE
-    ) {
-
-        val cacheKey = "$text-$start-$end-$textPaint-$width-$alignment-$textDir-" +
-                "$spacingMult-$spacingAdd-$includePad-$ellipsizedWidth-$ellipsize-" +
-                "$maxLines-$breakStrategy-$hyphenationFrequency-$justificationMode"
-
-        val staticLayout = StaticLayoutCache[cacheKey] ?: StaticLayout.Builder.obtain(
-            text,
-            start,
-            end,
-            textPaint,
-            width
-        )
-            .setAlignment(alignment)
-            .setTextDirection(textDir)
-            .setLineSpacing(spacingAdd, spacingMult)
-            .setIncludePad(includePad)
-            .setEllipsizedWidth(ellipsizedWidth)
-            .setEllipsize(ellipsize)
-            .setMaxLines(maxLines)
-            .setBreakStrategy(breakStrategy)
-            .setHyphenationFrequency(hyphenationFrequency)
-            .setJustificationMode(justificationMode)
-            .build().apply { StaticLayoutCache[cacheKey] = this }
-
-        staticLayout.draw(this, x, y)
+        observeTextChange(bitmap, canvas, arg, xN, yN, currentPaint, colorInt, size, xB, yB)
     }
 
 
-    //For M version (API 6)
-    @RequiresApi(Build.VERSION_CODES.M)
-    fun Canvas.drawMultilineText(
-        text: CharSequence,
-        textPaint: TextPaint,
-        width: Int,
-        x: Float,
-        y: Float,
-        start: Int = 0,
-        end: Int = text.length,
-        alignment: Layout.Alignment = Layout.Alignment.ALIGN_NORMAL,
-        textDir: TextDirectionHeuristic = TextDirectionHeuristics.FIRSTSTRONG_LTR,
-        spacingMult: Float = 1f,
-        spacingAdd: Float = 0f,
-        includePad: Boolean = true,
-        ellipsizedWidth: Int = width,
-        ellipsize: TextUtils.TruncateAt? = null,
-        maxLines: Int = Int.MAX_VALUE,
-        breakStrategy: Int = Layout.BREAK_STRATEGY_SIMPLE,
-        hyphenationFrequency: Int = Layout.HYPHENATION_FREQUENCY_NONE
-    ) {
-
-        val cacheKey = "$text-$start-$end-$textPaint-$width-$alignment-$textDir-" +
-                "$spacingMult-$spacingAdd-$includePad-$ellipsizedWidth-$ellipsize-" +
-                "$maxLines-$breakStrategy-$hyphenationFrequency"
-
-        val staticLayout = StaticLayoutCache[cacheKey] ?: StaticLayout.Builder.obtain(
-            text,
-            start,
-            end,
-            textPaint,
-            width
-        )
-            .setAlignment(alignment)
-            .setTextDirection(textDir)
-            .setLineSpacing(spacingAdd, spacingMult)
-            .setIncludePad(includePad)
-            .setEllipsizedWidth(ellipsizedWidth)
-            .setEllipsize(ellipsize)
-            .setMaxLines(maxLines)
-            .setBreakStrategy(breakStrategy)
-            .setHyphenationFrequency(hyphenationFrequency)
-            .build().apply { StaticLayoutCache[cacheKey] = this }
-
-        staticLayout.draw(this, x, y)
-    }
-
-    //For rest verses
-
-    fun Canvas.drawMultilineText(
-        text: CharSequence,
-        textPaint: TextPaint,
-        width: Int,
-        x: Float,
-        y: Float,
-        start: Int = 0,
-        end: Int = text.length,
-        alignment: Layout.Alignment = Layout.Alignment.ALIGN_NORMAL,
-        textDir: TextDirectionHeuristic = TextDirectionHeuristics.LTR,
-        spacingMult: Float = 1f,
-        spacingAdd: Float = 0f,
-        breakStrategy: Int = Layout.BREAK_STRATEGY_SIMPLE,
-        hyphenationFrequency: Int = Layout.HYPHENATION_FREQUENCY_NONE
-    ) {
-
-
-        val cacheKey = "$text-$start-$end-$textPaint-$width-$alignment-$textDir-" +
-                "$spacingMult-$spacingAdd-$breakStrategy-$hyphenationFrequency"
-
-        //Create a dynamic layout
-//        val dynamicLayout = DynamicLayout.Builder
-//            .obtain(text, textPaint, width)
-//            .setAlignment(alignment)
-//            .setTextDirection(textDir)
-//            .setLineSpacing(spacingAdd, spacingMult)
-//            .setBreakStrategy(breakStrategy)
-//            .build()
-
-
-        val staticLayout =
-            StaticLayoutCache[cacheKey] ?: StaticLayout.Builder
-                .obtain(text, start, end, textPaint, width)
-                .setAlignment(alignment)
-                .setTextDirection(textDir)
-                .setLineSpacing(spacingAdd, spacingMult)
-                .setBreakStrategy(breakStrategy)
-                .build()
-        staticLayout.draw(this, x, y)
-    }
-
-    //This is called after all the above is done
     private fun observeTextChange(
         bitmap: Bitmap?,
         canvas: Canvas,
         arg: Bundle,
         xN: Int,
         yN: Int,
-        currentPaint: TextPaint
+        currentPaint: TextPaint,
+        colorInt: Int,
+        size: Int,
+        xB: Int,
+        yB: Int
     ) {
-        //        val newCanvas = CanvasEditorView(requireContext())
-        //        val layoutParams = RelativeLayout.LayoutParams(
-        //            RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT
-        //        )
-        //        layoutParams.setMargins(pxToDp(xN),pxToDp(yN),0,0)
-        //        newCanvas.layoutParams = layoutParams
 
 
-        //Observe change on the edit etxt
+        //Sample two
+        val photoEditorClass = Photo.Builder(this, photoView, xN, yN, xB, yB)
+            .setPinchTextScalable(false)
+            .build()
+
+
+//        //Instance of PhotoEditor
+//        val mPhotoEditor = PhotoEditor.Builder(this, photoView)
+//            .setPinchTextScalable(false)        //False for zooming of image
+//            .build()
+
+
+        photoView.source!!.adjustViewBounds = true
+        val ht = photoView.source?.height
+        val wd = photoView.source?.width
+        val lh = photoView.source?.layoutParams?.height
+        val lw = photoView.source?.layoutParams?.width
+
+
+        //Check on Edt
+//        Log.e("View", " " + mPhotoEditor.toString())
         edt.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
 
-                val path = Path()
-                path.moveTo(
-                    xN.toFloat(), yN.toFloat()
-                )
-                path.lineTo(xN.toFloat() + 400f, yN.toFloat())
-                paths.add(path)
-
-                //Invalidate the view
-
-                //   canvas.drawTextOnPath(s.toString(),path,0f,10f,setPaint("#000000", currentSize))
                 if (edt.text.isNotEmpty()) {
                     sendButton = true
                     findViewById<MaterialButton>(R.id.send_post_new).isEnabled =
@@ -608,40 +495,46 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
                     findViewById<MaterialButton>(R.id.send_post_new).isEnabled =
                         false
                 }
-
-            }
-
-            override fun beforeTextChanged(
-                s: CharSequence?,
-                start: Int,
-                count: Int,
-                after: Int
-            ) {
-
-                img.invalidate()
-
-            }
-
-            override fun onTextChanged(
-                s: CharSequence?,
-                start: Int,
-                before: Int,
-                count: Int
-            ) {
-
-                //Draw a dynamicTextLayot
-
-                canvas.drawDynamicLayout(
-                    s.toString(),
-                    currentPaint,
-                    400,                    //Width
-                    xN.toFloat(),
-                    yN.toFloat(),
-                    edt
+                Log.e(
+                    "Child Count",
+                    photoView.childCount.toString() + "w " + ht + " " + wd + " " + lh + " " + lw
                 )
-                //Invalidate
-                img.invalidate()
 
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+
+                photoEditorClass.clearAllViews()
+                photoEditorClass.addText(s.toString(), colorInt, size.toFloat())
+
+
+            }
+        })
+
+
+        photoEditorClass.setOnPhotoEditorListener(object : OnPhotoEditorListener {
+            override fun onEditTextChangeListener(rootView: View?, text: String?, colorCode: Int) {
+                edt.requestFocus()
+            }
+
+            override fun onStartViewChangeListener(viewType: ViewType?) {
+
+            }
+
+            override fun onRemoveViewListener(numberOfAddedViews: Int) {
+                edt.text = null
+                edt.requestFocus()
+            }
+
+            override fun onAddViewListener(viewType: ViewType?, numberOfAddedViews: Int) {
+                edt.requestFocus()
+            }
+
+            override fun onStopViewChangeListener(viewType: ViewType?) {
 
             }
         })

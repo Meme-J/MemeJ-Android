@@ -1,4 +1,4 @@
-package com.example.memej.Utils
+package com.example.memej.Utils.sessionManagers
 
 import android.content.Context
 import android.util.Log
@@ -12,7 +12,8 @@ import java.io.IOException
 class TokenAuthenticator(val context: Context) : Authenticator {
 
     val service = RetrofitClient.getAuthInstance()
-    val sessionManager = SessionManager(context)
+    val sessionManager =
+        SessionManager(context)
 
     @Throws(IOException::class)
     override fun authenticate(route: Route?, response: Response): Request? {

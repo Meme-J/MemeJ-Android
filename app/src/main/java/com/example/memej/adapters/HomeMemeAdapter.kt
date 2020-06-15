@@ -11,6 +11,7 @@ import android.widget.ProgressBar
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.example.memej.R
@@ -49,8 +50,11 @@ class HomeMemeAdapter(val itemClickListener: OnItemClickListenerHome) :
 
             memeTimeLU.text = _homeMeme.lastUpdated.toString()
 
-            Glide.with(itemView)
+            Glide.with(itemView.context)
                 .asBitmap()
+                .dontAnimate()
+                .diskCacheStrategy(DiskCacheStrategy.ALL)  //Dont save this in the cache
+                .skipMemoryCache(true)
                 .load(_homeMeme.templateId.imageUrl)
                 .into(object : CustomTarget<Bitmap>() {
                     override fun onLoadCleared(placeholder: Drawable?) {

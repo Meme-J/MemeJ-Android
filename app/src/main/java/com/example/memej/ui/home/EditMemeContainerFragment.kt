@@ -23,12 +23,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
-import com.example.memej.Instances.ProjectResources
-import com.example.memej.Instances.projectResources
 import com.example.memej.MainActivity
 import com.example.memej.R
-import com.example.memej.Utils.SessionManager
+import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.adapters.*
 import com.example.memej.databinding.EditMemeContainerFragmentBinding
 import com.example.memej.entities.editMemeBody
@@ -38,9 +35,15 @@ import com.example.memej.responses.SearchResponse
 import com.example.memej.responses.editMemeApiResponse
 import com.example.memej.responses.homeMememResponses.Coordinates
 import com.example.memej.responses.homeMememResponses.HomeUsers
+import com.example.memej.textProperties.ConversionUtil
+import com.example.memej.textProperties.ProjectResources
+import com.example.memej.textProperties.lib.ImageEditorView
+import com.example.memej.textProperties.lib.OnPhotoEditorListener
+import com.example.memej.textProperties.lib.Photo
+import com.example.memej.textProperties.lib.ViewType
+import com.example.memej.textProperties.projectResources
 import com.example.memej.viewModels.EditMemeContainerViewModel
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.imageview.ShapeableImageView
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -51,7 +54,8 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
     private val viewModel: EditMemeContainerViewModel by viewModels()
     private lateinit var root: EditMemeContainerFragmentBinding
     lateinit var arg: Bundle
-    private lateinit var img: ShapeableImageView
+
+    //private lateinit var img: ShapeableImageView
     lateinit var edt: EditText
     private lateinit var paint_chosen: Paint
     private lateinit var type_face: Typeface
@@ -65,6 +69,7 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
     lateinit var stringAdapter: ArrayAdapter<String>
     lateinit var mutableList: MutableList<String>
     lateinit var tagCheck: MaterialButton
+    lateinit var photoView: ImageEditorView
 
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -72,18 +77,21 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
         super.onCreate(savedInstanceState)
 
         root = DataBindingUtil.setContentView(this, R.layout.edit_meme_container_fragment)
-        projectResources = ProjectResources(resources)
+        projectResources =
+            ProjectResources(resources)
 
         type_face = resources.getFont(R.font.arial)
 
         arg = intent?.getBundleExtra("bundle")!!
+        photoView = root.imageViewEditMeme
 
-        img = root.imagePostEdit
+//        img = root.imagePostEdit
         edt = root.lineAddedEt
         tagCheck = root.tagEdit
 
         initializeEditFrame(arg)
-        sessionManager = SessionManager(this)
+        sessionManager =
+            SessionManager(this)
         pb = root.pbEditFragment
 
         //Init
@@ -169,6 +177,7 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
 
         val onItemClickTag =
             OnItemClickListener { adapterView, view, i, l ->
+                Log.e("E", "In Tags ET TSuff")
 
                 mutableList.add(adapterView.getItemAtPosition(i).toString())
                 setInTagRv()
@@ -176,6 +185,8 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
             }
 
         tagsEt.addTextChangedListener(object : TextWatcher {
+
+
             override fun afterTextChanged(s: Editable?) {
                 //Activation of button
                 if (tagsEt.length() != 0) {
@@ -379,30 +390,56 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
     }
 
     private fun getImage() {
-        Glide.with(img)
+
+        Glide.with(this)
             .asBitmap()
             .load(arg.getString("imageUrl"))
+            .placeholder(R.drawable.icon_placeholder)
+            .error(R.drawable.icon_placeholder)
             .into(object : CustomTarget<Bitmap>() {
                 override fun onLoadCleared(placeholder: Drawable?) {
-                    //When we do not use the part
+
                 }
 
-                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                override fun onResourceReady(
+                    resource: Bitmap,
+                    transition: com.bumptech.glide.request.transition.Transition<in Bitmap>?
+                ) {
                     val canvas = Canvas(resource)
-
-                    img.draw(canvas)
-
-                    img.setImageBitmap(resource)
-
-                    getCompleteImage(resource, canvas, arg)
+                    photoView.source?.draw(canvas)
+                    photoView.source?.setImageBitmap(resource)
+                    getCompleteImage(resource, canvas)
 
                 }
             })
 
+
+//        Glide.with(img)
+//            .asBitmap()
+//            .dontAnimate()
+//            .dontTransform()
+//            .load(arg.getString("imageUrl"))
+//            .into(object : CustomTarget<Bitmap>() {
+//                override fun onLoadCleared(placeholder: Drawable?) {
+//                    //When we do not use the part
+//                }
+//
+//                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+//                    val canvas = Canvas(resource)
+//
+//                    img.draw(canvas)
+//
+//                    img.setImageBitmap(resource)
+//
+//                    getCompleteImage(resource, canvas, arg)
+//
+//                }
+//            })
+
     }
 
     private fun getCompleteImage(
-        bitmap: Bitmap?, canvas: Canvas, arg: Bundle
+        bitmap: Bitmap?, canvas: Canvas
     ) {
 
 
@@ -412,47 +449,68 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
 
         //Create a path to track undo and changes
         val currentStage = arg.getInt("stage")
+        val c = 2 * currentStage - 1
+        //Loop to iterate from 0, cSt-1, i= i+2
 
+        //Create View
 
-        for (i in 0..currentStage - 1) {
+        for (i in 0..c step 2) {
 
-            //Use static layout to encounter the multiline issues
-            //get the width as a parameter          //Keep it as a standard of 300.
-
-//            val paint =
-//                setPaint(
-//                    arg.getStringArrayList("paint")!!.elementAt(i),
-//                    arg.getIntegerArrayList("size")!!.elementAt(i)
-//                )
             val paint = getTextPaint(
-                arg.getStringArrayList("paint")!!.elementAt(i),
-                arg.getIntegerArrayList("size")!!.elementAt(i)
+                arg.getStringArrayList("paint")!!.elementAt(i / 2),
+                arg.getIntegerArrayList("size")!!.elementAt(i / 2)
             )
 
-            val pl = arg.getStringArrayList("placeHolders")!![i]
+            val color = arg.getStringArrayList("paint")!!.elementAt(i / 2)
+            val size = arg.getIntegerArrayList("size")!!.elementAt(i / 2)
+            val colorInt = Color.parseColor(color)
 
-            val x =
+
+            val pl = arg.getStringArrayList("placeHolders")!![i / 2]
+
+            val x1 =
                 arg.getParcelableArrayList<Coordinates>("templateIdCoordinates")!!.elementAt(i).x
-            val y =
+            val y1 =
                 arg.getParcelableArrayList<Coordinates>("templateIdCoordinates")!!.elementAt(i).y
 
-            canvas.drawMultilineText(pl, paint, 300, x.toFloat(), y.toFloat())
+            val x2 =
+                arg.getParcelableArrayList<Coordinates>("templateIdCoordinates")!!
+                    .elementAt(i + 1).x
+            val y2 =
+                arg.getParcelableArrayList<Coordinates>("templateIdCoordinates")!!
+                    .elementAt(i + 1).y
 
-            //canvas.drawText(pl, x.toFloat(), y.toFloat(), setPaint("#000000", size = s))
+            val mPhotBuilView = Photo.Builder(this, photoView, x1, y1, x1, y1).build()
+            mPhotBuilView.addOldText(pl, colorInt, size = size.toFloat())
+
+//            canvas.drawMultilineText(pl, paint, 300, x.toFloat(), y.toFloat())
         }
+
         val xN =
             arg.getParcelableArrayList<Coordinates>("templateIdCoordinates")!!
-                .elementAt(currentStage).x
+                .elementAt(c + 1).x
         val yN =
             arg.getParcelableArrayList<Coordinates>("templateIdCoordinates")!!
-                .elementAt(currentStage).y
+                .elementAt(c + 1).y
+        val xB =
+            arg.getParcelableArrayList<Coordinates>("templateIdCoordinates")!!
+                .elementAt(c + 2).x
+        val yB =
+            arg.getParcelableArrayList<Coordinates>("templateIdCoordinates")!!
+                .elementAt(c + 2).y
+
         val currentPaint = getTextPaint(
             arg.getStringArrayList("paint")!!.elementAt(currentStage),
             arg.getIntegerArrayList("size")!!.elementAt(currentStage)
         )
-        canvas.save()
 
-        observeTextChange(bitmap, canvas, arg, xN, yN, currentPaint)
+        val color = arg.getStringArrayList("paint")!!.elementAt(0)
+        val size = arg.getIntegerArrayList("size")!!.elementAt(0)
+        val colorInt = Color.parseColor(color)
+
+
+        observeTextChange(bitmap, canvas, arg, xN, yN, currentPaint, xB, yB, colorInt, size)
+
     }
 
     //For O Version (API 8)
@@ -574,15 +632,6 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
         val cacheKey = "$text-$start-$end-$textPaint-$width-$alignment-$textDir-" +
                 "$spacingMult-$spacingAdd-$breakStrategy-$hyphenationFrequency"
 
-        //Create a dynamic layout
-//        val dynamicLayout = DynamicLayout.Builder
-//            .obtain(text, textPaint, width)
-//            .setAlignment(alignment)
-//            .setTextDirection(textDir)
-//            .setLineSpacing(spacingAdd, spacingMult)
-//            .setBreakStrategy(breakStrategy)
-//            .build()
-
 
         val staticLayout =
             StaticLayoutCache[cacheKey] ?: StaticLayout.Builder
@@ -602,15 +651,18 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
         arg: Bundle,
         xN: Int,
         yN: Int,
-        currentPaint: TextPaint
+        currentPaint: TextPaint,
+        xB: Int,
+        yB: Int,
+        colorInt: Int,
+        size: Int
     ) {
-        //        val newCanvas = CanvasEditorView(requireContext())
-//        val layoutParams = RelativeLayout.LayoutParams(
-//            RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT
-//        )
-//        layoutParams.setMargins(pxToDp(xN),pxToDp(yN),0,0)
-//        newCanvas.layoutParams = layoutParams
 
+        //Sample two
+        val photoEditorClass = Photo.Builder(this, photoView, xN, yN, xB, yB)
+            .setPinchTextScalable(false)
+            .build()
+        Log.e("E", "In OT")
 
         //Create an Edit Text
 
@@ -624,9 +676,7 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
                 path.lineTo(xN.toFloat() + 400f, yN.toFloat())
                 paths.add(path)
 
-                //Invalidate the view
 
-                //   canvas.drawTextOnPath(s.toString(),path,0f,10f,setPaint("#000000", currentSize))
                 if (edt.text.isNotEmpty()) {
                     sendButton = true
                     root.sendPostEdit.isEnabled =
@@ -637,6 +687,7 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
                         false
                 }
 
+
             }
 
             override fun beforeTextChanged(
@@ -645,8 +696,6 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
                 count: Int,
                 after: Int
             ) {
-
-                img.invalidate()
 
             }
 
@@ -657,22 +706,39 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
                 count: Int
             ) {
 
-                //Draw a dynamicTextLayot
-
-                canvas.drawDynamicLayout(
-                    s.toString(),
-                    currentPaint,
-                    400,                    //Width
-                    xN.toFloat(),
-                    yN.toFloat()
-                )
-                //Invalidate
-                img.invalidate()
+                photoEditorClass.clearAllViews()
+                photoEditorClass.addText(s.toString(), colorInt, size.toFloat())
 
 
             }
         })
 
+
+        photoEditorClass.setOnPhotoEditorListener(object : OnPhotoEditorListener {
+            override fun onEditTextChangeListener(rootView: View?, text: String?, colorCode: Int) {
+                edt.requestFocus()
+            }
+
+            override fun onAddViewListener(viewType: ViewType?, numberOfAddedViews: Int) {
+
+                edt.requestFocus()
+            }
+
+            override fun onRemoveViewListener(numberOfAddedViews: Int) {
+                edt.requestFocus()
+                edt.text = null
+            }
+
+            override fun onStartViewChangeListener(viewType: ViewType?) {
+            }
+
+            override fun onStopViewChangeListener(viewType: ViewType?) {
+            }
+        })
+
+        //After it escapes
+
+        Log.e("E", "After Interface")
 
     }
 
@@ -722,9 +788,12 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
 
     //Helper Classes
     private fun DynamicLayout.draw(canvas: Canvas, x: Float, y: Float) {
+
+        canvas.save()
         canvas.withTranslation(x, y) {
             draw(this)
         }
+        canvas.restore()
     }
 
     fun StaticLayout.draw(canvas: Canvas, x: Float, y: Float) {
@@ -778,7 +847,11 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
     }
 
     private fun setSize(size: Int): Float {
-        val size_req = size.toFloat()
+        val size_req = ConversionUtil.spToPx(
+            this,
+            size
+        ).toFloat()
+
         return size_req
 
     }
@@ -798,16 +871,6 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
         }
         return type        //Equal to the type
 
-    }
-
-    private fun getColorWithAlpha(color: Int, ratio: Float): Int {
-        var newColor = 0
-        val alpha = Math.round(Color.alpha(color) * ratio).toInt()
-        val r = Color.red(color)
-        val g = Color.green(color)
-        val b = Color.blue(color)
-        newColor = Color.argb(alpha, r, g, b)
-        return newColor
     }
 
 

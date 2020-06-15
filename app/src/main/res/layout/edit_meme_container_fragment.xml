@@ -75,19 +75,25 @@
                                 android:layout_centerInParent="true"
                                 android:indeterminate="true" />
 
-                            <com.google.android.material.imageview.ShapeableImageView
-                                android:id="@+id/imagePostEdit"
+                            <com.example.memej.textProperties.lib.ImageEditorView
+                                android:id="@+id/imageViewEditMeme"
                                 android:layout_width="@dimen/meme_templete_std_height"
                                 android:layout_height="@dimen/meme_templete_std_height"
                                 android:layout_centerInParent="true" />
+
+                            <!--                            <com.google.android.material.imageview.ShapeableImageView-->
+                            <!--                                android:id="@+id/imagePostEdit"-->
+                            <!--                                android:layout_width="@dimen/meme_templete_std_height"-->
+                            <!--                                android:layout_height="@dimen/meme_templete_std_height"-->
+                            <!--                                android:layout_centerInParent="true" />-->
 
                         </RelativeLayout>
 
                     </com.google.android.material.card.MaterialCardView>
 
                     <com.google.android.material.textview.MaterialTextView
-                        style="@style/timestamp"
                         android:id="@+id/timestampEdit"
+                        style="@style/timestamp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="end"

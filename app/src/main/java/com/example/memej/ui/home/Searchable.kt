@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.memej.MainActivity
 import com.example.memej.R
 import com.example.memej.Utils.Communicator
-import com.example.memej.Utils.SessionManager
+import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.adapters.SearchAdapter
 import com.example.memej.adapters.onClickSearch
 import com.example.memej.entities.searchBody
@@ -43,7 +43,8 @@ class Searchable(val searchView: SearchView) : Fragment(), onClickSearch {
         val root = inflater.inflate(R.layout.activity_searchable, container, false)
 
         //Get the rv and adapter
-        sessionManager = SessionManager(requireContext())
+        sessionManager =
+            SessionManager(requireContext())
         comm = activity as Communicator
         rv = root.findViewById(R.id.rv_suggestions_frame)
         adapter = SearchAdapter(this)

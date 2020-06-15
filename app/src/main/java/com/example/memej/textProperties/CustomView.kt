@@ -1,4 +1,4 @@
-package com.example.memej.Utils
+package com.example.memej.textProperties
 
 import android.content.Context
 import android.util.AttributeSet

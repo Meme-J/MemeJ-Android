@@ -7,7 +7,7 @@ import androidx.databinding.DataBindingUtil
 import com.example.memej.MainActivity
 import com.example.memej.R
 import com.example.memej.Utils.PreferenceUtil
-import com.example.memej.Utils.SaveSharedPreference
+import com.example.memej.Utils.sessionManagers.SaveSharedPreference
 import com.example.memej.databinding.ActivitySettingsScreenBinding
 import com.example.memej.ui.auth.LoginActivity
 import com.shreyaspatil.MaterialDialog.MaterialDialog
@@ -60,7 +60,8 @@ class SettingsScreen : AppCompatActivity() {
     }
 
     private fun logout() {
-        SaveSharedPreference().setLoggedIn(applicationContext, false)
+        SaveSharedPreference()
+            .setLoggedIn(applicationContext, false)
 
         //Remove the saved profile
         preferenceUtils.clearPrefData()

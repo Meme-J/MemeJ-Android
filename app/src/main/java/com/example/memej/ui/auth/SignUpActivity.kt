@@ -12,8 +12,8 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.memej.R
-import com.example.memej.Utils.SaveSharedPreference
-import com.example.memej.Utils.SessionManager
+import com.example.memej.Utils.sessionManagers.SaveSharedPreference
+import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.entities.UserBody
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.SignUpResponse
@@ -57,7 +57,8 @@ class SignUpActivity : AppCompatActivity() {
 
 
         pb = findViewById(R.id.pb_signUp)
-        sessionManager = SessionManager(this)
+        sessionManager =
+            SessionManager(this)
         val b: MaterialButton = findViewById(R.id.signUp_btn)
         b.setOnClickListener {
             //Valiate the details
@@ -162,7 +163,8 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun goToLoginActivity() {
-        SaveSharedPreference().setLoggedIn(applicationContext, true)
+        SaveSharedPreference()
+            .setLoggedIn(applicationContext, true)
         val i = Intent(this, LoginActivity::class.java)
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
         startActivity(i)

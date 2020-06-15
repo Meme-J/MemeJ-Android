@@ -19,7 +19,7 @@ import com.example.memej.R
 import com.example.memej.Utils.ApplicationUtil
 import com.example.memej.Utils.DiffUtils.DiffUtilsMemeWorld
 import com.example.memej.Utils.PreferenceUtil
-import com.example.memej.Utils.SessionManager
+import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.entities.likeMemeBody
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.LikeOrNotResponse
@@ -54,7 +54,8 @@ class MemeWorldAdapter(val context: Context, val itemClickListener: OnItemClickL
 
     class MyViewHolder(itemView: View, context: Context) : RecyclerView.ViewHolder(itemView) {
 
-        val sessionManager = SessionManager(context)
+        val sessionManager =
+            SessionManager(context)
         val service = RetrofitClient.makeCallsForMemes(context)
         private val preferenceUtils = PreferenceUtil
 
@@ -189,7 +190,8 @@ class MemeWorldAdapter(val context: Context, val itemClickListener: OnItemClickL
 
             val ctx = ApplicationUtil.getContext()
             val apiservice = RetrofitClient.getAuthInstance()
-            val sessionManager = SessionManager(ctx)
+            val sessionManager =
+                SessionManager(ctx)
 
 
             var username: String? = ""
