@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="?attr/actionBarSize"
-        android:layout_marginBottom="?attr/actionBarSize">
+        android:background="@color/purple">
 
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true">
 
-            <LinearLayout xmlns:tools="http://schemas.android.com/tools"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -23,7 +23,7 @@
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="@dimen/margins"
+                    android:layout_margin="20dp"
                     android:elevation="40dp"
                     app:cardCornerRadius="16dp">
 
@@ -36,22 +36,12 @@
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/rv_complete_user"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:foreground="?android:attr/selectableItemBackground"
-                            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                            style="@style/recylclerViewAttr"
                             tools:listitem="@layout/layout_user" />
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/rv_complete_user_tag"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:foreground="?android:attr/selectableItemBackground"
-                            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                            style="@style/recylclerViewAttr"
                             tools:listitem="@layout/layout_user" />
 
 
@@ -61,14 +51,11 @@
                             android:elevation="4dp"
                             app:cardCornerRadius="@dimen/margins">
 
-
-                            <com.google.android.material.imageview.ShapeableImageView
-                                android:id="@+id/post_image_mw"
-                                android:layout_width="match_parent"
-                                android:layout_height="@dimen/meme_worl_height"
-                                android:layout_centerInParent="true"
-                                android:src="@drawable/test_image" />
-
+                            <com.example.memej.textProperties.lib.ImageEditorView
+                                android:id="@+id/photoView"
+                                android:layout_width="@dimen/meme_templete_std_height"
+                                android:layout_height="@dimen/meme_templete_std_height"
+                                android:layout_gravity="center" />
 
                         </com.google.android.material.card.MaterialCardView>
 
@@ -87,34 +74,25 @@
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
-                            <LinearLayout
+
+                            <com.like.LikeButton
+                                android:id="@+id/star_button"
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:elevation="18dp"
+
+                                app:icon_size="10dp"
+                                app:icon_type="heart" />
+
+                            <TextView
+                                android:id="@+id/num_likes_completed_meme"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_gravity="bottom"
                                 android:layout_marginStart="@dimen/margins"
-                                android:orientation="horizontal">
+                                android:text="@string/_0"
+                                android:textStyle="bold" />
 
-                                <com.like.LikeButton
-                                    android:id="@+id/star_button"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    app:icon_size="25dp"
-                                    app:icon_type="heart" />
-                                <ImageView
-                                    android:id="@+id/like_completed_meme_btn"
-                                    android:layout_width="@dimen/util_size"
-                                    android:layout_height="@dimen/util_size"
-                                    android:elevation="0dp"
-                                    android:src="@drawable/ic_like_empty" />
-
-                                <TextView
-                                    android:id="@+id/num_likes_completed_meme"
-                                    android:layout_width="40dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="@dimen/margins"
-                                    android:gravity="center"
-                                    android:text="@string/_0"
-                                    android:textStyle="bold" />
-                            </LinearLayout>
 
                             <Button
                                 android:id="@+id/share_completed_meme"
@@ -122,7 +100,8 @@
                                 android:layout_height="@dimen/util_size"
                                 android:layout_marginStart="16dp"
                                 android:background="@drawable/ic_share"
-                                android:elevation="0dp" />
+                                android:elevation="0dp"
+                                android:gravity="center" />
 
                             <Button
                                 android:id="@+id/download_completed_meme"
@@ -130,7 +109,8 @@
                                 android:layout_height="@dimen/util_size"
                                 android:layout_marginStart="16dp"
                                 android:background="@drawable/ic_arrow_downward_black_24dp"
-                                android:elevation="0dp" />
+                                android:elevation="0dp"
+                                android:gravity="center" />
 
 
                         </LinearLayout>

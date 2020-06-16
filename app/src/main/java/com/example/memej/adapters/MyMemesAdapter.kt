@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import androidx.paging.PageKeyedDataSource
-import com.example.memej.Utils.SessionManager
+import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.homeMememResponses.Meme_Home
 import com.example.memej.responses.homeMememResponses.homeMemeApiResponse
@@ -15,7 +15,8 @@ class MyMemesAdapter(val context: Context) :
 
     //External variable to point to api client
     private val apiService = RetrofitClient.makeCallsForMemes(context)
-    private val sessionManager = SessionManager(context)
+    private val sessionManager =
+        SessionManager(context)
 
     override fun loadInitial(
         params: LoadInitialParams<String>,

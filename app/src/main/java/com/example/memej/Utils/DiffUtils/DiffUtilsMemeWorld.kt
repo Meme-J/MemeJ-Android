@@ -21,8 +21,7 @@ class DiffUtilsMemeWorld : DiffUtil.ItemCallback<Meme_World>() {
         oldItem: Meme_World,
         newItem: Meme_World
     ): Boolean {
-        return oldItem._id == newItem._id
-                && oldItem.placeholders == newItem.placeholders
+        return oldItem == newItem
 
     }
 }

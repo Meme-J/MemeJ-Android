@@ -38,22 +38,12 @@
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rv_edit_user"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:foreground="?android:attr/selectableItemBackground"
-                        android:scrollbars="horizontal"
+                        style="@style/recylclerViewAttr"
                         tools:listitem="@layout/layout_user" />
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rv_edit_tag"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:foreground="?android:attr/selectableItemBackground"
-                        android:scrollbars="horizontal"
+                        style="@style/recylclerViewAttr"
                         tools:listitem="@layout/layout_user" />
 
 
@@ -75,17 +65,19 @@
                                 android:layout_centerInParent="true"
                                 android:indeterminate="true" />
 
-                            <com.google.android.material.imageview.ShapeableImageView
-                                android:id="@+id/imagePostEdit"
+                            <com.example.memej.textProperties.lib.ImageEditorView
+                                android:id="@+id/imageViewEditMeme"
                                 android:layout_width="@dimen/meme_templete_std_height"
                                 android:layout_height="@dimen/meme_templete_std_height"
                                 android:layout_centerInParent="true" />
+
 
                         </RelativeLayout>
 
                     </com.google.android.material.card.MaterialCardView>
 
                     <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/timestampEdit"
                         style="@style/timestamp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -94,26 +86,42 @@
                         android:text="@string/sample_timestamp" />
 
                     <!--                Style Picker-->
-                    <!--                <LinearLayout-->
-                    <!--                    android:layout_width="match_parent"-->
-                    <!--                    android:layout_height="wrap_content"-->
-                    <!--                    android:layout_margin="@dimen/margins"-->
-                    <!--                    android:orientation="horizontal">-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/margins"
+                        android:elevation="@dimen/margin_20dp"
+                        android:orientation="horizontal">
 
-                    <!--                    <com.google.android.material.textview.MaterialTextView-->
-                    <!--                        android:id="@+id/choose_color"-->
-                    <!--                        android:layout_width="wrap_content"-->
-                    <!--                        android:layout_height="wrap_content"-->
-                    <!--                        android:layout_margin="@dimen/margins"-->
-                    <!--                        android:text="@string/choose_color" />-->
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/choose_color"
+                            style="@style/stylePick"
+                            android:layout_marginStart="@dimen/margins"
+                            android:text="@string/choose_color" />
 
-                    <!--                    <com.google.android.material.textview.MaterialTextView-->
-                    <!--                        android:id="@+id/choose_font"-->
-                    <!--                        android:layout_width="wrap_content"-->
-                    <!--                        android:layout_height="wrap_content"-->
-                    <!--                        android:layout_margin="@dimen/margins"-->
-                    <!--                        android:text="@string/choose_font" />-->
-                    <!--                </LinearLayout>-->
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/colorIndicator"
+                            android:layout_width="@dimen/margin_20dp"
+                            android:layout_height="@dimen/margin_20dp"
+                            android:layout_gravity="center"
+                            android:layout_marginEnd="12dp"
+                            android:elevation="@dimen/margin_20dp"
+                            app:cardBackgroundColor="@color/black"
+                            app:cornerRadius="@dimen/margin_20dp" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/choose_font"
+                            style="@style/stylePick"
+                            android:text="@string/choose_font" />
+
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/choose_size"
+                            style="@style/stylePick"
+                            android:text="@string/size" />
+
+
+                    </LinearLayout>
 
 
                     <RelativeLayout
@@ -137,8 +145,8 @@
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/send_post_edit"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
+                            android:layout_width="45dp"
+                            android:layout_height="45dp"
                             android:layout_alignParentEnd="true"
                             android:layout_gravity="end"
                             android:background="@drawable/ic_send"
@@ -150,9 +158,7 @@
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rv_insertedTags"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:scrollbars="horizontal"
+                        style="@style/recylclerViewAttr"
                         tools:listitem="@layout/layout_tag" />
 
                     <RelativeLayout
@@ -172,8 +178,8 @@
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/tag_edit"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
                             android:layout_alignParentEnd="true"
                             android:layout_gravity="end"
                             android:background="@drawable/ic_check_black_24dp"

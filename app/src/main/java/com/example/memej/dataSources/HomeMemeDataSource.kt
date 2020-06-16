@@ -6,11 +6,15 @@ import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.paging.PageKeyedDataSource
-import com.example.memej.Utils.SessionManager
+import com.example.memej.Instances.NotInterntViews
+import com.example.memej.MainActivity
+import com.example.memej.R
+import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.entities.queryBody
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.homeMememResponses.Meme_Home
 import com.example.memej.responses.homeMememResponses.homeMemeApiResponse
+import com.shreyaspatil.MaterialDialog.MaterialDialog
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -20,7 +24,8 @@ class HomeMemeDataSource(val context: Context, val searchquery: queryBody, val p
 
     //External variable to point to api client
     private val apiService = RetrofitClient.makeCallsForMemes(context)
-    private val sessionManager = SessionManager(context)
+    private val sessionManager =
+        SessionManager(context)
 
     override fun loadInitial(
         params: LoadInitialParams<String>,
@@ -70,7 +75,8 @@ class HomeMemeDataSource(val context: Context, val searchquery: queryBody, val p
                             )
                         }
                     } else {
-                        Toast.makeText(context, response.errorBody().toString(), Toast.LENGTH_SHORT)
+
+                        Toast.makeText(context, response.message().toString(), Toast.LENGTH_SHORT)
                             .show()
                         pb.visibility = View.GONE
                     }
@@ -79,32 +85,9 @@ class HomeMemeDataSource(val context: Context, val searchquery: queryBody, val p
             }
             )
 
-//
-//        scope.launch {
-//            try {
-//                val response = apiService.fetchEditableMemes(loadSize = params.requestedLoadSize)
-//                Log.e("DATA SOURCE", "Response= " + response.code() + " " + response.body() + " " + response +" " + response.message()+" " + response.isSuccessful() +" " + response.headers())
-////
-//                when {
-//                    response.isSuccessful -> {
-//                        val listing = response.body()
-//                        val homePosts = listing?.map { it.memes }
-//                      Log.e("Dataa Source", "\n\n$listing"+ " " + "\n\n${listing?.size}"+ " \nLast meme Id: " + listing?.map { it.lastMemeId } )
-//                        Log.e("Data Source-homePost",homePosts.toString() +" ")
-//                        callback.onResult(
-//                            homePosts ?: listOf(),
-//                            null,                                  //Before Parameter
-//                            listing?.map { it.lastMemeId }.toString()             //After Parameter
-//                        )
-//
-//
-//                    }
-//                }
-//            } catch (exception: Exception) {
-//                Log.e("K", "Error 1")
-//            }
-//        }
     }
+
+
 
     override fun loadAfter(
         params: LoadParams<String>,

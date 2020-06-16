@@ -1,6 +1,7 @@
 package com.example.memej.ui.explore
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,9 +12,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DefaultItemAnimator
 import com.example.memej.R
-import com.example.memej.Utils.SessionManager
+import com.example.memej.Utils.sessionManagers.SessionManager
+import com.example.memej.adapters.RandomListener
 import com.example.memej.adapters.RandomMemeAdapter
 import com.example.memej.interfaces.RetrofitClient
+import com.example.memej.responses.homeMememResponses.Meme_Home
 import com.example.memej.responses.homeMememResponses.homeMemeApiResponse
 import com.example.memej.viewModels.ExploreViewModel
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager
@@ -22,7 +25,7 @@ import com.yuyakaido.android.cardstackview.SwipeableMethod
 import retrofit2.Call
 import retrofit2.Response
 
-class ExploreFragment : Fragment() {
+class ExploreFragment : Fragment(), RandomListener {
 
 
     companion object {
@@ -42,16 +45,19 @@ class ExploreFragment : Fragment() {
     ): View? {
 
         root = inflater.inflate(R.layout.explore_fragment, container, false)
-        sessionManager = SessionManager(requireContext())
-        adapter = RandomMemeAdapter()
+        sessionManager =
+            SessionManager(requireContext())
+        adapter = RandomMemeAdapter(this)
         pb = root.findViewById(R.id.pb_explore)
         pb.visibility = View.VISIBLE
+
 
         //Card Layout Manager
         layoutManager = CardStackLayoutManager(requireContext()).apply {
             setSwipeableMethod(SwipeableMethod.Manual)
             setOverlayInterpolator(LinearInterpolator())
         }
+
 
         val sv = root.findViewById<CardStackView>(R.id.stack_view)
         sv.layoutManager = layoutManager
@@ -61,6 +67,9 @@ class ExploreFragment : Fragment() {
                 supportsChangeAnimations = false
             }
         }
+
+
+
 
         getRandomMemes()
         pb.visibility = View.GONE
@@ -75,6 +84,7 @@ class ExploreFragment : Fragment() {
 
 
         val service = RetrofitClient.makeCallsForMemes(requireContext())
+
         service.getRandom(accessToken = "Bearer ${sessionManager.fetchAcessToken()}")
             .enqueue(object : retrofit2.Callback<homeMemeApiResponse> {
                 override fun onFailure(call: Call<homeMemeApiResponse>, t: Throwable) {
@@ -86,8 +96,11 @@ class ExploreFragment : Fragment() {
                     call: Call<homeMemeApiResponse>,
                     response: Response<homeMemeApiResponse>
                 ) {
+
+                    Log.e("random", response.body()?.memes.toString())
+
                     if (response.isSuccessful) {
-                        adapter.setRandomPosts(response.body()!!.memes)
+                        response.body()?.memes?.let { adapter.setRandomPosts(it) }
                         pb.visibility = View.GONE
 
                     } else {
@@ -97,6 +110,10 @@ class ExploreFragment : Fragment() {
                     }
                 }
             })
+    }
+
+    override fun initRandomMeme(_meme: Meme_Home) {
+        TODO("Not yet implemented")
     }
 
 

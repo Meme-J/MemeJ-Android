@@ -4,10 +4,16 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="login">Login</string>
     <string name="sign_up">Sign Up</string>
+    <string name="signin_failed">Unable to sign up at the moment. Please try again later</string>
+    <string name="login_failed">Unable to sign in at the moment. Please try again later</string>
     <string name="password">Password</string>
     <string name="new_to_memejam">New to memeJam?</string>
     <string name="signup_instead"> SignUp Instead</string>
     <string name="email">Email</string>
+    <string name="lorem_ipsum">the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</string>
+
+    <style name="unable_meeme_world">Unable to get memes. Please try again later</style>
+
     <string name="already_have_an_account">Already have an account?</string>
     <string name="username_empty">Username can not be empty</string>
     <string name="pwd_empty">Password can not be empty</string>
@@ -18,7 +24,8 @@
     <string name="name_invalid">Name is invalid</string>
     <string name="name_length">Name should be between 2 to 20 characters</string>
     <string name="pwd_length_min">Password must be at least 6 characters</string>
-    <string name="pwd_length_max">Password can not be greater than 16 characters</string>
+    <string name="pwd_length_max">Password can not be greater than 20 characters</string>
+    <string name="pwd_invalid">Password must have at least one lower case, one upper case and a numeric digit</string>
     <string name="search">Search</string>
     <string name="image_tag">#Image Tag</string>
     <string name="my_memes">My memes</string>
@@ -41,8 +48,8 @@
     <string name="sample_timestamp">2020-05-12T21:44:04.883Z</string>
     <string name="_1000">1000</string>
     <string name="_0">0</string>
-    <string name="choose_font">Choose Font</string>
-    <string name="choose_color">Choose color</string>
+    <string name="choose_font">Font</string>
+    <string name="choose_color">Color</string>
     <string name="time">Time</string>
     <string name="users">users</string>
     <string name="swipe_to_get_next">Swipe to get next</string>
@@ -53,19 +60,9 @@
     <string name="tag">#tag</string>
     <string name="lines">Go back to home</string>
     <string name="swipe_for_more">Swipe for more</string>
+    <string name="size">Size</string>
+    <string name="type_to_search">Type to search</string>
 
-
-    <string-array name="testSearch">
-        <item>Apple</item>
-        <item>Orange</item>
-        <item>Cheese</item>
-        <item>Alphacron</item>
-        <item>Alphabet</item>
-        <item>Alpha</item>
-        <item>Chocolate</item>
-        <item>Banana</item>
-        <item>Mango</item>
-    </string-array>
 
     <array name="themeColors">
         <item>@color/green_500</item>
@@ -73,7 +70,20 @@
         <item>@color/red_500</item>
         <item>@color/grey_500</item>
         <item>@color/orange_500</item>
+        <item>#D1C4E9</item>
+        <item>#FF1744</item>
+        <item>#1A237E</item>
+        <item>#004D40</item>
+        <item>#009688</item>
+        <item>#827717</item>
+        <item>#827717</item>
+        <item>#FFF9C4</item>
+        <item>#F57F17</item>
+        <item>#000000</item>
+        <item>#FFFFFF</item>
+
     </array>
+
 
     <string-array name="font_types">
         <item>Arial</item>

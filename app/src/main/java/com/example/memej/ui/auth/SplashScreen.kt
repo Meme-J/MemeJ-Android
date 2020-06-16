@@ -4,9 +4,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
+import com.airbnb.lottie.LottieAnimationView
 import com.example.memej.MainActivity
 import com.example.memej.R
-import com.example.memej.Utils.SaveSharedPreference
+import com.example.memej.Utils.sessionManagers.SaveSharedPreference
 
 
 class SplashScreen : AppCompatActivity() {
@@ -17,6 +18,8 @@ class SplashScreen : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
 
+        val lav: LottieAnimationView = findViewById(R.id.lav_splash)
+        lav.imageAssetsFolder = assets.toString()
 
         handler = Handler()
         handler.postDelayed({
@@ -24,11 +27,9 @@ class SplashScreen : AppCompatActivity() {
             //We ll write some lines of code in this to see weather the user is logged in or not
             //To redirect to signUp/Login Page or go to the home page fragment
 
-            //Refresh tokens is stored in database
-
 
             // Test for going to the login activity
-
+            //Incase save shared prefernce
             if (SaveSharedPreference().getLoggedStatus(applicationContext)) {
                 val intent = Intent(applicationContext, MainActivity::class.java)
                 startActivity(intent)
@@ -40,10 +41,7 @@ class SplashScreen : AppCompatActivity() {
             finish()
 
 
-
-
-
-        }, 1000)     //1 seconds delay
+        }, 2000)     //2 seconds delay
 
 
     }

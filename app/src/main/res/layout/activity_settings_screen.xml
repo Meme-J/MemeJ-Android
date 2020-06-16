@@ -14,27 +14,26 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/colorPrimary"
-            app:navigationIcon="@drawable/ic_arrow"
             app:title="Settings"
             app:titleTextColor="@color/white" />
 
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/std_height_settings"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="12dp"
-            android:elevation="4dp"
-            app:cardCornerRadius="4dp">
+        <!--        <androidx.cardview.widget.CardView-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="@dimen/std_height_settings"-->
+        <!--            android:layout_marginStart="12dp"-->
+        <!--            android:layout_marginTop="16dp"-->
+        <!--            android:layout_marginEnd="12dp"-->
+        <!--            android:elevation="4dp"-->
+        <!--            app:cardCornerRadius="4dp">-->
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/settings_change_avatar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/margins"
-                android:text="@string/change_avatar"
-                android:textStyle="bold" />
-        </androidx.cardview.widget.CardView>
+        <!--            <com.google.android.material.textview.MaterialTextView-->
+        <!--                android:id="@+id/settings_change_avatar"-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:padding="@dimen/margins"-->
+        <!--                android:text="@string/change_avatar"-->
+        <!--                android:textStyle="bold" />-->
+        <!--        </androidx.cardview.widget.CardView>-->
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"

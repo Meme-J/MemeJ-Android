@@ -7,29 +7,24 @@ import android.widget.ProgressBar
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
-import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.example.memej.MainActivity
 import com.example.memej.R
-import com.example.memej.Utils.Communicator
-import com.example.memej.adapters.MemeWorldAdapter
-import com.example.memej.adapters.OnItemClickListenerMemeWorld
+import com.example.memej.adapters.LikedMemesAdapter
+import com.example.memej.adapters.OnItemClickListenerLikeMeme
 import com.example.memej.responses.memeWorldResponses.Meme_World
 import com.example.memej.ui.MemeWorld.CompletedMemeActivity
 import com.example.memej.viewModels.LikedMemesViewModel
 
-class LikedMemes : AppCompatActivity(), OnItemClickListenerMemeWorld, Communicator {
+class LikedMemes : AppCompatActivity(), OnItemClickListenerLikeMeme {
 
 
     private val viewModel: LikedMemesViewModel by viewModels()
     private lateinit var rv: RecyclerView
-    private lateinit var memeWorldAdapter: MemeWorldAdapter
-    lateinit var root: View
-    lateinit var comm: Communicator
+    private lateinit var memeWorldAdapter: LikedMemesAdapter
     lateinit var pb: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,13 +36,10 @@ class LikedMemes : AppCompatActivity(), OnItemClickListenerMemeWorld, Communicat
 
         //Reinstantiate the toolbar properties
         val toolbar: androidx.appcompat.widget.Toolbar = findViewById(R.id.tb_likedMemes)
-        toolbar.setNavigationOnClickListener {
-            val i = Intent(this, MainActivity::class.java)
-            startActivity(i)
-        }
+
 
         //Instantiate ViewModel
-        memeWorldAdapter = MemeWorldAdapter(this, this)
+        memeWorldAdapter = LikedMemesAdapter(this, this)
         initList()
 
 
@@ -93,43 +85,11 @@ class LikedMemes : AppCompatActivity(), OnItemClickListenerMemeWorld, Communicat
             "textColor" to _homeMeme.templateId.textColorCode
         )
 
-        openLikedMemeFromActivity(bundle)
+        val i = Intent(this, CompletedMemeActivity::class.java)
+        i.putExtra("bundle", bundle)
+        startActivity(i)
 
     }
 
-    override fun passDataFromHome(bundle: Bundle) {
-
-    }
-
-    override fun passDataToMemeWorld(bundle: Bundle) {
-    }
-
-    override fun goToLikedMemesPage() {
-    }
-
-    override fun goToMemesByTagPage(bundle: Bundle) {
-    }
-
-    override fun goBackToHomePage() {
-    }
-
-    override fun goToSearchResult(bundle: Bundle) {
-    }
-
-    override fun goToProfilePage() {
-    }
-
-    override fun openLikedMemeFromActivity(bundle: Bundle) {
-        //Replace with the new meme World Frgment
-        val transaction = this.supportFragmentManager.beginTransaction()
-        val frag2 = CompletedMemeActivity()     //This is Fragmnet
-        frag2.arguments = bundle
-
-        transaction.replace(R.id.container_likedMemes, frag2)
-        transaction.addToBackStack(null)
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-        transaction.commit()
-
-    }
 
 }

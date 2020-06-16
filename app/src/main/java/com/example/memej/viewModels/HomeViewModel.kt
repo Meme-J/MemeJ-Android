@@ -21,7 +21,7 @@ class HomeViewModel : ViewModel() {
         Log.e("K", "in INIT Start")
 
         val config = PagedList.Config.Builder()
-            .setPageSize(30)               //Number of items to load in a page
+            .setInitialLoadSizeHint(20)
             .setEnablePlaceholders(false)   //There is holder disabled till the data is loaded
             .build()
         postsLiveData = initializedPagedListBuilder(config).build()
@@ -40,6 +40,7 @@ class HomeViewModel : ViewModel() {
         return postsLiveData
     }
 
+
     private fun initializedPagedListBuilder(config: PagedList.Config):
             LivePagedListBuilder<String, Meme_Home> {
 
@@ -52,4 +53,6 @@ class HomeViewModel : ViewModel() {
         }
         return LivePagedListBuilder(dataSourceFactory, config)
     }
+
+
 }

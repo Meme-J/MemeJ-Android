@@ -1,4 +1,4 @@
-package com.example.memej.Utils
+package com.example.memej.Utils.PagingUtils
 
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.JsonReader
@@ -42,7 +42,10 @@ class DefaultOndataMisMatchAdapter<T> private constructor(
                         return null
                     }
                     val delegate = moshi.nextAdapter<T>(this, type, annotations)
-                    return DefaultOndataMisMatchAdapter(delegate, defaultValue)
+                    return DefaultOndataMisMatchAdapter(
+                        delegate,
+                        defaultValue
+                    )
                 }
             }
         }

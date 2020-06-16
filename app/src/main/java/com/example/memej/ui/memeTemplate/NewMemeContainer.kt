@@ -1,42 +1,50 @@
 package com.example.memej.ui.memeTemplate
 
+import android.content.DialogInterface
 import android.content.Intent
-import android.graphics.*
-import android.graphics.drawable.Drawable
-import android.os.Build
+import android.graphics.Color
+import android.graphics.Path
+import android.graphics.Typeface
 import android.os.Bundle
-import android.text.*
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.*
-import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.collection.lruCache
-import androidx.core.graphics.withTranslation
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
 import com.example.memej.MainActivity
 import com.example.memej.R
 import com.example.memej.Utils.Communicator2
-import com.example.memej.Utils.SessionManager
+import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.adapters.TagAdapter
 import com.example.memej.adapters.TagEditAdapter
 import com.example.memej.adapters.onTagClickType
-import com.example.memej.entities.editMemeBody
+import com.example.memej.entities.createMemeBody
 import com.example.memej.entities.searchBody
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.SearchResponse
 import com.example.memej.responses.editMemeApiResponse
 import com.example.memej.responses.homeMememResponses.Coordinates
+import com.example.memej.textProperties.lib.ImageEditorView
+import com.example.memej.textProperties.lib.OnPhotoEditorListener
+import com.example.memej.textProperties.lib.Photo
+import com.example.memej.textProperties.lib.ViewType
 import com.example.memej.viewModels.NewMemeContainerViewModel
+import com.github.dhaval2404.colorpicker.MaterialColorPickerDialog
+import com.github.dhaval2404.colorpicker.model.ColorShape
+import com.github.dhaval2404.colorpicker.model.ColorSwatch
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.imageview.ShapeableImageView
+import com.google.android.material.textview.MaterialTextView
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import kotlin.properties.Delegates
+
 
 class NewMemeContainer : AppCompatActivity(), onTagClickType {
 
@@ -47,10 +55,9 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
 
     private lateinit var viewModel: NewMemeContainerViewModel
     lateinit var arg: Bundle
-    private lateinit var img: ShapeableImageView
+
+    // private lateinit var img: ShapeableImageView
     lateinit var edt: EditText
-    private lateinit var paint_chosen: Paint
-    private lateinit var type_face: Typeface
     val paths = ArrayList<Path>()
     val undonePaths = ArrayList<Path>()
     var sendButton: Boolean = false
@@ -60,6 +67,18 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
     lateinit var pb: ProgressBar
     lateinit var tagCheck: MaterialButton
 
+
+    //Global to be used
+    private var paint_chosen by Delegates.notNull<Int>()
+    private lateinit var type_face: Typeface
+    private var size_chosen by Delegates.notNull<Float>()
+    lateinit var colorIndicator: CardView
+
+    var whichFont = 0
+    var whichPaint = Color.BLACK
+    var whichProgress = 20
+
+
     lateinit var adapterTagsAdded: TagEditAdapter
     lateinit var stringAdapter: ArrayAdapter<String>
     lateinit var mutableList: MutableList<String>
@@ -67,16 +86,27 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
     lateinit var HorizontalLayoutInsertedTags: LinearLayoutManager
     lateinit var adapterTagAdded: TagEditAdapter
 
+    //    lateinit var photoView: PhotoEditorView
+    lateinit var photoView: ImageEditorView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.new_meme_container_fragment)
 
         arg = intent?.getBundleExtra("bundle")!!
-
-        img = findViewById(R.id.imagePostNew)
         edt = findViewById(R.id.lineAddedEtNew)
         tagCheck = findViewById(R.id.tag_editNew)
+        photoView = findViewById(R.id.imageView)
+
+
+        //Default Paint, TypeFace. Size
+        val tf: Typeface = Typeface.DEFAULT
+        type_face = tf
+        paint_chosen = Color.parseColor("#000000")      //Default color
+        size_chosen = 20f
+        colorIndicator = findViewById(R.id.colorIndicator_new)
+
+
 
         rvTagEdits = findViewById<RecyclerView>(R.id.rv_insertedTagsNew)
         HorizontalLayoutInsertedTags = LinearLayoutManager(
@@ -84,82 +114,36 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
             LinearLayoutManager.HORIZONTAL,
             false
         )
-
         adapterTagAdded = TagEditAdapter()
 
         initializeEditFrame(arg)
 
 
-        sessionManager = SessionManager(this)
+        sessionManager =
+            SessionManager(this)
         pb = findViewById(R.id.pb_new_fragment)
 
-
-        // val colors = root.findViewById<MaterialTextView>(R.id.choose_color)
-        // val font = root.findViewById<MaterialTextView>(R.id.choose_font)
-
-        /*
-            //Choose Color
-            colors.setOnClickListener {
-                context?.let {
-                    MaterialColorPickerDialog
-                        .Builder(it)                        // Pass Activity Instance
-                        .setColorShape(ColorShape.SQAURE)
-                        .setTitle("Pick a color")// Default ColorShape.CIRCLE
-                        .setPositiveButton("Select")
-                        .setNegativeButton("Cancel")
-                        .setColorSwatch(ColorSwatch._300)    // Default ColorSwatch._500
-                        .setColorRes(
-                            resources.getIntArray(R.array.themeColors).toList()
-                        )    // Pass Default Color
-                        .setColorListener { color, colorHex ->
-                            // Handle Color Selection
-                            //Set the paint brush to be valued for this color
-                            //Pass the color hex
-                            paint_chosen = setPaint(colorHex)
-
-                        }
-                        .show()
-                }
-
-            }
-
-            //Choose Font
-            font.setOnClickListener {
-                val builder = AlertDialog.Builder(context)
-                builder.setTitle("Choose a font")
-
-                //Create List
-                val font_list = R.array.font_types
-
-                val checkedItem = 0     //Arial
-
-                builder.setSingleChoiceItems(
-                    font_list,
-                    checkedItem
-                ) { dialog, which ->
-                    // user checked an item
-                    type_face = setFont(which)
-
-                }
-                builder.setPositiveButton(
-                    "OK"
-                ) { dialog, which ->
-                    // user clicked OK
-                    //which is the int
-                    //What is teh global type face
-                    type_face = setFont(which)
-                    dialog.dismiss()
-
-                }
-                builder.setNegativeButton("Cancel", null)
-                val dialog = builder.create()
-                dialog.show()
+        val colors = findViewById<MaterialTextView>(R.id.choose_color_new)
+        val font = findViewById<MaterialTextView>(R.id.choose_font_new)
+        val size = findViewById<MaterialTextView>(R.id.choose_size_new)
 
 
-            }
+        colors.setOnClickListener {
+            chooseColor()
+        }
+        font.setOnClickListener {
+            chooseFont()
+        }
+        size.setOnClickListener {
+            chooseSizeText()
+        }
+        colorIndicator.setOnClickListener {
+            chooseColor()
+        }
 
-        */
-//
+
+        //Init mutable list
+        mutableList = mutableListOf()
         stringAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line)
 
 
@@ -177,7 +161,7 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
             override fun afterTextChanged(s: Editable?) {
                 //Activation of button
                 //find the button
-                val tagCheck = findViewById<ImageView>(R.id.tag_editNew)
+                val tagCheck = findViewById<MaterialButton>(R.id.tag_editNew)
                 if (tagsEt.length() != 0) {
                     tagCheck.isEnabled =
                         true
@@ -215,6 +199,137 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
 
     }
 
+
+    private fun chooseSizeText() {
+        //Use a seek bar
+
+        val popDialog =
+            AlertDialog.Builder(this)
+
+
+        val seek = SeekBar(this)
+        seek.max = 40
+        seek.progress = whichProgress
+        seek.keyProgressIncrement = 2
+
+        popDialog.setTitle("Select Size")
+        popDialog.setView(seek)
+        popDialog.setMessage("Choose a size")
+
+        seek.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(
+                seekBar: SeekBar?,
+                progress: Int,
+                fromUser: Boolean
+            ) {
+                size_chosen = progress.toFloat()
+                whichProgress = progress
+            }
+
+            override fun onStartTrackingTouch(arg0: SeekBar?) {
+
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                Log.e("Size", seek.progress.toString())
+            }
+        })
+
+        popDialog.setPositiveButton("OK",
+            object : DialogInterface.OnClickListener {
+                override fun onClick(dialog: DialogInterface, which: Int) {
+
+                    dialog.dismiss()
+                }
+            })
+        popDialog.create()
+        popDialog.show()
+
+
+    }
+
+    private fun chooseFont() {
+
+        var typeface = Typeface.DEFAULT
+        //Choose Font
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Choose a font")
+
+        //Create List
+        val font_list = R.array.font_types
+
+        val checkedItem = whichFont     //Arial
+
+        builder.setSingleChoiceItems(
+            font_list,
+            checkedItem
+        ) { dialog, which ->
+            // user checked an item
+            whichFont = which
+            when (which) {
+                0 -> typeface = Typeface.createFromAsset(assets, "arial.ttf")
+                1 -> typeface = Typeface.createFromAsset(assets, "long_fox_font.ttf")
+                2 -> typeface = Typeface.createFromAsset(assets, "bomb_font.ttf")
+                3 -> typeface = Typeface.createFromAsset(assets, "romot_reavers_font.ttf")
+                4 -> typeface = Typeface.createFromAsset(assets, "fonty_font.ttf")
+            }
+            type_face = typeface
+
+        }
+
+        builder.setPositiveButton(
+            "OK"
+        ) { dialog, which ->
+
+
+            when (which) {
+                0 -> typeface = Typeface.createFromAsset(assets, "arial.ttf")
+                1 -> typeface = Typeface.createFromAsset(assets, "long_fox_font.ttf")
+                2 -> typeface = Typeface.createFromAsset(assets, "bomb_font.ttf")
+                3 -> typeface = Typeface.createFromAsset(assets, "romot_reavers_font.ttf")
+                4 -> typeface = Typeface.createFromAsset(assets, "fonty_font.ttf")
+            }
+            type_face = typeface
+            Log.e("Font", typeface.toString())
+            dialog.dismiss()
+
+        }
+        builder.setNegativeButton("Cancel", null)
+
+        val dialog = builder.create()
+        dialog.show()
+
+
+    }
+
+    private fun chooseColor() {
+
+        this.let {
+            MaterialColorPickerDialog
+                .Builder(it)                                              // Pass Activity Instance
+                .setColorShape(ColorShape.SQAURE)
+                .setTitle("Pick a color") // Default ColorShape.CIRCLE
+                .setPositiveButton("Select")
+                .setDefaultColor(whichPaint)
+                .setNegativeButton("Cancel")
+                .setColorSwatch(ColorSwatch._300)    // Default ColorSwatch._500
+                .setColorRes(
+                    resources.getIntArray(R.array.themeColors).toList()
+                )    // Pass Default Color
+                .setColorListener { color, colorHex ->
+                    // Handle Color Selection
+
+                    //Set the paint brush to be valued for this color
+                    //Pass the color hex
+                    paint_chosen = color
+                    colorIndicator.setCardBackgroundColor(color)
+                    whichPaint = color
+                    Log.e("Color", paint_chosen.toString())
+                }
+                .show()
+        }
+
+    }
 
     private fun setInTagRv() {
         Log.e("Edit", "Values in Mutable list" + mutableList.toString())
@@ -268,18 +383,26 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
     private fun sendPost(line: String) {
         //Show the progress bar
         pb.visibility = View.VISIBLE
-
+        Log.e("send", "CP1")
         val service = RetrofitClient.makeCallsForMemes(this)
-        val inf = editMemeBody(arg.getString("id")!!, line, mutableList)
+        val inf =
+            createMemeBody(arg.getInt("numPlaceholders"), line, mutableList, arg.getString("id")!!)
 
-        service.editMeme(accessToken = "Bearer ${sessionManager.fetchAcessToken()}", info = inf)
+        Log.e("send", "CP1")
+
+        Log.e("send", inf.toString() + "input")
+
+        service.createMeme(accessToken = "Bearer ${sessionManager.fetchAcessToken()}", info = inf)
             .enqueue(object : Callback<editMemeApiResponse> {
                 override fun onFailure(call: Call<editMemeApiResponse>, t: Throwable) {
+
+                    Log.e("send", "InFail")
                     Toast.makeText(
                         this@NewMemeContainer,
                         t.message.toString(),
                         Toast.LENGTH_LONG
                     ).show()
+
                     pb.visibility = View.GONE
                 }
 
@@ -287,32 +410,55 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
                     call: Call<editMemeApiResponse>,
                     response: Response<editMemeApiResponse>
                 ) {
-                    //Response will be good if the meme is created
-                    if (response.body()!!.msg == "Meme Edited successfully") {
-                        Toast.makeText(
-                            this@NewMemeContainer,
-                            response.body()!!.msg,
-                            Toast.LENGTH_LONG
-                        ).show()
-                        pb.visibility = View.GONE
-                        //Go back to the main activity
-                        //On Creating a new meme retrn to the main activty of return to the parent activity
-                        //Intent back to main activty
-                        val i = Intent(this@NewMemeContainer, MainActivity::class.java)
-                        startActivity(i)
 
+                    Log.e("send", "InResp" + response.toString())
+                    //Response will be good if the meme is created
+                    //Log the response
+                    Log.e(
+                        "send",
+                        response.body()
+                            .toString() + response.errorBody() + response.code() + "\n" + response.body()?.msg
+                                + " \n" + response.body()?.meme + "\n" + response.headers()
+                            .toString()
+                    )
+
+                    if (response.isSuccessful) {
+
+                        Log.e("send", "InRespSuccess")
+                        if (response.body()?.msg == "Meme created successfully") {
+                            Toast.makeText(
+                                this@NewMemeContainer,
+                                response.body()!!.msg,
+                                Toast.LENGTH_LONG
+                            ).show()
+
+                            Log.e("send", "InGood Message")
+                            pb.visibility = View.GONE
+                            //Go back to the main activity
+                            //On Creating a new meme retrn to the main activty of return to the parent activity
+                            //Intent back to main activty
+                            val i = Intent(
+                                this@NewMemeContainer,
+                                MainActivity::class.java
+                            )
+                            startActivity(i)
+                            finish()
+                        } else {
+                            Toast.makeText(
+                                this@NewMemeContainer,
+                                response.body()?.msg,
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
                     } else {
-                        Toast.makeText(
-                            this@NewMemeContainer,
-                            response.body()!!.msg,
-                            Toast.LENGTH_LONG
-                        ).show()
-                        pb.visibility = View.GONE
+
 
                     }
                 }
+
             })
 
+        Log.e("send", "In exit retro call")
     }
 
 
@@ -342,42 +488,51 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
 
         //There are no users
 
-
         getImage()
 
 
     }
 
+
     private fun getImage() {
-        Glide.with(img)
-            .asBitmap()
-            .load(arg.getString("imageUrl"))
-            .into(object : CustomTarget<Bitmap>() {
-                override fun onLoadCleared(placeholder: Drawable?) {
-                    //When we do not use the part
-                }
 
-                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                    val canvas = Canvas(resource)
+        photoView.source?.let {
+            Glide.with(this)
+                .load(arg.getString("imageUrl"))
+                .dontAnimate()
+                .dontTransform()
+                .placeholder(R.drawable.icon_placeholder)
+                .error(R.drawable.icon_placeholder)
+                .into(it)
+        }
+        getCompleteCoordinatesToBeUsed()
 
-                    img.draw(canvas)
-
-                    img.setImageBitmap(resource)
-
-                    //No need of complete Image
-                    getCompleteCoordinatesToBeUsed(resource, canvas, arg)
-
-                }
-            })
+//        Glide.with(this)
+//            .asBitmap()
+//            .load(arg.getString("imageUrl"))
+//            .placeholder(R.drawable.icon_placeholder)
+//            .error(R.drawable.icon_placeholder)
+//            .into(object : CustomTarget<Bitmap>() {
+//                override fun onLoadCleared(placeholder: Drawable?) {
+//
+//                }
+//
+//                override fun onResourceReady(
+//                    resource: Bitmap,
+//                    transition: com.bumptech.glide.request.transition.Transition<in Bitmap>?
+//                ) {
+//                    val canvas = Canvas(resource)
+//                    photoView.source?.draw(canvas)
+//                    photoView.source?.setImageBitmap(resource)
+//                    getCompleteCoordinatesToBeUsed(resource, canvas)
+//
+//                }
+//            })
 
     }
 
-    private fun getCompleteCoordinatesToBeUsed(
-        bitmap: Bitmap?, canvas: Canvas, arg: Bundle
-    ) {
+    private fun getCompleteCoordinatesToBeUsed() {
 
-        //Create a path to track undo and changes
-        val numPlaceHolders = arg.getInt("numPlaceholders")
 
         val xN =
             arg.getParcelableArrayList<Coordinates>("coordinate")!!
@@ -386,370 +541,111 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
             arg.getParcelableArrayList<Coordinates>("coordinate")!!
                 .elementAt(0).y
 
-        val currentPaint = getTextPaint(
-            arg.getStringArrayList("textColorCode")!!.elementAt(0),
-            arg.getIntegerArrayList("textSize")!!.elementAt(0)
-        )
-        canvas.save()
+        val xB =
+            arg.getParcelableArrayList<Coordinates>("coordinate")!!
+                .elementAt(1).x
+        val yB =
+            arg.getParcelableArrayList<Coordinates>("coordinate")!!
+                .elementAt(1).y
 
-        observeTextChange(bitmap, canvas, arg, xN, yN, currentPaint)
-    }
+        val color = arg.getStringArrayList("textColorCode")!!.elementAt(0)
+        val size = arg.getIntegerArrayList("textSize")!!.elementAt(0)
+        val colorInt = Color.parseColor(color)
 
-    //For O Version (API 8)
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun Canvas.drawMultilineText(
-        text: CharSequence,
-        textPaint: TextPaint,
-        width: Int,
-        x: Float,
-        y: Float,
-        start: Int = 0,
-        end: Int = text.length,
-        alignment: Layout.Alignment = Layout.Alignment.ALIGN_NORMAL,
-        textDir: TextDirectionHeuristic = TextDirectionHeuristics.FIRSTSTRONG_LTR,
-        spacingMult: Float = 1f,
-        spacingAdd: Float = 0f,
-        includePad: Boolean = true,
-        ellipsizedWidth: Int = width,
-        ellipsize: TextUtils.TruncateAt? = null,
-        maxLines: Int = Int.MAX_VALUE,
-        breakStrategy: Int = Layout.BREAK_STRATEGY_SIMPLE,
-        hyphenationFrequency: Int = Layout.HYPHENATION_FREQUENCY_NONE,
-        justificationMode: Int = Layout.JUSTIFICATION_MODE_NONE
-    ) {
-
-        val cacheKey = "$text-$start-$end-$textPaint-$width-$alignment-$textDir-" +
-                "$spacingMult-$spacingAdd-$includePad-$ellipsizedWidth-$ellipsize-" +
-                "$maxLines-$breakStrategy-$hyphenationFrequency-$justificationMode"
-
-        val staticLayout = StaticLayoutCache[cacheKey] ?: StaticLayout.Builder.obtain(
-            text,
-            start,
-            end,
-            textPaint,
-            width
-        )
-            .setAlignment(alignment)
-            .setTextDirection(textDir)
-            .setLineSpacing(spacingAdd, spacingMult)
-            .setIncludePad(includePad)
-            .setEllipsizedWidth(ellipsizedWidth)
-            .setEllipsize(ellipsize)
-            .setMaxLines(maxLines)
-            .setBreakStrategy(breakStrategy)
-            .setHyphenationFrequency(hyphenationFrequency)
-            .setJustificationMode(justificationMode)
-            .build().apply { StaticLayoutCache[cacheKey] = this }
-
-        staticLayout.draw(this, x, y)
+        observeTextChange(arg, xN, yN, colorInt, size, xB, yB)
     }
 
 
-    //For M version (API 6)
-    @RequiresApi(Build.VERSION_CODES.M)
-    fun Canvas.drawMultilineText(
-        text: CharSequence,
-        textPaint: TextPaint,
-        width: Int,
-        x: Float,
-        y: Float,
-        start: Int = 0,
-        end: Int = text.length,
-        alignment: Layout.Alignment = Layout.Alignment.ALIGN_NORMAL,
-        textDir: TextDirectionHeuristic = TextDirectionHeuristics.FIRSTSTRONG_LTR,
-        spacingMult: Float = 1f,
-        spacingAdd: Float = 0f,
-        includePad: Boolean = true,
-        ellipsizedWidth: Int = width,
-        ellipsize: TextUtils.TruncateAt? = null,
-        maxLines: Int = Int.MAX_VALUE,
-        breakStrategy: Int = Layout.BREAK_STRATEGY_SIMPLE,
-        hyphenationFrequency: Int = Layout.HYPHENATION_FREQUENCY_NONE
-    ) {
-
-        val cacheKey = "$text-$start-$end-$textPaint-$width-$alignment-$textDir-" +
-                "$spacingMult-$spacingAdd-$includePad-$ellipsizedWidth-$ellipsize-" +
-                "$maxLines-$breakStrategy-$hyphenationFrequency"
-
-        val staticLayout = StaticLayoutCache[cacheKey] ?: StaticLayout.Builder.obtain(
-            text,
-            start,
-            end,
-            textPaint,
-            width
-        )
-            .setAlignment(alignment)
-            .setTextDirection(textDir)
-            .setLineSpacing(spacingAdd, spacingMult)
-            .setIncludePad(includePad)
-            .setEllipsizedWidth(ellipsizedWidth)
-            .setEllipsize(ellipsize)
-            .setMaxLines(maxLines)
-            .setBreakStrategy(breakStrategy)
-            .setHyphenationFrequency(hyphenationFrequency)
-            .build().apply { StaticLayoutCache[cacheKey] = this }
-
-        staticLayout.draw(this, x, y)
-    }
-
-    //For rest verses
-
-    fun Canvas.drawMultilineText(
-        text: CharSequence,
-        textPaint: TextPaint,
-        width: Int,
-        x: Float,
-        y: Float,
-        start: Int = 0,
-        end: Int = text.length,
-        alignment: Layout.Alignment = Layout.Alignment.ALIGN_NORMAL,
-        textDir: TextDirectionHeuristic = TextDirectionHeuristics.LTR,
-        spacingMult: Float = 1f,
-        spacingAdd: Float = 0f,
-        breakStrategy: Int = Layout.BREAK_STRATEGY_SIMPLE,
-        hyphenationFrequency: Int = Layout.HYPHENATION_FREQUENCY_NONE
-    ) {
-
-
-        val cacheKey = "$text-$start-$end-$textPaint-$width-$alignment-$textDir-" +
-                "$spacingMult-$spacingAdd-$breakStrategy-$hyphenationFrequency"
-
-        //Create a dynamic layout
-//        val dynamicLayout = DynamicLayout.Builder
-//            .obtain(text, textPaint, width)
-//            .setAlignment(alignment)
-//            .setTextDirection(textDir)
-//            .setLineSpacing(spacingAdd, spacingMult)
-//            .setBreakStrategy(breakStrategy)
-//            .build()
-
-
-        val staticLayout =
-            StaticLayoutCache[cacheKey] ?: StaticLayout.Builder
-                .obtain(text, start, end, textPaint, width)
-                .setAlignment(alignment)
-                .setTextDirection(textDir)
-                .setLineSpacing(spacingAdd, spacingMult)
-                .setBreakStrategy(breakStrategy)
-                .build()
-        staticLayout.draw(this, x, y)
-    }
-
-    //This is called after all the above is done
     private fun observeTextChange(
-        bitmap: Bitmap?,
-        canvas: Canvas,
         arg: Bundle,
         xN: Int,
         yN: Int,
-        currentPaint: TextPaint
+        colorInt: Int,
+        size: Int,
+        xB: Int,
+        yB: Int
     ) {
-        //        val newCanvas = CanvasEditorView(requireContext())
-        //        val layoutParams = RelativeLayout.LayoutParams(
-        //            RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT
-        //        )
-        //        layoutParams.setMargins(pxToDp(xN),pxToDp(yN),0,0)
-        //        newCanvas.layoutParams = layoutParams
 
 
-        //Observe change on the edit etxt
+        //Sample two
+        val photoEditorClass = Photo.Builder(this, photoView, xN, yN, xB, yB)
+            .setPinchTextScalable(false)
+            .build()
+
+
+//        //Instance of PhotoEditor
+//        val mPhotoEditor = PhotoEditor.Builder(this, photoView)
+//            .setPinchTextScalable(false)        //False for zooming of image
+//            .build()
+
+
+        photoView.source!!.adjustViewBounds = true
+        val ht = photoView.source?.height
+        val wd = photoView.source?.width
+        val lh = photoView.source?.layoutParams?.height
+        val lw = photoView.source?.layoutParams?.width
+
+
+        //Check on Edt
+//        Log.e("View", " " + mPhotoEditor.toString())
         edt.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
 
-                val path = Path()
-                path.moveTo(
-                    xN.toFloat(), yN.toFloat()
-                )
-                path.lineTo(xN.toFloat() + 400f, yN.toFloat())
-                paths.add(path)
-
-                //Invalidate the view
-
-                //   canvas.drawTextOnPath(s.toString(),path,0f,10f,setPaint("#000000", currentSize))
                 if (edt.text.isNotEmpty()) {
                     sendButton = true
-                    findViewById<MaterialButton>(R.id.send_post_edit).isEnabled =
+                    findViewById<MaterialButton>(R.id.send_post_new).isEnabled =
                         true
                 } else if (edt.text.isEmpty()) {
                     sendButton = false
-                    findViewById<MaterialButton>(R.id.send_post_edit).isEnabled =
+                    findViewById<MaterialButton>(R.id.send_post_new).isEnabled =
                         false
                 }
 
             }
 
-            override fun beforeTextChanged(
-                s: CharSequence?,
-                start: Int,
-                count: Int,
-                after: Int
-            ) {
-
-                img.invalidate()
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                //Create a demo view just before init
+                photoEditorClass.addText(type_face, " ", paint_chosen, size_chosen)
+                photoEditorClass.clearAllViews()
+                photoEditorClass.addText(type_face, s.toString(), paint_chosen, size_chosen)
 
             }
 
-            override fun onTextChanged(
-                s: CharSequence?,
-                start: Int,
-                before: Int,
-                count: Int
-            ) {
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
 
-                //Draw a dynamicTextLayot
-
-                canvas.drawDynamicLayout(
-                    s.toString(),
-                    currentPaint,
-                    400,                    //Width
-                    xN.toFloat(),
-                    yN.toFloat(),
-                    edt
-                )
-                //Invalidate
-                img.invalidate()
+                photoEditorClass.clearAllViews()
+                photoEditorClass.addText(type_face, s.toString(), paint_chosen, size_chosen)
 
 
             }
         })
 
 
-    }
+        photoEditorClass.setOnPhotoEditorListener(object : OnPhotoEditorListener {
+            override fun onEditTextChangeListener(rootView: View?, text: String?, colorCode: Int) {
+                edt.requestFocus()
+            }
 
+            override fun onStartViewChangeListener(viewType: ViewType?) {
 
-    fun Canvas.drawDynamicLayout(
-        text: CharSequence,
-        textPaint: TextPaint,
-        width: Int,
-        x: Float,
-        y: Float,
-        editText: EditText,
-        start: Int = 0,
-        end: Int = text.length,
-        alignment: Layout.Alignment = Layout.Alignment.ALIGN_NORMAL,
-        textDir: TextDirectionHeuristic = TextDirectionHeuristics.LTR,
-        spacingMult: Float = 1f,
-        spacingAdd: Float = 0f,
+            }
 
-        breakStrategy: Int = Layout.BREAK_STRATEGY_SIMPLE,
-        hyphenationFrequency: Int = Layout.HYPHENATION_FREQUENCY_NONE
-    ) {
+            override fun onRemoveViewListener(numberOfAddedViews: Int) {
+                edt.text = null
+                edt.requestFocus()
+            }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            override fun onAddViewListener(viewType: ViewType?, numberOfAddedViews: Int) {
+                edt.requestFocus()
+            }
 
-            val cacheKey = "$text-$start-$end-$textPaint-$width-$alignment-$textDir-" +
-                    "$spacingMult-$spacingAdd" +
-                    "$breakStrategy-$hyphenationFrequency"
+            override fun onStopViewChangeListener(viewType: ViewType?) {
 
+            }
+        })
 
-            val dynamicLayout = DynamicLayoutCache[cacheKey] ?: DynamicLayout.Builder
-                .obtain(text, textPaint, width)
-                .setAlignment(alignment)
-                .setTextDirection(textDir)
-                .setLineSpacing(spacingAdd, spacingMult)
-                .setBreakStrategy(breakStrategy)
-                .build()
-
-            dynamicLayout.draw(this, x, y)
-
-
-        } else {
-            Toast.makeText(this@NewMemeContainer, "Version not supported", Toast.LENGTH_SHORT)
-                .show()
-        }
 
     }
-
-    //Helper Classes
-    private fun DynamicLayout.draw(canvas: Canvas, x: Float, y: Float) {
-        canvas.withTranslation(x, y) {
-            draw(this)
-        }
-    }
-
-    fun StaticLayout.draw(canvas: Canvas, x: Float, y: Float) {
-
-
-        canvas.withTranslation(x, y) {
-            draw(this)
-        }
-    }
-
-    private object StaticLayoutCache {
-
-        private const val MAX_SIZE = 50 // Arbitrary max number of cached items
-        private val cache = lruCache<String, StaticLayout>(MAX_SIZE)
-
-        operator fun set(key: String, staticLayout: StaticLayout) {
-            cache.put(key, staticLayout)
-        }
-
-        operator fun get(key: String): StaticLayout? {
-            return cache[key]
-        }
-    }
-
-    private object DynamicLayoutCache {
-        private const val MAX_SIZE = 50 // Arbitrary max number of cached items
-        private val cache = lruCache<String, DynamicLayout>(MAX_SIZE)
-
-        operator fun set(key: String, dynamicLayout: DynamicLayout) {
-            cache.put(key, dynamicLayout)
-        }
-
-        operator fun get(key: String): DynamicLayout? {
-            return cache[key]
-        }
-    }
-
-    private fun getTextPaint(color: String, size: Int?): TextPaint {
-        val paint = TextPaint()
-        paint.color = Color.parseColor(color)
-        paint.strokeWidth = 15F
-        paint.strokeCap = Paint.Cap.ROUND
-        paint.strokeJoin = Paint.Join.ROUND
-        paint.style = Paint.Style.FILL //Default to be set
-        paint.isAntiAlias = true
-        paint.textSize = size?.let { setSize(it) }!!
-        paint.isDither = true
-
-        return paint
-    }
-
-    private fun setSize(size: Int): Float {
-        val size_req = size.toFloat()
-        return size_req
-
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun setFont(id: Int): Typeface {
-        //Takes int
-        val i = id
-        var type: Typeface = resources.getFont(R.font.arial)
-        when (i) {
-
-            0 -> type = resources.getFont(R.font.arial)
-            1 -> resources.getFont(R.font.long_fox_font)
-            2 -> resources.getFont(R.font.bomb_font)
-            3 -> resources.getFont(R.font.romot_reavers_font)
-            4 -> resources.getFont(R.font.fonty_font)
-        }
-        return type        //Equal to the type
-
-    }
-
-    //Back Behaviour maintained
-    private fun getColorWithAlpha(color: Int, ratio: Float): Int {
-        var newColor = 0
-        val alpha = Math.round(Color.alpha(color) * ratio).toInt()
-        val r = Color.red(color)
-        val g = Color.green(color)
-        val b = Color.blue(color)
-        newColor = Color.argb(alpha, r, g, b)
-        return newColor
-    }
-
 
     override fun getTagType(_tag: String) {
         TODO("Not yet implemented")

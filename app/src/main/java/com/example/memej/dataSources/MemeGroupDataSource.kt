@@ -6,7 +6,7 @@ import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.paging.PageKeyedDataSource
-import com.example.memej.Utils.SessionManager
+import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.template.EmptyTemplateResponse
 import retrofit2.Call
@@ -20,7 +20,8 @@ class MemeGroupDataSource(val context: Context, val pb: ProgressBar) :
 
     //External variable to point to api client
     private val apiService = RetrofitClient.makeCallsForMemes(context)
-    private val sessionManager = SessionManager(context)
+    private val sessionManager =
+        SessionManager(context)
 
     override fun loadInitial(
         params: LoadInitialParams<String>,

@@ -1,13 +1,10 @@
 package com.example.memej.interfaces
 
-import com.example.memej.entities.editMemeBody
-import com.example.memej.entities.queryBody
-import com.example.memej.entities.searchBody
+import com.example.memej.entities.*
 import com.example.memej.responses.LikeOrNotResponse
 import com.example.memej.responses.SearchResponse
 import com.example.memej.responses.editMemeApiResponse
 import com.example.memej.responses.homeMememResponses.homeMemeApiResponse
-import com.example.memej.responses.memeWorldResponses.SuggestionsResponse
 import com.example.memej.responses.memeWorldResponses.memeApiResponses
 import com.example.memej.responses.template.EmptyTemplateResponse
 import retrofit2.Call
@@ -49,7 +46,7 @@ interface memes {
     @Headers("Content-Type:application/json")
     @POST("api/meme/like")
     fun likeMeme(
-        @Body memeId: String,
+        @Body memeId: likeMemeBody,
         @Header("Authorization") accessToken: String?
     ): Call<LikeOrNotResponse>
 
@@ -68,6 +65,7 @@ interface memes {
     ): Call<EmptyTemplateResponse>
 
     //To open an empty meme template
+    //Not to be used as it fetches all the templates
     @POST("api/template/open")
     fun openTemplate(
         @Body inf: String,
@@ -83,20 +81,21 @@ interface memes {
 
     ): Call<SearchResponse>
 
-    //## memes by tags
-    @POST("api/meme/tags")
-    fun getMemeByTag(
-        @Query("limit") loadSize: Int = 30,
-        @Header("Authorization") accessToken: String?,
-        @Body info: SuggestionsResponse         //This will be a string tag to be sent to the server
-    ): Call<homeMemeApiResponse>
-
     //Edit memes response
+    @Headers("Content-Type:application/json")
     @POST("api/meme/edit")
     fun editMeme(
         @Header("Authorization") accessToken: String?,
         @Body info: editMemeBody
     ): Call<editMemeApiResponse>
+
+    @Headers("Content-Type:application/json")
+    @POST("api/meme/create")
+    fun createMeme(
+        @Header("Authorization") accessToken: String?,
+        @Body info: createMemeBody
+    ): Call<editMemeApiResponse>
+
 
     //## get my memes ( I have contributed into)
     //Response will be moxed of meme world, and ongoing

@@ -1,4 +1,4 @@
-package com.example.memej.Utils;
+package com.example.memej.Utils.PagingUtils;
 //import android.support.annotation.*;
 
 import androidx.annotation.AnyThread;

@@ -1,34 +1,28 @@
 package com.example.memej.ui.home
 
 
+import android.content.DialogInterface
 import android.content.Intent
-import android.graphics.*
-import android.graphics.drawable.Drawable
-import android.os.Build
+import android.graphics.Color
+import android.graphics.Path
+import android.graphics.Typeface
 import android.os.Bundle
-import android.text.*
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import android.widget.*
 import android.widget.AdapterView.OnItemClickListener
-import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.ProgressBar
-import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.collection.lruCache
-import androidx.core.graphics.withTranslation
+import androidx.cardview.widget.CardView
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
-import com.example.memej.Instances.ProjectResources
-import com.example.memej.Instances.projectResources
 import com.example.memej.MainActivity
 import com.example.memej.R
-import com.example.memej.Utils.SessionManager
+import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.adapters.*
 import com.example.memej.databinding.EditMemeContainerFragmentBinding
 import com.example.memej.entities.editMemeBody
@@ -38,12 +32,21 @@ import com.example.memej.responses.SearchResponse
 import com.example.memej.responses.editMemeApiResponse
 import com.example.memej.responses.homeMememResponses.Coordinates
 import com.example.memej.responses.homeMememResponses.HomeUsers
+import com.example.memej.textProperties.ProjectResources
+import com.example.memej.textProperties.lib.ImageEditorView
+import com.example.memej.textProperties.lib.OnPhotoEditorListener
+import com.example.memej.textProperties.lib.Photo
+import com.example.memej.textProperties.lib.ViewType
+import com.example.memej.textProperties.projectResources
 import com.example.memej.viewModels.EditMemeContainerViewModel
+import com.github.dhaval2404.colorpicker.MaterialColorPickerDialog
+import com.github.dhaval2404.colorpicker.model.ColorShape
+import com.github.dhaval2404.colorpicker.model.ColorSwatch
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.imageview.ShapeableImageView
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import kotlin.properties.Delegates
 
 
 class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagClickType {
@@ -51,10 +54,18 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
     private val viewModel: EditMemeContainerViewModel by viewModels()
     private lateinit var root: EditMemeContainerFragmentBinding
     lateinit var arg: Bundle
-    private lateinit var img: ShapeableImageView
     lateinit var edt: EditText
-    private lateinit var paint_chosen: Paint
+
+    //Global to be used
+    private var paint_chosen by Delegates.notNull<Int>()
     private lateinit var type_face: Typeface
+    private var size_chosen by Delegates.notNull<Float>()
+    lateinit var colorIndicator: CardView
+
+    var whichFont = 0
+    var whichPaint = Color.BLACK
+    var whichProgress = 20
+
     val paths = ArrayList<Path>()
     val undonePaths = ArrayList<Path>()
     var sendButton: Boolean = false
@@ -65,99 +76,63 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
     lateinit var stringAdapter: ArrayAdapter<String>
     lateinit var mutableList: MutableList<String>
     lateinit var tagCheck: MaterialButton
+    lateinit var photoView: ImageEditorView
+
+    var X1: Int = 0
+    var Y1: Int = 0
+    var X2: Int = 0
+    var Y2: Int = 0
 
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         root = DataBindingUtil.setContentView(this, R.layout.edit_meme_container_fragment)
-        projectResources = ProjectResources(resources)
+        projectResources =
+            ProjectResources(resources)
 
-        type_face = resources.getFont(R.font.arial)
+        //Default Paint, TypeFace. Size
+        val tf: Typeface = Typeface.DEFAULT
+        type_face = tf
+        paint_chosen = Color.parseColor("#000000")      //Default color
+        size_chosen = 20f
+        colorIndicator = root.colorIndicator
 
         arg = intent?.getBundleExtra("bundle")!!
-
-        img = root.imagePostEdit
+        photoView = root.imageViewEditMeme
         edt = root.lineAddedEt
         tagCheck = root.tagEdit
 
-        initializeEditFrame(arg)
-        sessionManager = SessionManager(this)
+        sessionManager =
+            SessionManager(this)
         pb = root.pbEditFragment
 
-        //Init
+
+        initializeEditFrame(arg)
+
+
+        //Init for tags
         adapterTagsAdded = TagEditAdapter()
-        mutableList = mutableListOf()           //Empty
+        mutableList = mutableListOf()           //Empty list
 
         //root.rel_layout.setBackgroundColor(getColorWithAlpha(Color.DKGRAY, 0.2f));
-
-        // val colors = root.findViewById<MaterialTextView>(R.id.choose_color)
-        // val font = root.findViewById<MaterialTextView>(R.id.choose_font)
-
-        /*
-            //Choose Color
-            colors.setOnClickListener {
-                context?.let {
-                    MaterialColorPickerDialog
-                        .Builder(it)                        // Pass Activity Instance
-                        .setColorShape(ColorShape.SQAURE)
-                        .setTitle("Pick a color")// Default ColorShape.CIRCLE
-                        .setPositiveButton("Select")
-                        .setNegativeButton("Cancel")
-                        .setColorSwatch(ColorSwatch._300)    // Default ColorSwatch._500
-                        .setColorRes(
-                            resources.getIntArray(R.array.themeColors).toList()
-                        )    // Pass Default Color
-                        .setColorListener { color, colorHex ->
-                            // Handle Color Selection
-
-                            //Set the paint brush to be valued for this color
-                            //Pass the color hex
-                            paint_chosen = setPaint(colorHex)
-
-                        }
-                        .show()
-                }
-
-            }
-
-            //Choose Font
-            font.setOnClickListener {
-                val builder = AlertDialog.Builder(context)
-                builder.setTitle("Choose a font")
-
-                //Create List
-                val font_list = R.array.font_types
-
-                val checkedItem = 0     //Arial
-
-                builder.setSingleChoiceItems(
-                    font_list,
-                    checkedItem
-                ) { dialog, which ->
-                    // user checked an item
-                    type_face = setFont(which)
-
-                }
-                builder.setPositiveButton(
-                    "OK"
-                ) { dialog, which ->
-                    // user clicked OK
-                    //which is the int
-                    //What is teh global type face
-                    type_face = setFont(which)
-                    dialog.dismiss()
-
-                }
-                builder.setNegativeButton("Cancel", null)
-                val dialog = builder.create()
-                dialog.show()
+        val colors = root.chooseColor
+        val font = root.chooseFont
+        val size = root.chooseSize
 
 
-            }
-
-        */
+        colors.setOnClickListener {
+            chooseColor()
+        }
+        font.setOnClickListener {
+            chooseFont()
+        }
+        size.setOnClickListener {
+            chooseSizeText()
+        }
+        colorIndicator.setOnClickListener {
+            chooseColor()
+        }
 
 
         //Tags list
@@ -169,13 +144,14 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
 
         val onItemClickTag =
             OnItemClickListener { adapterView, view, i, l ->
-
                 mutableList.add(adapterView.getItemAtPosition(i).toString())
                 setInTagRv()
                 tagsEt.text = null
             }
 
         tagsEt.addTextChangedListener(object : TextWatcher {
+
+
             override fun afterTextChanged(s: Editable?) {
                 //Activation of button
                 if (tagsEt.length() != 0) {
@@ -212,6 +188,138 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
             sendPost(edt.text.toString())
         }
 
+
+    }
+
+    private fun chooseSizeText() {
+        //Use a seek bar
+
+        val popDialog =
+            AlertDialog.Builder(this)
+
+
+        val seek = SeekBar(this)
+        seek.max = 40
+        seek.progress = whichProgress
+        seek.keyProgressIncrement = 2
+
+        popDialog.setTitle("Select Size")
+        popDialog.setView(seek)
+        popDialog.setMessage("Choose a size")
+
+        seek.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(
+                seekBar: SeekBar?,
+                progress: Int,
+                fromUser: Boolean
+            ) {
+                size_chosen = progress.toFloat()
+                whichProgress = progress
+            }
+
+            override fun onStartTrackingTouch(arg0: SeekBar?) {
+
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                Log.e("Size", seek.progress.toString())
+            }
+        })
+
+        popDialog.setPositiveButton("OK",
+            object : DialogInterface.OnClickListener {
+                override fun onClick(dialog: DialogInterface, which: Int) {
+
+                    dialog.dismiss()
+                }
+            })
+        popDialog.create()
+        popDialog.show()
+
+
+    }
+
+    private fun chooseFont() {
+
+        var typeface = Typeface.DEFAULT
+        //Choose Font
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Choose a font")
+
+        //Create List
+        val font_list = R.array.font_types
+
+        val checkedItem = whichFont     //Arial
+
+        builder.setSingleChoiceItems(
+            font_list,
+            checkedItem
+        ) { dialog, which ->
+            // user checked an item
+            whichFont = which
+            when (which) {
+                0 -> typeface = Typeface.createFromAsset(assets, "arial.ttf")
+                1 -> typeface = Typeface.createFromAsset(assets, "long_fox_font.ttf")
+                2 -> typeface = Typeface.createFromAsset(assets, "bomb_font.ttf")
+                3 -> typeface = Typeface.createFromAsset(assets, "romot_reavers_font.ttf")
+                4 -> typeface = Typeface.createFromAsset(assets, "fonty_font.ttf")
+            }
+            type_face = typeface
+
+        }
+
+        builder.setPositiveButton(
+            "OK"
+        ) { dialog, which ->
+
+
+            when (which) {
+                0 -> typeface = Typeface.createFromAsset(assets, "arial.ttf")
+                1 -> typeface = Typeface.createFromAsset(assets, "long_fox_font.ttf")
+                2 -> typeface = Typeface.createFromAsset(assets, "bomb_font.ttf")
+                3 -> typeface = Typeface.createFromAsset(assets, "romot_reavers_font.ttf")
+                4 -> typeface = Typeface.createFromAsset(assets, "fonty_font.ttf")
+            }
+            type_face = typeface
+            Log.e("Font", typeface.toString())
+            dialog.dismiss()
+
+        }
+        builder.setNegativeButton("Cancel", null)
+
+        val dialog = builder.create()
+        dialog.show()
+
+
+    }
+
+    private fun chooseColor() {
+
+        this.let {
+            MaterialColorPickerDialog
+                .Builder(it)                                              // Pass Activity Instance
+                .setColorShape(ColorShape.SQAURE)
+                .setTitle("Pick a color") // Default ColorShape.CIRCLE
+                .setPositiveButton("Select")
+                .setDefaultColor(whichPaint)
+                .setNegativeButton("Cancel")
+                .setColorSwatch(ColorSwatch._300)    // Default ColorSwatch._500
+                .setColorRes(
+
+                    resources.getIntArray(R.array.themeColors).toList()
+                )    // Pass Default Color
+                .setColorListener { color, colorHex ->
+                    // Handle Color Selection
+
+                    //Set the paint brush to be valued for this color
+                    //Pass the color hex
+                    paint_chosen = color
+                    colorIndicator.setCardBackgroundColor(color)
+                    whichPaint = color
+                    Log.e("Color", paint_chosen.toString())
+                }
+                .show()
+        }
 
     }
 
@@ -276,7 +384,8 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
         //Show the progress bar
         pb.visibility = View.VISIBLE
         val service = RetrofitClient.makeCallsForMemes(this)
-        val inf = editMemeBody(arg.getString("id")!!, line, mutableList)
+        val inf =
+            editMemeBody(arg.getString("id")!!, line, mutableList, arg.getInt("numPlaceholders"))
 
         service.editMeme(accessToken = "Bearer ${sessionManager.fetchAcessToken()}", info = inf)
             .enqueue(object : Callback<editMemeApiResponse> {
@@ -368,6 +477,9 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
         rvUser.layoutManager = HorizontalUser
         rvUser.adapter = userAdater
 
+        //Set timestamp
+        root.timestampEdit.text = arg.getString("lastUpdated")
+
 
         getImage()
 
@@ -375,254 +487,145 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
     }
 
     private fun getImage() {
-        Glide.with(img)
-            .asBitmap()
-            .load(arg.getString("imageUrl"))
-            .into(object : CustomTarget<Bitmap>() {
-                override fun onLoadCleared(placeholder: Drawable?) {
-                    //When we do not use the part
-                }
 
-                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                    val canvas = Canvas(resource)
 
-                    img.draw(canvas)
+//        Glide.with(this)
+//            .asBitmap()
+//            .load(arg.getString("imageUrl"))
+//            .placeholder(R.drawable.icon_placeholder)
+//            .error(R.drawable.icon_placeholder)
+//            .into(object : CustomTarget<Bitmap>() {
+//                override fun onLoadCleared(placeholder: Drawable?) {
+//
+//                }
+//
+//                override fun onResourceReady(
+//                    resource: Bitmap,
+//                    transition: com.bumptech.glide.request.transition.Transition<in Bitmap>?
+//                ) {
+//                    val canvas = Canvas(resource)
+//                    photoView.source?.draw(canvas)
+//                    photoView.source?.setImageBitmap(resource)
+//                    getCompleteImage(resource, canvas)
+//
+//                }
+//            })
 
-                    img.setImageBitmap(resource)
 
-                    getCompleteImage(resource, canvas, arg)
+        photoView.source?.let {
+            Glide.with(this)
+                .load(arg.getString("imageUrl"))
+                .dontAnimate()
+                .dontTransform()
+                .placeholder(R.drawable.icon_placeholder)
+                .error(R.drawable.icon_placeholder)
+                .into(it)
+        }
 
-                }
-            })
+        getCompleteImage()
+
+
+//        Glide.with(img)
+//            .asBitmap()
+//            .dontAnimate()
+//            .dontTransform()
+//            .load(arg.getString("imageUrl"))
+//            .into(object : CustomTarget<Bitmap>() {
+//                override fun onLoadCleared(placeholder: Drawable?) {
+//                    //When we do not use the part
+//                }
+//
+//                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+//                    val canvas = Canvas(resource)
+//
+//                    img.draw(canvas)
+//
+//                    img.setImageBitmap(resource)
+//
+//                    getCompleteImage(resource, canvas, arg)
+//
+//                }
+//            })
 
     }
 
     private fun getCompleteImage(
-        bitmap: Bitmap?, canvas: Canvas, arg: Bundle
+//        bitmap: Bitmap?, canvas: Canvas
     ) {
 
-
-        //Extract every placeholder, color, textSize
-        //Use the num of placeholders in the  meme image to view those
-        //Set paint and size
-
-        //Create a path to track undo and changes
         val currentStage = arg.getInt("stage")
+        val c = 2 * currentStage - 1
+
+        for (i in 0..c step 2) {
 
 
-        for (i in 0..currentStage - 1) {
+            val color = arg.getStringArrayList("paint")!!.elementAt(i / 2)
+            val size = arg.getIntegerArrayList("size")!!.elementAt(i / 2)
+            val colorInt = Color.parseColor(color)
 
-            //Use static layout to encounter the multiline issues
-            //get the width as a parameter          //Keep it as a standard of 300.
 
-//            val paint =
-//                setPaint(
-//                    arg.getStringArrayList("paint")!!.elementAt(i),
-//                    arg.getIntegerArrayList("size")!!.elementAt(i)
-//                )
-            val paint = getTextPaint(
-                arg.getStringArrayList("paint")!!.elementAt(i),
-                arg.getIntegerArrayList("size")!!.elementAt(i)
-            )
+            val pl = arg.getStringArrayList("placeHolders")!![i / 2]
 
-            val pl = arg.getStringArrayList("placeHolders")!![i]
-
-            val x =
+            val x1 =
                 arg.getParcelableArrayList<Coordinates>("templateIdCoordinates")!!.elementAt(i).x
-            val y =
+            val y1 =
                 arg.getParcelableArrayList<Coordinates>("templateIdCoordinates")!!.elementAt(i).y
 
-            canvas.drawMultilineText(pl, paint, 300, x.toFloat(), y.toFloat())
+            val x2 =
+                arg.getParcelableArrayList<Coordinates>("templateIdCoordinates")!!
+                    .elementAt(i + 1).x
+            val y2 =
+                arg.getParcelableArrayList<Coordinates>("templateIdCoordinates")!!
+                    .elementAt(i + 1).y
 
-            //canvas.drawText(pl, x.toFloat(), y.toFloat(), setPaint("#000000", size = s))
+            val mPhotBuilView = Photo.Builder(this, photoView, x1, y1, x2, y2).build()
+            mPhotBuilView.addOldText(pl, colorInt, size = size.toFloat())
+
         }
+
         val xN =
             arg.getParcelableArrayList<Coordinates>("templateIdCoordinates")!!
-                .elementAt(currentStage).x
+                .elementAt(c + 1).x
         val yN =
             arg.getParcelableArrayList<Coordinates>("templateIdCoordinates")!!
-                .elementAt(currentStage).y
-        val currentPaint = getTextPaint(
-            arg.getStringArrayList("paint")!!.elementAt(currentStage),
-            arg.getIntegerArrayList("size")!!.elementAt(currentStage)
-        )
-        canvas.save()
+                .elementAt(c + 1).y
+        val xB =
+            arg.getParcelableArrayList<Coordinates>("templateIdCoordinates")!!
+                .elementAt(c + 2).x
+        val yB =
+            arg.getParcelableArrayList<Coordinates>("templateIdCoordinates")!!
+                .elementAt(c + 2).y
 
-        observeTextChange(bitmap, canvas, arg, xN, yN, currentPaint)
-    }
 
-    //For O Version (API 8)
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun Canvas.drawMultilineText(
-        text: CharSequence,
-        textPaint: TextPaint,
-        width: Int,
-        x: Float,
-        y: Float,
-        start: Int = 0,
-        end: Int = text.length,
-        alignment: Layout.Alignment = Layout.Alignment.ALIGN_NORMAL,
-        textDir: TextDirectionHeuristic = TextDirectionHeuristics.FIRSTSTRONG_LTR,
-        spacingMult: Float = 1f,
-        spacingAdd: Float = 0f,
-        includePad: Boolean = true,
-        ellipsizedWidth: Int = width,
-        ellipsize: TextUtils.TruncateAt? = null,
-        maxLines: Int = Int.MAX_VALUE,
-        breakStrategy: Int = Layout.BREAK_STRATEGY_SIMPLE,
-        hyphenationFrequency: Int = Layout.HYPHENATION_FREQUENCY_NONE,
-        justificationMode: Int = Layout.JUSTIFICATION_MODE_NONE
-    ) {
+        val color = arg.getStringArrayList("paint")!!.elementAt(0)
+        val size = arg.getIntegerArrayList("size")!!.elementAt(0)
+        val colorInt = Color.parseColor(color)
 
-        val cacheKey = "$text-$start-$end-$textPaint-$width-$alignment-$textDir-" +
-                "$spacingMult-$spacingAdd-$includePad-$ellipsizedWidth-$ellipsize-" +
-                "$maxLines-$breakStrategy-$hyphenationFrequency-$justificationMode"
 
-        val staticLayout = StaticLayoutCache[cacheKey] ?: StaticLayout.Builder.obtain(
-            text,
-            start,
-            end,
-            textPaint,
-            width
-        )
-            .setAlignment(alignment)
-            .setTextDirection(textDir)
-            .setLineSpacing(spacingAdd, spacingMult)
-            .setIncludePad(includePad)
-            .setEllipsizedWidth(ellipsizedWidth)
-            .setEllipsize(ellipsize)
-            .setMaxLines(maxLines)
-            .setBreakStrategy(breakStrategy)
-            .setHyphenationFrequency(hyphenationFrequency)
-            .setJustificationMode(justificationMode)
-            .build().apply { StaticLayoutCache[cacheKey] = this }
+        observeTextChange(arg, xN, yN, xB, yB, colorInt, size)
 
-        staticLayout.draw(this, x, y)
     }
 
 
-    //For M version (API 6)
-    @RequiresApi(Build.VERSION_CODES.M)
-    fun Canvas.drawMultilineText(
-        text: CharSequence,
-        textPaint: TextPaint,
-        width: Int,
-        x: Float,
-        y: Float,
-        start: Int = 0,
-        end: Int = text.length,
-        alignment: Layout.Alignment = Layout.Alignment.ALIGN_NORMAL,
-        textDir: TextDirectionHeuristic = TextDirectionHeuristics.FIRSTSTRONG_LTR,
-        spacingMult: Float = 1f,
-        spacingAdd: Float = 0f,
-        includePad: Boolean = true,
-        ellipsizedWidth: Int = width,
-        ellipsize: TextUtils.TruncateAt? = null,
-        maxLines: Int = Int.MAX_VALUE,
-        breakStrategy: Int = Layout.BREAK_STRATEGY_SIMPLE,
-        hyphenationFrequency: Int = Layout.HYPHENATION_FREQUENCY_NONE
-    ) {
-
-        val cacheKey = "$text-$start-$end-$textPaint-$width-$alignment-$textDir-" +
-                "$spacingMult-$spacingAdd-$includePad-$ellipsizedWidth-$ellipsize-" +
-                "$maxLines-$breakStrategy-$hyphenationFrequency"
-
-        val staticLayout = StaticLayoutCache[cacheKey] ?: StaticLayout.Builder.obtain(
-            text,
-            start,
-            end,
-            textPaint,
-            width
-        )
-            .setAlignment(alignment)
-            .setTextDirection(textDir)
-            .setLineSpacing(spacingAdd, spacingMult)
-            .setIncludePad(includePad)
-            .setEllipsizedWidth(ellipsizedWidth)
-            .setEllipsize(ellipsize)
-            .setMaxLines(maxLines)
-            .setBreakStrategy(breakStrategy)
-            .setHyphenationFrequency(hyphenationFrequency)
-            .build().apply { StaticLayoutCache[cacheKey] = this }
-
-        staticLayout.draw(this, x, y)
-    }
-
-    //For rest verses
-
-    fun Canvas.drawMultilineText(
-        text: CharSequence,
-        textPaint: TextPaint,
-        width: Int,
-        x: Float,
-        y: Float,
-        start: Int = 0,
-        end: Int = text.length,
-        alignment: Layout.Alignment = Layout.Alignment.ALIGN_NORMAL,
-        textDir: TextDirectionHeuristic = TextDirectionHeuristics.LTR,
-        spacingMult: Float = 1f,
-        spacingAdd: Float = 0f,
-        breakStrategy: Int = Layout.BREAK_STRATEGY_SIMPLE,
-        hyphenationFrequency: Int = Layout.HYPHENATION_FREQUENCY_NONE
-    ) {
-
-
-        val cacheKey = "$text-$start-$end-$textPaint-$width-$alignment-$textDir-" +
-                "$spacingMult-$spacingAdd-$breakStrategy-$hyphenationFrequency"
-
-        //Create a dynamic layout
-//        val dynamicLayout = DynamicLayout.Builder
-//            .obtain(text, textPaint, width)
-//            .setAlignment(alignment)
-//            .setTextDirection(textDir)
-//            .setLineSpacing(spacingAdd, spacingMult)
-//            .setBreakStrategy(breakStrategy)
-//            .build()
-
-
-        val staticLayout =
-            StaticLayoutCache[cacheKey] ?: StaticLayout.Builder
-                .obtain(text, start, end, textPaint, width)
-                .setAlignment(alignment)
-                .setTextDirection(textDir)
-                .setLineSpacing(spacingAdd, spacingMult)
-                .setBreakStrategy(breakStrategy)
-                .build()
-        staticLayout.draw(this, x, y)
-    }
-
-    //This is called after all the above is done
     private fun observeTextChange(
-        bitmap: Bitmap?,
-        canvas: Canvas,
         arg: Bundle,
         xN: Int,
         yN: Int,
-        currentPaint: TextPaint
+        xB: Int,
+        yB: Int,
+        colorInt: Int,
+        size: Int
     ) {
-        //        val newCanvas = CanvasEditorView(requireContext())
-//        val layoutParams = RelativeLayout.LayoutParams(
-//            RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT
-//        )
-//        layoutParams.setMargins(pxToDp(xN),pxToDp(yN),0,0)
-//        newCanvas.layoutParams = layoutParams
 
-
-        //Create an Edit Text
+        //Sample two
+        val photoEditorClass = Photo.Builder(this, photoView, xN, yN, xB, yB)
+            .setPinchTextScalable(false)
+            .build()
 
         edt.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
 
-                val path = Path()
-                path.moveTo(
-                    xN.toFloat(), yN.toFloat()
-                )
-                path.lineTo(xN.toFloat() + 400f, yN.toFloat())
-                paths.add(path)
 
-                //Invalidate the view
-
-                //   canvas.drawTextOnPath(s.toString(),path,0f,10f,setPaint("#000000", currentSize))
                 if (edt.text.isNotEmpty()) {
                     sendButton = true
                     root.sendPostEdit.isEnabled =
@@ -633,6 +636,7 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
                         false
                 }
 
+
             }
 
             override fun beforeTextChanged(
@@ -641,8 +645,9 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
                 count: Int,
                 after: Int
             ) {
-
-                img.invalidate()
+                photoEditorClass.clearAllViews()
+                //Return nothing
+                photoEditorClass.addText(type_face, s.toString(), paint_chosen, size_chosen)
 
             }
 
@@ -653,158 +658,58 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
                 count: Int
             ) {
 
-                //Draw a dynamicTextLayot
-
-                canvas.drawDynamicLayout(
-                    s.toString(),
-                    currentPaint,
-                    400,                    //Width
-                    xN.toFloat(),
-                    yN.toFloat()
-                )
-                //Invalidate
-                img.invalidate()
-
+                photoEditorClass.clearAllViews()
+                //Return nothing
+                photoEditorClass.addText(type_face, s.toString(), paint_chosen, size_chosen)
 
             }
         })
 
 
-    }
+        photoEditorClass.setOnPhotoEditorListener(object : OnPhotoEditorListener {
+            override fun onEditTextChangeListener(rootView: View?, text: String?, colorCode: Int) {
+                edt.requestFocus()
+            }
 
+            override fun onAddViewListener(viewType: ViewType?, numberOfAddedViews: Int) {
 
-    fun Canvas.drawDynamicLayout(
-        text: CharSequence,
-        textPaint: TextPaint,
-        width: Int,
-        x: Float,
-        y: Float,
-        start: Int = 0,
-        end: Int = text.length,
-        alignment: Layout.Alignment = Layout.Alignment.ALIGN_NORMAL,
-        textDir: TextDirectionHeuristic = TextDirectionHeuristics.LTR,
-        spacingMult: Float = 1f,
-        spacingAdd: Float = 0f,
-        breakStrategy: Int = Layout.BREAK_STRATEGY_SIMPLE,
-        hyphenationFrequency: Int = Layout.HYPHENATION_FREQUENCY_NONE
-    ) {
+                edt.requestFocus()
+            }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            override fun onRemoveViewListener(numberOfAddedViews: Int) {
+                edt.requestFocus()
+                edt.text = null
+            }
 
-            val cacheKey = "$text-$start-$end-$textPaint-$width-$alignment-$textDir-" +
-                    "$spacingMult-$spacingAdd" +
-                    "$breakStrategy-$hyphenationFrequency"
+            override fun onStartViewChangeListener(viewType: ViewType?) {
+            }
 
-            val dynamicLayout = DynamicLayoutCache[cacheKey] ?: DynamicLayout.Builder
-                .obtain(text, textPaint, width)
-                .setAlignment(alignment)
-                .setTextDirection(textDir)
-                .setLineSpacing(spacingAdd, spacingMult)
-                .setBreakStrategy(breakStrategy)
-                .build()
+            override fun onStopViewChangeListener(viewType: ViewType?) {
+            }
+        })
 
-            dynamicLayout.draw(this, x, y)
-
-
-        } else {
-            Toast.makeText(
-                this@EditMemeContainerFragment,
-                "Version not supported",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
+        //Get the layout parameters of the view
+        //Finally
+        photoEditorClass.clearAllViews()
+        //Return nothing
+//        val arrayList =
+//            photoEditorClass.addText(type_face, edt.text.toString(), paint_chosen, size_chosen)
+//        Log.e("Array List", arrayList.toString())
+//        //Extract coordinates
+//        getCoordunatesOfCustomView(arrayList)
 
     }
 
-    //Helper Classes
-    private fun DynamicLayout.draw(canvas: Canvas, x: Float, y: Float) {
-        canvas.withTranslation(x, y) {
-            draw(this)
-        }
-    }
 
-    fun StaticLayout.draw(canvas: Canvas, x: Float, y: Float) {
-
-
-        canvas.withTranslation(x, y) {
-            draw(this)
-        }
-    }
-
-    private object StaticLayoutCache {
-
-        private const val MAX_SIZE = 50 // Arbitrary max number of cached items
-        private val cache = lruCache<String, StaticLayout>(MAX_SIZE)
-
-        operator fun set(key: String, staticLayout: StaticLayout) {
-            cache.put(key, staticLayout)
-        }
-
-        operator fun get(key: String): StaticLayout? {
-            return cache[key]
-        }
-    }
-
-    //Dynamic Provate Object
-    private object DynamicLayoutCache {
-        private const val MAX_SIZE = 50 // Arbitrary max number of cached items
-        private val cache = lruCache<String, DynamicLayout>(MAX_SIZE)
-
-        operator fun set(key: String, dynamicLayout: DynamicLayout) {
-            cache.put(key, dynamicLayout)
-        }
-
-        operator fun get(key: String): DynamicLayout? {
-            return cache[key]
-        }
-    }
-
-    private fun getTextPaint(color: String, size: Int?): TextPaint {
-        val paint = TextPaint()
-        paint.color = Color.parseColor(color)
-        paint.strokeWidth = 15F
-        paint.strokeCap = Paint.Cap.ROUND
-        paint.strokeJoin = Paint.Join.ROUND
-        paint.style = Paint.Style.FILL //Default to be set
-        paint.isAntiAlias = true
-        paint.textSize = size?.let { setSize(it) }!!
-        paint.isDither = true
-
-        return paint
-    }
-
-    private fun setSize(size: Int): Float {
-        val size_req = size.toFloat()
-        return size_req
-
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun setFont(id: Int): Typeface {
-        //Takes int
-        val i = id
-        var type: Typeface = resources.getFont(R.font.arial)
-        when (i) {
-
-            0 -> type = resources.getFont(R.font.arial)
-            1 -> resources.getFont(R.font.long_fox_font)
-            2 -> resources.getFont(R.font.bomb_font)
-            3 -> resources.getFont(R.font.romot_reavers_font)
-            4 -> resources.getFont(R.font.fonty_font)
-        }
-        return type        //Equal to the type
-
-    }
-
-    private fun getColorWithAlpha(color: Int, ratio: Float): Int {
-        var newColor = 0
-        val alpha = Math.round(Color.alpha(color) * ratio).toInt()
-        val r = Color.red(color)
-        val g = Color.green(color)
-        val b = Color.blue(color)
-        newColor = Color.argb(alpha, r, g, b)
-        return newColor
-    }
+//    private fun getCoordunatesOfCustomView(arrayList: MutableList<Int>) {
+//
+//        X1 = arrayList[0]
+//        Y1 = arrayList[1]
+//        X2 = arrayList[2]
+//        Y2 = arrayList[3]
+//
+//        Log.e("Coord", X1.toString() + Y1.toString() + X2.toString() + Y2.toString())
+//    }
 
 
     //Api not yet made

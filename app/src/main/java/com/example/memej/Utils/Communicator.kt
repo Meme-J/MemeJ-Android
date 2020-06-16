@@ -1,6 +1,7 @@
 package com.example.memej.Utils
 
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 
 interface Communicator {
 
@@ -20,4 +21,5 @@ interface Communicator {
 
     fun openLikedMemeFromActivity(bundle: Bundle)
 
+    fun goToAFragmnet(fragment: Fragment)
 }

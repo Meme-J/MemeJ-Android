@@ -1,4 +1,4 @@
-package com.example.memej.Instances
+package com.example.memej.textProperties
 
 import android.content.Context
 import android.graphics.Canvas
@@ -18,8 +18,10 @@ class DrawTextView @JvmOverloads constructor(
     }
 
 
-    private var drawText = TEXT
-    private val drawTextCoordinate = CoordinateTV(x, y)
+    private var drawText =
+        TEXT
+    private val drawTextCoordinate =
+        CoordinateTV(x, y)
 
     var customText: String = ""
         set(value) {

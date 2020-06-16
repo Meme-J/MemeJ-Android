@@ -2,7 +2,7 @@ package com.example.memej.Instances
 
 import android.content.Context
 import android.util.Log
-import com.example.memej.Utils.SessionManager
+import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.ProfileResponse
 import retrofit2.Call
@@ -12,7 +12,8 @@ fun UserCompleteInstance(context: Context): ProfileResponse.Profile {
 
 
     val apiservice = RetrofitClient.getAuthInstance()
-    val sessionManager = SessionManager(context)
+    val sessionManager =
+        SessionManager(context)
 
 
     var username: String? = ""

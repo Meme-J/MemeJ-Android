@@ -1,4 +1,4 @@
-package com.example.memej.Utils
+package com.example.memej.Utils.sessionManagers
 
 import android.content.Context
 import android.content.SharedPreferences

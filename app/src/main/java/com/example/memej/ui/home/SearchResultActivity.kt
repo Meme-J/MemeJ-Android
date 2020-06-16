@@ -50,6 +50,7 @@ class SearchResultActivity : AppCompatActivity(), OnItemClickListenerHome,
         toolbar.setNavigationOnClickListener {
             val i = Intent(this, MainActivity::class.java)
             startActivity(i)
+            finish()
         }
         //Init Viewmmodel
         pb = findViewById(R.id.pb_template)

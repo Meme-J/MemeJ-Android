@@ -19,9 +19,9 @@
 
 
                 <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/head"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/head"
                     android:fontFamily="cursive"
                     android:gravity="center"
                     android:text="@string/app_name"
@@ -29,9 +29,9 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tilName"
-                    android:layout_below="@id/head"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/head"
                     android:layout_margin="@dimen/margins"
                     android:padding="@dimen/margins">
 
@@ -46,9 +46,9 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tilUsername"
-                    android:layout_below="@id/tilName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/tilName"
                     android:layout_margin="@dimen/margins"
                     android:padding="@dimen/margins">
 
@@ -64,9 +64,9 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tilEmail"
-                    android:layout_below="@id/tilUsername"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/tilUsername"
 
                     android:layout_margin="@dimen/margins"
                     android:padding="@dimen/margins">
@@ -89,9 +89,9 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tilPassword"
-                    android:layout_below="@id/tilEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/tilEmail"
                     android:layout_margin="@dimen/margins"
                     android:padding="@dimen/margins"
                     app:passwordToggleEnabled="true">
@@ -107,23 +107,22 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/signUp_btn"
+                    style="@style/buttonMaterialStyle"
                     android:layout_width="100dp"
-                    app:cornerRadius="50dp"
                     android:layout_height="@dimen/btn_size"
                     android:layout_below="@id/tilPassword"
-                    android:layout_marginTop="8dp"
                     android:layout_centerHorizontal="true"
+                    android:layout_marginTop="8dp"
                     android:background="@color/colorPrimary"
-                    android:gravity="center"
                     android:text="@string/sign_up"
-                    android:textStyle="bold"
-                    android:textColor="@color/white" />
+                    app:cornerRadius="50dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:layout_below="@id/signUp_btn"
                     android:layout_gravity="center"
+                    android:layout_marginBottom="@dimen/margins"
                     android:gravity="center">
 
                     <com.google.android.material.textview.MaterialTextView
@@ -140,7 +139,8 @@
                         android:layout_marginTop="@dimen/margins"
                         android:paddingStart="4dp"
                         android:text="@string/login"
-                        android:textColor="@color/colorAccent" />
+                        android:textColor="@color/colorAccent"
+                        android:textStyle="bold" />
 
 
                 </LinearLayout>

@@ -5,7 +5,6 @@
     android:id="@+id/container_likedMemes"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="56dp"
     tools:context=".ui.MemeWorld.MemeWorldFragment">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -18,7 +17,6 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:navigationContentDescription="@string/lines"
-            app:navigationIcon="@drawable/ic_arrow"
             app:title="Liked Memes"
             app:titleTextColor="@color/white" />
     </com.google.android.material.appbar.AppBarLayout>

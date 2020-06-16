@@ -14,7 +14,7 @@ import androidx.fragment.app.viewModels
 import com.example.memej.R
 import com.example.memej.Utils.Communicator
 import com.example.memej.Utils.PreferenceUtil
-import com.example.memej.Utils.SessionManager
+import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.NumLikes
 import com.example.memej.responses.ProfileResponse
@@ -43,7 +43,11 @@ class ProfileFragment : Fragment() {
     ): View? {
         root = inflater.inflate(R.layout.profile_fragment, container, false)
         comm = activity as Communicator
-        sessionManager = context?.let { SessionManager(it) }!!
+        sessionManager = context?.let {
+            SessionManager(
+                it
+            )
+        }!!
         pb = root.findViewById(R.id.pb_profile)
         //Create a lifecycle owner
         pb.visibility = View.VISIBLE

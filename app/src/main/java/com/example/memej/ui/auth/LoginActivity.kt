@@ -14,8 +14,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.memej.MainActivity
 import com.example.memej.R
-import com.example.memej.Utils.SaveSharedPreference
-import com.example.memej.Utils.SessionManager
+import com.example.memej.Utils.sessionManagers.SaveSharedPreference
+import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.entities.LoginBody
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.LoginResponse
@@ -64,7 +64,8 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
         t2 = findViewById(R.id.tilPassword)
 
         pb = findViewById(R.id.pb_login)
-        sessionManager = SessionManager(this)
+        sessionManager =
+            SessionManager(this)
 
         //Functions for Google SignIn
 
@@ -135,10 +136,12 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
 
         service.loginUser(inf).enqueue(object : retrofit2.Callback<LoginResponse> {
             override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+
+                Log.e("Login", t.message.toString())
                 Toast.makeText(
                     this@LoginActivity,
-                    t.message,
-                    Toast.LENGTH_SHORT
+                    getString(R.string.login_failed),
+                    Toast.LENGTH_LONG
                 ).show()
                 pb_login.visibility = View.GONE
 
@@ -146,31 +149,51 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
 
 
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
+                Log.e(
+                    "Login",
+                    response.message().toString() + response.code().toString() + response.body()
+                        .toString() + response.errorBody().toString()
+                )
 
-                if (response.body()?.msg == "Login successful.") {
-                    Toast.makeText(this@LoginActivity, "Login successful", Toast.LENGTH_SHORT)
-                        .show()
-                    //Set looged in status true
-                    //Store the access token on every login
-                    //Get the access token on login
-                    sessionManager.saveAuth_access_Token(
-                        LoginResponse(
-                            response.body()!!.msg,
-                            response.body()!!.user
-                        ).user.accessToken
-                    )
-                    sessionManager.saveAuth_refresh_Token(
-                        (LoginResponse(
-                            response.body()!!.msg,
-                            response.body()!!.user
-                        )).user.refreshToken
-                    )
+                if (response.isSuccessful) {
+                    if (response.body()?.msg == "Login successful.") {
+                        Toast.makeText(this@LoginActivity, "Login successful", Toast.LENGTH_SHORT)
+                            .show()
+                        Log.e("Login", response.message().toString())
 
-                    goToMainActivity()
+                        //Set looged in status true
+                        //Store the access token on every login
+                        //Get the access token on login
+                        sessionManager.saveAuth_access_Token(
+                            LoginResponse(
+                                response.body()!!.msg,
+                                response.body()!!.user
+                            ).user.accessToken
+                        )
+                        sessionManager.saveAuth_refresh_Token(
+                            (LoginResponse(
+                                response.body()!!.msg,
+                                response.body()!!.user
+                            )).user.refreshToken
+                        )
+
+                        goToMainActivity()
+                    }
+                    //Incorrect cred format
+                    else {
+                        Toast.makeText(this@LoginActivity, response.body()?.msg, Toast.LENGTH_LONG)
+                            .show()
+                        pb.visibility = View.GONE
+                    }
+
                 } else {
                     //Stop the spinner
                     pb_login.visibility = View.GONE
-                    Toast.makeText(this@LoginActivity, response.body()?.msg, Toast.LENGTH_SHORT)
+                    Toast.makeText(
+                        this@LoginActivity,
+                        response.errorBody().toString(),
+                        Toast.LENGTH_SHORT
+                    )
                         .show()
 
                 }
@@ -182,7 +205,8 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
         //Turn of the progress bar
 
         pb.visibility = View.GONE
-        SaveSharedPreference().setLoggedIn(applicationContext, true)
+        SaveSharedPreference()
+            .setLoggedIn(applicationContext, true)
         val i = Intent(this, MainActivity::class.java)
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK)
         startActivity(i)

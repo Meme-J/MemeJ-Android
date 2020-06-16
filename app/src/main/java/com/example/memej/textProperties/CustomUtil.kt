@@ -1,4 +1,4 @@
-package com.example.memej.Instances
+package com.example.memej.textProperties
 
 import android.content.res.Resources
 import android.graphics.Color

@@ -6,7 +6,7 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.paging.PageKeyedDataSource
 import com.example.memej.Utils.ApplicationUtil
-import com.example.memej.Utils.SessionManager
+import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.memeWorldResponses.Meme_World
 import com.example.memej.responses.memeWorldResponses.memeApiResponses
@@ -21,7 +21,8 @@ class LikedMemesDataSource(val context: Context, val pb: ProgressBar) :
 
     val ctx = ApplicationUtil.getContext()
     private val apiService = RetrofitClient.makeCallForProfileParameters(ctx)
-    private val sessionManager = SessionManager(ctx)
+    private val sessionManager =
+        SessionManager(ctx)
 
     override fun loadInitial(
         params: LoadInitialParams<String>,
@@ -58,7 +59,7 @@ class LikedMemesDataSource(val context: Context, val pb: ProgressBar) :
                             )
                         }
                     } else {
-                        Toast.makeText(context, response.errorBody().toString(), Toast.LENGTH_SHORT)
+                        Toast.makeText(context, response.message().toString(), Toast.LENGTH_SHORT)
                             .show()
                         pb.visibility = View.GONE
                     }
