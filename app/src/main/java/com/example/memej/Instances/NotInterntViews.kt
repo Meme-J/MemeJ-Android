@@ -1,3 +1,16 @@
 package com.example.memej.Instances
 
-object NotInterntViews
+import android.app.Activity
+import android.content.Context
+import com.example.memej.R
+import com.shreyaspatil.MaterialDialog.MaterialDialog
+
+object NotInterntViews {
+
+
+
+
+}
+
+
+
