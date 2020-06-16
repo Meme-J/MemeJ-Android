@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.Rect
 import android.graphics.Typeface
 import android.os.AsyncTask
 import android.os.Environment
@@ -39,7 +40,8 @@ class Photo private constructor(builder: Builder) :
     private val isTextPinchZoomable: Boolean
     private val mDefaultTextTypeface: Typeface?
     private val mDefaultEmojiTypeface: Typeface?
-
+    private val location = IntArray(2)
+    private var outRect: Rect? = null
     private val startX: Int
     private val startY: Int
     private val endY: Int
@@ -186,8 +188,45 @@ class Photo private constructor(builder: Builder) :
             }
         })
         //Remove the listener
-        // textRootView.setOnTouchListener(multiTouchListener)
+        //   textRootView.setOnTouchListener(multiTouchListener)
+
+        //get the coordinates of this view
+//        val arrayList = getCoordinatesOfTheView(multiTouchListener, textRootView)
         addViewToParent(textRootView, ViewType.TEXT)
+//        return arrayList
+    }
+
+    private fun viewBounds(view: View) {
+        view.getDrawingRect(outRect)
+        view.getLocationOnScreen(location)
+        outRect!!.offset(location[0], location[1])
+
+    }
+
+
+    fun getCoordinatesOfTheView(
+        multiTouchListener: MultiTouchListener,
+        textRootView: View
+    ): MutableList<Int> {
+        //Float array
+
+
+        //Get the rect
+        val topx = textRootView.left
+        val topy = textRootView.top
+        val botx = topx + textRootView.right
+        val boty = botx + textRootView.bottom
+
+//        Log.e("Coordinates", topx.toString() + topy.toString())
+
+        val arrayCoordinatesOfCustomView = mutableListOf<Int>()
+        arrayCoordinatesOfCustomView.add(topx)
+        arrayCoordinatesOfCustomView.add(topy)
+        arrayCoordinatesOfCustomView.add(botx)
+        arrayCoordinatesOfCustomView.add(boty)
+
+        return arrayCoordinatesOfCustomView
+
     }
 
     fun editText(view: View, inputText: String?, colorCode: Int, size: Float) {
@@ -268,7 +307,7 @@ class Photo private constructor(builder: Builder) :
      */
 
 
-    private fun addViewToParent(
+    fun addViewToParent(
         rootView: View?,
         viewType: ViewType
     ) {
@@ -312,7 +351,7 @@ class Photo private constructor(builder: Builder) :
      * @return rootview
      */
 
-    private fun getLatoutForOldText(viewType: ViewType): View? {
+    fun getLatoutForOldText(viewType: ViewType): View? {
         var rootView: View? = null
 
         when (viewType) {
@@ -355,7 +394,8 @@ class Photo private constructor(builder: Builder) :
 
     }
 
-    private fun getLayout(viewType: ViewType): View? {
+
+    fun getLayout(viewType: ViewType): View? {
         var rootView: View? = null
         when (viewType) {
             ViewType.TEXT -> {
@@ -388,7 +428,18 @@ class Photo private constructor(builder: Builder) :
                 rootView.findViewById<ImageView>(R.id.imgPhotoEditorClose)
             val finalRootView: View = rootView
             imgClose?.setOnClickListener { viewUndo(finalRootView) }
+            outRect = if (rootView != null) {
+                Rect(
+                    rootView.left, rootView.top,
+                    rootView.right, rootView.bottom
+                )
+            } else {
+                Rect(0, 0, 0, 0)
+            }
+            Log.e("rootView", outRect.toString())
+
         }
+
         return rootView
     }
 
@@ -531,7 +582,13 @@ class Photo private constructor(builder: Builder) :
         fun onSuccess(@NonNull imagePath: String?)
 
         fun onFailure(@NonNull exception: Exception?)
+
+        //Download the image
+
     }
+
+    //A method to save the photoBuilderclasse on the photo View
+
 
     @SuppressLint("StaticFieldLeak")
     @RequiresPermission(allOf = [Manifest.permission.WRITE_EXTERNAL_STORAGE])

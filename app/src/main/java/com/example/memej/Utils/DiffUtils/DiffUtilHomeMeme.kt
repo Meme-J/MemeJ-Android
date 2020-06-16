@@ -13,7 +13,7 @@ class DiffUtilsHomeMeme : DiffUtil.ItemCallback<Meme_Home>() {
     }
 
     override fun areContentsTheSame(oldItem: Meme_Home, newItem: Meme_Home): Boolean {
-        return oldItem._id == newItem._id
+        return oldItem == newItem
     }
 
 }

@@ -1,22 +1,23 @@
 package com.example.memej.ui.memeTemplate
 
+import android.content.DialogInterface
 import android.content.Intent
-import android.graphics.*
-import android.graphics.drawable.Drawable
-import android.os.Build
+import android.graphics.Color
+import android.graphics.Path
+import android.graphics.Typeface
 import android.os.Bundle
-import android.text.*
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.*
-import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.collection.lruCache
-import androidx.core.graphics.withTranslation
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.CustomTarget
+import com.example.memej.MainActivity
 import com.example.memej.R
 import com.example.memej.Utils.Communicator2
 import com.example.memej.Utils.sessionManagers.SessionManager
@@ -34,10 +35,15 @@ import com.example.memej.textProperties.lib.OnPhotoEditorListener
 import com.example.memej.textProperties.lib.Photo
 import com.example.memej.textProperties.lib.ViewType
 import com.example.memej.viewModels.NewMemeContainerViewModel
+import com.github.dhaval2404.colorpicker.MaterialColorPickerDialog
+import com.github.dhaval2404.colorpicker.model.ColorShape
+import com.github.dhaval2404.colorpicker.model.ColorSwatch
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.textview.MaterialTextView
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import kotlin.properties.Delegates
 
 
 class NewMemeContainer : AppCompatActivity(), onTagClickType {
@@ -52,8 +58,6 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
 
     // private lateinit var img: ShapeableImageView
     lateinit var edt: EditText
-    private lateinit var paint_chosen: Paint
-    private lateinit var type_face: Typeface
     val paths = ArrayList<Path>()
     val undonePaths = ArrayList<Path>()
     var sendButton: Boolean = false
@@ -62,6 +66,18 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
     lateinit var comm: Communicator2
     lateinit var pb: ProgressBar
     lateinit var tagCheck: MaterialButton
+
+
+    //Global to be used
+    private var paint_chosen by Delegates.notNull<Int>()
+    private lateinit var type_face: Typeface
+    private var size_chosen by Delegates.notNull<Float>()
+    lateinit var colorIndicator: CardView
+
+    var whichFont = 0
+    var whichPaint = Color.BLACK
+    var whichProgress = 20
+
 
     lateinit var adapterTagsAdded: TagEditAdapter
     lateinit var stringAdapter: ArrayAdapter<String>
@@ -78,19 +94,26 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
         setContentView(R.layout.new_meme_container_fragment)
 
         arg = intent?.getBundleExtra("bundle")!!
-
-        //   img = findViewById(R.id.imagePostNew)
         edt = findViewById(R.id.lineAddedEtNew)
         tagCheck = findViewById(R.id.tag_editNew)
-//        photoView = findViewById(R.id.photoView)
         photoView = findViewById(R.id.imageView)
+
+
+        //Default Paint, TypeFace. Size
+        val tf: Typeface = Typeface.DEFAULT
+        type_face = tf
+        paint_chosen = Color.parseColor("#000000")      //Default color
+        size_chosen = 20f
+        colorIndicator = findViewById(R.id.colorIndicator_new)
+
+
+
         rvTagEdits = findViewById<RecyclerView>(R.id.rv_insertedTagsNew)
         HorizontalLayoutInsertedTags = LinearLayoutManager(
             this,
             LinearLayoutManager.HORIZONTAL,
             false
         )
-
         adapterTagAdded = TagEditAdapter()
 
         initializeEditFrame(arg)
@@ -100,72 +123,24 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
             SessionManager(this)
         pb = findViewById(R.id.pb_new_fragment)
 
-
-        // val colors = root.findViewById<MaterialTextView>(R.id.choose_color)
-        // val font = root.findViewById<MaterialTextView>(R.id.choose_font)
-
-        /*
-            //Choose Color
-            colors.setOnClickListener {
-                context?.let {
-                    MaterialColorPickerDialog
-                        .Builder(it)                        // Pass Activity Instance
-                        .setColorShape(ColorShape.SQAURE)
-                        .setTitle("Pick a color")// Default ColorShape.CIRCLE
-                        .setPositiveButton("Select")
-                        .setNegativeButton("Cancel")
-                        .setColorSwatch(ColorSwatch._300)    // Default ColorSwatch._500
-                        .setColorRes(
-                            resources.getIntArray(R.array.themeColors).toList()
-                        )    // Pass Default Color
-                        .setColorListener { color, colorHex ->
-                            // Handle Color Selection
-                            //Set the paint brush to be valued for this color
-                            //Pass the color hex
-                            paint_chosen = setPaint(colorHex)
-
-                        }
-                        .show()
-                }
-
-            }
-
-            //Choose Font
-            font.setOnClickListener {
-                val builder = AlertDialog.Builder(context)
-                builder.setTitle("Choose a font")
-
-                //Create List
-                val font_list = R.array.font_types
-
-                val checkedItem = 0     //Arial
-
-                builder.setSingleChoiceItems(
-                    font_list,
-                    checkedItem
-                ) { dialog, which ->
-                    // user checked an item
-                    type_face = setFont(which)
-
-                }
-                builder.setPositiveButton(
-                    "OK"
-                ) { dialog, which ->
-                    // user clicked OK
-                    //which is the int
-                    //What is teh global type face
-                    type_face = setFont(which)
-                    dialog.dismiss()
-
-                }
-                builder.setNegativeButton("Cancel", null)
-                val dialog = builder.create()
-                dialog.show()
+        val colors = findViewById<MaterialTextView>(R.id.choose_color_new)
+        val font = findViewById<MaterialTextView>(R.id.choose_font_new)
+        val size = findViewById<MaterialTextView>(R.id.choose_size_new)
 
 
-            }
+        colors.setOnClickListener {
+            chooseColor()
+        }
+        font.setOnClickListener {
+            chooseFont()
+        }
+        size.setOnClickListener {
+            chooseSizeText()
+        }
+        colorIndicator.setOnClickListener {
+            chooseColor()
+        }
 
-        */
 
         //Init mutable list
         mutableList = mutableListOf()
@@ -224,6 +199,137 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
 
     }
 
+
+    private fun chooseSizeText() {
+        //Use a seek bar
+
+        val popDialog =
+            AlertDialog.Builder(this)
+
+
+        val seek = SeekBar(this)
+        seek.max = 40
+        seek.progress = whichProgress
+        seek.keyProgressIncrement = 2
+
+        popDialog.setTitle("Select Size")
+        popDialog.setView(seek)
+        popDialog.setMessage("Choose a size")
+
+        seek.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(
+                seekBar: SeekBar?,
+                progress: Int,
+                fromUser: Boolean
+            ) {
+                size_chosen = progress.toFloat()
+                whichProgress = progress
+            }
+
+            override fun onStartTrackingTouch(arg0: SeekBar?) {
+
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                Log.e("Size", seek.progress.toString())
+            }
+        })
+
+        popDialog.setPositiveButton("OK",
+            object : DialogInterface.OnClickListener {
+                override fun onClick(dialog: DialogInterface, which: Int) {
+
+                    dialog.dismiss()
+                }
+            })
+        popDialog.create()
+        popDialog.show()
+
+
+    }
+
+    private fun chooseFont() {
+
+        var typeface = Typeface.DEFAULT
+        //Choose Font
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Choose a font")
+
+        //Create List
+        val font_list = R.array.font_types
+
+        val checkedItem = whichFont     //Arial
+
+        builder.setSingleChoiceItems(
+            font_list,
+            checkedItem
+        ) { dialog, which ->
+            // user checked an item
+            whichFont = which
+            when (which) {
+                0 -> typeface = Typeface.createFromAsset(assets, "arial.ttf")
+                1 -> typeface = Typeface.createFromAsset(assets, "long_fox_font.ttf")
+                2 -> typeface = Typeface.createFromAsset(assets, "bomb_font.ttf")
+                3 -> typeface = Typeface.createFromAsset(assets, "romot_reavers_font.ttf")
+                4 -> typeface = Typeface.createFromAsset(assets, "fonty_font.ttf")
+            }
+            type_face = typeface
+
+        }
+
+        builder.setPositiveButton(
+            "OK"
+        ) { dialog, which ->
+
+
+            when (which) {
+                0 -> typeface = Typeface.createFromAsset(assets, "arial.ttf")
+                1 -> typeface = Typeface.createFromAsset(assets, "long_fox_font.ttf")
+                2 -> typeface = Typeface.createFromAsset(assets, "bomb_font.ttf")
+                3 -> typeface = Typeface.createFromAsset(assets, "romot_reavers_font.ttf")
+                4 -> typeface = Typeface.createFromAsset(assets, "fonty_font.ttf")
+            }
+            type_face = typeface
+            Log.e("Font", typeface.toString())
+            dialog.dismiss()
+
+        }
+        builder.setNegativeButton("Cancel", null)
+
+        val dialog = builder.create()
+        dialog.show()
+
+
+    }
+
+    private fun chooseColor() {
+
+        this.let {
+            MaterialColorPickerDialog
+                .Builder(it)                                              // Pass Activity Instance
+                .setColorShape(ColorShape.SQAURE)
+                .setTitle("Pick a color") // Default ColorShape.CIRCLE
+                .setPositiveButton("Select")
+                .setDefaultColor(whichPaint)
+                .setNegativeButton("Cancel")
+                .setColorSwatch(ColorSwatch._300)    // Default ColorSwatch._500
+                .setColorRes(
+                    resources.getIntArray(R.array.themeColors).toList()
+                )    // Pass Default Color
+                .setColorListener { color, colorHex ->
+                    // Handle Color Selection
+
+                    //Set the paint brush to be valued for this color
+                    //Pass the color hex
+                    paint_chosen = color
+                    colorIndicator.setCardBackgroundColor(color)
+                    whichPaint = color
+                    Log.e("Color", paint_chosen.toString())
+                }
+                .show()
+        }
+
+    }
 
     private fun setInTagRv() {
         Log.e("Edit", "Values in Mutable list" + mutableList.toString())
@@ -333,7 +439,7 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
                             //Intent back to main activty
                             val i = Intent(
                                 this@NewMemeContainer,
-                                SelectMemeTemplateActivity::class.java
+                                MainActivity::class.java
                             )
                             startActivity(i)
                             finish()
@@ -346,8 +452,7 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
                         }
                     } else {
 
-                        Log.e("send", response.errorBody().toString())
-                        Log.e("send", "InResp Fail")
+
                     }
                 }
 
@@ -391,33 +496,42 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
 
     private fun getImage() {
 
-        Glide.with(this)
-            .asBitmap()
-            .load(arg.getString("imageUrl"))
-            .placeholder(R.drawable.icon_placeholder)
-            .error(R.drawable.icon_placeholder)
-            .into(object : CustomTarget<Bitmap>() {
-                override fun onLoadCleared(placeholder: Drawable?) {
+        photoView.source?.let {
+            Glide.with(this)
+                .load(arg.getString("imageUrl"))
+                .dontAnimate()
+                .dontTransform()
+                .placeholder(R.drawable.icon_placeholder)
+                .error(R.drawable.icon_placeholder)
+                .into(it)
+        }
+        getCompleteCoordinatesToBeUsed()
 
-                }
-
-                override fun onResourceReady(
-                    resource: Bitmap,
-                    transition: com.bumptech.glide.request.transition.Transition<in Bitmap>?
-                ) {
-                    val canvas = Canvas(resource)
-                    photoView.source?.draw(canvas)
-                    photoView.source?.setImageBitmap(resource)
-                    getCompleteCoordinatesToBeUsed(resource, canvas)
-
-                }
-            })
+//        Glide.with(this)
+//            .asBitmap()
+//            .load(arg.getString("imageUrl"))
+//            .placeholder(R.drawable.icon_placeholder)
+//            .error(R.drawable.icon_placeholder)
+//            .into(object : CustomTarget<Bitmap>() {
+//                override fun onLoadCleared(placeholder: Drawable?) {
+//
+//                }
+//
+//                override fun onResourceReady(
+//                    resource: Bitmap,
+//                    transition: com.bumptech.glide.request.transition.Transition<in Bitmap>?
+//                ) {
+//                    val canvas = Canvas(resource)
+//                    photoView.source?.draw(canvas)
+//                    photoView.source?.setImageBitmap(resource)
+//                    getCompleteCoordinatesToBeUsed(resource, canvas)
+//
+//                }
+//            })
 
     }
 
-    private fun getCompleteCoordinatesToBeUsed(
-        bitmap: Bitmap?, canvas: Canvas
-    ) {
+    private fun getCompleteCoordinatesToBeUsed() {
 
 
         val xN =
@@ -434,27 +548,18 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
             arg.getParcelableArrayList<Coordinates>("coordinate")!!
                 .elementAt(1).y
 
-        val currentPaint = getTextPaint(
-            arg.getStringArrayList("textColorCode")!!.elementAt(0),
-            arg.getIntegerArrayList("textSize")!!.elementAt(0)
-        )
-
-        canvas.save()
         val color = arg.getStringArrayList("textColorCode")!!.elementAt(0)
         val size = arg.getIntegerArrayList("textSize")!!.elementAt(0)
         val colorInt = Color.parseColor(color)
 
-        observeTextChange(bitmap, canvas, arg, xN, yN, currentPaint, colorInt, size, xB, yB)
+        observeTextChange(arg, xN, yN, colorInt, size, xB, yB)
     }
 
 
     private fun observeTextChange(
-        bitmap: Bitmap?,
-        canvas: Canvas,
         arg: Bundle,
         xN: Int,
         yN: Int,
-        currentPaint: TextPaint,
         colorInt: Int,
         size: Int,
         xB: Int,
@@ -495,21 +600,21 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
                     findViewById<MaterialButton>(R.id.send_post_new).isEnabled =
                         false
                 }
-                Log.e(
-                    "Child Count",
-                    photoView.childCount.toString() + "w " + ht + " " + wd + " " + lh + " " + lw
-                )
 
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                //Create a demo view just before init
+                photoEditorClass.addText(type_face, " ", paint_chosen, size_chosen)
+                photoEditorClass.clearAllViews()
+                photoEditorClass.addText(type_face, s.toString(), paint_chosen, size_chosen)
 
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
 
                 photoEditorClass.clearAllViews()
-                photoEditorClass.addText(s.toString(), colorInt, size.toFloat())
+                photoEditorClass.addText(type_face, s.toString(), paint_chosen, size_chosen)
 
 
             }
@@ -541,141 +646,6 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
 
 
     }
-
-
-    fun Canvas.drawDynamicLayout(
-        text: CharSequence,
-        textPaint: TextPaint,
-        width: Int,
-        x: Float,
-        y: Float,
-        editText: EditText,
-        start: Int = 0,
-        end: Int = text.length,
-        alignment: Layout.Alignment = Layout.Alignment.ALIGN_NORMAL,
-        textDir: TextDirectionHeuristic = TextDirectionHeuristics.LTR,
-        spacingMult: Float = 1f,
-        spacingAdd: Float = 0f,
-
-        breakStrategy: Int = Layout.BREAK_STRATEGY_SIMPLE,
-        hyphenationFrequency: Int = Layout.HYPHENATION_FREQUENCY_NONE
-    ) {
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-
-            val cacheKey = "$text-$start-$end-$textPaint-$width-$alignment-$textDir-" +
-                    "$spacingMult-$spacingAdd" +
-                    "$breakStrategy-$hyphenationFrequency"
-
-
-            val dynamicLayout = DynamicLayoutCache[cacheKey] ?: DynamicLayout.Builder
-                .obtain(text, textPaint, width)
-                .setAlignment(alignment)
-                .setTextDirection(textDir)
-                .setLineSpacing(spacingAdd, spacingMult)
-                .setBreakStrategy(breakStrategy)
-                .build()
-
-            dynamicLayout.draw(this, x, y)
-
-
-        } else {
-            Toast.makeText(this@NewMemeContainer, "Version not supported", Toast.LENGTH_SHORT)
-                .show()
-        }
-
-    }
-
-    //Helper Classes
-    private fun DynamicLayout.draw(canvas: Canvas, x: Float, y: Float) {
-        canvas.withTranslation(x, y) {
-            draw(this)
-        }
-    }
-
-    fun StaticLayout.draw(canvas: Canvas, x: Float, y: Float) {
-
-
-        canvas.withTranslation(x, y) {
-            draw(this)
-        }
-    }
-
-    private object StaticLayoutCache {
-
-        private const val MAX_SIZE = 50 // Arbitrary max number of cached items
-        private val cache = lruCache<String, StaticLayout>(MAX_SIZE)
-
-        operator fun set(key: String, staticLayout: StaticLayout) {
-            cache.put(key, staticLayout)
-        }
-
-        operator fun get(key: String): StaticLayout? {
-            return cache[key]
-        }
-    }
-
-    private object DynamicLayoutCache {
-        private const val MAX_SIZE = 50 // Arbitrary max number of cached items
-        private val cache = lruCache<String, DynamicLayout>(MAX_SIZE)
-
-        operator fun set(key: String, dynamicLayout: DynamicLayout) {
-            cache.put(key, dynamicLayout)
-        }
-
-        operator fun get(key: String): DynamicLayout? {
-            return cache[key]
-        }
-    }
-
-    private fun getTextPaint(color: String, size: Int?): TextPaint {
-        val paint = TextPaint()
-        paint.color = Color.parseColor(color)
-        paint.strokeWidth = 15F
-        paint.strokeCap = Paint.Cap.ROUND
-        paint.strokeJoin = Paint.Join.ROUND
-        paint.style = Paint.Style.FILL //Default to be set
-        paint.isAntiAlias = true
-        paint.textSize = size?.let { setSize(it) }!!
-        paint.isDither = true
-
-        return paint
-    }
-
-    private fun setSize(size: Int): Float {
-        val size_req = size.toFloat()
-        return size_req
-
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun setFont(id: Int): Typeface {
-        //Takes int
-        val i = id
-        var type: Typeface = resources.getFont(R.font.arial)
-        when (i) {
-
-            0 -> type = resources.getFont(R.font.arial)
-            1 -> resources.getFont(R.font.long_fox_font)
-            2 -> resources.getFont(R.font.bomb_font)
-            3 -> resources.getFont(R.font.romot_reavers_font)
-            4 -> resources.getFont(R.font.fonty_font)
-        }
-        return type        //Equal to the type
-
-    }
-
-    //Back Behaviour maintained
-    private fun getColorWithAlpha(color: Int, ratio: Float): Int {
-        var newColor = 0
-        val alpha = Math.round(Color.alpha(color) * ratio).toInt()
-        val r = Color.red(color)
-        val g = Color.green(color)
-        val b = Color.blue(color)
-        newColor = Color.argb(alpha, r, g, b)
-        return newColor
-    }
-
 
     override fun getTagType(_tag: String) {
         TODO("Not yet implemented")

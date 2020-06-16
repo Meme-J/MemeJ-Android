@@ -28,9 +28,8 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-
-class MemeWorldAdapter(val context: Context, val itemClickListener: OnItemClickListenerMemeWorld) :
-    PagedListAdapter<Meme_World, MemeWorldAdapter.MyViewHolder>(DiffUtilsMemeWorld()) {
+class LikedMemesAdapter(val context: Context, val itemClickListener: OnItemClickListenerLikeMeme) :
+    PagedListAdapter<Meme_World, LikedMemesAdapter.MyViewHolder>(DiffUtilsMemeWorld()) {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -58,27 +57,30 @@ class MemeWorldAdapter(val context: Context, val itemClickListener: OnItemClickL
         val likeDrawIo = itemView.findViewById<LikeButton>(R.id.starBtnMeme)
         val photoView = itemView.findViewById<ImageEditorView>(R.id.photoViewMemeWorld)
 
-        fun bindPost(_meme: Meme_World, clickListener: OnItemClickListenerMemeWorld) {
+        fun bindPost(_meme: Meme_World, clickListener: OnItemClickListenerLikeMeme) {
 
             with(_meme) {
 
                 //TimeStamp
                 memeTime.text = _meme.lastUpdated             //To get the tag
 
-
-                val username = preferenceUtils.getUserFromPrefernece().username
-                val id = preferenceUtils.getUserFromPrefernece()._id
-                val userIns = com.example.memej.responses.memeWorldResponses.User(id, username)
-                val user_likers = _meme.likedBy
-
-                if (user_likers.contains(userIns)) {
-                    likeDrawIo.isLiked = true
-                } else if (!user_likers.contains(userIns) || user_likers.isEmpty()) {
-                    likeDrawIo.isLiked = false
-                }
+                //This is not required
+//
+//                val username = preferenceUtils.getUserFromPrefernece().username
+//                val id = preferenceUtils.getUserFromPrefernece()._id
+//                val userIns = com.example.memej.responses.memeWorldResponses.User(id, username)
+//                val user_likers = _meme.likedBy
+//
+//                if (user_likers.contains(userIns)) {
+//                    likeDrawIo.isLiked = true
+//                } else if (!user_likers.contains(userIns) || user_likers.isEmpty()) {
+//                    likeDrawIo.isLiked = false
+//                }
 
                 //Get the image
                 //Load the Image here
+                likeDrawIo.isLiked = true
+
                 photoView.source?.let {
                     Glide.with(itemView.context)
                         .load(_meme.templateId.imageUrl)
@@ -95,7 +97,6 @@ class MemeWorldAdapter(val context: Context, val itemClickListener: OnItemClickL
                 likeDrawIo.setOnLikeListener(object : OnLikeListener {
                     override fun liked(likeButton: LikeButton?) {
                         likeMeme(_meme)
-
                     }
 
                     override fun unLiked(likeButton: LikeButton?) {
@@ -140,17 +141,16 @@ class MemeWorldAdapter(val context: Context, val itemClickListener: OnItemClickL
                     ) {
 
                         //Get the response
+                        //Notify the data set that it has been chnmaged
                         if (response.body()?.msg == "Meme unliked successfully.") {
 
                             Log.e("ADapter", "In resp")
                             likeDrawIo.isLiked = false
-                            //Refresh the screen again
+
 
                         } else if (response.body()?.msg == "Meme liked successfully.") {
 
                             likeDrawIo.isLiked = true
-                            //Refresh the screen
-
                         }
                     }
                 })
@@ -203,7 +203,7 @@ class MemeWorldAdapter(val context: Context, val itemClickListener: OnItemClickL
 
 }
 
-interface OnItemClickListenerMemeWorld {
+interface OnItemClickListenerLikeMeme {
     fun onItemClicked(_meme: Meme_World)
 }
 

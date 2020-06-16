@@ -3,9 +3,23 @@
     <!--    <color name="colorPrimary">#6200EE</color>-->
     <!--    <color name="colorPrimaryDark">#3700B3</color>-->
     <!--        <color name="colorAccent">#03DAC5</color>-->
-    <color name="colorPrimary">#808080</color>
-    <color name="colorPrimaryDark">#696969</color>
-    <color name="colorAccent">#ff1493</color>
+    <!--    <color name="colorPrimary">#808080</color>-->
+    <!--    <color name="colorPrimaryDark">#696969</color>-->
+    <!--    <color name="colorAccent">#ff1493</color>-->
+
+    <color name="useRed">#f54a3b</color>
+
+    <color name="colorPrimary2">#f4511e</color>
+    <color name="colorPrimaryDark2">#d84315</color>
+    <color name="colorAccent2">#ffd600</color>
+
+
+    <color name="colorPrimary">@color/useRed</color>
+    <color name="colorPrimaryDark">@color/red_heart</color>
+    <color name="colorAccent">@color/useRed</color>
+
+    <!--#d33a2c-->
+
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
     <color name="base_yellow">#FFFFE0</color>

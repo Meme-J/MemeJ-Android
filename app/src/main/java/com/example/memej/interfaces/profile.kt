@@ -21,6 +21,7 @@ interface profile {
         @Header("Authorization") accessToken: String?
     ): Call<NumLikes>
 
+
     //Get the liked memes
     @POST("api/meme/likedmemes")
     fun getLikedMemes(
@@ -28,6 +29,7 @@ interface profile {
         @Header("Authorization") accessToken: String?
         //Response call is same as the meme world
     ): Call<memeApiResponses>
+
 
     //Get user is defined in auth
 

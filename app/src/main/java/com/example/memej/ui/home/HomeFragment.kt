@@ -12,6 +12,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.memej.R
@@ -29,6 +30,7 @@ class HomeFragment : Fragment(), OnItemClickListenerHome {
     lateinit var root: View
     lateinit var comm: Communicator
     lateinit var pb: ProgressBar
+    lateinit var itemAnimator: RecyclerView.ItemAnimator
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -38,10 +40,12 @@ class HomeFragment : Fragment(), OnItemClickListenerHome {
         root = inflater.inflate(R.layout.fragment_home, container, false)
         pb = root.findViewById(R.id.pb_home)
         rv = root.findViewById(R.id.rv_home)
-
+        itemAnimator = DefaultItemAnimator()
         homeMemeAdapter = HomeMemeAdapter(this)
 
         observeList()
+        //Invalidate as well
+
         initList()
 
 
@@ -54,14 +58,19 @@ class HomeFragment : Fragment(), OnItemClickListenerHome {
     private fun initList() {
         rv.layoutManager = LinearLayoutManager(context)
         rv.adapter = homeMemeAdapter
+        homeMemeAdapter.notifyDataSetChanged()
         pb.visibility = View.GONE
 
     }
 
     private fun observeList() {
+
+
         homeViewModel.getPosts(pb = pb).observe(viewLifecycleOwner, Observer {
             homeMemeAdapter.submitList(it)
         })
+
+
     }
 
 

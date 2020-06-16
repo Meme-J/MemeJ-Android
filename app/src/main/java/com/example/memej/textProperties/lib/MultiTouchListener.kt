@@ -12,7 +12,7 @@ import android.widget.TextView
 import androidx.annotation.Nullable
 
 
-internal class MultiTouchListener(
+class MultiTouchListener(
     @Nullable deleteView: View?, parentView: RelativeLayout,
     photoEditImageView: ImageView, private val mIsTextPinchZoomable: Boolean,
     onPhotoEditorListener: OnPhotoEditorListener?
@@ -38,7 +38,16 @@ internal class MultiTouchListener(
     private var onMultiTouchListener: OnMultiTouchListener? = null
     private var mOnGestureControl: OnGestureControl? = null
     private val mOnPhotoEditorListener: OnPhotoEditorListener?
+
     override fun onTouch(view: View, event: MotionEvent): Boolean {
+
+        val pointerIndex = event.actionIndex
+        val pointerId = event.getPointerId(pointerIndex)
+        val maskedAction = event.actionMasked
+
+
+
+
         mScaleGestureDetector.onTouchEvent(view, event)
         mGestureListener.onTouchEvent(event)
         if (!isTranslateEnabled) {
@@ -191,12 +200,12 @@ internal class MultiTouchListener(
         var maximumScale = 0f
     }
 
-    internal interface OnMultiTouchListener {
+    interface OnMultiTouchListener {
         fun onEditTextClickListener(text: String?, colorCode: Int)
         fun onRemoveViewListener(removedView: View?)
     }
 
-    internal interface OnGestureControl {
+    interface OnGestureControl {
         fun onClick()
         fun onLongClick()
     }

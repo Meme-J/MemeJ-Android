@@ -20,6 +20,7 @@ class ImageEditorView : RelativeLayout {
     var brushDrawingView: BrushView? = null
         private set
 
+
     constructor(context: Context?) : super(context) {
         init(null)
     }
@@ -88,8 +89,10 @@ class ImageEditorView : RelativeLayout {
         addView(brushDrawingView, brushParam)
     }
 
+
     companion object {
         private const val imgSrcId = 1
         private const val brushSrcId = 2
+        private const val downloadConst = 3
     }
 }

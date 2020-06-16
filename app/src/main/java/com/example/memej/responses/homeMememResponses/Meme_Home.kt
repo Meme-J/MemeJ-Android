@@ -28,7 +28,6 @@ data class Meme_Home(
     @Json(name = "stage")
     val stage: Int, // 1
 
-
     @Json(name = "tags")
     val tags: List<String>,
 
@@ -40,7 +39,7 @@ data class Meme_Home(
     val users: List<HomeUsers>?,
 
     @Json(name = "__v")
-    val v: Int, // 0
+    val __v: Int, // 0
 
     @Json(name = "workspace")
     val workspace: String // Global

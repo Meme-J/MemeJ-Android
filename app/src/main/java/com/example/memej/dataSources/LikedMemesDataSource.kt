@@ -59,7 +59,7 @@ class LikedMemesDataSource(val context: Context, val pb: ProgressBar) :
                             )
                         }
                     } else {
-                        Toast.makeText(context, response.errorBody().toString(), Toast.LENGTH_SHORT)
+                        Toast.makeText(context, response.message().toString(), Toast.LENGTH_SHORT)
                             .show()
                         pb.visibility = View.GONE
                     }

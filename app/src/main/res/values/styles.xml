@@ -3,22 +3,40 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
         <!-- Customize your theme here. -->
-        <item name="useMaterialThemeColors">true</item>
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorDimBlack</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorPrimary</item>
         <item name="android:windowSoftInputMode">adjustResize</item>
 
+
         <!-- Customize your theme here. -->
-        <item name="material_dialog_background">#FFFFFF</item>
+        <item name="material_dialog_background">@color/white</item>
         <item name="material_dialog_title_text_color">#000000</item>
         <item name="material_dialog_message_text_color">#5F5F5F</item>
         <item name="material_dialog_positive_button_color">@color/colorAccent</item>
         <item name="material_dialog_positive_button_text_color">#FFFFFF</item>
         <item name="material_dialog_negative_button_text_color">@color/colorAccent</item>
 
+        <!--Customize FAB here -->
+        <item name="floatingActionButtonStyle">@style/fabStyle</item>
+
     </style>
 
+    <style name="splashScreen" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/white</item>
+        <item name="colorAccent">@color/colorPrimary</item>
+
+    </style>
+
+    <style name="fabStyle" parent="Widget.MaterialComponents.FloatingActionButton">
+        <item name="color">@color/colorAccent</item>
+        <item name="backgroundColor">@color/colorAccent</item>
+        <item name="background">@color/colorAccent</item>
+        <item name="android:background">@color/colorAccent</item>
+        <item name="android:backgroundTint">@color/white</item>
+        <item name="android:tint">@color/white</item>
+    </style>
 
     <style name="LoginSignUp" parent="Theme.MaterialComponents.Light.DarkActionBar.Bridge">
         <item name="colorPrimary">@color/colorPrimary</item>
@@ -65,27 +83,6 @@
         <item name="textAllCaps">false</item>
     </style>
 
-    <!--    Arial Style-->
-    <style name="arial_font">
-        <item name="fontFamily">@font/arial</item>
-    </style>
-
-    <style name="bomb_font">
-        <item name="fontFamily">@font/bomb_font</item>
-    </style>
-
-    <style name="long_fox_font">
-        <item name="fontFamily">@font/long_fox_font</item>
-    </style>
-
-    <style name="robot_reavers_font">
-        <item name="fontFamily">@font/romot_reavers_font</item>
-    </style>
-
-    <style name="fonty_fonts">
-        <item name="fontFamily">@font/fonty_font</item>
-    </style>
-
 
     <style name="buttonMaterialStyle">
         <item name="android:layout_width">100dp</item>
@@ -98,6 +95,26 @@
         <item name="android:textAllCaps">true</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="stylePick">
+        <item name="android:elevation">@dimen/margin_20dp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginEnd">12dp</item>
+        <item name="android:layout_marginTop">@dimen/margins</item>
+        <item name="android:layout_marginBottom">@dimen/margins</item>
+
+    </style>
+
+    <style name="recylclerViewAttr">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:scrollbars">horizontal</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+        <item name="android:foreground">?android:attr/selectableItemBackground</item>
+
     </style>
 
 </resources>

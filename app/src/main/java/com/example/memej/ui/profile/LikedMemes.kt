@@ -12,20 +12,19 @@ import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.example.memej.MainActivity
 import com.example.memej.R
-import com.example.memej.adapters.MemeWorldAdapter
-import com.example.memej.adapters.OnItemClickListenerMemeWorld
+import com.example.memej.adapters.LikedMemesAdapter
+import com.example.memej.adapters.OnItemClickListenerLikeMeme
 import com.example.memej.responses.memeWorldResponses.Meme_World
 import com.example.memej.ui.MemeWorld.CompletedMemeActivity
 import com.example.memej.viewModels.LikedMemesViewModel
 
-class LikedMemes : AppCompatActivity(), OnItemClickListenerMemeWorld {
+class LikedMemes : AppCompatActivity(), OnItemClickListenerLikeMeme {
 
 
     private val viewModel: LikedMemesViewModel by viewModels()
     private lateinit var rv: RecyclerView
-    private lateinit var memeWorldAdapter: MemeWorldAdapter
+    private lateinit var memeWorldAdapter: LikedMemesAdapter
     lateinit var pb: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,13 +36,10 @@ class LikedMemes : AppCompatActivity(), OnItemClickListenerMemeWorld {
 
         //Reinstantiate the toolbar properties
         val toolbar: androidx.appcompat.widget.Toolbar = findViewById(R.id.tb_likedMemes)
-        toolbar.setNavigationOnClickListener {
-            val i = Intent(this, MainActivity::class.java)
-            startActivity(i)
-        }
+
 
         //Instantiate ViewModel
-        memeWorldAdapter = MemeWorldAdapter(this, this)
+        memeWorldAdapter = LikedMemesAdapter(this, this)
         initList()
 
 

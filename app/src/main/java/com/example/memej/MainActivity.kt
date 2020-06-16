@@ -4,6 +4,7 @@ import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.SearchView
@@ -41,6 +42,27 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
         transaction.addToBackStack(null)
         transaction.commit()
     }
+
+    private fun openSearch(
+        fragment: Fragment,
+        frag: Fragment?
+    ) {
+
+        val backstackedVerse = frag?.javaClass?.simpleName
+
+        val manager = supportFragmentManager
+        val fragPopped = manager.popBackStackImmediate(backstackedVerse, 0)
+
+        if (!fragPopped) {
+            val transaction = manager.beginTransaction()
+
+            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+            transaction.replace(R.id.container, fragment)
+            transaction.addToBackStack(null)
+            transaction.commit()
+        }
+    }
+
 
     //Get the res id
     private val mOnNavigationItemSelectedListener =
@@ -95,6 +117,7 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
         setContentView(R.layout.activity_main)
 
         //Set up the toolbar
+        toolbar = androidx.appcompat.widget.Toolbar(this)
         toolbar = findViewById(R.id.toolbar_main)
         setSupportActionBar(toolbar)
 
@@ -114,13 +137,6 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
             )
         )
 
-//        val host = NavHostFragment.create(R.navigation.mobile_navigation)
-        //     navController = findNavController(R.id.nav_host_fragment)
-        //Setting up the main activity navigation
-
-//        supportFragmentManager.beginTransaction().replace(R.id.container, host)
-//            .setPrimaryNavigationFragment(host).commit()
-
 
         //Default Fragment
         if (savedInstanceState == null) {
@@ -131,14 +147,13 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
         }
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
-//Initilaize th adapter of serach
-//        adapter = SearchAdapter(this)
-//        rv = findViewById(R.id.rv_suggestions)
-//        rv.layoutManager = LinearLayoutManager(this)
-
 
         //OnClickListener On FAB
         val fab: FloatingActionButton = findViewById(R.id.fab_add)
+        //Sett attr
+        fab.setBackgroundColor(resources.getColor(R.color.colorAccent))
+
+
         fab.setOnClickListener {
             val i = Intent(this, SelectMemeTemplateActivity::class.java)
             startActivity(i)
@@ -161,33 +176,31 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
         val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
         searchView = menu!!.findItem(R.id.navigation_search).actionView as SearchView
 
+        Log.e("SearchX", "In Inflate menu")
 
         searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
         searchView.isIconifiedByDefault = false
         searchView.queryHint = "Search"
         searchView.requestFocus()
 
+        val frag = getFragmnetFromIndex(index)
+        Log.e("SearchX", "In On Create Options, before close")
         searchManager.setOnCancelListener {
-            val frag = getFragmnetFromIndex(index)
+            Log.e("SearchXM", "Close search")
+
             openFragment(frag!!)
         }
+        searchView.setOnCloseListener(object : SearchView.OnCloseListener {
+            override fun onClose(): Boolean {
+
+                Log.e("SearchX", "In overrriden method of close")
+                openFragment(frag!!)
+
+                return true
+            }
+        })
 
         return true
-
-//Cursor Formation
-        // searchView.queryHint("Search")
-//
-//        val columNames =
-//            arrayOf(SearchManager.SUGGEST_COLUMN_TEXT_1)
-//        val viewIds = intArrayOf(android.R.id.text1)
-//         adap= SimpleCursorAdapter(
-//            this,
-//            android.R.layout.simple_list_item_1, null, columNames, viewIds
-//        )
-//        searchView.setOnSuggestionListener(getOnSuggestionClickListener())
-
-
-//        searchView.setOnQueryTextListener(getOnQueryTextListener(this, adapter))
 
     }
 
@@ -220,59 +233,14 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
 
     }
 
-//
-//    private fun getOnQueryTextListener(
-//        mainActivity: MainActivity,
-//        adapter: SearchAdapter
-//    ): SearchView.OnQueryTextListener? {
-//        return object : SearchView.OnQueryTextListener {
-//
-//            //Separate method for this
-//            override fun onQueryTextSubmit(s: String): Boolean {
-//                return false
-//            }
-//
-//            override fun onQueryTextChange(s: String): Boolean {
-//                if (s.length < 1) {
-//                    return false            //When it is not Able fetch
-//                }
-//
-//                Log.e("Search", s)
-//                val service = RetrofitClient.makeCallsForMemes(this@MainActivity)
-//                val body = searchBody(s, "ongoing")
-//                service.getSuggestions(
-//                    accessToken = "Bearer " + sessionManager.fetchAcessToken(),
-//                    info = body
-//                ).enqueue(object : retrofit2.Callback<SearchResponse> {
-//                    override fun onFailure(call: Call<SearchResponse>, t: Throwable) {
-//                        Log.e("Search", "Failded to load the serach suggestions")
-//
-//                    }
-//
-//                    override fun onResponse(
-//                        call: Call<SearchResponse>,
-//                        response: Response<SearchResponse>
-//                    ) {
-//                        Log.e("Searc ", "Resp" + response.body())
-//                        adapter.setAdapterSearch(response.body()!!.suggestions)
-//                        adapter.notifyDataSetChanged()
-//                        rv.adapter = adapter
-//                    }
-//                })
-//
-//
-//                return true
-//            }
-//        }
-//    }
-
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val i = Intent(this, SettingsScreen::class.java)
+        //Get index frag
+        val frag = getFragmnetFromIndex(index)
 
         when (item.itemId) {
             R.id.settings_btn -> startActivity(i)
-            R.id.navigation_search -> openFragment(Searchable(searchView))
+            R.id.navigation_search -> openSearch(Searchable(searchView), frag)
 
             else ->
                 return super.onOptionsItemSelected(item)
@@ -291,6 +259,7 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
     }
 
     override fun passDataToMemeWorld(bundle: Bundle) {
+
     }
 
     override fun goToLikedMemesPage() {
@@ -333,6 +302,15 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
     }
 
     override fun openLikedMemeFromActivity(bundle: Bundle) {
+
+    }
+
+    override fun goToAFragmnet(fragment: Fragment) {
+        val transaction = this.supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.container, fragment)
+        transaction.addToBackStack(null)
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+        transaction.commit()
 
     }
 

@@ -18,20 +18,32 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/cv_post"
-                android:layout_width="match_parent"
+            <ProgressBar
+                android:id="@+id/loadingPanel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true" />
+
+            <com.example.memej.textProperties.lib.ImageEditorView
+                android:id="@+id/photoViewMemeWorld"
+                android:layout_width="@dimen/meme_templete_std_height"
                 android:layout_height="@dimen/meme_templete_std_height"
-                android:src="@drawable/test_image" />
+                android:layout_centerInParent="true" />
+            <!--            <com.google.android.material.imageview.ShapeableImageView-->
+            <!--                android:id="@+id/cv_post"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="@dimen/meme_templete_std_height"-->
+            <!--                android:src="@drawable/test_image" />-->
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/meme_timestamp"
                 style="@style/timestamp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/cv_post"
+                android:layout_below="@id/photoViewMemeWorld"
                 android:layout_alignParentEnd="true"
-                android:layout_margin="@dimen/margins"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="@dimen/margins"
                 android:text="@string/time" />
 
 
@@ -46,18 +58,9 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_margin="@dimen/margins"
+                android:elevation="18dp"
                 app:icon_size="10dp"
                 app:icon_type="heart" />
-
-            <!--            <TextView-->
-            <!--                android:id="@+id/post_likes_num"-->
-            <!--                android:layout_width="wrap_content"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:layout_gravity="center"-->
-            <!--                android:layout_marginStart="12dp"-->
-            <!--                android:gravity="center"-->
-            <!--                android:text="0"-->
-            <!--                android:textStyle="bold" />-->
         </LinearLayout>
 
     </LinearLayout>

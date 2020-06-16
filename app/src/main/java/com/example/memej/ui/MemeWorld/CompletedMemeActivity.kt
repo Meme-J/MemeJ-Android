@@ -1,29 +1,22 @@
 package com.example.memej.ui.MemeWorld
 
+import android.Manifest
 import android.app.AlertDialog
 import android.app.ProgressDialog
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.text.*
 import android.util.Log
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.collection.lruCache
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.withTranslation
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
-import com.example.memej.Instances.LoadImage
 import com.example.memej.R
 import com.example.memej.Utils.ApplicationUtil
 import com.example.memej.Utils.PreferenceUtil
@@ -36,15 +29,17 @@ import com.example.memej.databinding.ActivityCompletedMemeBinding
 import com.example.memej.entities.likeMemeBody
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.LikeOrNotResponse
-import com.example.memej.responses.homeMememResponses.Coordinates
+import com.example.memej.responses.memeWorldResponses.Coordinate
 import com.example.memej.responses.memeWorldResponses.User
+import com.example.memej.textProperties.lib.ImageEditorView
+import com.example.memej.textProperties.lib.Photo
 import com.example.memej.viewModels.CompletdMemeViewModel
-import com.google.android.material.imageview.ShapeableImageView
 import com.like.LikeButton
 import com.like.OnLikeListener
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.File
 
 class CompletedMemeActivity : AppCompatActivity(), onUserClickType, onTagClickType {
 
@@ -59,7 +54,8 @@ class CompletedMemeActivity : AppCompatActivity(), onUserClickType, onTagClickTy
     private val preferenceUtils = PreferenceUtil
     private val viewmodel: CompletdMemeViewModel by viewModels()
     lateinit var bmp: Bitmap
-    lateinit var memeImage: ShapeableImageView
+    lateinit var photoView: ImageEditorView
+    lateinit var photoGlobalEditor: Photo
 
 
     //RequestCode
@@ -69,34 +65,45 @@ class CompletedMemeActivity : AppCompatActivity(), onUserClickType, onTagClickTy
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        //Root is the binding elemnt
         root = DataBindingUtil.setContentView(this, R.layout.activity_completed_meme)
-        memeImage = root.postImageMw
         arg = intent?.getBundleExtra("bundle")!!
         memeUrl = arg.getString("imageUrl").toString()
+        val memeId = arg.getString("id")       //This was the meme id
         rvTag = root.rvCompleteUserTag
         rvUser = root.rvCompleteUser
         image = root.starButton
+        photoView = root.photoView
         likes = root.numLikesCompletedMeme
         val download = root.downloadCompletedMeme
         val share = root.shareCompletedMeme
 
+
+        //Get the Corners of the image View
+        //Initialzie the global view
+        val x2 = photoView.width
+        val y2 = photoView.height
+        Log.e("This", x2.toString() + y2.toString())
+
+        photoGlobalEditor = Photo.Builder(this, photoView, 0, 0, x2, y2)
+            .setPinchTextScalable(false)
+            .build()
+
         initalizeTheMemePost()
 
 
-        //Like Image
-        image.setOnClickListener {
-            likeDislike()
-        }
+        //Like the meme
         image.setOnLikeListener(object : OnLikeListener {
             override fun liked(likeButton: LikeButton?) {
-                likeDislike()
+                likeDislike(memeId)
                 //Observer on the number of likes
             }
 
             override fun unLiked(likeButton: LikeButton?) {
-                likeDislike()
+                likeDislike(memeId)
             }
         })
+
 
         //Download image
         download.setOnClickListener {
@@ -118,9 +125,31 @@ class CompletedMemeActivity : AppCompatActivity(), onUserClickType, onTagClickTy
 
     private fun downloadCompletedMeme() {
 
-        checKPermissions()
-        checkDirectory()
+        var file: File? = applicationContext.getFileStreamPath("my_image.jpeg")
+        val imagePath = file?.absolutePath
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return
+        }
+        photoGlobalEditor.saveImage(imagePath.toString(), object : Photo.OnSaveListener {
+            override fun onSuccess(imagePath: String?) {
+                Log.e("Download", "Sucess")
+            }
 
+            override fun onFailure(exception: Exception?) {
+
+            }
+        })
     }
 
     private fun checkDirectory() {
@@ -189,7 +218,8 @@ class CompletedMemeActivity : AppCompatActivity(), onUserClickType, onTagClickTy
         }
 
     }
-
+    //##
+    //Is liked or not? Or a view model to obeserve a liked meme
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -215,7 +245,7 @@ class CompletedMemeActivity : AppCompatActivity(), onUserClickType, onTagClickTy
     }
 
 
-    private fun likeDislike() {
+    private fun likeDislike(memeId: String?) {
 
         val ctx = ApplicationUtil.getContext()
         val service = RetrofitClient.makeCallsForMemes(ctx)
@@ -224,8 +254,10 @@ class CompletedMemeActivity : AppCompatActivity(), onUserClickType, onTagClickTy
 
         Log.e("Like", "InLike")
         val inf = likeMemeBody(
-            arg.getString("id").toString()
+            memeId.toString()
         )
+
+
         service.likeMeme(
             inf,
             accessToken = "Bearer ${sessionManager.fetchAcessToken()}"
@@ -341,12 +373,13 @@ class CompletedMemeActivity : AppCompatActivity(), onUserClickType, onTagClickTy
 
         Log.e("Adapter", userIns.toString() + user_likers.toString())
 
-        if (user_likers!!.contains(userIns)) {
-            image.isLiked = true
-        } else if (!user_likers.contains(userIns) || user_likers.isEmpty()) {
-            image.isLiked = false
+        if (user_likers != null) {
+            if (user_likers.contains(userIns)) {
+                image.isLiked = true
+            } else if (!user_likers.contains(userIns) || user_likers.isEmpty()) {
+                image.isLiked = false
+            }
         }
-
 
         //Check if you have liked the meme or not previously
         //Set the number of likes
@@ -358,127 +391,77 @@ class CompletedMemeActivity : AppCompatActivity(), onUserClickType, onTagClickTy
 
     private fun getImage() {
 
-        Glide.with(this)
-            .asBitmap()
-            .load(arg.getString("imageUrl"))
-            .into(object : CustomTarget<Bitmap>() {
-                override fun onLoadCleared(placeholder: Drawable?) {
-                }
+        photoView.source?.let {
+            Glide.with(this)
+                .load(arg.getString("imageUrl"))
+                .dontAnimate()
+                .dontTransform()
+                .placeholder(R.drawable.icon_placeholder)
+                .error(R.drawable.icon_placeholder)
+                .into(it)
+        }
 
-                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+        getCompleteImage()
 
-                    val memeImage = root.postImageMw
-                    val canvas = Canvas(resource)
 
-                    memeImage.draw(canvas)
-
-                    memeImage.setImageBitmap(resource)
-                    getCompleteImage(resource, canvas)
-                }
-            })
+//        Glide.with(this)
+//            .asBitmap()
+//            .load(arg.getString("imageUrl"))
+//            .into(object : CustomTarget<Bitmap>() {
+//                override fun onLoadCleared(placeholder: Drawable?) {
+//                }
+//
+//                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+//
+//                    val canvas = Canvas(resource)
+//
+//                    memeImage.draw(canvas)
+//
+//                    memeImage.setImageBitmap(resource)
+//                    getCompleteImage(resource, canvas)
+//                }
+//            })
     }
 
 
-    private fun getCompleteImage(bitmap: Bitmap?, canvas: Canvas) {
+    private fun getCompleteImage() {
 
         //Extract every placeholder, color, textSize
         //Use the num of placeholders in the  meme image to view those
         //Set paint and size
+        val totalPlaces = arg.getInt("numPlaceholders")
+        val c = 2 * totalPlaces - 1
 
-        val placeHolders_array = arg.getStringArrayList("placeHolders")
-        //This is an array. Get the co-ordinates from index 0 to stage-1, and fit them with paint on canvas with color black initialized
+        for (i in 0..c step 2) {
 
-        //Get Co-ordinates
-        val coordinates = arg.getParcelableArrayList<Coordinates>("templateIdCoordinates")
 
-        for (i in 0..arg.getInt("numPlaceHolders") - 1) {
-            val paint = LoadImage().getTextPaint(
-                arg.getStringArrayList("textColor")?.get(i).toString(),
-                arg.getIntegerArrayList("textSize")?.get(i)!!.toInt()
-            )
+            val color = arg.getStringArrayList("textColor")!!.elementAt(i / 2)
+            val size = arg.getIntegerArrayList("textSize")!!.elementAt(i / 2)
+            val colorInt = Color.parseColor(color)
 
-            val pl = placeHolders_array?.get(i)?.toString()
-            val xi = coordinates?.elementAt(i)?.x
-            val yi = coordinates?.elementAt(i)?.y
 
-            //Draw The static Multiliner
-            if (xi != null) {
-                if (yi != null) {
-                    canvas.drawMultilineText(pl.toString(), paint, 400, xi.toFloat(), yi.toFloat())
-                }
-            }
+            val pl = arg.getStringArrayList("placeholders")!![i / 2]
+
+            val x1 =
+                arg.getParcelableArrayList<Coordinate>("templateIdCoordinates")!!.elementAt(i).x
+            val y1 =
+                arg.getParcelableArrayList<Coordinate>("templateIdCoordinates")!!.elementAt(i).y
+
+            val x2 =
+                arg.getParcelableArrayList<Coordinate>("templateIdCoordinates")!!
+                    .elementAt(i + 1).x
+            val y2 =
+                arg.getParcelableArrayList<Coordinate>("templateIdCoordinates")!!
+                    .elementAt(i + 1).y
+
+            val mPhotBuilView = Photo.Builder(this, photoView, x1, y1, x2, y2).build()
+            mPhotBuilView.addOldText(pl, colorInt, size = size.toFloat())
+
         }
 
-        canvas.save()
-
-        saveImage(canvas, bitmap)
+        Log.e("Complete", photoView.childCount.toString())
 
 
-    }
-
-    private fun saveImage(canvas: Canvas, bitmap: Bitmap?) {
-
-        canvas.save()
-        canvas.setBitmap(bitmap)
-        //Attach with the imageview
-        memeImage.setImageBitmap(bitmap)
-
-
-    }
-
-    //Static Multiliners
-    fun Canvas.drawMultilineText(
-        text: CharSequence,
-        textPaint: TextPaint,
-        width: Int,
-        x: Float,
-        y: Float,
-        start: Int = 0,
-        end: Int = text.length,
-        alignment: Layout.Alignment = Layout.Alignment.ALIGN_NORMAL,
-        textDir: TextDirectionHeuristic = TextDirectionHeuristics.LTR,
-        spacingMult: Float = 1f,
-        spacingAdd: Float = 0f,
-        breakStrategy: Int = Layout.BREAK_STRATEGY_SIMPLE,
-        hyphenationFrequency: Int = Layout.HYPHENATION_FREQUENCY_NONE
-    ) {
-
-        //Use Cache Key
-        val cacheKey = "$text-$start-$end-$textPaint-$width-$alignment-$textDir-" +
-                "$spacingMult-$spacingAdd" +
-                "$breakStrategy-$hyphenationFrequency"
-
-
-        val staticLayout = StaticLayoutCache[cacheKey] ?: StaticLayout.Builder
-            .obtain(text, start, end, textPaint, width)
-            .setAlignment(alignment)
-            .setTextDirection(textDir)
-            .setLineSpacing(spacingAdd, spacingMult)
-            .setBreakStrategy(breakStrategy)
-            .build()
-        staticLayout.draw(this, x, y)
-    }
-
-    fun StaticLayout.draw(canvas: Canvas, x: Float, y: Float) {
-
-
-        canvas.withTranslation(x, y) {
-            draw(this)
-        }
-    }
-
-    private object StaticLayoutCache {
-
-        private const val MAX_SIZE = 50 // Arbitrary max number of cached items
-        private val cache = lruCache<String, StaticLayout>(MAX_SIZE)
-
-        operator fun set(key: String, staticLayout: StaticLayout) {
-            cache.put(key, staticLayout)
-        }
-
-        operator fun get(key: String): StaticLayout? {
-            return cache[key]
-        }
     }
 
 

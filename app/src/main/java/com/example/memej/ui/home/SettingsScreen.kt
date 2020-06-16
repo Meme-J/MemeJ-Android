@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import com.example.memej.MainActivity
 import com.example.memej.R
 import com.example.memej.Utils.PreferenceUtil
 import com.example.memej.Utils.sessionManagers.SaveSharedPreference
@@ -27,11 +26,11 @@ class SettingsScreen : AppCompatActivity() {
         toolbar = binding.tbSettings
         //Implement add avatar
 
-        toolbar.setNavigationOnClickListener {
-            val i = Intent(this, MainActivity::class.java)
-            startActivity(i)
-
-        }
+//        toolbar.setNavigationOnClickListener {
+//            val i = Intent(this, MainActivity::class.java)
+//            startActivity(i)
+//
+//        }
 
         binding.settingsLogout.setOnClickListener {
             //Set logged in status as false
@@ -40,7 +39,7 @@ class SettingsScreen : AppCompatActivity() {
             val mDialog = MaterialDialog.Builder(this)
                 .setTitle("Logout?")
                 .setMessage("Are you sure want to logout?")
-                .setCancelable(false)
+                .setCancelable(true)
                 .setPositiveButton(
                     "Yes",
                     R.drawable.ic_exit_to_app_black_24dp
@@ -48,8 +47,7 @@ class SettingsScreen : AppCompatActivity() {
                     logout()
                 }
                 .setNegativeButton(
-                    "No",
-                    R.drawable.ic_close
+                    "No"
                 ) { dialogInterface, which -> dialogInterface.dismiss() }
                 .build()
             mDialog.show()
