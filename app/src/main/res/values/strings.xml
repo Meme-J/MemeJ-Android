@@ -84,6 +84,8 @@
         <item>#FFF9C4</item>
         <item>#F57F17</item>
         <item>#000000</item>
+        <item>@color/crimson</item>
+        <item>@color/useBlue</item>
         <item>#FFFFFF</item>
 
     </array>

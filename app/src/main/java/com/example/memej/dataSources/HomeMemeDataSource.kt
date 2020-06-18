@@ -82,7 +82,7 @@ class HomeMemeDataSource(val context: Context, val searchquery: queryBody, val p
                                 Toast.makeText(
                                     context,
                                     "Unable to get meme with this tag",
-                                    Toast.LENGTH_LONG
+                                    Toast.LENGTH_SHORT
                                 ).show()
                                 pb.visibility = View.GONE
                                 val i = Intent(context, MainActivity::class.java)
@@ -133,7 +133,7 @@ class HomeMemeDataSource(val context: Context, val searchquery: queryBody, val p
                                 Toast.makeText(
                                     context,
                                     "Unable to get meme with this tag",
-                                    Toast.LENGTH_LONG
+                                    Toast.LENGTH_SHORT
                                 ).show()
                                 pb.visibility = View.GONE
                                 val i = Intent(context, MainActivity::class.java)
@@ -201,7 +201,7 @@ class HomeMemeDataSource(val context: Context, val searchquery: queryBody, val p
                                     Toast.makeText(
                                         context,
                                         "Unable to get meme with this tag",
-                                        Toast.LENGTH_LONG
+                                        Toast.LENGTH_SHORT
                                     ).show()
                                     pb.visibility = View.GONE
                                     val i = Intent(context, MainActivity::class.java)
@@ -252,7 +252,7 @@ class HomeMemeDataSource(val context: Context, val searchquery: queryBody, val p
                                 Toast.makeText(
                                     context,
                                     "Unable to get meme with this tag",
-                                    Toast.LENGTH_LONG
+                                    Toast.LENGTH_SHORT
                                 ).show()
                                 pb.visibility = View.GONE
                                 val i = Intent(context, MainActivity::class.java)

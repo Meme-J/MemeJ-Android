@@ -14,12 +14,18 @@
     <color name="colorAccent2">#ffd600</color>
 
 
-    <color name="colorPrimary">@color/useRed</color>
-    <color name="colorPrimaryDark">@color/red_heart</color>
-    <color name="colorAccent">@color/useRed</color>
+    <color name="colorPrimary">@color/useBlue</color>
+    <color name="colorPrimaryDark">@color/darkBlue</color>
+    <color name="colorAccent">@color/useBlue</color>
 
+    <!--    Blue scheme-->
+    <color name="useBlue">#3b5998</color>
+    <color name="useFacebooBlue">#39569c</color>
+    <color name="crimson">#990000</color>
+    <color name="darkBlue">#3b558f</color>
+    <color name="wildColor">#3a91ff</color>
     <!--#d33a2c-->
-
+    <color name="stoneWhite">#FBFAFB</color>
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
     <color name="base_yellow">#FFFFE0</color>

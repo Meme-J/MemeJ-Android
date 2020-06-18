@@ -100,7 +100,7 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
         tagCheck = findViewById(R.id.tag_editNew)
         photoView = findViewById(R.id.imageView)
 
-
+        edt.requestFocus()
         //Default Paint, TypeFace. Size
         val tf: Typeface = Typeface.DEFAULT
         type_face = tf

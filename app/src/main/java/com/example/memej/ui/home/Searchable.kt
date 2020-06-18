@@ -65,6 +65,7 @@ class Searchable(val searchView: SearchView) : Fragment(), onClickSearch {
         lav = root.findViewById(R.id.searchAnimation)
         tsv = root.findViewById<TextView>(R.id.tvTTS)
 
+        searchView.requestFocus()
         //Check connection
         if (ErrorStatesResponse.checkIsNetworkConnected(requireContext())) {
             lav.setAnimation(R.raw.search_animation)

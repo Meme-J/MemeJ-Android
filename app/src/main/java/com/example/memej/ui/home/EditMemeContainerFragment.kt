@@ -126,6 +126,8 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
         val size = root.chooseSize
 
 
+        //request focus for edt
+        edt.requestFocus()
         colors.setOnClickListener {
             chooseColor()
         }
