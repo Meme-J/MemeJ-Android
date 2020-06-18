@@ -61,6 +61,8 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
     lateinit var arg: Bundle
     lateinit var edt: EditText
 
+    lateinit var photoVieGlobal: Photo
+
     //Global to be used
     private var paint_chosen by Delegates.notNull<Int>()
     private lateinit var type_face: Typeface
@@ -112,6 +114,10 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
             SessionManager(this)
         pb = root.pbEditFragment
 
+
+        photoVieGlobal = Photo.Builder(this, photoView)
+            .setPinchTextScalable(false)
+            .build()
 
         initializeEditFrame(arg)
 
@@ -545,10 +551,7 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
             val y2 =
                 arg.getParcelableArrayList<Coordinates>("templateIdCoordinates")!!
                     .elementAt(i + 1).y
-
-            val mPhotBuilView = Photo.Builder(this, photoView, x1, y1, x2, y2).build()
-            mPhotBuilView.addOldText(pl, colorInt, size = size.toFloat())
-
+            photoVieGlobal.addOldText(type_face, pl, colorInt, size.toFloat(), x1, y1, x2, y2)
         }
 
         val xN =
@@ -586,7 +589,7 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
     ) {
 
         //Sample two
-        val photoEditorClass = Photo.Builder(this, photoView, xN, yN, xB, yB)
+        val photoEditorClass = Photo.Builder(this, photoView)
             .setPinchTextScalable(false)
             .build()
 
@@ -615,7 +618,16 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
             ) {
                 photoEditorClass.clearAllViews()
                 //Return nothing
-                photoEditorClass.addText(type_face, s.toString(), paint_chosen, size_chosen)
+                photoEditorClass.addText(
+                    type_face,
+                    s.toString(),
+                    paint_chosen,
+                    size_chosen,
+                    xN,
+                    yN,
+                    xB,
+                    yB
+                )
 
             }
 
@@ -628,7 +640,16 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
 
                 photoEditorClass.clearAllViews()
                 //Return nothing
-                photoEditorClass.addText(type_face, s.toString(), paint_chosen, size_chosen)
+                photoEditorClass.addText(
+                    type_face,
+                    s.toString(),
+                    paint_chosen,
+                    size_chosen,
+                    xN,
+                    yN,
+                    xB,
+                    yB
+                )
 
             }
         })

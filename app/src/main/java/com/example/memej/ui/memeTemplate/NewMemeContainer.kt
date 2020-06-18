@@ -542,7 +542,7 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
 
 
         //Sample two
-        val photoEditorClass = Photo.Builder(this, photoView, xN, yN, xB, yB)
+        val photoEditorClass = Photo.Builder(this, photoView)
             .setPinchTextScalable(false)
             .build()
 
@@ -579,16 +579,34 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 //Create a demo view just before init
-                photoEditorClass.addText(type_face, " ", paint_chosen, size_chosen)
+
                 photoEditorClass.clearAllViews()
-                photoEditorClass.addText(type_face, s.toString(), paint_chosen, size_chosen)
+                photoEditorClass.addText(
+                    type_face,
+                    s.toString(),
+                    paint_chosen,
+                    size_chosen,
+                    xN,
+                    yN,
+                    xB,
+                    yB
+                )
 
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
 
                 photoEditorClass.clearAllViews()
-                photoEditorClass.addText(type_face, s.toString(), paint_chosen, size_chosen)
+                photoEditorClass.addText(
+                    type_face,
+                    s.toString(),
+                    paint_chosen,
+                    size_chosen,
+                    xN,
+                    yN,
+                    xB,
+                    yB
+                )
 
 
             }

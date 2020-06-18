@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.ProgressBar
 import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -120,6 +121,7 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
         toolbar = androidx.appcompat.widget.Toolbar(this)
         toolbar = findViewById(R.id.toolbar_main)
         setSupportActionBar(toolbar)
+        val pbar = findViewById<ProgressBar>(R.id.pb_main)
 
 
         val navView: BottomNavigationView = findViewById(R.id.nav_view)

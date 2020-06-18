@@ -48,7 +48,10 @@
             android:name=".ui.MemeWorld.CompletedMemeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Containertheme"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize">
+
+
+        </activity>
 
         <activity android:name=".ui.profile.UserProfile" />
         <activity android:name=".ui.home.Searchable">

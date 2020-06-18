@@ -180,7 +180,7 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
                     //Incorrect cred format
                     else {
                         val snack = Snackbar.make(
-                            container_signUp,
+                            signinView,
                             response.body()?.msg.toString(),
                             Snackbar.LENGTH_SHORT
                         )

@@ -126,10 +126,11 @@ class RandomMemeAdapter(val clickListener: RandomListener) :
                     _homeMeme.templateId.coordinates.elementAt(i + 1).y
 
                 val mPhotBuilView = Photo.Builder(
-                    context = context!!, photoEditorView = photoView!!,
-                    startX = x1, startY = y1, endX = x2, endY = y2
-                ).build()
-                mPhotBuilView.addOldText(pl, colorInt, size = size.toFloat())
+                    context = context!!, photoEditorView = photoView!!
+                ).setPinchTextScalable(false)
+                    .build()
+
+                mPhotBuilView.addOldText(pl, colorInt, size.toFloat(), x1, y1, endX = x2, endY = y2)
 
             }
 
