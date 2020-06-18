@@ -1,6 +1,7 @@
 package com.example.memej.ui.home
 
 
+import android.app.ProgressDialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
@@ -11,8 +12,11 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
-import android.widget.*
 import android.widget.AdapterView.OnItemClickListener
+import android.widget.ArrayAdapter
+import android.widget.EditText
+import android.widget.ProgressBar
+import android.widget.SeekBar
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -22,6 +26,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.memej.MainActivity
 import com.example.memej.R
+import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.adapters.*
 import com.example.memej.databinding.EditMemeContainerFragmentBinding
@@ -382,20 +387,28 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
 
     private fun sendPost(line: String) {
         //Show the progress bar
-        pb.visibility = View.VISIBLE
+        //pb.visibility = View.VISIBLE
         val service = RetrofitClient.makeCallsForMemes(this)
         val inf =
             editMemeBody(arg.getString("id")!!, line, mutableList, arg.getInt("numPlaceholders"))
 
+        //Create a profress dialog
+        val dialog = ProgressDialog(this)
+        dialog.setMessage("Editing this meme")
+        dialog.show()
+
         service.editMeme(accessToken = "Bearer ${sessionManager.fetchAcessToken()}", info = inf)
             .enqueue(object : Callback<editMemeApiResponse> {
                 override fun onFailure(call: Call<editMemeApiResponse>, t: Throwable) {
-                    Toast.makeText(
-                        this@EditMemeContainerFragment,
-                        t.message.toString(),
-                        Toast.LENGTH_LONG
-                    ).show()
-                    pb.visibility = View.GONE
+                    Log.e("Edit", "In failure")
+                    dialog.dismiss()
+                    val message = ErrorStatesResponse.returnStateMessageForThrowable(t)
+                    android.app.AlertDialog.Builder(this@EditMemeContainerFragment)
+                        .setTitle("Unable to edit")
+                        .setMessage(message)
+                        .setPositiveButton(android.R.string.ok) { _, _ -> }
+                        .show()
+
                 }
 
                 override fun onResponse(
@@ -404,23 +417,22 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
                 ) {
                     //Response will be good if the meme is created
                     if (response.body()!!.msg == "Meme Edited successfully") {
-                        Toast.makeText(
-                            this@EditMemeContainerFragment,
-                            response.body()!!.msg,
-                            Toast.LENGTH_LONG
-                        ).show()
-                        pb.visibility = View.GONE
-                        //Go back to the main activity
+                        Log.e("Edit", "In resp okay")
+                        dialog.dismiss()
+
+
                         val i = Intent(this@EditMemeContainerFragment, MainActivity::class.java)
                         startActivity(i)
 
                     } else {
-                        Toast.makeText(
-                            this@EditMemeContainerFragment,
-                            response.body()!!.msg,
-                            Toast.LENGTH_LONG
-                        ).show()
-                        pb.visibility = View.GONE
+
+                        Log.e("Edit", "In resp not")
+                        dialog.dismiss()
+                        android.app.AlertDialog.Builder(this@EditMemeContainerFragment)
+                            .setTitle("Unable to edit")
+                            .setMessage(response.body()?.msg)
+                            .setPositiveButton(android.R.string.ok) { _, _ -> }
+                            .show()
 
                     }
                 }
@@ -489,29 +501,6 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
     private fun getImage() {
 
 
-//        Glide.with(this)
-//            .asBitmap()
-//            .load(arg.getString("imageUrl"))
-//            .placeholder(R.drawable.icon_placeholder)
-//            .error(R.drawable.icon_placeholder)
-//            .into(object : CustomTarget<Bitmap>() {
-//                override fun onLoadCleared(placeholder: Drawable?) {
-//
-//                }
-//
-//                override fun onResourceReady(
-//                    resource: Bitmap,
-//                    transition: com.bumptech.glide.request.transition.Transition<in Bitmap>?
-//                ) {
-//                    val canvas = Canvas(resource)
-//                    photoView.source?.draw(canvas)
-//                    photoView.source?.setImageBitmap(resource)
-//                    getCompleteImage(resource, canvas)
-//
-//                }
-//            })
-
-
         photoView.source?.let {
             Glide.with(this)
                 .load(arg.getString("imageUrl"))
@@ -523,29 +512,6 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
         }
 
         getCompleteImage()
-
-
-//        Glide.with(img)
-//            .asBitmap()
-//            .dontAnimate()
-//            .dontTransform()
-//            .load(arg.getString("imageUrl"))
-//            .into(object : CustomTarget<Bitmap>() {
-//                override fun onLoadCleared(placeholder: Drawable?) {
-//                    //When we do not use the part
-//                }
-//
-//                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-//                    val canvas = Canvas(resource)
-//
-//                    img.draw(canvas)
-//
-//                    img.setImageBitmap(resource)
-//
-//                    getCompleteImage(resource, canvas, arg)
-//
-//                }
-//            })
 
     }
 

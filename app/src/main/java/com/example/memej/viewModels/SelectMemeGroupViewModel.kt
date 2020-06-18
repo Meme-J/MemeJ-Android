@@ -1,7 +1,6 @@
 package com.example.memej.viewModels
 
 import android.app.Application
-import android.util.Log
 import android.widget.ProgressBar
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -34,13 +33,8 @@ class SelectMemeGroupViewModel(application: Application) : AndroidViewModel(appl
         return postsLiveData
     }
 
-//      initializedPagedListBuilder fetches the
-//    pagedlist from our data source.
-//    In our viewmodel also we pass the viewModelScope to the PostsDataSource factory.
-
     private fun initializedPagedListBuilder(config: PagedList.Config):
             LivePagedListBuilder<String, EmptyTemplateResponse.Template> {
-        Log.e("K", "in IPLB")
         val dataSourceFactory =
             object : DataSource.Factory<String, EmptyTemplateResponse.Template>() {
                 override fun create(): DataSource<String, EmptyTemplateResponse.Template> {

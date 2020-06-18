@@ -3,7 +3,6 @@ package com.example.memej.adapters
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -59,11 +58,10 @@ class RandomMemeAdapter(val clickListener: RandomListener) :
             with(_meme) {
 
 
-                Log.e("R", photoView.source.toString())
-
                 Glide.with(itemView.context)
                     .load(_meme.templateId.imageUrl)
                     .dontAnimate()
+                    .fitCenter()
                     .centerInside()
                     .dontTransform()
                     .error(R.drawable.icon_placeholder)

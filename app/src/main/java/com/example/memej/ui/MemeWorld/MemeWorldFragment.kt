@@ -1,5 +1,7 @@
 package com.example.memej.ui.MemeWorld
 
+import android.app.Activity
+import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,10 +16,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.memej.R
 import com.example.memej.Utils.Communicator
+import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.adapters.MemeWorldAdapter
 import com.example.memej.adapters.OnItemClickListenerMemeWorld
 import com.example.memej.responses.memeWorldResponses.Meme_World
 import com.example.memej.viewModels.MemeWorldViewModel
+import com.shreyaspatil.MaterialDialog.MaterialDialog
 
 class MemeWorldFragment : Fragment(), OnItemClickListenerMemeWorld {
 
@@ -31,7 +35,7 @@ class MemeWorldFragment : Fragment(), OnItemClickListenerMemeWorld {
     lateinit var root: View
     lateinit var comm: Communicator
     lateinit var pb: ProgressBar
-
+    lateinit var dialog: ProgressDialog
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -44,13 +48,55 @@ class MemeWorldFragment : Fragment(), OnItemClickListenerMemeWorld {
         pb = root.findViewById(R.id.pb_meme_world)
         pb.visibility = View.VISIBLE
 
-        observeList()
-        initList()
+        pb.visibility = View.VISIBLE
 
+        //Create a dialog
+        dialog = ProgressDialog(context)
+        dialog.setMessage("Loading memes...")
+        dialog.show()
+
+        if (ErrorStatesResponse.checkIsNetworkConnected(requireContext())) {
+            observeList()
+        } else {
+            checkConnection()
+        }
         comm = activity as Communicator
-
+        dialog.dismiss()
 
         return root
+    }
+
+    private fun checkConnection() {
+        if (!ErrorStatesResponse.checkIsNetworkConnected(requireContext())) {
+            //Create a dialog
+            pb.visibility = View.GONE
+            dialog.dismiss()
+            val mDialog = MaterialDialog.Builder(requireContext() as Activity)
+                .setTitle("Oops")
+                .setMessage("No internet connection")
+                .setCancelable(true)
+                .setAnimation(R.raw.inter2)
+                .setPositiveButton(
+                    "Retry"
+                ) { dialogInterface, which ->
+                    dialogInterface.dismiss()
+                    observeList()
+                }
+                .setNegativeButton(
+                    "Cancel"
+                ) { dialogInterface, which ->
+                    dialogInterface.dismiss()
+                    pb.visibility = View.GONE
+
+                }
+                .build()
+            mDialog.show()
+
+        } else {
+
+            observeList()
+
+        }
     }
 
 
@@ -58,13 +104,22 @@ class MemeWorldFragment : Fragment(), OnItemClickListenerMemeWorld {
         rv.layoutManager = LinearLayoutManager(context)
         rv.adapter = memeWorldAdapter
         pb.visibility = View.GONE
+        dialog.dismiss()
 
     }
 
     private fun observeList() {
+
+        if (!ErrorStatesResponse.checkIsNetworkConnected(requireContext())) {
+            dialog.dismiss()
+            checkConnection()
+        }
+
         memeWorldViewModel.getPosts(pr = pb).observe(viewLifecycleOwner, Observer {
             memeWorldAdapter.submitList(it)
         })
+
+        initList()
     }
 
 

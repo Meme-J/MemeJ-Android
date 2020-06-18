@@ -31,6 +31,7 @@ class SearchAdapter(val itemClickListener: onClickSearch) :
 
     }
 
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v =
             LayoutInflater.from(parent.context).inflate(R.layout.list_suggestion, parent, false)

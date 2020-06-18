@@ -1,5 +1,6 @@
 package com.example.memej.ui.memeTemplate
 
+import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -11,12 +12,13 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.memej.R
+import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.adapters.MemeGroupAdapter
 import com.example.memej.adapters.OnItemClickListenerTemplate
 import com.example.memej.responses.template.EmptyTemplateResponse
 import com.example.memej.viewModels.SelectMemeGroupViewModel
-import kotlinx.android.synthetic.main.activity_select_meme_template.*
+import com.shreyaspatil.MaterialDialog.MaterialDialog
 
 class SelectMemeTemplateActivity : AppCompatActivity(), OnItemClickListenerTemplate {
 
@@ -28,13 +30,12 @@ class SelectMemeTemplateActivity : AppCompatActivity(), OnItemClickListenerTempl
     lateinit var sessionManager: SessionManager
     lateinit var bundle: Bundle
     lateinit var toolbar: androidx.appcompat.widget.Toolbar
+    lateinit var dialog: ProgressDialog
 
 
     override fun onItemClickedForTemplate(mg: EmptyTemplateResponse.Template) {
 
         //When we click a new template to be created
-
-        pb_template.visibility = View.VISIBLE
 
         bundle = bundleOf(
 
@@ -49,7 +50,6 @@ class SelectMemeTemplateActivity : AppCompatActivity(), OnItemClickListenerTempl
 
         )
 
-        pb.visibility = View.GONE
 
         val i = Intent(this, NewMemeContainer::class.java)
         i.putExtra("bundle", bundle)
@@ -66,25 +66,66 @@ class SelectMemeTemplateActivity : AppCompatActivity(), OnItemClickListenerTempl
         pb = findViewById(R.id.pb_template)
         pb.visibility = View.VISIBLE
         toolbar = findViewById(R.id.addMemeTb)
-        //Will go back as any other activity
-
-        pb = findViewById(R.id.pb_template)
         sessionManager =
             SessionManager(this)
 
         rv = findViewById(R.id.rv_memeGroup)
         memeGroupAdapter = MemeGroupAdapter(this)
+        dialog = ProgressDialog(this)
+        dialog.setMessage("Loading templates...")
+        dialog.show()
+        //Get a dialog loader
 
-        observeLiveData()
-        initializeList()
+        if (ErrorStatesResponse.checkIsNetworkConnected(this)) {
+            observeLiveData()
 
+        } else {
+            checkConnection()
+        }
+        dialog.dismiss()
+
+    }
+
+    private fun checkConnection() {
+        pb.visibility = View.GONE
+        dialog.dismiss()
+        val mDialog = MaterialDialog.Builder(this)
+            .setTitle("Oops")
+            .setMessage("No internet connection")
+            .setCancelable(true)
+            .setAnimation(R.raw.inter2)
+            .setPositiveButton(
+                "Retry"
+            ) { dialogInterface, which ->
+                dialogInterface.dismiss()
+                dialog.show()
+                observeLiveData()
+            }
+            .setNegativeButton(
+                "Cancel"
+            ) { dialogInterface, which ->
+                dialogInterface.dismiss()
+                pb.visibility = View.GONE
+
+            }
+            .build()
+        mDialog.show()
 
     }
 
     private fun observeLiveData() {
+
+        if (!ErrorStatesResponse.checkIsNetworkConnected(this)) {
+            checkConnection()
+        }
+
         viewModel.getPosts(pb = pb).observe(this, Observer {
             memeGroupAdapter.submitList(it)
         })
+
+
+        initializeList()
+
     }
 
     private fun initializeList() {
@@ -92,6 +133,7 @@ class SelectMemeTemplateActivity : AppCompatActivity(), OnItemClickListenerTempl
         rv.adapter = memeGroupAdapter
         //After this has been done, close the pb
         pb.visibility = View.GONE
+        dialog.dismiss()
     }
 
 

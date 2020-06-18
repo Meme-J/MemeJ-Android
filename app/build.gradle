@@ -201,5 +201,6 @@ dependencies {
 
     implementation 'com.github.iamutkarshtiwari:Ananas:1.2.3'
     implementation 'ja.burhanrashid52:photoeditor:0.1.1'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0'
 
 }

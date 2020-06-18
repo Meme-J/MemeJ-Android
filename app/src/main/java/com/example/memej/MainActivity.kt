@@ -182,6 +182,7 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
         searchView.isIconifiedByDefault = false
         searchView.queryHint = "Search"
         searchView.requestFocus()
+        searchView.setBackgroundColor(resources.getColor(R.color.white))
 
         val frag = getFragmnetFromIndex(index)
         Log.e("SearchX", "In On Create Options, before close")

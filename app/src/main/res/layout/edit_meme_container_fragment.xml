@@ -136,6 +136,7 @@
                             android:layout_height="@dimen/boxHt"
                             android:layout_marginStart="@dimen/margins"
                             android:layout_marginTop="4dp"
+                            android:gravity="bottom"
                             android:hint="@string/add_a_line"
                             android:maxLines="4"
                             android:minLines="1"
@@ -146,11 +147,13 @@
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/send_post_edit"
                             android:layout_width="45dp"
+
                             android:layout_height="45dp"
                             android:layout_alignParentEnd="true"
                             android:layout_gravity="end"
                             android:background="@drawable/ic_send"
                             android:enabled="false"
+                            android:gravity="bottom"
                             app:layout_constraintEnd_toEndOf="parent" />
 
 
@@ -173,6 +176,7 @@
                             android:layout_marginStart="@dimen/margins"
                             android:layout_marginTop="@dimen/margins"
                             android:layout_marginBottom="16dp"
+                            android:gravity="bottom"
                             android:hint="@string/add_a_tag" />
 
 
@@ -184,6 +188,7 @@
                             android:layout_gravity="end"
                             android:background="@drawable/ic_check_black_24dp"
                             android:enabled="false"
+                            android:gravity="bottom"
                             app:layout_constraintEnd_toEndOf="parent" />
                     </RelativeLayout>
                 </LinearLayout>
