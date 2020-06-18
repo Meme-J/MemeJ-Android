@@ -2,6 +2,8 @@ package com.example.memej.ui.home
 
 //import com.example.memej.adapters.OnItemClickListenerHome
 //import com.example.memej.database.HomeMemeDataBase
+import android.app.Activity
+import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -17,10 +19,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.memej.R
 import com.example.memej.Utils.Communicator
+import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.adapters.HomeMemeAdapter
 import com.example.memej.adapters.OnItemClickListenerHome
 import com.example.memej.responses.homeMememResponses.Meme_Home
 import com.example.memej.viewModels.HomeViewModel
+import com.shreyaspatil.MaterialDialog.MaterialDialog
 
 class HomeFragment : Fragment(), OnItemClickListenerHome {
 
@@ -31,6 +35,8 @@ class HomeFragment : Fragment(), OnItemClickListenerHome {
     lateinit var comm: Communicator
     lateinit var pb: ProgressBar
     lateinit var itemAnimator: RecyclerView.ItemAnimator
+    lateinit var dialog: ProgressDialog
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -42,35 +48,90 @@ class HomeFragment : Fragment(), OnItemClickListenerHome {
         rv = root.findViewById(R.id.rv_home)
         itemAnimator = DefaultItemAnimator()
         homeMemeAdapter = HomeMemeAdapter(this)
+        pb.visibility = View.VISIBLE
 
-        observeList()
-        //Invalidate as well
+        //Create a dialog
+        dialog = ProgressDialog(activity)
+        dialog.setMessage("Loading memes...")
+        dialog.show()
 
-        initList()
+        if (ErrorStatesResponse.checkIsNetworkConnected(requireContext())) {
+            observeList()
+        } else {
+            checkConnection()
+        }
 
 
         comm = activity as Communicator
-
+        dialog.dismiss()
 
         return root
     }
+
+    private fun checkConnection() {
+
+        if (!ErrorStatesResponse.checkIsNetworkConnected(requireContext())) {
+            //Create a dialog
+            pb.visibility = View.GONE
+            dialog.dismiss()
+            val mDialog = MaterialDialog.Builder(requireContext() as Activity)
+                .setTitle("Oops")
+                .setMessage("No internet connection")
+                .setCancelable(true)
+                .setAnimation(R.raw.inter2)
+                .setPositiveButton(
+                    "Retry"
+                ) { dialogInterface, which ->
+                    dialogInterface.dismiss()
+
+                    observeList()
+                }
+                .setNegativeButton(
+                    "Cancel"
+                ) { dialogInterface, which ->
+                    dialogInterface.dismiss()
+                    pb.visibility = View.GONE
+
+                }
+                .build()
+            mDialog.show()
+
+        } else {
+
+            observeList()
+
+        }
+
+
+    }
+
 
     private fun initList() {
         rv.layoutManager = LinearLayoutManager(context)
         rv.adapter = homeMemeAdapter
         homeMemeAdapter.notifyDataSetChanged()
         pb.visibility = View.GONE
-
+        dialog.dismiss()
     }
 
     private fun observeList() {
 
+        //Create a material dialog for network states
 
-        homeViewModel.getPosts(pb = pb).observe(viewLifecycleOwner, Observer {
+        if (!ErrorStatesResponse.checkIsNetworkConnected(requireContext())) {
+            dialog.dismiss()
+            checkConnection()
+        }
+
+
+        pb.visibility = View.VISIBLE
+        homeViewModel.getPosts(pb = pb).observe(
+            viewLifecycleOwner, Observer
+            {
             homeMemeAdapter.submitList(it)
         })
 
-
+        initList()
     }
 
 
@@ -99,6 +160,7 @@ class HomeFragment : Fragment(), OnItemClickListenerHome {
         startActivity(i)
         //It will again go in the home bundle
     }
+}
 
 //With Room
 //    private fun initializedPagedListBuilder(config: PagedList.Config):
@@ -114,5 +176,5 @@ class HomeFragment : Fragment(), OnItemClickListenerHome {
 //    }
 
 
-}
+
 

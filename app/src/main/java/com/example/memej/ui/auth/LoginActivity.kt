@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.memej.MainActivity
 import com.example.memej.R
+import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.SaveSharedPreference
 import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.entities.LoginBody
@@ -26,10 +27,12 @@ import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.textview.MaterialTextView
 import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.android.synthetic.main.activity_sign_up.*
 import retrofit2.Call
 import retrofit2.Response
 
@@ -137,23 +140,18 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
         service.loginUser(inf).enqueue(object : retrofit2.Callback<LoginResponse> {
             override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
 
-                Log.e("Login", t.message.toString())
-                Toast.makeText(
-                    this@LoginActivity,
-                    getString(R.string.login_failed),
-                    Toast.LENGTH_LONG
-                ).show()
-                pb_login.visibility = View.GONE
+
+                val message = ErrorStatesResponse.returnStateMessageForThrowable(t)
+                val snack = Snackbar.make(container_signUp, message, Snackbar.LENGTH_SHORT)
+                snack.show()
+                pb.visibility = View.GONE
+                pb.visibility = View.GONE
+
 
             }
 
 
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
-                Log.e(
-                    "Login",
-                    response.message().toString() + response.code().toString() + response.body()
-                        .toString() + response.errorBody().toString()
-                )
 
                 if (response.isSuccessful) {
                     if (response.body()?.msg == "Login successful.") {
@@ -181,8 +179,12 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
                     }
                     //Incorrect cred format
                     else {
-                        Toast.makeText(this@LoginActivity, response.body()?.msg, Toast.LENGTH_LONG)
-                            .show()
+                        val snack = Snackbar.make(
+                            signinView,
+                            response.body()?.msg.toString(),
+                            Snackbar.LENGTH_SHORT
+                        )
+                        snack.show()
                         pb.visibility = View.GONE
                     }
 

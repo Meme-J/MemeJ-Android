@@ -1,6 +1,5 @@
 package com.example.memej.viewModels
 
-import android.util.Log
 import android.widget.ProgressBar
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
@@ -18,7 +17,6 @@ class HomeViewModel : ViewModel() {
     lateinit var pb: ProgressBar
 
     init {
-        Log.e("K", "in INIT Start")
 
         val config = PagedList.Config.Builder()
             .setInitialLoadSizeHint(20)
@@ -26,12 +24,6 @@ class HomeViewModel : ViewModel() {
             .build()
         postsLiveData = initializedPagedListBuilder(config).build()
 
-        Log.e(
-            "K",
-            " " + postsLiveData.value + " <- Value of live data \n has observers or not" + postsLiveData.hasObservers() + " List" + postsLiveData
-        )
-
-        Log.e("K", "in INIT End")
     }
 
     fun getPosts(pb: ProgressBar): LiveData<PagedList<Meme_Home>> {

@@ -5,8 +5,9 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
+        android:id="@+id/container_completeMeme"
         android:layout_height="match_parent"
-        android:background="@color/purple">
+        android:background="@color/colorPrimary">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -75,23 +76,23 @@
                             android:orientation="horizontal">
 
 
-                            <com.like.LikeButton
-                                android:id="@+id/star_button"
-                                android:layout_width="50dp"
-                                android:layout_height="50dp"
-                                android:elevation="18dp"
+                            <!--                            <com.like.LikeButton-->
+                            <!--                                android:id="@+id/star_button"-->
+                            <!--                                android:layout_width="wrap_content"-->
+                            <!--                                android:layout_height="wrap_content"-->
+                            <!--                                android:elevation="18dp"-->
+                            <!--                                app:icon_size="10dp"-->
+                            <!--                                android:layout_gravity="start|top"-->
+                            <!--                                app:icon_type="heart" />-->
 
-                                app:icon_size="10dp"
-                                app:icon_type="heart" />
-
-                            <TextView
-                                android:id="@+id/num_likes_completed_meme"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="bottom"
-                                android:layout_marginStart="@dimen/margins"
-                                android:text="@string/_0"
-                                android:textStyle="bold" />
+                            <!--                            <TextView-->
+                            <!--                                android:id="@+id/num_likes_completed_meme"-->
+                            <!--                                android:layout_width="wrap_content"-->
+                            <!--                                android:layout_height="wrap_content"-->
+                            <!--                                android:layout_gravity="bottom"-->
+                            <!--                                android:layout_marginStart="@dimen/margins"-->
+                            <!--                                android:text="@string/_0"-->
+                            <!--                                android:textStyle="bold" />-->
 
 
                             <Button

@@ -7,7 +7,7 @@
         android:id="@+id/rel_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/purple">
+        android:background="@color/colorPrimary">
 
         <ProgressBar
             android:id="@+id/pb_edit_fragment"
@@ -136,6 +136,7 @@
                             android:layout_height="@dimen/boxHt"
                             android:layout_marginStart="@dimen/margins"
                             android:layout_marginTop="4dp"
+                            android:gravity="bottom"
                             android:hint="@string/add_a_line"
                             android:maxLines="4"
                             android:minLines="1"
@@ -146,11 +147,13 @@
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/send_post_edit"
                             android:layout_width="45dp"
+
                             android:layout_height="45dp"
                             android:layout_alignParentEnd="true"
                             android:layout_gravity="end"
                             android:background="@drawable/ic_send"
                             android:enabled="false"
+                            android:gravity="bottom"
                             app:layout_constraintEnd_toEndOf="parent" />
 
 
@@ -164,6 +167,7 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/margins"
                         android:orientation="horizontal">
 
                         <AutoCompleteTextView
@@ -173,17 +177,20 @@
                             android:layout_marginStart="@dimen/margins"
                             android:layout_marginTop="@dimen/margins"
                             android:layout_marginBottom="16dp"
+                            android:gravity="bottom"
                             android:hint="@string/add_a_tag" />
 
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/tag_edit"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
                             android:layout_alignParentEnd="true"
                             android:layout_gravity="end"
                             android:background="@drawable/ic_check_black_24dp"
                             android:enabled="false"
+                            android:gravity="bottom"
+
                             app:layout_constraintEnd_toEndOf="parent" />
                     </RelativeLayout>
                 </LinearLayout>

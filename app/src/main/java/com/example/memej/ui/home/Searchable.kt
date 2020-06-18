@@ -21,6 +21,7 @@ import com.airbnb.lottie.LottieAnimationView
 import com.example.memej.MainActivity
 import com.example.memej.R
 import com.example.memej.Utils.Communicator
+import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.adapters.SearchAdapter
 import com.example.memej.adapters.onClickSearch
@@ -46,6 +47,7 @@ class Searchable(val searchView: SearchView) : Fragment(), onClickSearch {
     lateinit var searchType: String
     lateinit var lav: LottieAnimationView
     private var originalMode: Int? = null
+    lateinit var tsv: TextView
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -60,10 +62,23 @@ class Searchable(val searchView: SearchView) : Fragment(), onClickSearch {
         adapter = SearchAdapter(this)
         rv.layoutManager = LinearLayoutManager(context)
         pb = root.findViewById(R.id.pb_search)
-        Log.e("Searchable", "In Empty Searchable")
-        tv = root.findViewById(R.id.empty_tv)
         lav = root.findViewById(R.id.searchAnimation)
-        val tsv = root.findViewById<TextView>(R.id.tvTTS)
+        tsv = root.findViewById<TextView>(R.id.tvTTS)
+
+        searchView.requestFocus()
+        //Check connection
+        if (ErrorStatesResponse.checkIsNetworkConnected(requireContext())) {
+            lav.setAnimation(R.raw.search_animation)
+            lav.playAnimation()
+            lav.loop(true)
+        } else {
+            lav.setAnimation(R.raw.no_internet_connection_animataion)
+            lav.playAnimation()
+            tsv.text = getString(R.string.no_internet_str)
+            lav.loop(true)
+        }
+
+        tv = root.findViewById(R.id.empty_tv)
         //Open the input medthod
 
 
@@ -79,19 +94,36 @@ class Searchable(val searchView: SearchView) : Fragment(), onClickSearch {
         Log.e("Searchable", "Before query change")
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                Log.e("Search", "In query submit")
-                lav.visibility = View.GONE
-                tsv.visibility = View.GONE
-                fetchSuggestions(query, searchView)
+                if (ErrorStatesResponse.checkIsNetworkConnected(requireContext())) {
+                    lav.visibility = View.GONE
+                    tsv.visibility = View.GONE
+                    Log.e("Tag", query.toString())
+                    getMemeAndReplace(query.toString(), searchType)
+                } else {
+                    lav.setAnimation(R.raw.no_internet_connection_animataion)
+                    lav.playAnimation()
+                    tsv.text = getString(R.string.no_internet_str)
+                    lav.loop(true)
+
+                }
+
                 return false
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                Log.e("Search", "In query change")
-                lav.visibility = View.GONE
 
-                tsv.visibility = View.GONE
-                fetchSuggestions(newText, searchView)
+                if (ErrorStatesResponse.checkIsNetworkConnected(requireContext())) {
+                    lav.visibility = View.GONE
+                    tsv.visibility = View.GONE
+                    fetchSuggestions(newText, searchView)
+                } else {
+                    lav.setAnimation(R.raw.no_internet_connection_animataion)
+                    lav.playAnimation()
+                    tsv.text = getString(R.string.no_internet_str)
+                    lav.loop(true)
+
+                }
+
                 return false
             }
         })
@@ -101,8 +133,6 @@ class Searchable(val searchView: SearchView) : Fragment(), onClickSearch {
         searchView.setOnCloseListener(object : SearchView.OnCloseListener {
             override fun onClose(): Boolean {
 
-                Log.e("Searchable", "In overrriden method of close within Searchable")
-                //Get index and fragment
                 val fragment = getFragmnetFromIndex(MainActivity().index)
                 //Close the input keboard
                 hideKeyboard(context)
@@ -115,20 +145,6 @@ class Searchable(val searchView: SearchView) : Fragment(), onClickSearch {
         searchView.invalidate()
 
 
-        //Acticty instance
-//        val activity = activity as MainActivity?
-//
-//        val toolbar = activity?.toolbar
-////        val toolbar = (getActivity() as AppCompatActivity?)!!.supportActionBar
-//        //Get the toolbar from Main Activity
-//
-//        toolbar!!.setNavigationOnClickListener(View.OnClickListener {
-//            Toast.makeText(
-//                activity,
-//                "Back clicked!",
-//                Toast.LENGTH_SHORT
-//            ).show()
-//        })
         return root
     }
 
@@ -150,7 +166,7 @@ class Searchable(val searchView: SearchView) : Fragment(), onClickSearch {
 
         inputMethodManager.toggleSoftInput(
             InputMethodManager.SHOW_FORCED,
-            InputMethodManager.HIDE_IMPLICIT_ONLY
+            InputMethodManager.HIDE_NOT_ALWAYS
         )
 
     }
@@ -164,7 +180,6 @@ class Searchable(val searchView: SearchView) : Fragment(), onClickSearch {
         searchType = getIndexStringType(MainActivity().index)
 
         val body = searchBody(query!!, searchType = searchType.toString())
-        Log.e("Search", "Search Type is" + searchType.toString() + body.toString())
 
 
         val service = RetrofitClient.makeCallsForMemes(requireContext())
@@ -173,47 +188,49 @@ class Searchable(val searchView: SearchView) : Fragment(), onClickSearch {
             info = body
         ).enqueue(object : retrofit2.Callback<SearchResponse> {
             override fun onFailure(call: Call<SearchResponse>, t: Throwable) {
-                Toast.makeText(context, t.message.toString(), Toast.LENGTH_SHORT).show()
-                Log.e("Search", "FAILED FETCH")
+                val message = ErrorStatesResponse.returnStateMessageForThrowable(t)
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
                 pb.visibility = View.GONE
-
             }
 
             override fun onResponse(
                 call: Call<SearchResponse>,
                 response: Response<SearchResponse>
             ) {
-                //Get the response
-                Log.e("Search", "RESP FETCH")
 
                 if (response.code() == 200) {
                     //Successfull suggestion
                     val suggestions: List<SearchResponse.Suggestion> = response.body()!!.suggestions
-                    Log.e("Search", "Suggestions now" + suggestions.toString())
 
                     val str = mutableListOf<String>()
                     for (y: SearchResponse.Suggestion in response.body()!!.suggestions) {
                         str.add(y.tag)
                     }
 
+                    Log.e("Size", response.body()?.suggestions?.size.toString())
+                    if (response.body()?.suggestions?.size == 0) {
+                        Log.e("Size", "In yhe not resp")
 
-                    if (suggestions.size != 0) {
+
+                        tsv.text =
+                            "No meme found on this name. Try something else"
+                        pb.visibility = View.GONE
+                        lav.setAnimation(R.raw.not_found)
+                        lav.playAnimation()
+                        lav.loop(true)
+                        //Clear adapter
+
+                    } else {
                         adapter.searchItems = suggestions
                         rv.adapter = adapter
                         adapter.notifyDataSetChanged()
                         pb.visibility = View.GONE
-                    } else {
-                        val type = getIndexStringType(MainActivity().index)
-                        tv.text = "Unable to get memes which are " + type.toString()
-                        pb.visibility = View.GONE
                     }
 
+
                 } else {
-                    Toast.makeText(
-                        context,
-                        response.errorBody().toString(),
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    val message = response.errorBody().toString()
+                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
                     pb.visibility = View.GONE
                 }
 

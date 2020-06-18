@@ -1,5 +1,6 @@
 package com.example.memej.ui.home
 
+import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -10,62 +11,112 @@ import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.memej.MainActivity
 import com.example.memej.R
+import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.adapters.HomeMemeAdapter
 import com.example.memej.adapters.MemeWorldAdapter
 import com.example.memej.adapters.OnItemClickListenerHome
 import com.example.memej.adapters.OnItemClickListenerMemeWorld
 import com.example.memej.responses.homeMememResponses.Meme_Home
 import com.example.memej.responses.memeWorldResponses.Meme_World
+import com.example.memej.ui.MemeWorld.CompletedMemeActivity
 import com.example.memej.viewModels.SearchResultActivityViewModel
+import com.shreyaspatil.MaterialDialog.MaterialDialog
 
 
 class SearchResultActivity : AppCompatActivity(), OnItemClickListenerHome,
     OnItemClickListenerMemeWorld {
 
     var tagName: String? = ""              //Deafult Query
-    var type: String? = "ongoing"           //Default
+    var type: String? = ""           //Default
+
     lateinit var arg: Bundle
     lateinit var rv: RecyclerView
     lateinit var adapterOnGoing: HomeMemeAdapter
     lateinit var adapterComplete: MemeWorldAdapter
     lateinit var pb: ProgressBar
+    lateinit var dialog: ProgressDialog
+
     private val viewmodel: SearchResultActivityViewModel by viewModels()
     lateinit var toolbar: androidx.appcompat.widget.Toolbar
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search_result)
 
 
         arg = intent?.getBundleExtra("bundle")!!
-        //The toolbar will be automatically set
         toolbar = findViewById(R.id.tb_searchResult)
-
+        pb = findViewById(R.id.pb_searchResult)
         tagName = arg.getString("tag")
         type = arg.getString("type")
         toolbar.title = tagName
 
         //Navigate back
-        toolbar.setNavigationOnClickListener {
-            val i = Intent(this, MainActivity::class.java)
-            startActivity(i)
-            finish()
-        }
-        //Init Viewmmodel
-        pb = findViewById(R.id.pb_template)
+//        toolbar.setNavigationOnClickListener {
+//            val i = Intent(this, MainActivity::class.java)
+//            startActivity(i)
+//            finish()
+//        }
+
+
         pb.visibility = View.VISIBLE
-        //Init RV
+        dialog = ProgressDialog(this)
+        dialog.setMessage("Loading Memes...")
+        dialog.show()
 
         rv = findViewById(R.id.rv_memes_search)
-        if (type == "complete") {
 
-            getCompleteMemes()
+        if (ErrorStatesResponse.checkIsNetworkConnected(this)) {
+            goThroughType()
         } else {
-
-            getOngoingMemes()
+            checkConnection()
         }
 
+        dialog.dismiss()
+    }
+
+    private fun checkConnection() {
+        pb.visibility = View.GONE
+        dialog.dismiss()
+        val mDialog = MaterialDialog.Builder(this)
+            .setTitle("Oops")
+            .setMessage("No internet connection")
+            .setCancelable(true)
+            .setAnimation(R.raw.inter2)
+            .setPositiveButton(
+                "Retry"
+            ) { dialogInterface, which ->
+                dialogInterface.dismiss()
+                goThroughType()
+            }
+            .setNegativeButton(
+                "Cancel"
+            ) { dialogInterface, which ->
+                dialogInterface.dismiss()
+                pb.visibility = View.GONE
+
+            }
+            .build()
+        mDialog.show()
+
+
+    }
+
+    private fun goThroughType() {
+
+        if (!ErrorStatesResponse.checkIsNetworkConnected(this)) {
+            checkConnection()
+        } else {
+            dialog.show()
+            if (type == "complete") {
+
+                getCompleteMemes()
+            } else {
+
+                getOngoingMemes()
+            }
+        }
     }
 
     private fun getOngoingMemes() {
@@ -80,7 +131,7 @@ class SearchResultActivity : AppCompatActivity(), OnItemClickListenerHome,
         rv.layoutManager = LinearLayoutManager(this)
         rv.adapter = adapterOnGoing
         pb.visibility = View.GONE
-
+        dialog.dismiss()
     }
 
 
@@ -95,6 +146,8 @@ class SearchResultActivity : AppCompatActivity(), OnItemClickListenerHome,
         rv.layoutManager = LinearLayoutManager(this)
         rv.adapter = adapterComplete
         pb.visibility = View.GONE
+        dialog.dismiss()
+
     }
 
 
@@ -117,6 +170,11 @@ class SearchResultActivity : AppCompatActivity(), OnItemClickListenerHome,
             "textSize" to _homeMeme.templateId.textSize,
             "textColor" to _homeMeme.templateId.textColorCode
         )
+
+        val i = Intent(this, CompletedMemeActivity::class.java)
+        i.putExtra("bundle", bundle)
+        startActivity(i)
+
 
     }
 

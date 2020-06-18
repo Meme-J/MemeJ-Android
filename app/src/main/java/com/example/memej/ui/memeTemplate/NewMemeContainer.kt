@@ -1,5 +1,6 @@
 package com.example.memej.ui.memeTemplate
 
+import android.app.ProgressDialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
@@ -20,6 +21,7 @@ import com.bumptech.glide.Glide
 import com.example.memej.MainActivity
 import com.example.memej.R
 import com.example.memej.Utils.Communicator2
+import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.adapters.TagAdapter
 import com.example.memej.adapters.TagEditAdapter
@@ -98,7 +100,7 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
         tagCheck = findViewById(R.id.tag_editNew)
         photoView = findViewById(R.id.imageView)
 
-
+        edt.requestFocus()
         //Default Paint, TypeFace. Size
         val tf: Typeface = Typeface.DEFAULT
         type_face = tf
@@ -382,28 +384,26 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
 
     private fun sendPost(line: String) {
         //Show the progress bar
-        pb.visibility = View.VISIBLE
-        Log.e("send", "CP1")
         val service = RetrofitClient.makeCallsForMemes(this)
         val inf =
             createMemeBody(arg.getInt("numPlaceholders"), line, mutableList, arg.getString("id")!!)
 
-        Log.e("send", "CP1")
-
-        Log.e("send", inf.toString() + "input")
+        val dialog = ProgressDialog(this)
+        dialog.setMessage("Creating meme")
+        dialog.show()
 
         service.createMeme(accessToken = "Bearer ${sessionManager.fetchAcessToken()}", info = inf)
             .enqueue(object : Callback<editMemeApiResponse> {
                 override fun onFailure(call: Call<editMemeApiResponse>, t: Throwable) {
 
-                    Log.e("send", "InFail")
-                    Toast.makeText(
-                        this@NewMemeContainer,
-                        t.message.toString(),
-                        Toast.LENGTH_LONG
-                    ).show()
+                    dialog.dismiss()
+                    val message = ErrorStatesResponse.returnStateMessageForThrowable(t)
+                    android.app.AlertDialog.Builder(this@NewMemeContainer)
+                        .setTitle("Unable to create")
+                        .setMessage(message)
+                        .setPositiveButton(android.R.string.ok) { _, _ -> }
+                        .show()
 
-                    pb.visibility = View.GONE
                 }
 
                 override fun onResponse(
@@ -411,54 +411,28 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
                     response: Response<editMemeApiResponse>
                 ) {
 
-                    Log.e("send", "InResp" + response.toString())
-                    //Response will be good if the meme is created
-                    //Log the response
-                    Log.e(
-                        "send",
-                        response.body()
-                            .toString() + response.errorBody() + response.code() + "\n" + response.body()?.msg
-                                + " \n" + response.body()?.meme + "\n" + response.headers()
-                            .toString()
-                    )
+                    if (response.body()?.msg == "Meme created successfully") {
 
-                    if (response.isSuccessful) {
+                        dialog.dismiss()
+                        val i = Intent(this@NewMemeContainer, MainActivity::class.java)
+                        startActivity(i)
+                        finish()
 
-                        Log.e("send", "InRespSuccess")
-                        if (response.body()?.msg == "Meme created successfully") {
-                            Toast.makeText(
-                                this@NewMemeContainer,
-                                response.body()!!.msg,
-                                Toast.LENGTH_LONG
-                            ).show()
-
-                            Log.e("send", "InGood Message")
-                            pb.visibility = View.GONE
-                            //Go back to the main activity
-                            //On Creating a new meme retrn to the main activty of return to the parent activity
-                            //Intent back to main activty
-                            val i = Intent(
-                                this@NewMemeContainer,
-                                MainActivity::class.java
-                            )
-                            startActivity(i)
-                            finish()
-                        } else {
-                            Toast.makeText(
-                                this@NewMemeContainer,
-                                response.body()?.msg,
-                                Toast.LENGTH_LONG
-                            ).show()
-                        }
                     } else {
+
+                        dialog.dismiss()
+                        val message = response.body()?.msg
+                        android.app.AlertDialog.Builder(this@NewMemeContainer)
+                            .setTitle("Unable to create meme")
+                            .setMessage(message)
+                            .setPositiveButton(android.R.string.ok) { _, _ -> }
+                            .show()
 
 
                     }
                 }
-
             })
 
-        Log.e("send", "In exit retro call")
     }
 
 
@@ -568,7 +542,7 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
 
 
         //Sample two
-        val photoEditorClass = Photo.Builder(this, photoView, xN, yN, xB, yB)
+        val photoEditorClass = Photo.Builder(this, photoView)
             .setPinchTextScalable(false)
             .build()
 
@@ -605,16 +579,34 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 //Create a demo view just before init
-                photoEditorClass.addText(type_face, " ", paint_chosen, size_chosen)
+
                 photoEditorClass.clearAllViews()
-                photoEditorClass.addText(type_face, s.toString(), paint_chosen, size_chosen)
+                photoEditorClass.addText(
+                    type_face,
+                    s.toString(),
+                    paint_chosen,
+                    size_chosen,
+                    xN,
+                    yN,
+                    xB,
+                    yB
+                )
 
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
 
                 photoEditorClass.clearAllViews()
-                photoEditorClass.addText(type_face, s.toString(), paint_chosen, size_chosen)
+                photoEditorClass.addText(
+                    type_face,
+                    s.toString(),
+                    paint_chosen,
+                    size_chosen,
+                    xN,
+                    yN,
+                    xB,
+                    yB
+                )
 
 
             }

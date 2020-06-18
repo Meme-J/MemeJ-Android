@@ -1,5 +1,6 @@
 package com.example.memej.ui.profile
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -13,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.memej.R
 import com.example.memej.Utils.Communicator
+import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.PreferenceUtil
 import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.interfaces.RetrofitClient
@@ -20,6 +22,7 @@ import com.example.memej.responses.NumLikes
 import com.example.memej.responses.ProfileResponse
 import com.example.memej.viewModels.ProfileViewModel
 import com.google.android.material.textview.MaterialTextView
+import com.shreyaspatil.MaterialDialog.MaterialDialog
 import retrofit2.Call
 import retrofit2.Response
 
@@ -75,6 +78,8 @@ class ProfileFragment : Fragment() {
         if (preferenceUtils.likes == 0) {
             callLikes()
         } else {
+            pb.visibility = View.GONE
+
             root.findViewById<TextView>(R.id.textViewTotalLikes).text =
                 preferenceUtils.likes.toString()
 
@@ -91,6 +96,7 @@ class ProfileFragment : Fragment() {
         service.getNumLikesRecieved(accessToken = "Bearer ${sessionManager.fetchAcessToken()}")
             .enqueue(object : retrofit2.Callback<NumLikes> {
                 override fun onFailure(call: Call<NumLikes>, t: Throwable) {
+                    pb.visibility = View.GONE
 
                 }
 
@@ -99,6 +105,8 @@ class ProfileFragment : Fragment() {
                     if (response.isSuccessful) {
                         root.findViewById<TextView>(R.id.textViewTotalLikes).text =
                             response.body()?.likes.toString()
+                        pb.visibility = View.GONE
+
                         setPreferencesLikes(response.body()!!)
                         preferenceUtils.setNumberOfLikesFromPreference(response.body()!!)
                     }
@@ -118,7 +126,13 @@ class ProfileFragment : Fragment() {
 
         //If there is blank in the pref
         if (preferenceUtils.username == "") {
-            callUser()
+
+            //Check connection here
+            if (ErrorStatesResponse.checkIsNetworkConnected(requireContext())) {
+                callUser()
+            } else {
+                checkConnection()
+            }
         } else {
 
             root.findViewById<MaterialTextView>(R.id.username).text =
@@ -132,9 +146,37 @@ class ProfileFragment : Fragment() {
 
     }
 
+    fun checkConnection() {
+        val mDialog = MaterialDialog.Builder(requireContext() as Activity)
+            .setTitle("Oops")
+            .setMessage("No internet connection")
+            .setCancelable(true)
+            .setAnimation(R.raw.inter2)
+            .setPositiveButton(
+                "Retry"
+            ) { dialogInterface, which ->
+                dialogInterface.dismiss()
+                callUser()
+            }
+            .setNegativeButton(
+                "Cancel"
+            ) { dialogInterface, which ->
+                dialogInterface.dismiss()
+                pb.visibility = View.GONE
+
+            }
+            .build()
+        mDialog.show()
+
+    }
+
     private fun callUser() {
 
-        Log.e("Profile", "InCalling User from APi")
+        if (!ErrorStatesResponse.checkIsNetworkConnected(requireContext())) {
+            checkConnection()
+        }
+
+
         val service = RetrofitClient.getAuthInstance()
         service.getUser(accessToken = "Bearer ${sessionManager.fetchAcessToken()}")
             .enqueue(object : retrofit2.Callback<ProfileResponse> {
@@ -147,7 +189,6 @@ class ProfileFragment : Fragment() {
                     call: Call<ProfileResponse>,
                     response: Response<ProfileResponse>
                 ) {
-                    Log.e("porf pass", response.body()?.profile.toString())
 
                     if (response.isSuccessful) {
                         root.findViewById<MaterialTextView>(R.id.username).text =

@@ -187,11 +187,19 @@ class LikedMemesAdapter(val context: Context, val itemClickListener: OnItemClick
                     _homeMeme.templateId.coordinates.elementAt(i + 1).y
 
                 val mPhotBuilView = Photo.Builder(
-                    context = context, photoEditorView = photoView,
-                    startX = x1, startY = y1, endX = x2, endY = y2
-                ).build()
-                mPhotBuilView.addOldText(pl, colorInt, size = size.toFloat())
+                    context = context, photoEditorView = photoView
+                ).setPinchTextScalable(false)
+                    .build()
 
+                mPhotBuilView.addOldText(
+                    pl,
+                    colorInt,
+                    size = size.toFloat(),
+                    startX = x1,
+                    startY = x2,
+                    endX = x2,
+                    endY = y2
+                )
             }
 
 

@@ -12,12 +12,14 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.memej.R
+import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.SaveSharedPreference
 import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.entities.UserBody
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.SignUpResponse
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.textview.MaterialTextView
@@ -104,12 +106,11 @@ class SignUpActivity : AppCompatActivity() {
         service.createUser(regInfo).enqueue(object : retrofit2.Callback<SignUpResponse> {
             override fun onFailure(call: Call<SignUpResponse>, t: Throwable) {
 
-                Toast.makeText(
-                    this@SignUpActivity,
-                    getString(R.string.signin_failed),
-                    Toast.LENGTH_SHORT
-                ).show()
-                Log.e("signUp failed", t.message.toString() + "In faiure")
+                val message = ErrorStatesResponse.returnStateMessageForThrowable(t)
+                val snack = Snackbar.make(container_signUp, message, Snackbar.LENGTH_SHORT)
+                snack.show()
+                pb.visibility = View.GONE
+
                 pb.visibility = View.GONE
             }
 
@@ -119,9 +120,6 @@ class SignUpActivity : AppCompatActivity() {
             ) {
 
                 if (response.isSuccessful) {
-                    Log.e("SignUp", "In resp success")
-                    Log.e("SignUp", response.message().toString())
-                    Log.e("SignUp", response.body()?.msg.toString())
 
                     if (response.body()?.msg == "Registeration successful") {
                         Toast.makeText(
@@ -131,13 +129,15 @@ class SignUpActivity : AppCompatActivity() {
                         ).show()
 
                         goToLoginActivity()
-                    } else {
-                        Toast.makeText(
-                            this@SignUpActivity,
-                            response.body()?.msg.toString(),
-                            Toast.LENGTH_SHORT
-                        ).show()
 
+                    } else {
+
+                        val snack = Snackbar.make(
+                            container_signUp,
+                            response.body()?.msg.toString(),
+                            Snackbar.LENGTH_SHORT
+                        )
+                        snack.show()
                         pb.visibility = View.GONE
                     }
 

@@ -25,6 +25,7 @@ class MemeGroupAdapter(val itemClickListener: OnItemClickListenerTemplate) :
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
 
         getItem(position)?.let { holder.bindPost(it, itemClickListener) }
+        holder.setIsRecyclable(false)
     }
 
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

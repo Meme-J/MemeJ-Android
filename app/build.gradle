@@ -201,5 +201,15 @@ dependencies {
 
     implementation 'com.github.iamutkarshtiwari:Ananas:1.2.3'
     implementation 'ja.burhanrashid52:photoeditor:0.1.1'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0'
+
+    //Coil
+    implementation("io.coil-kt:coil:0.8.0")
+    // image.load(File("/path/to/image.jpg")) to load from local storage
+    //image.load("https://i.ibb.co/TRTpb0N/download.png")
+    //        {
+    //            transformations(CircleCropTransformation())
+    //        }
+
 
 }

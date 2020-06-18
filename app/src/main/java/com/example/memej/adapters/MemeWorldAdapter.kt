@@ -6,13 +6,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import android.widget.TextView
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.memej.R
-import com.example.memej.Utils.ApplicationUtil
 import com.example.memej.Utils.DiffUtils.DiffUtilsMemeWorld
+import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.PreferenceUtil
 import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.entities.likeMemeBody
@@ -21,6 +21,7 @@ import com.example.memej.responses.LikeOrNotResponse
 import com.example.memej.responses.memeWorldResponses.Meme_World
 import com.example.memej.textProperties.lib.ImageEditorView
 import com.example.memej.textProperties.lib.Photo
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textview.MaterialTextView
 import com.like.LikeButton
 import com.like.OnLikeListener
@@ -57,6 +58,8 @@ class MemeWorldAdapter(val context: Context, val itemClickListener: OnItemClickL
         val memeTime = itemView.findViewById<MaterialTextView>(R.id.meme_timestamp)
         val likeDrawIo = itemView.findViewById<LikeButton>(R.id.starBtnMeme)
         val photoView = itemView.findViewById<ImageEditorView>(R.id.photoViewMemeWorld)
+        val numLikes = itemView.findViewById<TextView>(R.id.num_likes_memeAdapter)
+
 
         fun bindPost(_meme: Meme_World, clickListener: OnItemClickListenerMemeWorld) {
 
@@ -71,6 +74,10 @@ class MemeWorldAdapter(val context: Context, val itemClickListener: OnItemClickL
                 val userIns = com.example.memej.responses.memeWorldResponses.User(id, username)
                 val user_likers = _meme.likedBy
 
+                Log.e(
+                    "Users",
+                    user_likers.toString() + userIns.toString() + username.toString() + id
+                )
                 if (user_likers.contains(userIns)) {
                     likeDrawIo.isLiked = true
                 } else if (!user_likers.contains(userIns) || user_likers.isEmpty()) {
@@ -89,7 +96,7 @@ class MemeWorldAdapter(val context: Context, val itemClickListener: OnItemClickL
                 }
 
                 getCompleteImage(_meme, photoView, itemView.context)
-
+                numLikes.text = _meme.likes.toString()
 
                 //Like the meme
                 likeDrawIo.setOnLikeListener(object : OnLikeListener {
@@ -125,12 +132,17 @@ class MemeWorldAdapter(val context: Context, val itemClickListener: OnItemClickL
                 .enqueue(object : Callback<LikeOrNotResponse> {
                     override fun onFailure(call: Call<LikeOrNotResponse>, t: Throwable) {
                         //Not able to get
-                        Toast.makeText(
-                            ApplicationUtil.getContext(),
-                            "Unable to like meme at the moment",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        Log.e("ADapter", "In fail")
+                        val message = ErrorStatesResponse.returnStateMessageForThrowable(t)
+                        val snack = Snackbar.make(itemView, message, Snackbar.LENGTH_SHORT)
+                        snack.show()
+
+                        //Revert with the state usage
+                        if (likeDrawIo.isLiked) {
+                            likeDrawIo.isLiked = false
+                        } else if (!likeDrawIo.isLiked) {
+                            likeDrawIo.isLiked = true
+                        }
+
 
                     }
 
@@ -139,16 +151,20 @@ class MemeWorldAdapter(val context: Context, val itemClickListener: OnItemClickL
                         response: Response<LikeOrNotResponse>
                     ) {
 
-                        //Get the response
+
                         if (response.body()?.msg == "Meme unliked successfully.") {
 
                             Log.e("ADapter", "In resp")
+
                             likeDrawIo.isLiked = false
+
+
                             //Refresh the screen again
 
                         } else if (response.body()?.msg == "Meme liked successfully.") {
 
                             likeDrawIo.isLiked = true
+
                             //Refresh the screen
 
                         }
@@ -156,12 +172,16 @@ class MemeWorldAdapter(val context: Context, val itemClickListener: OnItemClickL
                 })
         }
 
-
         private fun getCompleteImage(
             _homeMeme: Meme_World,
             photoView: ImageEditorView,
             context: Context
         ) {
+
+            //Builder
+            val photoVieGlobal = Photo.Builder(context, photoView)
+                .setPinchTextScalable(false)
+                .build()
 
             val holders = _homeMeme.templateId.numPlaceholders
             val c = 2 * holders - 1
@@ -186,12 +206,7 @@ class MemeWorldAdapter(val context: Context, val itemClickListener: OnItemClickL
                 val y2 =
                     _homeMeme.templateId.coordinates.elementAt(i + 1).y
 
-                val mPhotBuilView = Photo.Builder(
-                    context = context, photoEditorView = photoView,
-                    startX = x1, startY = y1, endX = x2, endY = y2
-                ).build()
-                mPhotBuilView.addOldText(pl, colorInt, size = size.toFloat())
-
+                photoVieGlobal.addOldText(pl, colorInt, size.toFloat(), x1, y1, x2, y2)
             }
 
 

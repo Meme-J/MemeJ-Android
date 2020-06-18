@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.paging.PageKeyedDataSource
+import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.template.EmptyTemplateResponse
@@ -34,7 +35,8 @@ class MemeGroupDataSource(val context: Context, val pb: ProgressBar) :
         )
             .enqueue(object : Callback<EmptyTemplateResponse> {
                 override fun onFailure(call: Call<EmptyTemplateResponse>, t: Throwable) {
-                    Toast.makeText(context, t.message.toString(), Toast.LENGTH_SHORT).show()
+                    val message = ErrorStatesResponse.returnStateMessageForThrowable(t)
+                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
                     pb.visibility = View.GONE
                 }
 
@@ -60,7 +62,8 @@ class MemeGroupDataSource(val context: Context, val pb: ProgressBar) :
                         }
                         pb.visibility = View.GONE
                     } else {
-                        Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show()
+                        val message = response.errorBody().toString()
+                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
                         pb.visibility = View.GONE
                     }
 
@@ -82,7 +85,9 @@ class MemeGroupDataSource(val context: Context, val pb: ProgressBar) :
         )
             .enqueue(object : Callback<EmptyTemplateResponse> {
                 override fun onFailure(call: Call<EmptyTemplateResponse>, t: Throwable) {
-                    Toast.makeText(context, t.message.toString(), Toast.LENGTH_SHORT).show()
+                    val message = ErrorStatesResponse.returnStateMessageForThrowable(t)
+                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+
                     pb.visibility = View.GONE
                 }
 
@@ -104,7 +109,8 @@ class MemeGroupDataSource(val context: Context, val pb: ProgressBar) :
                         }
                         pb.visibility = View.GONE
                     } else {
-                        Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show()
+                        val message = response.errorBody().toString()
+                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
                         pb.visibility = View.GONE
                     }
                 }

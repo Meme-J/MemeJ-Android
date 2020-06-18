@@ -1,6 +1,5 @@
 package com.example.memej.textProperties.lib
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
@@ -18,7 +17,10 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
-import androidx.annotation.*
+import androidx.annotation.ColorInt
+import androidx.annotation.NonNull
+import androidx.annotation.Nullable
+import androidx.annotation.UiThread
 import com.example.memej.R
 import java.io.File
 import java.io.FileOutputStream
@@ -42,10 +44,12 @@ class Photo private constructor(builder: Builder) :
     private val mDefaultEmojiTypeface: Typeface?
     private val location = IntArray(2)
     private var outRect: Rect? = null
-    private val startX: Int
-    private val startY: Int
-    private val endY: Int
-    private val endX: Int
+
+    //    private val startX: Int
+//    private val startY: Int
+//    private val endY: Int
+//    private val endX: Int
+    var childCount = 0
 
 
     fun addImage(desiredImage: Bitmap?) {
@@ -72,13 +76,18 @@ class Photo private constructor(builder: Builder) :
             override fun onLongClick() {}
         })
         imageRootView.setOnTouchListener(multiTouchListener)
-        addViewToParent(imageRootView, ViewType.IMAGE)
+        addViewToParent(imageRootView, ViewType.IMAGE, 0, 0, 0, 0)
     }
 
 
     @SuppressLint("ClickableViewAccessibility")
-    fun addOldText(text: String?, colorCodeTextView: Int, size: Float) {
-        addOldText(null, text, colorCodeTextView, size)
+    fun addOldText(
+        text: String?, colorCodeTextView: Int, size: Float, startX: Int,
+        startY: Int,
+        endX: Int,
+        endY: Int
+    ) {
+        addOldText(null, text, colorCodeTextView, size, startX, startY, endX, endY)
     }
 
 
@@ -87,7 +96,11 @@ class Photo private constructor(builder: Builder) :
         @Nullable textTypeface: Typeface?,
         text: String?,
         colorCodeTextView: Int,
-        size: Float
+        size: Float,
+        startX: Int,
+        startY: Int,
+        endX: Int,
+        endY: Int
     ) {
         brushDrawingView!!.brushDrawingMode = false
 
@@ -132,13 +145,18 @@ class Photo private constructor(builder: Builder) :
             }
         })
 //        textRootView.setOnTouchListener(multiTouchListener)
-        addViewToParent(textRootView, ViewType.TEXT)
+        addViewToParent(textRootView, ViewType.TEXT, startX, startY, endX, endY)
     }
 
 
     @SuppressLint("ClickableViewAccessibility")
-    fun addText(text: String?, colorCodeTextView: Int, size: Float) {
-        addText(null, text, colorCodeTextView, size)
+    fun addText(
+        text: String?, colorCodeTextView: Int, size: Float, startX: Int,
+        startY: Int,
+        endX: Int,
+        endY: Int
+    ) {
+        addText(null, text, colorCodeTextView, size, startX, startY, endX, endY)
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -146,7 +164,11 @@ class Photo private constructor(builder: Builder) :
         @Nullable textTypeface: Typeface?,
         text: String?,
         colorCodeTextView: Int,
-        size: Float
+        size: Float,
+        startX: Int,
+        startY: Int,
+        endX: Int,
+        endY: Int
     ) {
         brushDrawingView!!.brushDrawingMode = false
 
@@ -192,7 +214,14 @@ class Photo private constructor(builder: Builder) :
 
         //get the coordinates of this view
 //        val arrayList = getCoordinatesOfTheView(multiTouchListener, textRootView)
-        addViewToParent(textRootView, ViewType.TEXT)
+        addViewToParent(
+            textRootView,
+            ViewType.TEXT,
+            startX = startX,
+            startY = startY,
+            endX = endX,
+            endY = endY
+        )
 //        return arrayList
     }
 
@@ -297,7 +326,7 @@ class Photo private constructor(builder: Builder) :
             override fun onLongClick() {}
         })
         emojiRootView.setOnTouchListener(multiTouchListener)
-        addViewToParent(emojiRootView, ViewType.EMOJI)
+        addViewToParent(emojiRootView, ViewType.EMOJI, 0, 0, 0, 0)
     }
 
     /**
@@ -309,8 +338,13 @@ class Photo private constructor(builder: Builder) :
 
     fun addViewToParent(
         rootView: View?,
-        viewType: ViewType
+        viewType: ViewType,
+        startX: Int,
+        startY: Int,
+        endX: Int,
+        endY: Int
     ) {
+        childCount = childCount + 1
         val params = RelativeLayout.LayoutParams(
             ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
         )
@@ -578,20 +612,22 @@ class Photo private constructor(builder: Builder) :
         }
     }
 
+
     interface OnSaveListener {
-        fun onSuccess(@NonNull imagePath: String?)
+        fun onSuccess(@NonNull imagePath: String?) {
 
-        fun onFailure(@NonNull exception: Exception?)
+        }
 
-        //Download the image
+        fun onFailure(@NonNull exception: Exception?) {
 
+        }
     }
 
     //A method to save the photoBuilderclasse on the photo View
 
 
     @SuppressLint("StaticFieldLeak")
-    @RequiresPermission(allOf = [Manifest.permission.WRITE_EXTERNAL_STORAGE])
+//    @RequiresPermission(allOf = [Manifest.permission.WRITE_EXTERNAL_STORAGE])
     fun saveImage(
         @NonNull imagePath: String,
         @NonNull onSaveListener: OnSaveListener
@@ -599,8 +635,9 @@ class Photo private constructor(builder: Builder) :
         Log.d(TAG, "Image Path: $imagePath")
         object : AsyncTask<String?, String?, Exception?>() {
             override fun onPreExecute() {
+
+                Log.e("In save image", "In pre execute")
                 super.onPreExecute()
-                clearTextHelperBox()
                 parentView!!.isDrawingCacheEnabled = false
             }
 
@@ -609,11 +646,13 @@ class Photo private constructor(builder: Builder) :
                 // Create a media file name
                 val file = File(imagePath)
                 return try {
+
+                    Log.e("In save image", "In try of do")
                     val out = FileOutputStream(file, false)
                     if (parentView != null) {
                         parentView.isDrawingCacheEnabled = true
                         val drawingCache = parentView.drawingCache
-                        drawingCache.compress(Bitmap.CompressFormat.PNG, 100, out)
+                        drawingCache.compress(Bitmap.CompressFormat.JPEG, 100, out)
                     }
                     out.flush()
                     out.close()
@@ -622,6 +661,8 @@ class Photo private constructor(builder: Builder) :
 
                     null
                 } catch (e: Exception) {
+
+                    Log.e("In save image", "In catch of do error" + e.toString())
                     e.printStackTrace()
                     Log.e(TAG, "Failed to save File")
                     Log.d(TAG, "Failed to save File")
@@ -633,15 +674,39 @@ class Photo private constructor(builder: Builder) :
 
             override fun onPostExecute(e: Exception?) {
                 super.onPostExecute(e)
+
+                Log.e("In save image", "In post execute")
                 if (e == null) {
-                    clearAllViews()
+
+                    Log.e("In save image", "e is null, life is great")
+
                     onSaveListener.onSuccess(imagePath)
                 } else {
+
+
                     onSaveListener.onFailure(e)
                 }
             }
         }.execute()
     }
+
+    //Share the meme
+    interface ShareMemeOnSocialMedia {
+        fun onSuccess(@NonNull imagePath: String?) {
+
+        }
+
+        fun onFailure(@NonNull exception: Exception?) {
+
+        }
+    }
+
+
+    fun shareImage() {
+
+
+    }
+
 
     private val isSDCARDMounted: Boolean
         private get() {
@@ -660,6 +725,10 @@ class Photo private constructor(builder: Builder) :
      */
     val isCacheEmpty: Boolean
         get() = addedViews.size == 0 && redoViews.size == 0
+
+
+    //get the view heights
+
 
     //##OVerriden Methods
     override fun onViewAdd(brushDrawingView: BrushView?) {
@@ -703,11 +772,7 @@ class Photo private constructor(builder: Builder) :
 
     class Builder(
         val context: Context,
-        photoEditorView: ImageEditorView,
-        var startX: Int,
-        var startY: Int,
-        var endX: Int,
-        var endY: Int
+        photoEditorView: ImageEditorView
     ) {
         val parentView: RelativeLayout
         val imageView: ImageView
@@ -797,10 +862,10 @@ class Photo private constructor(builder: Builder) :
         brushDrawingView.setBrushViewChangeListener(this)
         addedViews = ArrayList()
         redoViews = ArrayList()
-        startX = builder.startX
-        startY = builder.startY
-        endX = builder.endX
-        endY = builder.endY
+//        startX = builder.startX
+//        startY = builder.startY
+//        endX = builder.endX
+//        endY = builder.endY
 
     }
 }

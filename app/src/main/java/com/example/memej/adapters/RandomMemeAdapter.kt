@@ -3,7 +3,6 @@ package com.example.memej.adapters
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -59,11 +58,10 @@ class RandomMemeAdapter(val clickListener: RandomListener) :
             with(_meme) {
 
 
-                Log.e("R", photoView.source.toString())
-
                 Glide.with(itemView.context)
                     .load(_meme.templateId.imageUrl)
                     .dontAnimate()
+                    .fitCenter()
                     .centerInside()
                     .dontTransform()
                     .error(R.drawable.icon_placeholder)
@@ -128,10 +126,11 @@ class RandomMemeAdapter(val clickListener: RandomListener) :
                     _homeMeme.templateId.coordinates.elementAt(i + 1).y
 
                 val mPhotBuilView = Photo.Builder(
-                    context = context!!, photoEditorView = photoView!!,
-                    startX = x1, startY = y1, endX = x2, endY = y2
-                ).build()
-                mPhotBuilView.addOldText(pl, colorInt, size = size.toFloat())
+                    context = context!!, photoEditorView = photoView!!
+                ).setPinchTextScalable(false)
+                    .build()
+
+                mPhotBuilView.addOldText(pl, colorInt, size.toFloat(), x1, y1, endX = x2, endY = y2)
 
             }
 

@@ -17,15 +17,18 @@ interface memes {
 
 
     //Memes of Home
+
     @POST("api/meme/ongoing")
+    @Headers("Content-Type:application/json")
     fun fetchEditableMemes(
-        @Query("limit") loadSize: Int = 30,
+        @Query("limit") loadSize: Int = 20,
         @Header("Authorization") accessToken: String?,
         @Body tags: queryBody                 //Default for normal calling, but a separate string incase a new param called
     ): Call<homeMemeApiResponse>
 
 
     //Get search suggestions of memes
+    @Headers("Content-Type:application/json")
     @POST("api/meme/autocomplete")
     fun getSuggestions(
         @Header("Authorization") accessToken: String?
@@ -35,8 +38,9 @@ interface memes {
 
     //Get the memes of the memeWorld
     @POST("api/meme/complete")
+    @Headers("Content-Type:application/json")
     fun fetchMemeWorldMemes(
-        @Query("limit") loadSize: Int = 30,              //Test it with this value
+        @Query("limit") loadSize: Int = 20,              //Test it with this value
         @Header("Authorization") accessToken: String?,
         @Body tag: queryBody
     ): Call<memeApiResponses>
@@ -60,7 +64,7 @@ interface memes {
     //Get an empty meme template
     @POST("api/template")
     fun getTemplate(
-        @Query("limit") loadSize: Int = 30,              //Test it with this value
+        @Query("limit") loadSize: Int = 20,              //Test it with this value
         @Header("Authorization") accessToken: String?
     ): Call<EmptyTemplateResponse>
 
@@ -102,7 +106,7 @@ interface memes {
     //But It will come mixed
     @POST("api/meme/myMemes")
     fun getMyMemes(
-        @Query("limit") loadSize: Int = 30,
+        @Query("limit") loadSize: Int = 20,
         @Header("Authorization") accessToken: String?
     ): Call<homeMemeApiResponse>
 
