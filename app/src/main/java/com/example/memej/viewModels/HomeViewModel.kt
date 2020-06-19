@@ -1,5 +1,6 @@
 package com.example.memej.viewModels
 
+import android.util.Log
 import android.widget.ProgressBar
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
@@ -19,7 +20,7 @@ class HomeViewModel : ViewModel() {
     init {
 
         val config = PagedList.Config.Builder()
-            .setInitialLoadSizeHint(20)
+            .setInitialLoadSizeHint(30)
             .setEnablePlaceholders(false)   //There is holder disabled till the data is loaded
             .build()
         postsLiveData = initializedPagedListBuilder(config).build()
@@ -29,6 +30,8 @@ class HomeViewModel : ViewModel() {
     fun getPosts(pb: ProgressBar): LiveData<PagedList<Meme_Home>> {
 
         this.pb = pb
+
+        Log.e("Home", "In get posts" + postsLiveData.toString())
         return postsLiveData
     }
 
@@ -36,9 +39,11 @@ class HomeViewModel : ViewModel() {
     private fun initializedPagedListBuilder(config: PagedList.Config):
             LivePagedListBuilder<String, Meme_Home> {
 
+
+        Log.e("Home", "In init")
         val dataSourceFactory = object : DataSource.Factory<String, Meme_Home>() {
             override fun create(): DataSource<String, Meme_Home> {
-                //Query Body
+
                 val inf = queryBody("")
                 return HomeMemeDataSource(ApplicationUtil.getContext(), inf, pb)
             }

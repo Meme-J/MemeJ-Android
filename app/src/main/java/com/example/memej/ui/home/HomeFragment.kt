@@ -6,6 +6,7 @@ import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -107,6 +108,8 @@ class HomeFragment : Fragment(), OnItemClickListenerHome {
 
 
     private fun initList() {
+
+        Log.e("Home", "In init list")
         rv.layoutManager = LinearLayoutManager(context)
         rv.adapter = homeMemeAdapter
         homeMemeAdapter.notifyDataSetChanged()
@@ -117,7 +120,7 @@ class HomeFragment : Fragment(), OnItemClickListenerHome {
     private fun observeList() {
 
         //Create a material dialog for network states
-
+        Log.e("Home", "In observe list")
         if (!ErrorStatesResponse.checkIsNetworkConnected(requireContext())) {
             dialog.dismiss()
             checkConnection()
@@ -128,7 +131,9 @@ class HomeFragment : Fragment(), OnItemClickListenerHome {
         homeViewModel.getPosts(pb = pb).observe(
             viewLifecycleOwner, Observer
             {
-            homeMemeAdapter.submitList(it)
+
+                Log.e("Home", "In observer")
+                homeMemeAdapter.submitList(it)
         })
 
         initList()

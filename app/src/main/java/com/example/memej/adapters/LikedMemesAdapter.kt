@@ -6,13 +6,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import android.widget.TextView
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.memej.R
-import com.example.memej.Utils.ApplicationUtil
 import com.example.memej.Utils.DiffUtils.DiffUtilsMemeWorld
+import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.PreferenceUtil
 import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.entities.likeMemeBody
@@ -21,6 +21,7 @@ import com.example.memej.responses.LikeOrNotResponse
 import com.example.memej.responses.memeWorldResponses.Meme_World
 import com.example.memej.textProperties.lib.ImageEditorView
 import com.example.memej.textProperties.lib.Photo
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textview.MaterialTextView
 import com.like.LikeButton
 import com.like.OnLikeListener
@@ -56,6 +57,8 @@ class LikedMemesAdapter(val context: Context, val itemClickListener: OnItemClick
         val memeTime = itemView.findViewById<MaterialTextView>(R.id.meme_timestamp)
         val likeDrawIo = itemView.findViewById<LikeButton>(R.id.starBtnMeme)
         val photoView = itemView.findViewById<ImageEditorView>(R.id.photoViewMemeWorld)
+        val numLikes = itemView.findViewById<TextView>(R.id.num_likes_memeAdapter)
+
 
         fun bindPost(_meme: Meme_World, clickListener: OnItemClickListenerLikeMeme) {
 
@@ -126,12 +129,18 @@ class LikedMemesAdapter(val context: Context, val itemClickListener: OnItemClick
                 .enqueue(object : Callback<LikeOrNotResponse> {
                     override fun onFailure(call: Call<LikeOrNotResponse>, t: Throwable) {
                         //Not able to get
-                        Toast.makeText(
-                            ApplicationUtil.getContext(),
-                            "Unable to like meme at the moment",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        Log.e("ADapter", "In fail")
+                        val message = ErrorStatesResponse.returnStateMessageForThrowable(t)
+                        val snack = Snackbar.make(itemView, message, Snackbar.LENGTH_SHORT)
+                        snack.show()
+
+                        //Revert with the state usage
+                        //Do nothing with the number of likes
+                        if (likeDrawIo.isLiked) {
+                            likeDrawIo.isLiked = false
+                        } else if (!likeDrawIo.isLiked) {
+                            likeDrawIo.isLiked = true
+                        }
+
 
                     }
 
@@ -144,13 +153,19 @@ class LikedMemesAdapter(val context: Context, val itemClickListener: OnItemClick
                         //Notify the data set that it has been chnmaged
                         if (response.body()?.msg == "Meme unliked successfully.") {
 
-                            Log.e("ADapter", "In resp")
+                            Log.e("ADapter", "In  dislike")
                             likeDrawIo.isLiked = false
+                            numLikes.text = (numLikes.text.toString().toInt() - 1).toString()
+
 
 
                         } else if (response.body()?.msg == "Meme liked successfully.") {
 
+                            Log.e("ADapter", "In  Like")
+
                             likeDrawIo.isLiked = true
+                            numLikes.text = (numLikes.text.toString().toInt() + 1).toString()
+
                         }
                     }
                 })
@@ -165,6 +180,11 @@ class LikedMemesAdapter(val context: Context, val itemClickListener: OnItemClick
 
             val holders = _homeMeme.templateId.numPlaceholders
             val c = 2 * holders - 1
+
+            val mPhotBuilView = Photo.Builder(
+                context = context, photoEditorView = photoView
+            ).setPinchTextScalable(false)
+                .build()
 
             for (i in 0..c step 2) {
 
@@ -186,17 +206,13 @@ class LikedMemesAdapter(val context: Context, val itemClickListener: OnItemClick
                 val y2 =
                     _homeMeme.templateId.coordinates.elementAt(i + 1).y
 
-                val mPhotBuilView = Photo.Builder(
-                    context = context, photoEditorView = photoView
-                ).setPinchTextScalable(false)
-                    .build()
 
                 mPhotBuilView.addOldText(
                     pl,
                     colorInt,
                     size = size.toFloat(),
                     startX = x1,
-                    startY = x2,
+                    startY = y1,
                     endX = x2,
                     endY = y2
                 )

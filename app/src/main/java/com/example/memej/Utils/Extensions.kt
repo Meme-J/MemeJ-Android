@@ -6,11 +6,14 @@ import android.content.ContextWrapper
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
+import android.provider.MediaStore
 import android.util.Log
 import androidx.core.content.FileProvider
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
+
 
 // Extension function to share save bitmap in cache directory and share
 fun Activity.shareCacheDirBitmap(uri: Uri?, name: String, bitmap: Bitmap) {
@@ -24,11 +27,15 @@ fun Activity.shareCacheDirBitmap(uri: Uri?, name: String, bitmap: Bitmap) {
 
     try {
         val file = File("${this.cacheDir}/images.jpeg")
+
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, FileOutputStream(file))
+
         Log.e("PAckage name", this.packageName)
 //            val contentUri = FileProvider.getUriForFile(this, this.packageName + ".provider", file)
-        val contentUri = FileProvider.getUriForFile(this, this.packageName, file)
 
+        val contentUri = FileProvider.getUriForFile(this, this.packageName, file)
+        Log.e("PAckage name", contentUri.toString())
+//
         val shareIntent = Intent()
         shareIntent.action = Intent.ACTION_SEND
         shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri)
@@ -36,6 +43,7 @@ fun Activity.shareCacheDirBitmap(uri: Uri?, name: String, bitmap: Bitmap) {
         this.startActivity(Intent.createChooser(shareIntent, "Share Image"))
     } catch (e: FileNotFoundException) {
         e.printStackTrace()
+        Log.e("Fail share", e.toString())
     }
 //    }
 
@@ -52,6 +60,17 @@ fun Activity.shareCacheDirBitmap(uri: Uri?, name: String, bitmap: Bitmap) {
 //        this.draw(canvas)
 //        return bitmap
 //    }
+
+
+fun Bitmap.getImageUri(inContext: Context, inImage: Bitmap): Uri? {
+
+    val bytes = ByteArrayOutputStream()
+    inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+    val path =
+        MediaStore.Images.Media.insertImage(inContext.contentResolver, inImage, "Title", null)
+    return Uri.parse(path)
+
+}
 
 
 // Extension method to save bitmap to internal storage

@@ -137,6 +137,7 @@ class MemeWorldAdapter(val context: Context, val itemClickListener: OnItemClickL
                         snack.show()
 
                         //Revert with the state usage
+                        //Do nothing with the number of likes
                         if (likeDrawIo.isLiked) {
                             likeDrawIo.isLiked = false
                         } else if (!likeDrawIo.isLiked) {
@@ -154,16 +155,19 @@ class MemeWorldAdapter(val context: Context, val itemClickListener: OnItemClickL
 
                         if (response.body()?.msg == "Meme unliked successfully.") {
 
-                            Log.e("ADapter", "In resp")
+                            Log.e("ADapter", "In response, meme unliked")
 
                             likeDrawIo.isLiked = false
-
+                            numLikes.text = (numLikes.text.toString().toInt() - 1).toString()
 
                             //Refresh the screen again
 
                         } else if (response.body()?.msg == "Meme liked successfully.") {
 
+
+                            Log.e("ADapter", "In  Like")
                             likeDrawIo.isLiked = true
+                            numLikes.text = (numLikes.text.toString().toInt() + 1).toString()
 
                             //Refresh the screen
 

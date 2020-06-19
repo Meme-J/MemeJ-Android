@@ -19,10 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.memej.R
-import com.example.memej.Utils.ApplicationUtil
-import com.example.memej.Utils.ErrorStatesResponse
-import com.example.memej.Utils.PreferenceUtil
-import com.example.memej.Utils.saveToInternalStorage
+import com.example.memej.Utils.*
 import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.adapters.TagAdapter
 import com.example.memej.adapters.UserAdapter
@@ -139,16 +136,17 @@ class CompletedMemeActivity : AppCompatActivity(), onUserClickType, onTagClickTy
 
         val map: Bitmap = ConvertToBitmap(photoView)
         Log.e("Share", "Value of bitmpa is" + map.toString())
-        val uri = map.saveToInternalStorage(this, imageName)
+        val uri = map.getImageUri(this, map)
+
         Log.e("Share", "Value of URi is" + uri)
 
-        val snack = Snackbar.make(
-            container_completeMeme,
-            "Unable to share at the moment",
-            Snackbar.LENGTH_SHORT
-        )
-        snack.show()
-//        this.shareCacheDirBitmap(uri, imageName,map)
+//        val snack = Snackbar.make(
+//            container_completeMeme,
+//            "Unable to share at the moment",
+//            Snackbar.LENGTH_SHORT
+//        )
+//        snack.show()
+        this.shareCacheDirBitmap(uri, imageName, map)
 
     }
 
