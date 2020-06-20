@@ -12,7 +12,6 @@ import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.RelativeLayout
@@ -22,6 +21,7 @@ import androidx.annotation.NonNull
 import androidx.annotation.Nullable
 import androidx.annotation.UiThread
 import com.example.memej.R
+import com.example.memej.textProperties.ConversionUtil
 import java.io.File
 import java.io.FileOutputStream
 import java.util.*
@@ -181,6 +181,16 @@ class Photo private constructor(builder: Builder) :
         val textRootView =
             getLayout(ViewType.TEXT)
 
+        addViewToParent(
+            textRootView,
+            ViewType.TEXT,
+            startX = startX,
+            startY = startY,
+            endX = endX,
+            endY = endY,
+            width = endX - startX,
+            height = endY - startY
+        )
         val textInputTv = textRootView!!.findViewById<TextView>(R.id.tvPhotoEditorTextNew)
         val imgClose =
             textRootView.findViewById<ImageView>(R.id.imgPhotoEditorClose)
@@ -195,11 +205,12 @@ class Photo private constructor(builder: Builder) :
         //Create layout
         val ht = endY - startY
         val wd = endX - startX
-
+        Log.e("Heihjt and width", ht.toString() + " " + wd.toString())
 
         if (textTypeface != null) {
             textInputTv.typeface = textTypeface
         }
+
 
         //Touch listener
         val multiTouchListener =
@@ -233,16 +244,6 @@ class Photo private constructor(builder: Builder) :
 //        val arrayList = getCoordinatesOfTheView(multiTouchListener, textRootView)
 
 
-        addViewToParent(
-            textRootView,
-            ViewType.TEXT,
-            startX = startX,
-            startY = startY,
-            endX = endX,
-            endY = endY,
-            width = wd,
-            height = ht
-        )
 //        return arrayList
     }
 
@@ -448,24 +449,37 @@ class Photo private constructor(builder: Builder) :
 
         childCount = childCount + 1
 
-        val params = RelativeLayout.LayoutParams(
-            ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
-        )
+//        val params = RelativeLayout.LayoutParams(
+//            ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
+//        )
+
+
         val p = RelativeLayout.LayoutParams(width, height)
 
         //Starting parameters for height and width
+        p.leftMargin = ConversionUtil.pxToDp(context, startX).toInt()
+        p.topMargin = ConversionUtil.pxToDp(context, startY).toInt()
 
-        params.setMargins(startX, startY, endX, endY)
+//        p.setMargins(startX, startY, endX, endY)
+
+        Log.e("Start X", startX.toString())
+        val conmv = ConversionUtil.pxToDp(context, startX)
+
+        Log.e("Start X", startX.toString() + " " + conmv.toString())
+
 
         //params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE)
 
-        parentView!!.addView(rootView, params)
+        parentView!!.addView(rootView, p)
         addedViews.add(rootView)
         if (mOnPhotoEditorListener != null) mOnPhotoEditorListener!!.onAddViewListener(
             viewType,
             addedViews.size
         )
-    }//multiTouchListener.setOnMultiTouchListener(this);
+    }
+
+
+    //multiTouchListener.setOnMultiTouchListener(this);
 
     /**
      * Create a new instance and scalable touchview
@@ -536,7 +550,7 @@ class Photo private constructor(builder: Builder) :
     }
 
 
-    fun getLayout(viewType: ViewType): View? {
+    private fun getLayout(viewType: ViewType): View? {
         var rootView: View? = null
 
         when (viewType) {

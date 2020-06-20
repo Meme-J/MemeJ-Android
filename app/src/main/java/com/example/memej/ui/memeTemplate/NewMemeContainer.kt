@@ -30,6 +30,7 @@ import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.SearchResponse
 import com.example.memej.responses.editMemeApiResponse
 import com.example.memej.responses.homeMememResponses.Coordinates
+import com.example.memej.textProperties.ConversionUtil
 import com.example.memej.textProperties.lib.ImageEditorView
 import com.example.memej.textProperties.lib.OnPhotoEditorListener
 import com.example.memej.textProperties.lib.Photo
@@ -501,23 +502,28 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
     private fun getCompleteCoordinatesToBeUsed() {
 
 
-        val xN =
-            arg.getParcelableArrayList<Coordinates>("coordinate")!!
+        //Convert the px values
+
+        val xN = arg.getParcelableArrayList<Coordinates>("coordinate")!!
                 .elementAt(0).x
-        val yN =
-            arg.getParcelableArrayList<Coordinates>("coordinate")!!
+
+        val yN = arg.getParcelableArrayList<Coordinates>("coordinate")!!
                 .elementAt(0).y
 
-        val xB =
-            arg.getParcelableArrayList<Coordinates>("coordinate")!!
+        val xB = arg.getParcelableArrayList<Coordinates>("coordinate")!!
                 .elementAt(1).x
         val yB =
             arg.getParcelableArrayList<Coordinates>("coordinate")!!
                 .elementAt(1).y
 
+
         val color = arg.getStringArrayList("textColorCode")!!.elementAt(0)
-        val size = arg.getIntegerArrayList("textSize")!!.elementAt(0)
+        val size = ConversionUtil.pxToSp(arg.getIntegerArrayList("textSize")!!.elementAt(0))
         val colorInt = Color.parseColor(color)
+        Log.e(
+            "Values",
+            xN.toString() + " " + yN.toString() + " " + xB.toString() + " " + yB.toString() + " " + size.toString()
+        )
 
         observeTextChange(arg, xN, yN, colorInt, size, xB, yB)
     }
@@ -528,7 +534,7 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
         xN: Int,
         yN: Int,
         colorInt: Int,
-        size: Int,
+        size: Float,
         xB: Int,
         yB: Int
     ) {

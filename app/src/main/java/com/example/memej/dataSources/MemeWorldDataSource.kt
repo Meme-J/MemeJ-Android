@@ -75,6 +75,7 @@ class MemeWorldDataSourcae(val context: Context, val searchQuery: queryBody, val
                             ).show()
                             pb.visibility = View.GONE
                             val i = Intent(context, MainActivity::class.java)
+                            i.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                             context.startActivity(i)
                         }
 
