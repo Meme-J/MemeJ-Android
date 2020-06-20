@@ -78,20 +78,20 @@ class HomeMemeDataSource(val context: Context, val searchquery: queryBody, val p
 
                         }
 
-//                        if (homePosts?.isEmpty()!!) {
-//
-//                            Log.e("Query", "In empty query,empty resp")
-//                            Toast.makeText(
-//                                context,
-//                                "Unable to get meme with this tag",
-//                                Toast.LENGTH_SHORT
-//                            ).show()
+                        if (homePosts?.isEmpty()!!) {
+
+                            Log.e("Query", "In empty query,empty resp")
+                            Toast.makeText(
+                                context,
+                                "Unable to get memes",
+                                Toast.LENGTH_SHORT
+                            ).show()
 //                            pb.visibility = View.GONE
 //                            val i = Intent(context, MainActivity::class.java)
 //                            i.flags = Intent.FLAG_ACTIVITY_NEW_TASK
 //                            context.startActivity(i)
-//
-//                        }
+
+                        }
 
                     } else {
                         val message = response.errorBody().toString()

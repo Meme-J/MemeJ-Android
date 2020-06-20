@@ -19,12 +19,18 @@ object ConversionUtil {
     fun pxToDp(context: Context, px: Int): Float {
         val GESTURE_THRESHOLD_DP = 16.0f
         val scale = context.resources.displayMetrics.density
-        Log.e("PX to dp",
+
+
+        Log.e(
+            "PX to dp",
             "The dpi " + scale.toString() + " " + context.resources.displayMetrics.densityDpi.toFloat()
-                .toString() + " " + DisplayMetrics.DENSITY_DEFAULT.toString()
+                .toString() + " " + DisplayMetrics.DENSITY_DEFAULT.toString() + " metrics"
         )
 
-        return px / (context.resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
+
+        return px / (context.resources.displayMetrics.density)
+
+//        return px / (context.resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
     }
 
     fun pxToSp(px: Int): Float {

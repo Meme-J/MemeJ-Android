@@ -70,13 +70,13 @@ class MemeWorldDataSourcae(val context: Context, val searchQuery: queryBody, val
                         if (memeWorldPosts?.isEmpty()!!) {
                             Toast.makeText(
                                 context,
-                                "Unable to get meme with this tag",
+                                "Unable to get memes ",
                                 Toast.LENGTH_LONG
                             ).show()
                             pb.visibility = View.GONE
-                            val i = Intent(context, MainActivity::class.java)
-                            i.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                            context.startActivity(i)
+//                            val i = Intent(context, MainActivity::class.java)
+//                            i.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+//                            context.startActivity(i)
                         }
 
 
