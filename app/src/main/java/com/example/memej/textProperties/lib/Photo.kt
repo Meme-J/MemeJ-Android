@@ -12,7 +12,6 @@ import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.RelativeLayout
@@ -22,6 +21,7 @@ import androidx.annotation.NonNull
 import androidx.annotation.Nullable
 import androidx.annotation.UiThread
 import com.example.memej.R
+import com.example.memej.textProperties.ConversionUtil
 import java.io.File
 import java.io.FileOutputStream
 import java.util.*
@@ -76,20 +76,20 @@ class Photo private constructor(builder: Builder) :
             override fun onLongClick() {}
         })
         imageRootView.setOnTouchListener(multiTouchListener)
-        addViewToParent(imageRootView, ViewType.IMAGE, 0, 0, 0, 0)
+        addViewToParent(imageRootView, ViewType.IMAGE, 0, 0, 0, 0, 0, 0)
     }
 
 
-    @SuppressLint("ClickableViewAccessibility")
-    fun addOldText(
-        text: String?, colorCodeTextView: Int, size: Float, startX: Int,
-        startY: Int,
-        endX: Int,
-        endY: Int
-    ) {
-        addOldText(null, text, colorCodeTextView, size, startX, startY, endX, endY)
-    }
-
+//    @SuppressLint("ClickableViewAccessibility")
+//    fun addOldText(
+//        text: String?, colorCodeTextView: Int, size: Float, startX: Int,
+//        startY: Int,
+//        endX: Int,
+//        endY: Int
+//    ) {
+//        addOldText(null, text, colorCodeTextView, size, startX, startY, endX, endY)
+//    }
+//
 
     @SuppressLint("ClickableViewAccessibility")
     fun addOldText(
@@ -97,25 +97,28 @@ class Photo private constructor(builder: Builder) :
         text: String?,
         colorCodeTextView: Int,
         size: Float,
-        startX: Int,
-        startY: Int,
-        endX: Int,
-        endY: Int
+        x1: Int,
+        y1: Int,
+        x2: Int,
+        y2: Int
     ) {
         brushDrawingView!!.brushDrawingMode = false
 
         val textRootView =
             getLatoutForOldText(ViewType.TEXT)
         val textInputTv = textRootView!!.findViewById<TextView>(R.id.tvPhotoEditorText)
+
         //Image closing button
 //        val imgClose =
 //            textRootView.findViewById<ImageView>(R.id.imgPhotoEditorClose)
 
 
         val frmBorder = textRootView.findViewById<FrameLayout>(R.id.frmBorder)
+
         textInputTv.text = text
         textInputTv.setTextColor(colorCodeTextView)
         textInputTv.textSize = size
+
 
         if (textTypeface != null) {
             textInputTv.typeface = textTypeface
@@ -145,7 +148,9 @@ class Photo private constructor(builder: Builder) :
             }
         })
 //        textRootView.setOnTouchListener(multiTouchListener)
-        addViewToParent(textRootView, ViewType.TEXT, startX, startY, endX, endY)
+
+
+        addViewToParent(textRootView, ViewType.TEXT, x1, y1, x2, y2, x2 - x1, y2 - y1)
     }
 
 
@@ -158,6 +163,7 @@ class Photo private constructor(builder: Builder) :
     ) {
         addText(null, text, colorCodeTextView, size, startX, startY, endX, endY)
     }
+
 
     @SuppressLint("ClickableViewAccessibility")
     fun addText(
@@ -174,17 +180,39 @@ class Photo private constructor(builder: Builder) :
 
         val textRootView =
             getLayout(ViewType.TEXT)
-        val textInputTv = textRootView!!.findViewById<TextView>(R.id.tvPhotoEditorText)
+
+        addViewToParent(
+            textRootView,
+            ViewType.TEXT,
+            startX = startX,
+            startY = startY,
+            endX = endX,
+            endY = endY,
+            width = endX - startX,
+            height = endY - startY
+        )
+        val textInputTv = textRootView!!.findViewById<TextView>(R.id.tvPhotoEditorTextNew)
         val imgClose =
             textRootView.findViewById<ImageView>(R.id.imgPhotoEditorClose)
         val frmBorder = textRootView.findViewById<FrameLayout>(R.id.frmBorder)
+
+
         textInputTv.text = text
         textInputTv.setTextColor(colorCodeTextView)
         textInputTv.textSize = size
 
+        //Req ht and width of the text box
+        //Create layout
+        val ht = endY - startY
+        val wd = endX - startX
+        Log.e("Heihjt and width", ht.toString() + " " + wd.toString())
+
         if (textTypeface != null) {
             textInputTv.typeface = textTypeface
         }
+
+
+        //Touch listener
         val multiTouchListener =
             multiTouchListener
         multiTouchListener!!.setOnGestureControl(object :
@@ -214,14 +242,8 @@ class Photo private constructor(builder: Builder) :
 
         //get the coordinates of this view
 //        val arrayList = getCoordinatesOfTheView(multiTouchListener, textRootView)
-        addViewToParent(
-            textRootView,
-            ViewType.TEXT,
-            startX = startX,
-            startY = startY,
-            endX = endX,
-            endY = endY
-        )
+
+
 //        return arrayList
     }
 
@@ -258,11 +280,22 @@ class Photo private constructor(builder: Builder) :
 
     }
 
-    fun editText(view: View, inputText: String?, colorCode: Int, size: Float) {
-        editText(view, null, inputText, colorCode, size)
+    fun editText(
+        view: View, inputText: String?, colorCode: Int, size: Float, startX: Int,
+        startY: Int,
+        endX: Int,
+        endY: Int
+    ) {
+        editText(
+            view, null, inputText, colorCode, size, startX,
+            startY,
+            endX,
+            endY
+        )
     }
 
     /**
+     * This will update the text and color on provided view
      * This will update the text and color on provided view
      *
      * @param view         root view where text view is a child
@@ -277,14 +310,33 @@ class Photo private constructor(builder: Builder) :
         textTypeface: Typeface?,
         inputText: String?,
         colorCode: Int,
-        size: Float
+        size: Float,
+        startX: Int,
+        startY: Int,
+        endX: Int,
+        endY: Int
+
     ) {
-        val inputTextView = view.findViewById<TextView>(R.id.tvPhotoEditorText)
+
+        brushDrawingView!!.brushDrawingMode = false
+
+        val editTextRootView =
+            getLayout(ViewType.EDIT_TEXT)
+
+        val inputTextView = editTextRootView!!.findViewById<TextView>(R.id.tvPhotoEditorTextNew)
+        val imgClose =
+            editTextRootView.findViewById<ImageView>(R.id.imgPhotoEditorClose)
+        val frmBorder = editTextRootView.findViewById<FrameLayout>(R.id.frmBorder)
+
+
         if (inputTextView != null && addedViews.contains(view) && !TextUtils.isEmpty(inputText)) {
+
             inputTextView.text = inputText
+
             if (textTypeface != null) {
                 inputTextView.typeface = textTypeface
             }
+
             inputTextView.setTextColor(colorCode)
             inputTextView.textSize = size
 
@@ -292,6 +344,21 @@ class Photo private constructor(builder: Builder) :
             val i = addedViews.indexOf(view)
             if (i > -1) addedViews[i] = view
         }
+        //Else add to views
+        else {
+            addEditTextToParentWithChange(
+                inputTextView,
+                ViewType.EDIT_TEXT,
+                startX = startX,
+                startY = startY,
+                endX = endX,
+                endY = endY,
+                width = endX - startX,
+                height = endY - startY
+            )
+
+        }
+
     }
 
     fun addEmoji(emojiName: String?) {
@@ -326,7 +393,7 @@ class Photo private constructor(builder: Builder) :
             override fun onLongClick() {}
         })
         emojiRootView.setOnTouchListener(multiTouchListener)
-        addViewToParent(emojiRootView, ViewType.EMOJI, 0, 0, 0, 0)
+        addViewToParent(emojiRootView, ViewType.EMOJI, 0, 0, 0, 0, 0, 0)
     }
 
     /**
@@ -335,6 +402,39 @@ class Photo private constructor(builder: Builder) :
      * @param rootView rootview of image,text and emoji
      */
 
+    fun addEditTextToParentWithChange(
+        rootView: View?,
+        viewType: ViewType,
+        startX: Int,
+        startY: Int,
+        endX: Int,
+        endY: Int,
+        width: Int,
+        height: Int
+    ) {
+        childCount = childCount + 1
+
+        val p = rootView!!.layoutParams
+        p.height = height
+        p.width = width
+        rootView.layoutParams = p
+
+//        val params = RelativeLayout.LayoutParams(width, height)
+//        params.setMargins(startX, startY, endX, endY)
+
+        //params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE)
+
+        parentView!!.removeView(rootView)
+        parentView.addView(rootView, p)
+        addedViews.add(rootView)
+        if (mOnPhotoEditorListener != null) mOnPhotoEditorListener!!.onAddViewListener(
+            viewType,
+            addedViews.size
+        )
+
+
+    }
+
 
     fun addViewToParent(
         rootView: View?,
@@ -342,23 +442,44 @@ class Photo private constructor(builder: Builder) :
         startX: Int,
         startY: Int,
         endX: Int,
-        endY: Int
+        endY: Int,
+        width: Int,
+        height: Int
     ) {
+
         childCount = childCount + 1
-        val params = RelativeLayout.LayoutParams(
-            ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
-        )
-        params.setMargins(startX, startY, endX, endY)
+
+//        val params = RelativeLayout.LayoutParams(
+//            ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
+//        )
+
+
+        val p = RelativeLayout.LayoutParams(width, height)
+
+        //Starting parameters for height and width
+        p.leftMargin = ConversionUtil.pxToDp(context, startX).toInt()
+        p.topMargin = ConversionUtil.pxToDp(context, startY).toInt()
+
+//        p.setMargins(startX, startY, endX, endY)
+
+        Log.e("Start X", startX.toString())
+        val conmv = ConversionUtil.pxToDp(context, startX)
+
+        Log.e("Start X", startX.toString() + " " + conmv.toString())
+
 
         //params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE)
 
-        parentView!!.addView(rootView, params)
+        parentView!!.addView(rootView, p)
         addedViews.add(rootView)
         if (mOnPhotoEditorListener != null) mOnPhotoEditorListener!!.onAddViewListener(
             viewType,
             addedViews.size
         )
-    }//multiTouchListener.setOnMultiTouchListener(this);
+    }
+
+
+    //multiTouchListener.setOnMultiTouchListener(this);
 
     /**
      * Create a new instance and scalable touchview
@@ -429,11 +550,28 @@ class Photo private constructor(builder: Builder) :
     }
 
 
-    fun getLayout(viewType: ViewType): View? {
+    private fun getLayout(viewType: ViewType): View? {
         var rootView: View? = null
+
         when (viewType) {
+
+
             ViewType.TEXT -> {
-                rootView = mLayoutInflater.inflate(R.layout.view_photo_editor_text, null)
+                rootView = mLayoutInflater.inflate(R.layout.view_editor_text_new, null)
+                val txtText = rootView.findViewById<TextView>(R.id.tvPhotoEditorTextNew)
+                if (txtText != null && mDefaultTextTypeface != null) {
+                    txtText.gravity = Gravity.CENTER
+                    if (mDefaultEmojiTypeface != null) {
+                        txtText.typeface = mDefaultTextTypeface
+                    }
+                }
+            }
+
+            ViewType.IMAGE -> rootView =
+                mLayoutInflater.inflate(R.layout.view_photo_editor_image, null)
+
+            ViewType.EDIT_TEXT -> {
+                rootView = mLayoutInflater.inflate(R.layout.view_editor_text_new, null)
                 val txtText = rootView.findViewById<TextView>(R.id.tvPhotoEditorText)
                 if (txtText != null && mDefaultTextTypeface != null) {
                     txtText.gravity = Gravity.CENTER
@@ -442,8 +580,7 @@ class Photo private constructor(builder: Builder) :
                     }
                 }
             }
-            ViewType.IMAGE -> rootView =
-                mLayoutInflater.inflate(R.layout.view_photo_editor_image, null)
+
             ViewType.EMOJI -> {
                 rootView = mLayoutInflater.inflate(R.layout.view_photo_editor_text, null)
                 val txtTextEmoji =
@@ -651,6 +788,7 @@ class Photo private constructor(builder: Builder) :
                     val out = FileOutputStream(file, false)
                     if (parentView != null) {
                         parentView.isDrawingCacheEnabled = true
+
                         val drawingCache = parentView.drawingCache
                         drawingCache.compress(Bitmap.CompressFormat.JPEG, 100, out)
                     }
@@ -705,6 +843,17 @@ class Photo private constructor(builder: Builder) :
     fun shareImage() {
 
 
+    }
+
+
+    fun getBitmapOfImage(photView: ImageEditorView): Bitmap? {
+
+        parentView?.isDrawingCacheEnabled = true
+
+        val drawingCache = parentView?.drawingCache
+//        drawingCache.compress(Bitmap.CompressFormat.JPEG, 100, out)
+
+        return drawingCache
     }
 
 

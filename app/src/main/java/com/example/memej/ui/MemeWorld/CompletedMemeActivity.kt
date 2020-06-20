@@ -1,5 +1,6 @@
 package com.example.memej.ui.MemeWorld
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.DownloadManager
 import android.app.ProgressDialog
@@ -7,6 +8,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
@@ -22,8 +24,8 @@ import com.example.memej.R
 import com.example.memej.Utils.ApplicationUtil
 import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.PreferenceUtil
-import com.example.memej.Utils.saveToInternalStorage
 import com.example.memej.Utils.sessionManagers.SessionManager
+import com.example.memej.Utils.shareCacheDirBitmap
 import com.example.memej.adapters.TagAdapter
 import com.example.memej.adapters.UserAdapter
 import com.example.memej.adapters.onTagClickType
@@ -131,24 +133,21 @@ class CompletedMemeActivity : AppCompatActivity(), onUserClickType, onTagClickTy
 
     }
 
+    @SuppressLint("SetWorldReadable")
     private fun shareMeme() {
 
         //Get layout
         val imageName = arg.getString("imageName") + "_" + arg.getString("lastUpdated")
         val imagePath = imageName + ".jpg"
 
-        val map: Bitmap = ConvertToBitmap(photoView)
-        Log.e("Share", "Value of bitmpa is" + map.toString())
-        val uri = map.saveToInternalStorage(this, imageName)
-        Log.e("Share", "Value of URi is" + uri)
+        Log.e("Share", "In share00")
 
-        val snack = Snackbar.make(
-            container_completeMeme,
-            "Unable to share at the moment",
-            Snackbar.LENGTH_SHORT
-        )
-        snack.show()
-//        this.shareCacheDirBitmap(uri, imageName,map)
+        val map = ConvertToBitmap(photoView)
+        val file = File(externalCacheDir, "images.png")
+        val uri = Uri.fromFile(file)
+
+        this.shareCacheDirBitmap(uri, "images", map)
+
 
     }
 
@@ -508,7 +507,7 @@ class CompletedMemeActivity : AppCompatActivity(), onUserClickType, onTagClickTy
                 arg.getParcelableArrayList<Coordinate>("templateIdCoordinates")!!
                     .elementAt(i + 1).y
 
-            photoGlobalEditor.addOldText(pl, colorInt, size.toFloat(), x1, y1, x2, y2)
+            photoGlobalEditor.addOldText(null, pl, colorInt, size.toFloat(), x1, y1, x2, y2)
         }
 
         Log.e("Complete", photoView.childCount.toString())

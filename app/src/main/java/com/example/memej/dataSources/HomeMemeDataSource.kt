@@ -36,7 +36,7 @@ class HomeMemeDataSource(val context: Context, val searchquery: queryBody, val p
         apiService.fetchEditableMemes(
             loadSize = params.requestedLoadSize,
             accessToken = "Bearer ${sessionManager.fetchAcessToken()}",
-            tags = searchquery
+            search = searchquery
         )
             .enqueue(object : Callback<homeMemeApiResponse> {
                 override fun onFailure(call: Call<homeMemeApiResponse>, t: Throwable) {
@@ -53,97 +53,45 @@ class HomeMemeDataSource(val context: Context, val searchquery: queryBody, val p
                 ) {
 
 
+                    Log.e("Response", response.body().toString())
+                    Log.e("Value query", searchquery.toString())
+
+
                     if (response.isSuccessful) {
                         val listing = response.body()
                         val homePosts = listing?.memes
                         val size = homePosts?.size
 
-                        //When a notmal request sent
-                        if (searchquery.tags == "") {
-                            Log.e("Query", "In empty query")
-                            if (homePosts != null && homePosts.isNotEmpty()) {
+                        Log.e("Query", "In empty query")
+                        if (homePosts != null && homePosts.isNotEmpty()) {
 
-                                Log.e("Query", "In empty query, not empty resp")
+                            Log.e("Query", "In empty query, not empty resp")
 
-                                callback.onResult(
+                            callback.onResult(
 
-                                    homePosts,
-                                    null,       //Last Key
-                                    listing.lastMemeId         //Before value
+                                homePosts,
+                                null,       //Last Key
+                                listing.lastMemeId         //Before value
 
-                                )
-                                pb.visibility = View.GONE
-
-                            }
-
-                            if (homePosts?.isEmpty()!!) {
-
-                                Log.e("Query", "In empty query,empty resp")
-                                Toast.makeText(
-                                    context,
-                                    "Unable to get meme with this tag",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                                pb.visibility = View.GONE
-                                val i = Intent(context, MainActivity::class.java)
-                                i.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                context.startActivity(i)
-
-                            }
-                        } else if (!searchquery.tags.equals("")) {
-
-
-                            Log.e("Query", "In  query, ")
-                            //Create a new empty array list
-                            val listFiltered: MutableList<Meme_Home> = mutableListOf()
-                            Log.e("List filtered initial", listFiltered.toString())
-                            Log.e("Size", size.toString())
-
-                            if (size != null) {
-                                for (i in 0 until size - 1) {
-                                    val templateIdTag = homePosts.elementAt(i).templateId.tags
-                                    val memeTag = homePosts.elementAt(i).tags
-                                    Log.e("This", templateIdTag.toString())
-
-                                    if (memeTag.contains(searchquery.tags)) {
-                                        listFiltered.add(homePosts.elementAt(i))
-                                    } else if (templateIdTag.contains(searchquery.tags)) {
-                                        listFiltered.add(homePosts.elementAt(i))
-                                    }
-
-                                }
-                            }
-
-                            Log.e("Query", listFiltered.toString() + listFiltered.size)
-
-                            if (listFiltered.isNotEmpty()) {
-                                Log.e("Query", "In non empty ")
-
-                                callback.onResult(
-
-                                    listFiltered,
-                                    null,       //Last Key
-                                    null
-                                )
-                                pb.visibility = View.GONE
-
-                            } else if (listFiltered.isEmpty()) {
-                                Log.e("Query", "In empty ")
-
-                                Toast.makeText(
-                                    context,
-                                    "Unable to get meme with this tag",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                                pb.visibility = View.GONE
-                                val i = Intent(context, MainActivity::class.java)
-                                i.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                context.startActivity(i)
-
-
-                            }
+                            )
+                            pb.visibility = View.GONE
 
                         }
+
+//                        if (homePosts?.isEmpty()!!) {
+//
+//                            Log.e("Query", "In empty query,empty resp")
+//                            Toast.makeText(
+//                                context,
+//                                "Unable to get meme with this tag",
+//                                Toast.LENGTH_SHORT
+//                            ).show()
+//                            pb.visibility = View.GONE
+//                            val i = Intent(context, MainActivity::class.java)
+//                            i.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+//                            context.startActivity(i)
+//
+//                        }
 
                     } else {
                         val message = response.errorBody().toString()
@@ -168,7 +116,7 @@ class HomeMemeDataSource(val context: Context, val searchquery: queryBody, val p
         apiService.fetchEditableMemes(
             loadSize = params.requestedLoadSize,
             accessToken = "Bearer ${sessionManager.fetchAcessToken()}",
-            tags = searchquery
+            search = searchquery
         )
             .enqueue(object : Callback<homeMemeApiResponse> {
                 override fun onFailure(call: Call<homeMemeApiResponse>, t: Throwable) {
@@ -190,79 +138,26 @@ class HomeMemeDataSource(val context: Context, val searchquery: queryBody, val p
                         val homePosts = listing?.memes
                         val size = homePosts?.size
 
-                        if (searchquery.tags == "") {
-                            if (homePosts != null && homePosts.isNotEmpty()) {
-                                callback.onResult(
-                                    homePosts,
-                                    listing.lastMemeId
-                                )
-
-                                if (homePosts.isEmpty()) {
-                                    Toast.makeText(
-                                        context,
-                                        "Unable to get meme with this tag",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                    pb.visibility = View.GONE
-                                    val i = Intent(context, MainActivity::class.java)
-                                    context.startActivity(i)
-                                }
-
-                            }
-                            pb.visibility = View.GONE
-                        } else if (!searchquery.tags.equals("")) {
-
-
-                            Log.e("Query", "In  query, ")
-                            //Create a new empty array list
-                            val listFiltered: MutableList<Meme_Home> = mutableListOf()
-                            Log.e("List filtered initial", listFiltered.toString())
-                            Log.e("Size", size.toString())
-
-                            if (size != null) {
-                                for (i in 0 until size - 1) {
-                                    val templateIdTag = homePosts.elementAt(i).templateId.tags
-                                    val memeTag = homePosts.elementAt(i).tags
-                                    Log.e("This", templateIdTag.toString())
-
-                                    if (memeTag.contains(searchquery.tags)) {
-                                        listFiltered.add(homePosts.elementAt(i))
-                                    } else if (templateIdTag.contains(searchquery.tags)) {
-                                        listFiltered.add(homePosts.elementAt(i))
-                                    }
-
-                                }
-                            }
-
-                            Log.e("Query", listFiltered.toString() + listFiltered.size)
-
-                            if (listFiltered.isNotEmpty()) {
-                                Log.e("Query", "In non empty ")
-
-                                callback.onResult(
-
-                                    listFiltered,
-                                    null     //Last Key
-                                )
-                                pb.visibility = View.GONE
-
-                            } else if (listFiltered.isEmpty()) {
-                                Log.e("Query", "In empty ")
-
-                                Toast.makeText(
-                                    context,
-                                    "Unable to get meme with this tag",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                                pb.visibility = View.GONE
-                                val i = Intent(context, MainActivity::class.java)
-                                i.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                context.startActivity(i)
-
-
-                            }
-
+                        if (homePosts != null && homePosts.isNotEmpty()) {
+                            callback.onResult(
+                                homePosts,
+                                listing.lastMemeId
+                            )
                         }
+                        if (homePosts!!.isEmpty()) {
+                            Toast.makeText(
+                                context,
+                                "Unable to get meme with this tag",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            pb.visibility = View.GONE
+                            val i = Intent(context, MainActivity::class.java)
+                            context.startActivity(i)
+                        }
+
+
+                        pb.visibility = View.GONE
+
 
                     } else {
                         val message = response.errorBody().toString()

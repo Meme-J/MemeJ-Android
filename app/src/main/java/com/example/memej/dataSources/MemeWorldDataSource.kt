@@ -2,7 +2,6 @@ package com.example.memej.dataSources
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
@@ -34,7 +33,7 @@ class MemeWorldDataSourcae(val context: Context, val searchQuery: queryBody, val
         apiService.fetchMemeWorldMemes(
             loadSize = params.requestedLoadSize,
             accessToken = "Bearer ${sessionManager.fetchAcessToken()}",
-            tag = searchQuery
+            search = searchQuery
         )
             .enqueue(object : Callback<memeApiResponses> {
                 override fun onFailure(call: Call<memeApiResponses>, t: Throwable) {
@@ -55,83 +54,31 @@ class MemeWorldDataSourcae(val context: Context, val searchQuery: queryBody, val
                         val memeWorldPosts = listing?.memes
                         val size = memeWorldPosts?.size
 
-                        if (searchQuery.tags == "") {
-                            if (memeWorldPosts != null && memeWorldPosts.isNotEmpty()) {
 
-                                callback.onResult(
+                        if (memeWorldPosts != null && memeWorldPosts.isNotEmpty()) {
 
-                                    memeWorldPosts,
-                                    null,       //Last Key
-                                    listing.lastMemeId         //Before value
+                            callback.onResult(
 
-                                )
-                                pb.visibility = View.GONE
+                                memeWorldPosts,
+                                null,       //Last Key
+                                listing.lastMemeId         //Before value
 
-                            }
-                            if (memeWorldPosts?.isEmpty()!!) {
-                                Toast.makeText(
-                                    context,
-                                    "Unable to get meme with this tag",
-                                    Toast.LENGTH_LONG
-                                ).show()
-                                pb.visibility = View.GONE
-                                val i = Intent(context, MainActivity::class.java)
-                                context.startActivity(i)
-                            }
-                        } else if (!searchQuery.tags.equals("")) {
-
-
-                            Log.e("Query", "In  query, ")
-                            //Create a new empty array list
-                            val listFiltered: MutableList<Meme_World> = mutableListOf()
-                            Log.e("List filtered initial", listFiltered.toString())
-                            Log.e("Size", size.toString())
-
-                            if (size != null) {
-                                for (i in 0 until size - 1) {
-                                    val templateIdTag = memeWorldPosts.elementAt(i).templateId.tags
-                                    val memeTag = memeWorldPosts.elementAt(i).tags
-                                    Log.e("This", templateIdTag.toString())
-
-                                    if (memeTag.contains(searchQuery.tags)) {
-                                        listFiltered.add(memeWorldPosts.elementAt(i))
-                                    } else if (templateIdTag.contains(searchQuery.tags)) {
-                                        listFiltered.add(memeWorldPosts.elementAt(i))
-                                    }
-
-                                }
-                            }
-
-                            Log.e("Query", listFiltered.toString() + listFiltered.size)
-
-                            if (listFiltered.isNotEmpty()) {
-                                Log.e("Query", "In non empty ")
-
-                                callback.onResult(
-
-                                    listFiltered,
-                                    null,       //Last Key
-                                    null
-                                )
-                                pb.visibility = View.GONE
-
-                            } else if (listFiltered.isEmpty()) {
-                                Log.e("Query", "In empty ")
-
-                                Toast.makeText(
-                                    context,
-                                    "Unable to get meme with this tag",
-                                    Toast.LENGTH_LONG
-                                ).show()
-                                pb.visibility = View.GONE
-                                val i = Intent(context, MainActivity::class.java)
-                                i.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                context.startActivity(i)
-
-
-                            }
+                            )
+                            pb.visibility = View.GONE
 
                         }
+                        if (memeWorldPosts?.isEmpty()!!) {
+                            Toast.makeText(
+                                context,
+                                "Unable to get meme with this tag",
+                                Toast.LENGTH_LONG
+                            ).show()
+                            pb.visibility = View.GONE
+                            val i = Intent(context, MainActivity::class.java)
+                            i.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            context.startActivity(i)
+                        }
+
 
                     } else {
 
@@ -154,7 +101,7 @@ class MemeWorldDataSourcae(val context: Context, val searchQuery: queryBody, val
         apiService.fetchMemeWorldMemes(
             loadSize = params.requestedLoadSize,
             accessToken = "Bearer " + sessionManager.fetchAcessToken(),
-            tag = searchQuery
+            search = searchQuery
         )
             .enqueue(object : Callback<memeApiResponses> {
                 override fun onFailure(call: Call<memeApiResponses>, t: Throwable) {
@@ -178,79 +125,24 @@ class MemeWorldDataSourcae(val context: Context, val searchQuery: queryBody, val
                         val size = memePosts?.size
 
 
-                        if (searchQuery.tags.equals("")) {
-                            if (memePosts != null && memePosts.isNotEmpty()) {
-                                callback.onResult(
-                                    memePosts,
-                                    listing.lastMemeId
-                                )
-                            }
-
-                            if (memePosts?.isEmpty()!!) {
-                                Toast.makeText(
-                                    context,
-                                    "Unable to get meme wioth this tag",
-                                    Toast.LENGTH_LONG
-                                ).show()
-                                pb.visibility = View.GONE
-                                val i = Intent(context, MainActivity::class.java)
-                                context.startActivity(i)
-                            }
-                            pb.visibility = View.GONE
-
-                        } else if (!searchQuery.tags.equals("")) {
-
-
-                            Log.e("Query", "In  query, ")
-                            //Create a new empty array list
-                            val listFiltered: MutableList<Meme_World> = mutableListOf()
-                            Log.e("List filtered initial", listFiltered.toString())
-                            Log.e("Size", size.toString())
-
-                            if (size != null) {
-                                for (i in 0 until size - 1) {
-                                    val templateIdTag = memePosts.elementAt(i).templateId.tags
-                                    val memeTag = memePosts.elementAt(i).tags
-                                    Log.e("This", templateIdTag.toString())
-
-                                    if (memeTag.contains(searchQuery.tags)) {
-                                        listFiltered.add(memePosts.elementAt(i))
-                                    } else if (templateIdTag.contains(searchQuery.tags)) {
-                                        listFiltered.add(memePosts.elementAt(i))
-                                    }
-
-                                }
-                            }
-
-                            Log.e("Query", listFiltered.toString() + listFiltered.size)
-
-                            if (listFiltered.isNotEmpty()) {
-                                Log.e("Query", "In non empty ")
-
-                                callback.onResult(
-
-                                    listFiltered,
-                                    null      //Last Key
-                                )
-                                pb.visibility = View.GONE
-
-                            } else if (listFiltered.isEmpty()) {
-                                Log.e("Query", "In empty ")
-
-                                Toast.makeText(
-                                    context,
-                                    "Unable to get meme with this tag",
-                                    Toast.LENGTH_LONG
-                                ).show()
-                                pb.visibility = View.GONE
-                                val i = Intent(context, MainActivity::class.java)
-                                i.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                context.startActivity(i)
-
-
-                            }
-
+                        if (memePosts != null && memePosts.isNotEmpty()) {
+                            callback.onResult(
+                                memePosts,
+                                listing.lastMemeId
+                            )
                         }
+
+                        if (memePosts?.isEmpty()!!) {
+                            Toast.makeText(
+                                context,
+                                "Unable to get meme wioth this tag",
+                                Toast.LENGTH_LONG
+                            ).show()
+                            pb.visibility = View.GONE
+                            val i = Intent(context, MainActivity::class.java)
+                            context.startActivity(i)
+                        }
+                        pb.visibility = View.GONE
 
 
                     } else {

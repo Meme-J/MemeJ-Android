@@ -78,6 +78,11 @@ class HomeMemeAdapter(val itemClickListener: OnItemClickListenerHome) :
         ) {
             val currentStage = _homeMeme.stage
             val c = 2 * currentStage - 1
+            val mPhotBuilView = Photo.Builder(
+                context = context, photoEditorView = photoView
+            ).setPinchTextScalable(false)
+                .build()
+
 
             for (i in 0..c step 2) {
 
@@ -99,12 +104,16 @@ class HomeMemeAdapter(val itemClickListener: OnItemClickListenerHome) :
                 val y2 =
                     _homeMeme.templateId.coordinates.elementAt(i + 1).y
 
-                val mPhotBuilView = Photo.Builder(
-                    context = context, photoEditorView = photoView
+                mPhotBuilView.addOldText(
+                    null,
+                    text = pl,
+                    colorCodeTextView = colorInt,
+                    size = size.toFloat(),
+                    x1 = x1,
+                    y1 = y1,
+                    x2 = x2,
+                    y2 = y2
                 )
-                    .setPinchTextScalable(false)
-                    .build()
-                mPhotBuilView.addOldText(pl, colorInt, size.toFloat(), x1, y1, x2, y2)
 
             }
         }

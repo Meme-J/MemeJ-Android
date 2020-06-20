@@ -2,7 +2,6 @@ package com.example.memej.ui.home
 
 
 import android.app.ProgressDialog
-import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Path
@@ -16,9 +15,7 @@ import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.ProgressBar
-import android.widget.SeekBar
 import androidx.activity.viewModels
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.databinding.DataBindingUtil
@@ -44,9 +41,6 @@ import com.example.memej.textProperties.lib.Photo
 import com.example.memej.textProperties.lib.ViewType
 import com.example.memej.textProperties.projectResources
 import com.example.memej.viewModels.EditMemeContainerViewModel
-import com.github.dhaval2404.colorpicker.MaterialColorPickerDialog
-import com.github.dhaval2404.colorpicker.model.ColorShape
-import com.github.dhaval2404.colorpicker.model.ColorSwatch
 import com.google.android.material.button.MaterialButton
 import retrofit2.Call
 import retrofit2.Callback
@@ -103,7 +97,7 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
         type_face = tf
         paint_chosen = Color.parseColor("#000000")      //Default color
         size_chosen = 20f
-        colorIndicator = root.colorIndicator
+        // colorIndicator = root.colorIndicator
 
         arg = intent?.getBundleExtra("bundle")!!
         photoView = root.imageViewEditMeme
@@ -127,25 +121,26 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
         mutableList = mutableListOf()           //Empty list
 
         //root.rel_layout.setBackgroundColor(getColorWithAlpha(Color.DKGRAY, 0.2f));
-        val colors = root.chooseColor
-        val font = root.chooseFont
-        val size = root.chooseSize
+//        val colors = root.chooseColor
+//        val font = root.chooseFont
+//        val size = root.chooseSize
 
 
         //request focus for edt
         edt.requestFocus()
-        colors.setOnClickListener {
-            chooseColor()
-        }
-        font.setOnClickListener {
-            chooseFont()
-        }
-        size.setOnClickListener {
-            chooseSizeText()
-        }
-        colorIndicator.setOnClickListener {
-            chooseColor()
-        }
+
+//        colors.setOnClickListener {
+//            chooseColor()
+//        }
+//        font.setOnClickListener {
+//            chooseFont()
+//        }
+//        size.setOnClickListener {
+//            chooseSizeText()
+//        }
+//        colorIndicator.setOnClickListener {
+//            chooseColor()
+//        }
 
 
         //Tags list
@@ -204,137 +199,137 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
 
     }
 
-    private fun chooseSizeText() {
-        //Use a seek bar
+//    private fun chooseSizeText() {
+//        //Use a seek bar
+//
+//        val popDialog =
+//            AlertDialog.Builder(this)
+//
+//
+//        val seek = SeekBar(this)
+//        seek.max = 40
+//        seek.progress = whichProgress
+//        seek.keyProgressIncrement = 2
+//
+//        popDialog.setTitle("Select Size")
+//        popDialog.setView(seek)
+//        popDialog.setMessage("Choose a size")
+//
+//        seek.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+//            override fun onProgressChanged(
+//                seekBar: SeekBar?,
+//                progress: Int,
+//                fromUser: Boolean
+//            ) {
+//                size_chosen = progress.toFloat()
+//                whichProgress = progress
+//            }
+//
+//            override fun onStartTrackingTouch(arg0: SeekBar?) {
+//
+//            }
+//
+//            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+//                Log.e("Size", seek.progress.toString())
+//            }
+//        })
+//
+//        popDialog.setPositiveButton("OK",
+//            object : DialogInterface.OnClickListener {
+//                override fun onClick(dialog: DialogInterface, which: Int) {
+//
+//                    dialog.dismiss()
+//                }
+//            })
+//        popDialog.create()
+//        popDialog.show()
+//
+//
+//    }
 
-        val popDialog =
-            AlertDialog.Builder(this)
+    //private fun chooseFont() {
 
+//        var typeface = Typeface.DEFAULT
+//        //Choose Font
+//        val builder = AlertDialog.Builder(this)
+//        builder.setTitle("Choose a font")
+//
+//        //Create List
+//        val font_list = R.array.font_types
+//
+//        val checkedItem = whichFont     //Arial
+//
+//        builder.setSingleChoiceItems(
+//            font_list,
+//            checkedItem
+//        ) { dialog, which ->
+//            // user checked an item
+//            whichFont = which
+//            when (which) {
+//                0 -> typeface = Typeface.createFromAsset(assets, "arial.ttf")
+//                1 -> typeface = Typeface.createFromAsset(assets, "long_fox_font.ttf")
+//                2 -> typeface = Typeface.createFromAsset(assets, "bomb_font.ttf")
+//                3 -> typeface = Typeface.createFromAsset(assets, "romot_reavers_font.ttf")
+//                4 -> typeface = Typeface.createFromAsset(assets, "fonty_font.ttf")
+//            }
+//            type_face = typeface
+//
+//        }
+//
+//        builder.setPositiveButton(
+//            "OK"
+//        ) { dialog, which ->
+//
+//
+//            when (which) {
+//                0 -> typeface = Typeface.createFromAsset(assets, "arial.ttf")
+//                1 -> typeface = Typeface.createFromAsset(assets, "long_fox_font.ttf")
+//                2 -> typeface = Typeface.createFromAsset(assets, "bomb_font.ttf")
+//                3 -> typeface = Typeface.createFromAsset(assets, "romot_reavers_font.ttf")
+//                4 -> typeface = Typeface.createFromAsset(assets, "fonty_font.ttf")
+//            }
+//            type_face = typeface
+//            Log.e("Font", typeface.toString())
+//            dialog.dismiss()
+//
+//        }
+//        builder.setNegativeButton("Cancel", null)
+//
+//        val dialog = builder.create()
+//        dialog.show()
+//
+//
+//    }
 
-        val seek = SeekBar(this)
-        seek.max = 40
-        seek.progress = whichProgress
-        seek.keyProgressIncrement = 2
-
-        popDialog.setTitle("Select Size")
-        popDialog.setView(seek)
-        popDialog.setMessage("Choose a size")
-
-        seek.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(
-                seekBar: SeekBar?,
-                progress: Int,
-                fromUser: Boolean
-            ) {
-                size_chosen = progress.toFloat()
-                whichProgress = progress
-            }
-
-            override fun onStartTrackingTouch(arg0: SeekBar?) {
-
-            }
-
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                Log.e("Size", seek.progress.toString())
-            }
-        })
-
-        popDialog.setPositiveButton("OK",
-            object : DialogInterface.OnClickListener {
-                override fun onClick(dialog: DialogInterface, which: Int) {
-
-                    dialog.dismiss()
-                }
-            })
-        popDialog.create()
-        popDialog.show()
-
-
-    }
-
-    private fun chooseFont() {
-
-        var typeface = Typeface.DEFAULT
-        //Choose Font
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Choose a font")
-
-        //Create List
-        val font_list = R.array.font_types
-
-        val checkedItem = whichFont     //Arial
-
-        builder.setSingleChoiceItems(
-            font_list,
-            checkedItem
-        ) { dialog, which ->
-            // user checked an item
-            whichFont = which
-            when (which) {
-                0 -> typeface = Typeface.createFromAsset(assets, "arial.ttf")
-                1 -> typeface = Typeface.createFromAsset(assets, "long_fox_font.ttf")
-                2 -> typeface = Typeface.createFromAsset(assets, "bomb_font.ttf")
-                3 -> typeface = Typeface.createFromAsset(assets, "romot_reavers_font.ttf")
-                4 -> typeface = Typeface.createFromAsset(assets, "fonty_font.ttf")
-            }
-            type_face = typeface
-
-        }
-
-        builder.setPositiveButton(
-            "OK"
-        ) { dialog, which ->
-
-
-            when (which) {
-                0 -> typeface = Typeface.createFromAsset(assets, "arial.ttf")
-                1 -> typeface = Typeface.createFromAsset(assets, "long_fox_font.ttf")
-                2 -> typeface = Typeface.createFromAsset(assets, "bomb_font.ttf")
-                3 -> typeface = Typeface.createFromAsset(assets, "romot_reavers_font.ttf")
-                4 -> typeface = Typeface.createFromAsset(assets, "fonty_font.ttf")
-            }
-            type_face = typeface
-            Log.e("Font", typeface.toString())
-            dialog.dismiss()
-
-        }
-        builder.setNegativeButton("Cancel", null)
-
-        val dialog = builder.create()
-        dialog.show()
-
-
-    }
-
-    private fun chooseColor() {
-
-        this.let {
-            MaterialColorPickerDialog
-                .Builder(it)                                              // Pass Activity Instance
-                .setColorShape(ColorShape.SQAURE)
-                .setTitle("Pick a color") // Default ColorShape.CIRCLE
-                .setPositiveButton("Select")
-                .setDefaultColor(whichPaint)
-                .setNegativeButton("Cancel")
-                .setColorSwatch(ColorSwatch._300)    // Default ColorSwatch._500
-                .setColorRes(
-
-                    resources.getIntArray(R.array.themeColors).toList()
-                )    // Pass Default Color
-                .setColorListener { color, colorHex ->
-                    // Handle Color Selection
-
-                    //Set the paint brush to be valued for this color
-                    //Pass the color hex
-                    paint_chosen = color
-                    colorIndicator.setCardBackgroundColor(color)
-                    whichPaint = color
-                    Log.e("Color", paint_chosen.toString())
-                }
-                .show()
-        }
-
-    }
+//   private fun chooseColor() {
+//
+//        this.let {
+//            MaterialColorPickerDialog
+//                .Builder(it)                                              // Pass Activity Instance
+//                .setColorShape(ColorShape.SQAURE)
+//                .setTitle("Pick a color") // Default ColorShape.CIRCLE
+//                .setPositiveButton("Select")
+//                .setDefaultColor(whichPaint)
+//                .setNegativeButton("Cancel")
+//                .setColorSwatch(ColorSwatch._300)    // Default ColorSwatch._500
+//                .setColorRes(
+//
+//                    resources.getIntArray(R.array.themeColors).toList()
+//                )    // Pass Default Color
+//                .setColorListener { color, colorHex ->
+//                    // Handle Color Selection
+//
+//                    //Set the paint brush to be valued for this color
+//                    //Pass the color hex
+//                    paint_chosen = color
+//                    colorIndicator.setCardBackgroundColor(color)
+//                    whichPaint = color
+//                    Log.e("Color", paint_chosen.toString())
+//                }
+//                .show()
+//        }
+//
+//    }
 
     private fun setInTagRv() {
         val rvTagEdits = root.rvInsertedTags
@@ -551,7 +546,8 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
             val y2 =
                 arg.getParcelableArrayList<Coordinates>("templateIdCoordinates")!!
                     .elementAt(i + 1).y
-            photoVieGlobal.addOldText(type_face, pl, colorInt, size.toFloat(), x1, y1, x2, y2)
+
+            photoVieGlobal.addOldText(null, pl, colorInt, size.toFloat(), x1, y1, x2, y2)
         }
 
         val xN =
@@ -568,8 +564,8 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
                 .elementAt(c + 2).y
 
 
-        val color = arg.getStringArrayList("paint")!!.elementAt(0)
-        val size = arg.getIntegerArrayList("size")!!.elementAt(0)
+        val color = arg.getStringArrayList("paint")!!.elementAt(currentStage)
+        val size = arg.getIntegerArrayList("size")!!.elementAt(currentStage)
         val colorInt = Color.parseColor(color)
 
 
@@ -616,13 +612,27 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
                 count: Int,
                 after: Int
             ) {
+
+//                photoEditorClass.editText(
+//                    edt as View,
+//                    s.toString(),
+//                    colorInt,
+//                    size.toFloat(),
+//                    xN,
+//                    yN,
+//                    xB,
+//                    yB
+//                )
+
                 photoEditorClass.clearAllViews()
                 //Return nothing
                 photoEditorClass.addText(
-                    type_face,
+                    //     type_face,
                     s.toString(),
-                    paint_chosen,
-                    size_chosen,
+//                    paint_chosen,
+                    colorInt,
+                    size.toFloat(),
+//                    size_chosen,
                     xN,
                     yN,
                     xB,
@@ -638,13 +648,27 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
                 count: Int
             ) {
 
+
+//                photoEditorClass.editText(
+//                    edt as View,
+//                    s.toString(),
+//                    colorInt,
+//                    size.toFloat(),
+//                    xN,
+//                    yN,
+//                    xB,
+//                    yB
+//                )
+
                 photoEditorClass.clearAllViews()
                 //Return nothing
                 photoEditorClass.addText(
-                    type_face,
+//                    type_face,
                     s.toString(),
-                    paint_chosen,
-                    size_chosen,
+                    colorInt,
+                    size.toFloat(),
+//                    paint_chosen,
+//                    size_chosen,
                     xN,
                     yN,
                     xB,
@@ -679,7 +703,7 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
 
         //Get the layout parameters of the view
         //Finally
-        photoEditorClass.clearAllViews()
+        // photoEditorClass.clearAllViews()
         //Return nothing
 //        val arrayList =
 //            photoEditorClass.addText(type_face, edt.text.toString(), paint_chosen, size_chosen)

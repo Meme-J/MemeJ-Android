@@ -15,14 +15,12 @@
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/rel_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="56dp">
+        android:layout_height="match_parent">
 
         <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="@dimen/edit_meme_card_width"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerInParent="true"
+            android:layout_centerHorizontal="true"
             android:layout_gravity="center"
             android:layout_margin="12dp"
             android:elevation="40dp"
@@ -77,42 +75,42 @@
 
                     <!--                Style Picker-->
                     <!--                Style Picker-->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/margins"
-                        android:elevation="@dimen/margin_20dp"
-                        android:orientation="horizontal">
+                    <!--                    <LinearLayout-->
+                    <!--                        android:layout_width="match_parent"-->
+                    <!--                        android:layout_height="wrap_content"-->
+                    <!--                        android:layout_margin="@dimen/margins"-->
+                    <!--                        android:elevation="@dimen/margin_20dp"-->
+                    <!--                        android:orientation="horizontal">-->
 
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/choose_colorR"
-                            style="@style/stylePick"
-                            android:layout_marginStart="@dimen/margins"
-                            android:text="@string/choose_color" />
+                    <!--                        <com.google.android.material.textview.MaterialTextView-->
+                    <!--                            android:id="@+id/choose_colorR"-->
+                    <!--                            style="@style/stylePick"-->
+                    <!--                            android:layout_marginStart="@dimen/margins"-->
+                    <!--                            android:text="@string/choose_color" />-->
 
-                        <androidx.cardview.widget.CardView
-                            android:id="@+id/colorIndicatorR"
-                            android:layout_width="@dimen/margin_20dp"
-                            android:layout_height="@dimen/margin_20dp"
-                            android:layout_gravity="center"
-                            android:layout_marginEnd="12dp"
-                            android:elevation="@dimen/margin_20dp"
-                            app:cardBackgroundColor="@color/black"
-                            app:cornerRadius="@dimen/margin_20dp" />
+                    <!--                        <androidx.cardview.widget.CardView-->
+                    <!--                            android:id="@+id/colorIndicatorR"-->
+                    <!--                            android:layout_width="@dimen/margin_20dp"-->
+                    <!--                            android:layout_height="@dimen/margin_20dp"-->
+                    <!--                            android:layout_gravity="center"-->
+                    <!--                            android:layout_marginEnd="12dp"-->
+                    <!--                            android:elevation="@dimen/margin_20dp"-->
+                    <!--                            app:cardBackgroundColor="@color/black"-->
+                    <!--                            app:cornerRadius="@dimen/margin_20dp" />-->
 
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/choose_fontR"
-                            style="@style/stylePick"
-                            android:text="@string/choose_font" />
-
-
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/choose_sizeR"
-                            style="@style/stylePick"
-                            android:text="@string/size" />
+                    <!--                        <com.google.android.material.textview.MaterialTextView-->
+                    <!--                            android:id="@+id/choose_fontR"-->
+                    <!--                            style="@style/stylePick"-->
+                    <!--                            android:text="@string/choose_font" />-->
 
 
-                    </LinearLayout>
+                    <!--                        <com.google.android.material.textview.MaterialTextView-->
+                    <!--                            android:id="@+id/choose_sizeR"-->
+                    <!--                            style="@style/stylePick"-->
+                    <!--                            android:text="@string/size" />-->
+
+
+                    <!--                    </LinearLayout>-->
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -121,7 +119,7 @@
                         android:orientation="horizontal">
 
                         <EditText
-                            android:id="@+id/lineAddedEt"
+                            android:id="@+id/lineAddedEtR"
                             android:layout_width="@dimen/add_line"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/margins"
@@ -134,7 +132,7 @@
 
 
                         <com.google.android.material.button.MaterialButton
-                            android:id="@+id/send_post_edit"
+                            android:id="@+id/send_post_editR"
                             android:layout_width="50dp"
                             android:layout_height="50dp"
                             android:layout_alignParentEnd="true"
@@ -147,7 +145,7 @@
                     </RelativeLayout>
 
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rv_insertedTags"
+                        android:id="@+id/rv_insertedTagsR"
                         style="@style/recylclerViewAttr"
                         tools:listitem="@layout/layout_tag" />
 
@@ -157,7 +155,7 @@
                         android:orientation="horizontal">
 
                         <AutoCompleteTextView
-                            android:id="@+id/auto_completeTag"
+                            android:id="@+id/auto_completeTagR"
                             android:layout_width="@dimen/add_line"
                             android:layout_height="@dimen/boxHt"
                             android:layout_marginStart="@dimen/margins"
@@ -167,7 +165,7 @@
 
 
                         <com.google.android.material.button.MaterialButton
-                            android:id="@+id/tag_edit"
+                            android:id="@+id/tag_editR"
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:layout_alignParentEnd="true"
@@ -176,6 +174,16 @@
                             android:enabled="false"
                             app:layout_constraintEnd_toEndOf="parent" />
                     </RelativeLayout>
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="@dimen/margins"
+                        android:elevation="40dp"
+                        android:text="@string/swipe_for_more"
+                        android:textSize="@dimen/text_size" />
 
                 </LinearLayout>
             </ScrollView>

@@ -66,6 +66,7 @@
     <string name="error_request_timed_out">Request Timeout</string>
     <string name="error_please_check_internet">Please check your internet connection</string>
     <string name="no_internet_str">\" No Internet Connection\"</string>
+    <string name="hello">Hello</string>
 
 
     <array name="themeColors">

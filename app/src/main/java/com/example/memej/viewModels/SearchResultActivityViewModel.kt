@@ -27,7 +27,7 @@ class SearchResultActivityViewModel(application: Application) : AndroidViewModel
     init {
 
         val config = PagedList.Config.Builder()
-            .setPageSize(30)               //Number of items to load in a page
+            .setPageSize(20)               //Number of items to load in a page
             .setEnablePlaceholders(false)   //There is holder disabled till the data is loaded
             .build()
         homeResponse = initializedPagedListBuilderOngoing(config).build()
@@ -53,8 +53,8 @@ class SearchResultActivityViewModel(application: Application) : AndroidViewModel
         val dataSourceFactory = object : DataSource.Factory<String, Meme_Home>() {
             override fun create(): DataSource<String, Meme_Home> {
 
-
                 val inf = queryBody(tagName)
+
                 return HomeMemeDataSource(context, inf, pb)
             }
         }

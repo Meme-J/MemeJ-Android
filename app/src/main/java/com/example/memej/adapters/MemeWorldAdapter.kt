@@ -101,11 +101,13 @@ class MemeWorldAdapter(val context: Context, val itemClickListener: OnItemClickL
                 //Like the meme
                 likeDrawIo.setOnLikeListener(object : OnLikeListener {
                     override fun liked(likeButton: LikeButton?) {
+                        numLikes.text = (numLikes.text.toString().toInt() + 1).toString()
                         likeMeme(_meme)
 
                     }
 
                     override fun unLiked(likeButton: LikeButton?) {
+                        numLikes.text = (numLikes.text.toString().toInt() + 1).toString()
                         likeMeme(_meme)
                     }
                 })
@@ -122,6 +124,7 @@ class MemeWorldAdapter(val context: Context, val itemClickListener: OnItemClickL
 
         private fun likeMeme(_meme: Meme_World) {
 
+
             //Revert the state
             Log.e("ADapter", "In like meme")
             val inf = likeMemeBody(_meme._id)
@@ -137,6 +140,7 @@ class MemeWorldAdapter(val context: Context, val itemClickListener: OnItemClickL
                         snack.show()
 
                         //Revert with the state usage
+                        //Do nothing with the number of likes
                         if (likeDrawIo.isLiked) {
                             likeDrawIo.isLiked = false
                         } else if (!likeDrawIo.isLiked) {
@@ -154,15 +158,16 @@ class MemeWorldAdapter(val context: Context, val itemClickListener: OnItemClickL
 
                         if (response.body()?.msg == "Meme unliked successfully.") {
 
-                            Log.e("ADapter", "In resp")
+                            Log.e("ADapter", "In response, meme unliked")
 
                             likeDrawIo.isLiked = false
-
 
                             //Refresh the screen again
 
                         } else if (response.body()?.msg == "Meme liked successfully.") {
 
+
+                            Log.e("ADapter", "In  Like")
                             likeDrawIo.isLiked = true
 
                             //Refresh the screen
@@ -206,7 +211,7 @@ class MemeWorldAdapter(val context: Context, val itemClickListener: OnItemClickL
                 val y2 =
                     _homeMeme.templateId.coordinates.elementAt(i + 1).y
 
-                photoVieGlobal.addOldText(pl, colorInt, size.toFloat(), x1, y1, x2, y2)
+                photoVieGlobal.addOldText(null, pl, colorInt, size.toFloat(), x1, y1, x2, y2)
             }
 
 

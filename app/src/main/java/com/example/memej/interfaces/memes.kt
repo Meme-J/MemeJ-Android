@@ -23,7 +23,7 @@ interface memes {
     fun fetchEditableMemes(
         @Query("limit") loadSize: Int = 20,
         @Header("Authorization") accessToken: String?,
-        @Body tags: queryBody                 //Default for normal calling, but a separate string incase a new param called
+        @Body search: queryBody                  //Default for normal calling, but a separate string incase a new param called
     ): Call<homeMemeApiResponse>
 
 
@@ -42,7 +42,7 @@ interface memes {
     fun fetchMemeWorldMemes(
         @Query("limit") loadSize: Int = 20,              //Test it with this value
         @Header("Authorization") accessToken: String?,
-        @Body tag: queryBody
+        @Body search: queryBody
     ): Call<memeApiResponses>
 
 
