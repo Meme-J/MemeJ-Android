@@ -19,21 +19,14 @@ import java.io.FileOutputStream
 fun Activity.shareCacheDirBitmap(uri: Uri?, name: String, bitmap: Bitmap) {
 
 
-//    if (uri != null) {
-//
-//        val fis = FileInputStream(uri.path.toString())  // 2nd line
-//        val bitmap = BitmapFactory.decodeStream(fis)
-//        fis.close()
-
     try {
         val file = File("${this.cacheDir}/images.jpeg")
 
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, FileOutputStream(file))
 
         Log.e("PAckage name", this.packageName)
-//            val contentUri = FileProvider.getUriForFile(this, this.packageName + ".provider", file)
 
-        val contentUri = FileProvider.getUriForFile(this, this.packageName, file)
+        val contentUri = FileProvider.getUriForFile(this, this.packageName + ".FileProvider", file)
         Log.e("PAckage name", contentUri.toString())
 //
         val shareIntent = Intent()
@@ -45,10 +38,10 @@ fun Activity.shareCacheDirBitmap(uri: Uri?, name: String, bitmap: Bitmap) {
         e.printStackTrace()
         Log.e("Fail share", e.toString())
     }
-//    }
-
-
 }
+
+
+
 
 //toString
 //// Extension property to get bitmap from view

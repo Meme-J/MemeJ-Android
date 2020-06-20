@@ -612,20 +612,32 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
                 count: Int,
                 after: Int
             ) {
-                photoEditorClass.clearAllViews()
-                //Return nothing
-                photoEditorClass.addText(
-                    //     type_face,
+
+                photoEditorClass.editText(
+                    edt as View,
                     s.toString(),
-//                    paint_chosen,
                     colorInt,
                     size.toFloat(),
-//                    size_chosen,
                     xN,
                     yN,
                     xB,
                     yB
                 )
+
+//                photoEditorClass.clearAllViews()
+//                //Return nothing
+//                photoEditorClass.addText(
+//                    //     type_face,
+//                    s.toString(),
+////                    paint_chosen,
+//                    colorInt,
+//                    size.toFloat(),
+////                    size_chosen,
+//                    xN,
+//                    yN,
+//                    xB,
+//                    yB
+//                )
 
             }
 
@@ -636,20 +648,32 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
                 count: Int
             ) {
 
-                photoEditorClass.clearAllViews()
-                //Return nothing
-                photoEditorClass.addText(
-//                    type_face,
+
+                photoEditorClass.editText(
+                    edt as View,
                     s.toString(),
                     colorInt,
                     size.toFloat(),
-//                    paint_chosen,
-//                    size_chosen,
                     xN,
                     yN,
                     xB,
                     yB
                 )
+
+//                photoEditorClass.clearAllViews()
+//                //Return nothing
+//                photoEditorClass.addText(
+////                    type_face,
+//                    s.toString(),
+//                    colorInt,
+//                    size.toFloat(),
+////                    paint_chosen,
+////                    size_chosen,
+//                    xN,
+//                    yN,
+//                    xB,
+//                    yB
+//                )
 
             }
         })

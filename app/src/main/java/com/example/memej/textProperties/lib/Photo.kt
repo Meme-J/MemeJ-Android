@@ -279,8 +279,18 @@ class Photo private constructor(builder: Builder) :
 
     }
 
-    fun editText(view: View, inputText: String?, colorCode: Int, size: Float) {
-        editText(view, null, inputText, colorCode, size)
+    fun editText(
+        view: View, inputText: String?, colorCode: Int, size: Float, startX: Int,
+        startY: Int,
+        endX: Int,
+        endY: Int
+    ) {
+        editText(
+            view, null, inputText, colorCode, size, startX,
+            startY,
+            endX,
+            endY
+        )
     }
 
     /**
@@ -299,7 +309,12 @@ class Photo private constructor(builder: Builder) :
         textTypeface: Typeface?,
         inputText: String?,
         colorCode: Int,
-        size: Float
+        size: Float,
+        startX: Int,
+        startY: Int,
+        endX: Int,
+        endY: Int
+
     ) {
 
         brushDrawingView!!.brushDrawingMode = false
@@ -327,6 +342,20 @@ class Photo private constructor(builder: Builder) :
             parentView!!.updateViewLayout(view, view.layoutParams)
             val i = addedViews.indexOf(view)
             if (i > -1) addedViews[i] = view
+        }
+        //Else add to views
+        else {
+            addEditTextToParentWithChange(
+                inputTextView,
+                ViewType.EDIT_TEXT,
+                startX = startX,
+                startY = startY,
+                endX = endX,
+                endY = endY,
+                width = endX - startX,
+                height = endY - startY
+            )
+
         }
 
     }
@@ -394,7 +423,8 @@ class Photo private constructor(builder: Builder) :
 
         //params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE)
 
-        parentView!!.addView(rootView, p)
+        parentView!!.removeView(rootView)
+        parentView.addView(rootView, p)
         addedViews.add(rootView)
         if (mOnPhotoEditorListener != null) mOnPhotoEditorListener!!.onAddViewListener(
             viewType,
