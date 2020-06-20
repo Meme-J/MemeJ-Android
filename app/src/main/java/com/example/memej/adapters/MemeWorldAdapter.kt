@@ -101,11 +101,13 @@ class MemeWorldAdapter(val context: Context, val itemClickListener: OnItemClickL
                 //Like the meme
                 likeDrawIo.setOnLikeListener(object : OnLikeListener {
                     override fun liked(likeButton: LikeButton?) {
+                        numLikes.text = (numLikes.text.toString().toInt() + 1).toString()
                         likeMeme(_meme)
 
                     }
 
                     override fun unLiked(likeButton: LikeButton?) {
+                        numLikes.text = (numLikes.text.toString().toInt() + 1).toString()
                         likeMeme(_meme)
                     }
                 })
@@ -121,6 +123,7 @@ class MemeWorldAdapter(val context: Context, val itemClickListener: OnItemClickL
 
 
         private fun likeMeme(_meme: Meme_World) {
+
 
             //Revert the state
             Log.e("ADapter", "In like meme")
@@ -158,7 +161,6 @@ class MemeWorldAdapter(val context: Context, val itemClickListener: OnItemClickL
                             Log.e("ADapter", "In response, meme unliked")
 
                             likeDrawIo.isLiked = false
-                            numLikes.text = (numLikes.text.toString().toInt() - 1).toString()
 
                             //Refresh the screen again
 
@@ -167,7 +169,6 @@ class MemeWorldAdapter(val context: Context, val itemClickListener: OnItemClickL
 
                             Log.e("ADapter", "In  Like")
                             likeDrawIo.isLiked = true
-                            numLikes.text = (numLikes.text.toString().toInt() + 1).toString()
 
                             //Refresh the screen
 
@@ -210,7 +211,7 @@ class MemeWorldAdapter(val context: Context, val itemClickListener: OnItemClickL
                 val y2 =
                     _homeMeme.templateId.coordinates.elementAt(i + 1).y
 
-                photoVieGlobal.addOldText(pl, colorInt, size.toFloat(), x1, y1, x2, y2)
+                photoVieGlobal.addOldText(null, pl, colorInt, size.toFloat(), x1, y1, x2, y2)
             }
 
 

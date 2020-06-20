@@ -1,17 +1,18 @@
 package com.example.memej.ui.explore
 
+import android.app.Activity
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.view.animation.LinearInterpolator
 import android.widget.ProgressBar
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DefaultItemAnimator
 import com.example.memej.R
+import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.adapters.RandomListener
 import com.example.memej.adapters.RandomMemeAdapter
@@ -19,6 +20,7 @@ import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.homeMememResponses.Meme_Home
 import com.example.memej.responses.homeMememResponses.homeMemeApiResponse
 import com.example.memej.viewModels.ExploreViewModel
+import com.shreyaspatil.MaterialDialog.MaterialDialog
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager
 import com.yuyakaido.android.cardstackview.CardStackView
 import com.yuyakaido.android.cardstackview.SwipeableMethod
@@ -59,6 +61,11 @@ class ExploreFragment : Fragment(), RandomListener {
         }
 
 
+        //The edit text will be according to
+        activity?.window?.setSoftInputMode(
+            WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+        )
+
         val sv = root.findViewById<CardStackView>(R.id.stack_view)
         sv.layoutManager = layoutManager
         sv.adapter = adapter
@@ -71,25 +78,62 @@ class ExploreFragment : Fragment(), RandomListener {
 
 
 
-        getRandomMemes()
+        if (ErrorStatesResponse.checkIsNetworkConnected(requireContext())) {
+            getRandomMemes()
+        } else {
+            checkConnection()
+        }
+
         pb.visibility = View.GONE
-
-
 
 
         return root
     }
 
+    private fun checkConnection() {
+        val mDialog = MaterialDialog.Builder(requireContext() as Activity)
+            .setTitle("Oops")
+            .setMessage("No internet connection")
+            .setCancelable(true)
+            .setAnimation(R.raw.inter2)
+            .setPositiveButton(
+                "Retry"
+            ) { dialogInterface, which ->
+                dialogInterface.dismiss()
+                getRandomMemes()
+            }
+            .setNegativeButton(
+                "Cancel"
+            ) { dialogInterface, which ->
+                dialogInterface.dismiss()
+                pb.visibility = View.GONE
+
+            }
+            .build()
+        mDialog.show()
+
+
+    }
+
     private fun getRandomMemes() {
 
+
+        //Recheck for states
+        if (!ErrorStatesResponse.checkIsNetworkConnected(requireContext())) {
+            checkConnection()
+        }
 
         val service = RetrofitClient.makeCallsForMemes(requireContext())
 
         service.getRandom(accessToken = "Bearer ${sessionManager.fetchAcessToken()}")
             .enqueue(object : retrofit2.Callback<homeMemeApiResponse> {
                 override fun onFailure(call: Call<homeMemeApiResponse>, t: Throwable) {
-                    Toast.makeText(context, t.message.toString(), Toast.LENGTH_SHORT).show()
-                    pb.visibility = View.GONE
+                    val message = ErrorStatesResponse.returnStateMessageForThrowable(t)
+                    android.app.AlertDialog.Builder(context)
+                        .setTitle("Unable to create")
+                        .setMessage(message)
+                        .setPositiveButton(android.R.string.ok) { _, _ -> }
+                        .show()
                 }
 
                 override fun onResponse(
@@ -97,15 +141,17 @@ class ExploreFragment : Fragment(), RandomListener {
                     response: Response<homeMemeApiResponse>
                 ) {
 
-                    Log.e("random", response.body()?.memes.toString())
-
                     if (response.isSuccessful) {
                         response.body()?.memes?.let { adapter.setRandomPosts(it) }
                         pb.visibility = View.GONE
 
                     } else {
-                        Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show()
-                        pb.visibility = View.GONE
+                        val message = response.errorBody().toString()
+                        android.app.AlertDialog.Builder(context)
+                            .setTitle("Unable to create meme")
+                            .setMessage(message)
+                            .setPositiveButton(android.R.string.ok) { _, _ -> }
+                            .show()
 
                     }
                 }

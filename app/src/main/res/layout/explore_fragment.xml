@@ -8,8 +8,8 @@
 
     <com.yuyakaido.android.cardstackview.CardStackView
         android:id="@+id/stack_view"
-        android:layout_width="380dp"
-        android:layout_height="620dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_centerInParent="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="12dp" />
@@ -17,17 +17,17 @@
     <ProgressBar
         android:id="@+id/pb_explore"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:visibility="visible" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/margins"
-        android:text="@string/swipe_for_more"
-        android:textSize="@dimen/text_size" />
+    <!--    <TextView-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_alignParentBottom="true"-->
+    <!--        android:layout_centerHorizontal="true"-->
+    <!--        android:layout_marginBottom="@dimen/margins"-->
+    <!--        android:text="@string/swipe_for_more"-->
+    <!--        android:textSize="@dimen/text_size" />-->
 
 </RelativeLayout>

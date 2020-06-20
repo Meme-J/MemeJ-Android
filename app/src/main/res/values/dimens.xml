@@ -25,5 +25,6 @@
     <dimen name="profile_icons">50dp</dimen>
     <dimen name="card_eleveation_max">40dp</dimen>
     <dimen name="boxHt">60dp</dimen>
+    <dimen name="autoSizeMaxSize">24dp</dimen>
 
 </resources>

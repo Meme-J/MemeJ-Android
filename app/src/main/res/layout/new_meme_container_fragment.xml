@@ -87,42 +87,42 @@
                     android:text="@string/sample_timestamp" />
 
                 <!--                Style Picker-->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/margins"
-                    android:elevation="@dimen/margin_20dp"
-                    android:orientation="horizontal">
+                <!--                <LinearLayout-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:layout_margin="@dimen/margins"-->
+                <!--                    android:elevation="@dimen/margin_20dp"-->
+                <!--                    android:orientation="horizontal">-->
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/choose_color_new"
-                        style="@style/stylePick"
-                        android:layout_marginStart="@dimen/margins"
-                        android:text="@string/choose_color" />
+                <!--                    <com.google.android.material.textview.MaterialTextView-->
+                <!--                        android:id="@+id/choose_color_new"-->
+                <!--                        style="@style/stylePick"-->
+                <!--                        android:layout_marginStart="@dimen/margins"-->
+                <!--                        android:text="@string/choose_color" />-->
 
-                    <androidx.cardview.widget.CardView
-                        android:id="@+id/colorIndicator_new"
-                        android:layout_width="@dimen/margin_20dp"
-                        android:layout_height="@dimen/margin_20dp"
-                        android:layout_gravity="center"
-                        android:layout_marginEnd="12dp"
-                        android:elevation="@dimen/margin_20dp"
-                        app:cardBackgroundColor="@color/black"
-                        app:cornerRadius="@dimen/margin_20dp" />
+                <!--                    <androidx.cardview.widget.CardView-->
+                <!--                        android:id="@+id/colorIndicator_new"-->
+                <!--                        android:layout_width="@dimen/margin_20dp"-->
+                <!--                        android:layout_height="@dimen/margin_20dp"-->
+                <!--                        android:layout_gravity="center"-->
+                <!--                        android:layout_marginEnd="12dp"-->
+                <!--                        android:elevation="@dimen/margin_20dp"-->
+                <!--                        app:cardBackgroundColor="@color/black"-->
+                <!--                        app:cornerRadius="@dimen/margin_20dp" />-->
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/choose_font_new"
-                        style="@style/stylePick"
-                        android:text="@string/choose_font" />
-
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/choose_size_new"
-                        style="@style/stylePick"
-                        android:text="@string/size" />
+                <!--                    <com.google.android.material.textview.MaterialTextView-->
+                <!--                        android:id="@+id/choose_font_new"-->
+                <!--                        style="@style/stylePick"-->
+                <!--                        android:text="@string/choose_font" />-->
 
 
-                </LinearLayout>
+                <!--                    <com.google.android.material.textview.MaterialTextView-->
+                <!--                        android:id="@+id/choose_size_new"-->
+                <!--                        style="@style/stylePick"-->
+                <!--                        android:text="@string/size" />-->
+
+
+                <!--                </LinearLayout>-->
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"

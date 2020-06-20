@@ -83,6 +83,7 @@ class LikedMemesAdapter(val context: Context, val itemClickListener: OnItemClick
                 //Get the image
                 //Load the Image here
                 likeDrawIo.isLiked = true
+                numLikes.text = _meme.likes.toString()
 
                 photoView.source?.let {
                     Glide.with(itemView.context)
@@ -99,10 +100,12 @@ class LikedMemesAdapter(val context: Context, val itemClickListener: OnItemClick
                 //Like the meme
                 likeDrawIo.setOnLikeListener(object : OnLikeListener {
                     override fun liked(likeButton: LikeButton?) {
+                        numLikes.text = (numLikes.text.toString().toInt() + 1).toString()
                         likeMeme(_meme)
                     }
 
                     override fun unLiked(likeButton: LikeButton?) {
+                        numLikes.text = (numLikes.text.toString().toInt() - 1).toString()
                         likeMeme(_meme)
                     }
                 })
@@ -155,8 +158,6 @@ class LikedMemesAdapter(val context: Context, val itemClickListener: OnItemClick
 
                             Log.e("ADapter", "In  dislike")
                             likeDrawIo.isLiked = false
-                            numLikes.text = (numLikes.text.toString().toInt() - 1).toString()
-
 
 
                         } else if (response.body()?.msg == "Meme liked successfully.") {
@@ -164,7 +165,6 @@ class LikedMemesAdapter(val context: Context, val itemClickListener: OnItemClick
                             Log.e("ADapter", "In  Like")
 
                             likeDrawIo.isLiked = true
-                            numLikes.text = (numLikes.text.toString().toInt() + 1).toString()
 
                         }
                     }
@@ -208,13 +208,14 @@ class LikedMemesAdapter(val context: Context, val itemClickListener: OnItemClick
 
 
                 mPhotBuilView.addOldText(
+                    null,
                     pl,
                     colorInt,
                     size = size.toFloat(),
-                    startX = x1,
-                    startY = y1,
-                    endX = x2,
-                    endY = y2
+                    x1 = x1,
+                    y1 = y1,
+                    x2 = x2,
+                    y2 = y2
                 )
             }
 

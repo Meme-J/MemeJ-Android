@@ -1,12 +1,15 @@
 package com.example.memej.ui.MemeWorld
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.DownloadManager
 import android.app.ProgressDialog
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
@@ -19,7 +22,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.memej.R
-import com.example.memej.Utils.*
+import com.example.memej.Utils.ApplicationUtil
+import com.example.memej.Utils.ErrorStatesResponse
+import com.example.memej.Utils.PreferenceUtil
 import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.adapters.TagAdapter
 import com.example.memej.adapters.UserAdapter
@@ -40,6 +45,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
+import java.io.FileOutputStream
 import java.util.*
 
 class CompletedMemeActivity : AppCompatActivity(), onUserClickType, onTagClickType {
@@ -128,17 +134,43 @@ class CompletedMemeActivity : AppCompatActivity(), onUserClickType, onTagClickTy
 
     }
 
+    @SuppressLint("SetWorldReadable")
     private fun shareMeme() {
 
         //Get layout
         val imageName = arg.getString("imageName") + "_" + arg.getString("lastUpdated")
         val imagePath = imageName + ".jpg"
 
-        val map: Bitmap = ConvertToBitmap(photoView)
-        Log.e("Share", "Value of bitmpa is" + map.toString())
-        val uri = map.getImageUri(this, map)
+        Log.e("Share", "In share00")
 
-        Log.e("Share", "Value of URi is" + uri)
+        val map = ConvertToBitmap(photoView)
+
+        Log.e("Share", "bitmap" + map.toString())
+        try {
+
+            Log.e("Share", "In try")
+            val file = File(externalCacheDir, "images.png")
+            Log.e("Share", "File" + file.toString())
+
+            val fOut = FileOutputStream(file)
+            map.compress(Bitmap.CompressFormat.PNG, 100, fOut)
+            fOut.flush()
+            fOut.close()
+            file.setReadable(true, false)
+            val intent = Intent(Intent.ACTION_SEND)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file))
+            intent.type = "image/png"
+            startActivity(Intent.createChooser(intent, "Share image via"))
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+//        val map: Bitmap = ConvertToBitmap(photoView)
+//        Log.e("Share", "Value of bitmpa is" + map.toString())
+//        val uri = map.getImageUri(this, map)
+//
+//        Log.e("Share", "Value of URi is" + uri)
 
 //        val snack = Snackbar.make(
 //            container_completeMeme,
@@ -146,7 +178,7 @@ class CompletedMemeActivity : AppCompatActivity(), onUserClickType, onTagClickTy
 //            Snackbar.LENGTH_SHORT
 //        )
 //        snack.show()
-        this.shareCacheDirBitmap(uri, imageName, map)
+//        this.shareCacheDirBitmap(uri, imageName, map)
 
     }
 
@@ -506,7 +538,7 @@ class CompletedMemeActivity : AppCompatActivity(), onUserClickType, onTagClickTy
                 arg.getParcelableArrayList<Coordinate>("templateIdCoordinates")!!
                     .elementAt(i + 1).y
 
-            photoGlobalEditor.addOldText(pl, colorInt, size.toFloat(), x1, y1, x2, y2)
+            photoGlobalEditor.addOldText(null, pl, colorInt, size.toFloat(), x1, y1, x2, y2)
         }
 
         Log.e("Complete", photoView.childCount.toString())
