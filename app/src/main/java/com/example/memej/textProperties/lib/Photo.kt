@@ -22,7 +22,6 @@ import androidx.annotation.ColorInt
 import androidx.annotation.NonNull
 import androidx.annotation.Nullable
 import androidx.annotation.UiThread
-import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.memej.R
 import com.example.memej.textProperties.ConversionUtil
 import java.io.File
@@ -469,12 +468,11 @@ class Photo private constructor(builder: Builder) :
         val w2 = ConversionUtil.pxToSp(width)
         val h2 = ConversionUtil.pxToSp(height)
 
-        //Taking them as dp only
+        val scaledW = ConversionUtil.dpToRequiredScaledDensity(context, width)
+        val scaledH = ConversionUtil.dpToRequiredScaledDensity(context, height)
 
-        //Get the width and height in dp. The device will adjust according to that.
 
-        val p = RelativeLayout.LayoutParams(width, height)
-
+        val p = RelativeLayout.LayoutParams(scaledW.toInt(), scaledH.toInt())
 
 //        val p = RelativeLayout.LayoutParams(w.toInt(), h.toInt())
 //        val p = RelativeLayout.LayoutParams(w2.toInt(), h2.toInt())
@@ -495,8 +493,10 @@ class Photo private constructor(builder: Builder) :
         val eff = (scrwidth - 300) / 2
 
 
-        p.marginStart = startX
-        p.topMargin = startY
+        val marX = ConversionUtil.dpToRequiredScaledDensity(context, startX)
+        val marY = ConversionUtil.dpToRequiredScaledDensity(context, startY)
+        p.marginStart = marX.toInt()
+        p.topMargin = marY.toInt()
 
         Log.e(
             "Final Stats Comp",
@@ -505,26 +505,19 @@ class Photo private constructor(builder: Builder) :
                     "sp scaled " + w2.toString() + " " + h2.toString()
         )
 
-//        p.leftMargin = ConversionUtil.pxToDp(context, startX).toInt()
-        //  p.topMargin = ConversionUtil.pxToDp(context, startY).toInt()
-
-
-//        p.leftMargin = startX.toInt()
-//        p.topMargin = startY.toInt()
-
 
 //        p.setMargins(startX, startY, endX, endY)
 
         //params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE)
 
 
-        val par = ConstraintLayout.LayoutParams(width, height)
-        par.topMargin = startY
-        par.marginStart = startX
-        par.editorAbsoluteX = startX
-        par.editorAbsoluteY = startY
+//        val par = ConstraintLayout.LayoutParams(width, height)
+//        par.topMargin = startY
+//        par.marginStart = startX
+//        par.editorAbsoluteX = startX
+//        par.editorAbsoluteY = startY
 
-        parentView!!.addView(rootView, par)
+        parentView!!.addView(rootView, p)
         addedViews.add(rootView)
         if (mOnPhotoEditorListener != null) mOnPhotoEditorListener!!.onAddViewListener(
             viewType,

@@ -28,6 +28,11 @@ object ConversionUtil {
         return px / (context.resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
     }
 
+    fun dpToRequiredScaledDensity(context: Context, dp: Int): Float {
+        val scale = context.resources.displayMetrics.density
+        return dp * scale
+    }
+
     fun pxToSp(px: Int): Float {
         val sp: Float = px / getContext().resources.displayMetrics.scaledDensity
         return sp
