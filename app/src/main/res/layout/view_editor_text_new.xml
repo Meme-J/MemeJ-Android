@@ -10,7 +10,7 @@
         android:id="@+id/frmBorder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="8dp"
+        android:layout_margin="@dimen/space"
         android:background="@drawable/rounded_border_tv">
 
         <TextView
@@ -18,13 +18,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
-            android:autoSizeMaxTextSize="20sp"
-            android:autoSizeMinTextSize="12sp"
+            android:autoSizeMaxTextSize="24sp"
+            android:autoSizeMinTextSize="8sp"
             android:autoSizeStepGranularity="2sp"
             android:autoSizeTextType="uniform"
             android:text="@string/hello"
             app:autoSizeMaxTextSize="20sp"
-            app:autoSizeMinTextSize="12sp"
+            app:autoSizeMinTextSize="8sp"
             app:autoSizeStepGranularity="2sp"
             app:autoSizeTextType="uniform"
             tools:text="Kavya Vatsal" />

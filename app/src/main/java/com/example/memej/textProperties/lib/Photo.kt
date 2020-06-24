@@ -1,6 +1,7 @@
 package com.example.memej.textProperties.lib
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Rect
@@ -8,6 +9,7 @@ import android.graphics.Typeface
 import android.os.AsyncTask
 import android.os.Environment
 import android.text.TextUtils
+import android.util.DisplayMetrics
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -102,6 +104,7 @@ class Photo private constructor(builder: Builder) :
         x2: Int,
         y2: Int
     ) {
+
         brushDrawingView!!.brushDrawingMode = false
 
         val textRootView =
@@ -117,6 +120,7 @@ class Photo private constructor(builder: Builder) :
 
         textInputTv.text = text
         textInputTv.setTextColor(colorCodeTextView)
+        //Size is in px. Set in sp
         textInputTv.textSize = size
 
 
@@ -199,13 +203,18 @@ class Photo private constructor(builder: Builder) :
 
         textInputTv.text = text
         textInputTv.setTextColor(colorCodeTextView)
-        textInputTv.textSize = size
+        //Do the sizes in standard units
+        textInputTv.textSize = ConversionUtil.pxToSp(size.toInt())
+
 
         //Req ht and width of the text box
         //Create layout
         val ht = endY - startY
         val wd = endX - startX
-        Log.e("Heihjt and width", ht.toString() + " " + wd.toString())
+        Log.e(
+            "Heihjt and width and size ",
+            ht.toString() + " " + wd.toString() + " " + textInputTv.textSize.toString()
+        )
 
         if (textTypeface != null) {
             textInputTv.typeface = textTypeface
@@ -449,26 +458,64 @@ class Photo private constructor(builder: Builder) :
 
         childCount = childCount + 1
 
-//        val params = RelativeLayout.LayoutParams(
+//        val p = RelativeLayout.LayoutParams(
 //            ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
 //        )
 
 
-        val p = RelativeLayout.LayoutParams(width, height)
+        val w = ConversionUtil.pxToDp(context, width)
+        val h = ConversionUtil.pxToDp(context, height)
+        val w2 = ConversionUtil.pxToSp(width)
+        val h2 = ConversionUtil.pxToSp(height)
 
-        //Starting parameters for height and width
-        p.leftMargin = ConversionUtil.pxToDp(context, startX).toInt()
-        p.topMargin = ConversionUtil.pxToDp(context, startY).toInt()
+        val scaledW = ConversionUtil.dpToRequiredScaledDensity(context, width)
+        val scaledH = ConversionUtil.dpToRequiredScaledDensity(context, height)
+
+
+        val p = RelativeLayout.LayoutParams(scaledW.toInt(), scaledH.toInt())
+
+//        val p = RelativeLayout.LayoutParams(w.toInt(), h.toInt())
+//        val p = RelativeLayout.LayoutParams(w2.toInt(), h2.toInt())
+
+        //Starting
+        //parameters for height and width
+
+        val displayMetrics = DisplayMetrics()
+        (context as Activity).windowManager
+            .defaultDisplay
+            .getMetrics(displayMetrics)
+
+        val scrheight: Int = displayMetrics.heightPixels
+        val scrwidth: Int = displayMetrics.widthPixels
+
+        Log.e("scrWidth", scrwidth.toString())
+        //The amount that we have spare to use
+        val eff = (scrwidth - 300) / 2
+
+
+        val marX = ConversionUtil.dpToRequiredScaledDensity(context, startX)
+        val marY = ConversionUtil.dpToRequiredScaledDensity(context, startY)
+        p.marginStart = marX.toInt()
+        p.topMargin = marY.toInt()
+
+        Log.e(
+            "Final Stats Comp",
+            " width and height : " + width.toString() + " " + height.toString() + " \n" +
+                    "dp scaled height and width" + w.toString() + " " + h.toString() + " \n" +
+                    "sp scaled " + w2.toString() + " " + h2.toString()
+        )
+
 
 //        p.setMargins(startX, startY, endX, endY)
 
-        Log.e("Start X", startX.toString())
-        val conmv = ConversionUtil.pxToDp(context, startX)
-
-        Log.e("Start X", startX.toString() + " " + conmv.toString())
-
-
         //params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE)
+
+
+//        val par = ConstraintLayout.LayoutParams(width, height)
+//        par.topMargin = startY
+//        par.marginStart = startX
+//        par.editorAbsoluteX = startX
+//        par.editorAbsoluteY = startY
 
         parentView!!.addView(rootView, p)
         addedViews.add(rootView)
@@ -558,6 +605,7 @@ class Photo private constructor(builder: Builder) :
 
             ViewType.TEXT -> {
                 rootView = mLayoutInflater.inflate(R.layout.view_editor_text_new, null)
+
                 val txtText = rootView.findViewById<TextView>(R.id.tvPhotoEditorTextNew)
                 if (txtText != null && mDefaultTextTypeface != null) {
                     txtText.gravity = Gravity.CENTER

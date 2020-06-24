@@ -94,6 +94,7 @@
         <item name="android:elevation">@dimen/margins</item>
         <item name="android:focusable">true</item>
         <item name="cornerRadius">30dp</item>
+        <item name="android:background">@drawable/round_button</item>
         <item name="android:radius">40dp</item>
         <item name="android:gravity">center</item>
         <item name="android:textAllCaps">true</item>

@@ -24,9 +24,9 @@
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="20dp"
-                    android:elevation="40dp"
-                    app:cardCornerRadius="16dp">
+                    android:layout_margin="@dimen/card_half"
+                    android:elevation="@dimen/card_eleveation_max"
+                    app:cardCornerRadius="@dimen/space_2x">
 
 
                     <LinearLayout
@@ -99,7 +99,7 @@
                                 android:id="@+id/share_completed_meme"
                                 android:layout_width="@dimen/util_size"
                                 android:layout_height="@dimen/util_size"
-                                android:layout_marginStart="16dp"
+                                android:layout_marginStart="@dimen/space_2x"
                                 android:background="@drawable/ic_share"
                                 android:elevation="0dp"
                                 android:gravity="center" />
@@ -108,7 +108,7 @@
                                 android:id="@+id/download_completed_meme"
                                 android:layout_width="@dimen/util_size"
                                 android:layout_height="@dimen/util_size"
-                                android:layout_marginStart="16dp"
+                                android:layout_marginStart="@dimen/space_2x"
                                 android:background="@drawable/ic_arrow_downward_black_24dp"
                                 android:elevation="0dp"
                                 android:gravity="center" />

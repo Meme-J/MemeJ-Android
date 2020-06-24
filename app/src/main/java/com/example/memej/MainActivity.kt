@@ -148,7 +148,11 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
                 .commit()
         }
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+        //Reselect as wee
 
+//        navView.setOnNavigationItemReselectedListener {
+//            //Do nothing
+//        }
 
         //OnClickListener On FAB
         val fab: FloatingActionButton = findViewById(R.id.fab_add)

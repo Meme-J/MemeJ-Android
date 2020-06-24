@@ -2,9 +2,9 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
-
-    <dimen name="margins">8dp</dimen>
-    <dimen name="splash_img_dim">80dp</dimen>
+    <dimen name="card_half">20dp</dimen>
+    <dimen name="margins">@dimen/space</dimen>
+    <dimen name="splash_img_dim">100dp</dimen>
     <dimen name="heading_sizeLarge">28sp</dimen>
     <dimen name="text_size">18sp</dimen>
     <dimen name="meme_templete_std_height">300dp</dimen>
@@ -16,15 +16,24 @@
     <dimen name="exp_card_width">320dp</dimen>
     <dimen name="exp_card_height">540dp</dimen>
     <dimen name="meme_worl_height">400dp</dimen>
+    <dimen name="std_template">300dp</dimen>
     <dimen name="meme_world_width">350dp</dimen>
-    <dimen name="std_height_settings">40dp</dimen>
+    <dimen name="std_height_settings">@dimen/space_5x</dimen>
     <dimen name="image_profile_attr">120dp</dimen>
     <dimen name="editHt">80dp</dimen>
-    <dimen name="btn_size">40dp</dimen>
+    <dimen name="btn_size">@dimen/space_5x</dimen>
     <dimen name="util_size">30dp</dimen>
     <dimen name="profile_icons">50dp</dimen>
-    <dimen name="card_eleveation_max">40dp</dimen>
+    <dimen name="card_eleveation_max">@dimen/space_5x</dimen>
     <dimen name="boxHt">60dp</dimen>
     <dimen name="autoSizeMaxSize">24dp</dimen>
+    <dimen name="space">8dp</dimen>
+    <dimen name="space_2x">16dp</dimen>
+    <dimen name="space_3x">24dp</dimen>
+    <dimen name="space_4x">32dp</dimen>
+    <dimen name="space_5x">40dp</dimen>
+    <dimen name="space_half">4dp</dimen>
+    <dimen name="space_6x">48dp</dimen>
+
 
 </resources>
