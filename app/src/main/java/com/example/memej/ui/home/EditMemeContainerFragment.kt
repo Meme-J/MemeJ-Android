@@ -387,6 +387,10 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
             })
     }
 
+    override fun onBackPressed(): Unit {
+        finish()
+
+    }
 
     private fun sendPost(line: String) {
         //Show the progress bar

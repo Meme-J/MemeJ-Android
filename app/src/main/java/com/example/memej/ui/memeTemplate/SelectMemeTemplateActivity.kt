@@ -53,8 +53,9 @@ class SelectMemeTemplateActivity : AppCompatActivity(), OnItemClickListenerTempl
 
         val i = Intent(this, NewMemeContainer::class.java)
         i.putExtra("bundle", bundle)
-        startActivity(i)
 
+        startActivity(i)
+        finish()
     }
 
 
@@ -132,6 +133,7 @@ class SelectMemeTemplateActivity : AppCompatActivity(), OnItemClickListenerTempl
         initializeList()
 
     }
+
 
     private fun initializeList() {
         rv.layoutManager = GridLayoutManager(this, 2)

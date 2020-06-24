@@ -638,6 +638,10 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
 
     }
 
+    override fun onBackPressed(): Unit {
+        finish()
+
+    }
     override fun getTagType(_tag: String) {
         TODO("Not yet implemented")
     }

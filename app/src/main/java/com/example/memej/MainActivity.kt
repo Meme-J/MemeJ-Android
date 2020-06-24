@@ -113,6 +113,7 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
 
     //Initialzie the toolbar
     lateinit var toolbar: androidx.appcompat.widget.Toolbar
+    private var atMainActicty = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -257,8 +258,9 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
     }
 
     //Exit app
-    override fun onBackPressed(): Unit {
+    override fun onBackPressed() {
         finish()
+
     }
 
     //Communicator Classes
