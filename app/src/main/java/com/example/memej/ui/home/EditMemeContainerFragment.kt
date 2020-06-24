@@ -426,6 +426,7 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
 
                         val i = Intent(this@EditMemeContainerFragment, MainActivity::class.java)
                         startActivity(i)
+                        finish()
 
                     } else {
 

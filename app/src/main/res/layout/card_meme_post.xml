@@ -24,7 +24,7 @@
             android:layout_centerInParent="true"
             android:layout_gravity="center"
             android:layout_margin="12dp"
-            android:elevation="40dp"
+            android:elevation="@dimen/card_eleveation_max"
             app:cardCornerRadius="@dimen/margins">
 
             <ScrollView
@@ -145,7 +145,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/margins"
                         android:layout_marginTop="@dimen/margins"
-                        android:layout_marginBottom="16dp"
+                        android:layout_marginBottom="@dimen/space_2x"
                         android:hint="@string/add_a_tag" />
 
                     <RelativeLayout
@@ -156,8 +156,8 @@
 
                         <View
                             android:id="@+id/item_swipe_left_indicator"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
+                            android:layout_width="@dimen/card_half"
+                            android:layout_height="@dimen/card_half"
                             android:layout_alignParentStart="true"
                             android:layout_margin="10dp"
                             android:alpha="0"
@@ -165,8 +165,8 @@
 
                         <View
                             android:id="@+id/item_swipe_right_indicator"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
+                            android:layout_width="@dimen/card_half"
+                            android:layout_height="@dimen/card_half"
                             android:layout_alignParentEnd="true"
                             android:layout_margin="10dp"
                             android:alpha="0"

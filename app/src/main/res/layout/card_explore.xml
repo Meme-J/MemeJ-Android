@@ -23,7 +23,7 @@
             android:layout_centerHorizontal="true"
             android:layout_gravity="center"
             android:layout_margin="12dp"
-            android:elevation="40dp"
+            android:elevation="@dimen/card_eleveation_max"
             app:cardCornerRadius="@dimen/margins">
 
             <ScrollView
@@ -160,14 +160,14 @@
                             android:layout_height="@dimen/boxHt"
                             android:layout_marginStart="@dimen/margins"
                             android:layout_marginTop="@dimen/margins"
-                            android:layout_marginBottom="16dp"
+                            android:layout_marginBottom="@dimen/space_2x"
                             android:hint="@string/add_a_tag" />
 
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/tag_editR"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
+                            android:layout_width="@dimen/card_eleveation_max"
+                            android:layout_height="@dimen/card_eleveation_max"
                             android:layout_alignParentEnd="true"
                             android:layout_gravity="end"
                             android:background="@drawable/ic_check_black_24dp"
@@ -181,7 +181,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginBottom="@dimen/margins"
-                        android:elevation="40dp"
+                        android:elevation="@dimen/card_eleveation_max"
                         android:text="@string/swipe_for_more"
                         android:textSize="@dimen/text_size" />
 

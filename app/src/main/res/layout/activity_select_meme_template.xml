@@ -6,6 +6,7 @@
         android:id="@+id/container_select_template"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/stoneWhite"
         android:orientation="vertical">
 
 
@@ -31,17 +32,18 @@
         <!--            android:layout_marginTop="?attr/actionBarSize"-->
         <!--            android:layout_marginEnd="@dimen/margins"-->
         <!--            android:hint="@string/search_hint"-->
-        <!--            android:paddingStart="40dp"-->
+        <!--            android:paddingStart="@dimen/card_eleveation_max"-->
         <!--            android:paddingTop="12dp"-->
-        <!--            android:paddingEnd="40dp" />-->
+        <!--            android:paddingEnd="@dimen/card_eleveation_max" />-->
 
 
         <ProgressBar
             android:id="@+id/pb_template"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/card_half"
             android:layout_gravity="center"
-            android:layout_marginTop="20dp" />
+            android:indeterminate="true" />
 
 
         <androidx.recyclerview.widget.RecyclerView

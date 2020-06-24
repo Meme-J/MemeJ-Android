@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.view.animation.LinearInterpolator
 import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -147,6 +148,7 @@ class ExploreFragment : Fragment(), RandomListener {
 
                     } else {
                         val message = response.errorBody().toString()
+                        Toast.makeText(context, "Unable to create meme", Toast.LENGTH_SHORT).show()
                         android.app.AlertDialog.Builder(context)
                             .setTitle("Unable to create meme")
                             .setMessage(message)

@@ -8,7 +8,7 @@
     android:layout_marginEnd="@dimen/margin_4dp"
     android:layout_marginBottom="@dimen/margin_4dp"
     app:cardBackgroundColor="@color/stoneWhite"
-    app:cardCornerRadius="40dp">
+    app:cardCornerRadius="@dimen/card_eleveation_max">
 
 
 </androidx.cardview.widget.CardView>

@@ -19,9 +19,9 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_gravity="center"
-        android:layout_margin="20dp"
-        android:elevation="40dp"
-        app:cardCornerRadius="@dimen/margins">
+        android:layout_marginTop="@dimen/space"
+        android:layout_marginBottom="@dimen/space"
+        android:elevation="@dimen/card_eleveation_max">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -38,53 +38,55 @@
                     style="@style/recylclerViewAttr"
                     tools:listitem="@layout/layout_user" />
 
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/meme_templete_std_height"
-                    android:layout_margin="@dimen/margins"
-                    android:elevation="4dp"
-                    app:cardCornerRadius="@dimen/margins">
+                <!--                <com.google.android.material.card.MaterialCardView-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="@dimen/meme_templete_std_height"-->
+                <!--                    android:layout_margin="@dimen/margins"-->
+                <!--                    android:elevation="4dp"-->
+                <!--                    app:cardCornerRadius="@dimen/margins">-->
 
-                    <RelativeLayout
+                <RelativeLayout
+                    android:layout_width="@dimen/std_template"
+                    android:layout_height="@dimen/std_template"
+                    android:layout_gravity="center"
+                    android:background="@color/stoneWhite">
+
+                    <ProgressBar
+                        android:id="@+id/loading_panel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:indeterminate="true" />
+
+                    <!--                        <ja.burhanrashid52.photoeditor.PhotoEditorView-->
+                    <!--                            android:id="@+id/photoView"-->
+                    <!--                            android:layout_centerInParent="true"-->
+                    <!--                            android:layout_width="@dimen/meme_templete_std_height"-->
+                    <!--                            android:layout_height="@dimen/meme_templete_std_height" />-->
+                    <com.example.memej.textProperties.lib.ImageEditorView
+                        android:id="@+id/imageView"
                         android:layout_width="match_parent"
-                        android:layout_height="300dp">
-
-                        <ProgressBar
-                            android:id="@+id/loading_panel"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            android:indeterminate="true" />
-
-                        <!--                        <ja.burhanrashid52.photoeditor.PhotoEditorView-->
-                        <!--                            android:id="@+id/photoView"-->
-                        <!--                            android:layout_centerInParent="true"-->
-                        <!--                            android:layout_width="@dimen/meme_templete_std_height"-->
-                        <!--                            android:layout_height="@dimen/meme_templete_std_height" />-->
-                        <com.example.memej.textProperties.lib.ImageEditorView
-                            android:id="@+id/imageView"
-                            android:layout_width="@dimen/meme_templete_std_height"
-                            android:layout_height="@dimen/meme_templete_std_height"
-                            android:layout_centerInParent="true" />
+                        android:layout_height="match_parent"
+                        android:layout_centerInParent="true" />
 
 
-                        <!--                        <com.google.android.material.imageview.ShapeableImageView-->
-                        <!--                            android:id="@+id/imagePostNew"-->
-                        <!--                            android:layout_width="@dimen/meme_templete_std_height"-->
-                        <!--                            android:layout_height="@dimen/meme_templete_std_height"-->
-                        <!--                            android:layout_centerInParent="true" />-->
+                    <!--                        <com.google.android.material.imageview.ShapeableImageView-->
+                    <!--                            android:id="@+id/imagePostNew"-->
+                    <!--                            android:layout_width="@dimen/meme_templete_std_height"-->
+                    <!--                            android:layout_height="@dimen/meme_templete_std_height"-->
+                    <!--                            android:layout_centerInParent="true" />-->
 
-                    </RelativeLayout>
+                </RelativeLayout>
 
-                </com.google.android.material.card.MaterialCardView>
+                <!--                </com.google.android.material.card.MaterialCardView>-->
 
-                <com.google.android.material.textview.MaterialTextView
-                    style="@style/timestamp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:layout_margin="@dimen/margins"
-                    android:text="@string/sample_timestamp" />
+                <!--                <com.google.android.material.textview.MaterialTextView-->
+                <!--                    style="@style/timestamp"-->
+                <!--                    android:layout_width="wrap_content"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:layout_gravity="end"-->
+                <!--                    android:layout_margin="@dimen/margins"-->
+                <!--                    android:text="@string/sample_timestamp" />-->
 
                 <!--                Style Picker-->
                 <!--                <LinearLayout-->
@@ -125,10 +127,10 @@
                 <!--                </LinearLayout>-->
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/csp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margins"
-                    android:id="@+id/csp"
                     android:orientation="horizontal">
 
                     <EditText
@@ -137,10 +139,10 @@
                         android:layout_height="@dimen/boxHt"
                         android:layout_marginStart="@dimen/margins"
                         android:layout_marginTop="4dp"
+                        android:gravity="bottom"
                         android:hint="@string/add_a_line"
                         android:maxLines="4"
                         android:minLines="1"
-                        android:gravity="bottom"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -151,10 +153,10 @@
                         android:layout_height="50dp"
                         android:layout_alignParentEnd="true"
                         android:layout_gravity="bottom"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="@dimen/space_2x"
+                        android:layout_marginBottom="@dimen/margins"
                         android:background="@drawable/ic_send"
                         android:enabled="false"
-                        android:layout_marginBottom="@dimen/margins"
                         android:gravity="center"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent" />
@@ -170,7 +172,7 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/padding_10dp"
+                    android:layout_marginBottom="@dimen/_10sdp"
                     android:orientation="horizontal">
 
                     <AutoCompleteTextView
@@ -179,25 +181,26 @@
                         android:layout_height="@dimen/boxHt"
                         android:layout_marginStart="@dimen/margins"
                         android:layout_marginTop="@dimen/margins"
+                        android:layout_marginBottom="@dimen/space_2x"
                         android:gravity="bottom"
+                        android:hint="@string/add_a_tag"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        android:layout_marginBottom="16dp"
-                        android:hint="@string/add_a_tag" />
+                        app:layout_constraintTop_toTopOf="parent" />
 
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/tag_editNew"
                         android:layout_width="60dp"
                         android:layout_height="60dp"
-                        android:layout_marginBottom="@dimen/margins"
-                        android:gravity="bottom"
                         android:layout_gravity="end"
-                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:layout_marginBottom="@dimen/margins"
                         android:background="@drawable/ic_check_black_24dp"
                         android:enabled="false"
-
+                        android:gravity="bottom"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent" />
+
+
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </LinearLayout>
         </ScrollView>

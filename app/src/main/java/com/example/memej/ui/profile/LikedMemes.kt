@@ -74,7 +74,7 @@ class LikedMemes : AppCompatActivity(), OnItemClickListenerLikeMeme {
             "likedBy" to _homeMeme.likedBy,
             "likes" to _homeMeme.likes,
             "placeholders" to _homeMeme.placeholders,
-            "meme" to _homeMeme.templateId.numPlaceholders,
+            "numPlaceholders" to _homeMeme.templateId.numPlaceholders,
             "tags" to _homeMeme.tags,
             "users" to _homeMeme.users,
             "templateIdCoordinates" to _homeMeme.templateId.coordinates,

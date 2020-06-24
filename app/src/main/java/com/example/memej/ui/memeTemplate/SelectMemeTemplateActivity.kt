@@ -54,7 +54,6 @@ class SelectMemeTemplateActivity : AppCompatActivity(), OnItemClickListenerTempl
         val i = Intent(this, NewMemeContainer::class.java)
         i.putExtra("bundle", bundle)
         startActivity(i)
-        finish()
 
     }
 
@@ -75,6 +74,7 @@ class SelectMemeTemplateActivity : AppCompatActivity(), OnItemClickListenerTempl
         dialog = ProgressDialog(this)
         dialog.setMessage("Loading templates...")
         dialog.show()
+
         //Get a dialog loader
 
         if (ErrorStatesResponse.checkIsNetworkConnected(this)) {
@@ -84,6 +84,9 @@ class SelectMemeTemplateActivity : AppCompatActivity(), OnItemClickListenerTempl
             checkConnection()
         }
         dialog.dismiss()
+
+        pb.isIndeterminate = false
+        pb.visibility = View.GONE
 
     }
 
@@ -108,6 +111,7 @@ class SelectMemeTemplateActivity : AppCompatActivity(), OnItemClickListenerTempl
                 dialogInterface.dismiss()
                 pb.visibility = View.GONE
 
+                pb.isIndeterminate = false
             }
             .build()
         mDialog.show()
@@ -134,6 +138,7 @@ class SelectMemeTemplateActivity : AppCompatActivity(), OnItemClickListenerTempl
         rv.adapter = memeGroupAdapter
         //After this has been done, close the pb
         pb.visibility = View.GONE
+        pb.isIndeterminate = false
         dialog.dismiss()
     }
 

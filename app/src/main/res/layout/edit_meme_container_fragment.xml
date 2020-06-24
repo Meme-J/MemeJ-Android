@@ -21,8 +21,8 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_gravity="center"
-            android:layout_margin="20dp"
-            android:elevation="40dp"
+            android:layout_margin="@dimen/card_half"
+            android:elevation="@dimen/card_eleveation_max"
             app:cardCornerRadius="@dimen/margins">
 
 
@@ -176,7 +176,7 @@
                             android:layout_height="@dimen/boxHt"
                             android:layout_marginStart="@dimen/margins"
                             android:layout_marginTop="@dimen/margins"
-                            android:layout_marginBottom="16dp"
+                            android:layout_marginBottom="@dimen/space_2x"
                             android:gravity="bottom"
                             android:hint="@string/add_a_tag" />
 

@@ -56,7 +56,7 @@
             style="@style/buttonMaterialStyle"
             android:layout_below="@id/tilPassword"
             android:layout_centerInParent="true"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/space"
             android:background="@color/colorPrimary"
             android:text="@string/login"
             app:cornerRadius="@dimen/margins" />
@@ -75,7 +75,7 @@
         <LinearLayout
             android:id="@+id/ll1"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="@dimen/card_eleveation_max"
             android:layout_below="@id/login_btn"
             android:gravity="center">
 

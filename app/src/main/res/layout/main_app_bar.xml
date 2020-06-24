@@ -36,7 +36,7 @@
     <!--        app:civ_shadow="true"-->
     <!--        app:civ_gravity="end"-->
     <!--        app:civ_shadow_color="#3f51b5"-->
-    <!--        app:civ_shadow_radius="40dp" />-->
+    <!--        app:civ_shadow_radius="@dimen/card_eleveation_max" />-->
 
 
 </RelativeLayout>

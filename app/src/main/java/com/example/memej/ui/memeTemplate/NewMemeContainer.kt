@@ -456,6 +456,7 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
 
         //There are no users
 
+        //Fit the timestamp of last updtaed for template
         getImage()
 
 
@@ -468,6 +469,7 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
             Glide.with(this)
                 .load(arg.getString("imageUrl"))
                 .dontAnimate()
+                .fitCenter()
                 .dontTransform()
                 .placeholder(R.drawable.icon_placeholder)
                 .error(R.drawable.icon_placeholder)
@@ -505,13 +507,13 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
         //Convert the px values
 
         val xN = arg.getParcelableArrayList<Coordinates>("coordinate")!!
-                .elementAt(0).x
+            .elementAt(0).x
 
         val yN = arg.getParcelableArrayList<Coordinates>("coordinate")!!
-                .elementAt(0).y
+            .elementAt(0).y
 
         val xB = arg.getParcelableArrayList<Coordinates>("coordinate")!!
-                .elementAt(1).x
+            .elementAt(1).x
         val yB =
             arg.getParcelableArrayList<Coordinates>("coordinate")!!
                 .elementAt(1).y

@@ -70,7 +70,7 @@ class MemeWorldDataSourcae(val context: Context, val searchQuery: queryBody, val
                         if (memeWorldPosts?.isEmpty()!!) {
                             Toast.makeText(
                                 context,
-                                "Unable to get memes ",
+                                "Unable to get memes",
                                 Toast.LENGTH_LONG
                             ).show()
                             pb.visibility = View.GONE

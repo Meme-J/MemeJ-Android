@@ -70,11 +70,15 @@ class CompletedMemeActivity : AppCompatActivity(), onUserClickType, onTagClickTy
     var MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 101
     lateinit var root: ActivityCompletedMemeBinding
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         //Root is the binding elemnt
+
+
         root = DataBindingUtil.setContentView(this, R.layout.activity_completed_meme)
+
         arg = intent?.getBundleExtra("bundle")!!
         memeUrl = arg.getString("imageUrl").toString()
         val memeId = arg.getString("id")       //This was the meme id
@@ -431,13 +435,13 @@ class CompletedMemeActivity : AppCompatActivity(), onUserClickType, onTagClickTy
 
 
         //Check if the post is liked already or not
-        val username = preferenceUtils.getUserFromPrefernece().username
-        val id = preferenceUtils.getUserFromPrefernece()._id
-        val userIns = com.example.memej.responses.memeWorldResponses.User(id, username)
-        val user_likers = arg.getParcelableArrayList<User>("likedBy")
-
-
-        Log.e("Adapter", userIns.toString() + user_likers.toString())
+//        val username = preferenceUtils.getUserFromPrefernece().username
+//        val id = preferenceUtils.getUserFromPrefernece()._id
+//        val userIns = com.example.memej.responses.memeWorldResponses.User(id, username)
+//        val user_likers = arg.getParcelableArrayList<User>("likedBy")
+//
+//
+//        Log.e("Adapter", userIns.toString() + user_likers.toString())
 
 //        if (user_likers != null) {
 //            if (user_likers.contains(userIns)) {
@@ -485,7 +489,10 @@ class CompletedMemeActivity : AppCompatActivity(), onUserClickType, onTagClickTy
         val totalPlaces = arg.getInt("numPlaceholders")
         val c = 2 * totalPlaces - 1
 
+        Log.e("Complete", totalPlaces.toString())
+
         for (i in 0..c step 2) {
+            Log.e("Complete", "In for")
 
 
             val color = arg.getStringArrayList("textColor")!!.elementAt(i / 2)
@@ -506,6 +513,8 @@ class CompletedMemeActivity : AppCompatActivity(), onUserClickType, onTagClickTy
             val y2 =
                 arg.getParcelableArrayList<Coordinate>("templateIdCoordinates")!!
                     .elementAt(i + 1).y
+
+            Log.e("Complete", color.toString() + x1.toString() + size.toString())
 
             photoGlobalEditor.addOldText(null, pl, colorInt, size.toFloat(), x1, y1, x2, y2)
         }
