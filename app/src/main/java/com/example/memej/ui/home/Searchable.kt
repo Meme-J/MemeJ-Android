@@ -48,6 +48,8 @@ class Searchable(val searchView: SearchView) : Fragment(), onClickSearch {
     lateinit var lav: LottieAnimationView
     private var originalMode: Int? = null
     lateinit var tsv: TextView
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

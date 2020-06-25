@@ -205,7 +205,7 @@ class CompletedMemeActivity : AppCompatActivity(), onUserClickType, onTagClickTy
                 Log.e("Save", "In success")
                 val snack = Snackbar.make(
                     container_completeMeme,
-                    "Downloaded successfully",
+                    "Meme will be downloaded successfully",
                     Snackbar.LENGTH_SHORT
                 )
                 snack.show()

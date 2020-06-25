@@ -124,6 +124,8 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
         setSupportActionBar(toolbar)
         val pbar = findViewById<ProgressBar>(R.id.pb_main)
 
+        //Dont set it in Profile section
+
 
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         sessionManager =

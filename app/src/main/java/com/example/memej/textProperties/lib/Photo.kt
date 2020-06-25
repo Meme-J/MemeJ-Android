@@ -533,6 +533,7 @@ class Photo private constructor(builder: Builder) :
      *
      * @return scalable multitouch listener
      */
+
     @get:NonNull
     private val multiTouchListener: MultiTouchListener?
         private get() =//multiTouchListener.setOnMultiTouchListener(this);

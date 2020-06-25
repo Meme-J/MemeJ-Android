@@ -5,7 +5,7 @@ buildscript {
     repositories {
         google()
         jcenter()
-        
+
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.6.3'
@@ -14,6 +14,7 @@ buildscript {
         classpath 'android.arch.navigation:navigation-safe-args-gradle-plugin:1.0.0'
 // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
+        //classpath 'gradle.plugin.chrisney:enigma:1.0.0.8'
     }
 }
 
@@ -21,8 +22,12 @@ allprojects {
     repositories {
         google()
         jcenter()
-        maven { url 'https://jitpack.io' }
-        
+        maven {
+            url 'https://jitpack.io'
+
+        }
+
+      //  maven { url "https://plugins.gradle.org/m2/" }
     }
 }
 

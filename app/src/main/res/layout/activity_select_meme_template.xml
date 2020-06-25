@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/card_half"
             android:layout_gravity="center"
-            android:indeterminate="true" />
+            android:visibility="visible" />
 
 
         <androidx.recyclerview.widget.RecyclerView

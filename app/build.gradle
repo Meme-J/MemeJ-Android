@@ -3,6 +3,10 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'androidx.navigation.safeargs'
+//apply plugin: 'com.chrisney.enigma'
+
+//enigma.enabled = true
+//enigma.injectFakeKeys = true
 
 android {
     compileSdkVersion 29
@@ -27,7 +31,8 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            //Proguard Techniques
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }

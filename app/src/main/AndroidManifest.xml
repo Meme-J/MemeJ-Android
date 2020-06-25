@@ -44,48 +44,57 @@
             android:screenOrientation="portrait"
             android:theme="@style/Containertheme"
             android:windowSoftInputMode="adjustResize" />
+
         <activity
             android:name=".ui.MemeWorld.CompletedMemeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Containertheme"
             android:windowSoftInputMode="adjustResize">
-
-
         </activity>
 
+
         <activity android:name=".ui.profile.UserProfile" />
-        <activity android:name=".ui.home.Searchable">
-            <meta-data
-                android:name="android.app.default_searchable"
-                android:value=".MainActivity" />
-        </activity> <!-- <activity android:name=".ui.MemeWorld.CompletedMemeActivity" /> -->
+
+        <!--        <activity android:name=".ui.home.Searchable">-->
+        <!--            <meta-data-->
+        <!--                android:name="android.app.default_searchable"-->
+        <!--                android:value=".MainActivity" />-->
+        <!--        </activity> &lt;!&ndash; <activity android:name=".ui.MemeWorld.CompletedMemeActivity" /> &ndash;&gt;-->
+
+
         <activity
             android:name=".ui.home.SettingsScreen"
             android:screenOrientation="portrait"
             android:theme="@style/DarkTheme"
             android:windowSoftInputMode="stateAlwaysHidden" />
+
         <activity
             android:name=".ui.profile.LikedMemes"
             android:screenOrientation="portrait"
             android:theme="@style/DarkTheme"
             android:windowSoftInputMode="stateAlwaysHidden" />
+
         <activity
             android:name=".ui.auth.SignUpActivity"
             android:screenOrientation="portrait"
             android:theme="@style/LoginSignUp"
             android:windowSoftInputMode="adjustResize" />
+
         <activity android:name=".ui.memeTemplate.TemplateActivity" />
+
         <activity
             android:name=".ui.memeTemplate.SelectMemeTemplateActivity"
             android:label="Select Template"
             android:screenOrientation="portrait"
             android:theme="@style/DarkTheme"
             android:windowSoftInputMode="adjustResize" />
+
         <activity
             android:name=".ui.auth.LoginActivity"
             android:screenOrientation="portrait"
             android:theme="@style/LoginSignUp"
             android:windowSoftInputMode="adjustResize" />
+
         <activity
             android:name=".ui.auth.SplashScreen"
             android:noHistory="true"
