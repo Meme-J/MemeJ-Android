@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
+        android:id="@+id/container_signUp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/container_signUp"
         android:orientation="vertical">
 
         <androidx.core.widget.NestedScrollView
@@ -19,21 +19,23 @@
                 android:orientation="vertical">
 
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/head"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="cursive"
-                    android:gravity="center"
-                    android:text="@string/app_name"
-                    android:textSize="32sp" />
+                <!--                <com.google.android.material.textview.MaterialTextView-->
+                <!--                    android:id="@+id/head"-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:fontFamily="cursive"-->
+                <!--                    android:gravity="center"-->
+                <!--                    android:text="@string/app_name"-->
+                <!--                    android:textSize="32sp" />-->
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tilName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/head"
-                    android:layout_margin="@dimen/margins"
+                    android:layout_marginStart="@dimen/margins"
+                    android:layout_marginTop="@dimen/space_3x"
+                    android:layout_marginEnd="@dimen/margins"
+                    android:layout_marginBottom="@dimen/margins"
                     android:padding="@dimen/margins">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -106,12 +108,31 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilConfPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tilPassword"
+                    android:layout_margin="@dimen/margins"
+                    android:padding="@dimen/margins"
+                    app:passwordToggleEnabled="true">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etConfPassword"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:hint="@string/confirm_password"
+                        android:inputType="textPassword" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/signUp_btn"
                     style="@style/buttonMaterialStyle"
                     android:layout_width="100dp"
                     android:layout_height="@dimen/btn_size"
-                    android:layout_below="@id/tilPassword"
+                    android:layout_below="@id/tilConfPassword"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="@dimen/space"
                     android:background="@color/colorPrimary"

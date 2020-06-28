@@ -11,12 +11,13 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProviders
 import com.example.memej.R
 import com.example.memej.Utils.Communicator
 import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.PreferenceUtil
 import com.example.memej.Utils.sessionManagers.SessionManager
+import com.example.memej.databinding.ProfileFragmentBinding
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.NumLikes
 import com.example.memej.responses.ProfileResponse
@@ -34,16 +35,35 @@ class ProfileFragment : Fragment() {
     }
 
     private lateinit var root: View
-    private val viewModel: ProfileViewModel by viewModels()
+
+    //    private val viewModel: ProfileViewModel by viewModels()
     private lateinit var comm: Communicator
     private lateinit var sessionManager: SessionManager
     lateinit var pb: ProgressBar
     private val preferenceUtils = PreferenceUtil
 
+    private lateinit var fragmentProfileBinding: ProfileFragmentBinding
+    private val profileViewModel by lazy {
+        ViewModelProviders.of(this).get(ProfileViewModel::class.java)
+    }
+
+    //   override fun getLayoutResourceId(): Int = R.layout.profile_fragment
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+
+//        fragmentProfileBinding = DataBindingUtil.inflate(inflater, R.layout.profile_fragment, container, false)
+//        return fragmentProfileBinding.root
+
+
+
+
+
+
         root = inflater.inflate(R.layout.profile_fragment, container, false)
         comm = activity as Communicator
         sessionManager = context?.let {
@@ -137,8 +157,8 @@ class ProfileFragment : Fragment() {
 
             root.findViewById<MaterialTextView>(R.id.username).text =
                 preferenceUtils.getUserFromPrefernece().username
-            root.findViewById<MaterialTextView>(R.id.name).text =
-                preferenceUtils.getUserFromPrefernece().name
+//            root.findViewById<MaterialTextView>(R.id.name).text =
+//                preferenceUtils.getUserFromPrefernece().name
             pb.visibility = View.GONE
 
         }
@@ -193,8 +213,8 @@ class ProfileFragment : Fragment() {
                     if (response.isSuccessful) {
                         root.findViewById<MaterialTextView>(R.id.username).text =
                             response.body()?.profile?.username
-                        root.findViewById<MaterialTextView>(R.id.name).text =
-                            response.body()?.profile?.name
+//                        root.findViewById<MaterialTextView>(R.id.name).text =
+//                            response.body()?.profile?.name
                         pb.visibility = View.GONE
                         setPreferencesUser(response.body()!!.profile)
                     }

@@ -498,7 +498,7 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
         rvUser.adapter = userAdater
 
         //Set timestamp
-        root.timestampEdit.text = arg.getString("lastUpdated")
+//        root.timestampEdit.text = arg.getString("lastUpdated")
 
 
         getImage()

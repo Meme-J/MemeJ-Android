@@ -8,7 +8,7 @@ import androidx.paging.DataSource
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.example.memej.dataSources.HomeMemeDataSource
-import com.example.memej.dataSources.MemeWorldDataSourcae
+import com.example.memej.dataSources.MemeWorldDataSource
 import com.example.memej.entities.queryBody
 import com.example.memej.responses.homeMememResponses.Meme_Home
 import com.example.memej.responses.memeWorldResponses.Meme_World
@@ -67,7 +67,7 @@ class SearchResultActivityViewModel(application: Application) : AndroidViewModel
             override fun create(): DataSource<String, Meme_World> {
 
                 val inf = queryBody(tagName)
-                return MemeWorldDataSourcae(context, inf, pb)
+                return MemeWorldDataSource(context, inf, pb)
             }
         }
         return LivePagedListBuilder(dataSourceFactory, config)

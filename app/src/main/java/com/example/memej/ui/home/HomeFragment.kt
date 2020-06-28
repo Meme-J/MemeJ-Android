@@ -18,6 +18,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.memej.R
 import com.example.memej.Utils.Communicator
 import com.example.memej.Utils.ErrorStatesResponse
@@ -37,6 +38,7 @@ class HomeFragment : Fragment(), OnItemClickListenerHome {
     lateinit var pb: ProgressBar
     lateinit var itemAnimator: RecyclerView.ItemAnimator
     lateinit var dialog: ProgressDialog
+    lateinit var swl: SwipeRefreshLayout
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,6 +52,12 @@ class HomeFragment : Fragment(), OnItemClickListenerHome {
         itemAnimator = DefaultItemAnimator()
         homeMemeAdapter = HomeMemeAdapter(this)
         pb.visibility = View.VISIBLE
+        swl = root.findViewById(R.id.swl_home)
+
+
+        swl.setOnRefreshListener {
+            observeList()
+        }
 
         //Create a dialog
         dialog = ProgressDialog(activity)
@@ -115,24 +123,22 @@ class HomeFragment : Fragment(), OnItemClickListenerHome {
         homeMemeAdapter.notifyDataSetChanged()
         pb.visibility = View.GONE
         dialog.dismiss()
+        swl.isRefreshing = false
     }
 
     private fun observeList() {
 
-        //Create a material dialog for network states
-        Log.e("Home", "In observe list")
         if (!ErrorStatesResponse.checkIsNetworkConnected(requireContext())) {
             dialog.dismiss()
             checkConnection()
         }
 
-
+        swl.isRefreshing = true
         pb.visibility = View.VISIBLE
         homeViewModel.getPosts(pb = pb).observe(
             viewLifecycleOwner, Observer
             {
 
-                Log.e("Home", "In observer")
                 homeMemeAdapter.submitList(it)
         })
 

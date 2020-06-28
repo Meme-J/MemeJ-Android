@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.ProgressBar
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -14,6 +15,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.memej.R
 import com.example.memej.Utils.Communicator
 import com.example.memej.Utils.ErrorStatesResponse
@@ -36,6 +38,10 @@ class MemeWorldFragment : Fragment(), OnItemClickListenerMemeWorld {
     lateinit var comm: Communicator
     lateinit var pb: ProgressBar
     lateinit var dialog: ProgressDialog
+    lateinit var swl: SwipeRefreshLayout
+
+    private var memesPresent = false
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -48,20 +54,35 @@ class MemeWorldFragment : Fragment(), OnItemClickListenerMemeWorld {
         pb = root.findViewById(R.id.pb_meme_world)
         pb.visibility = View.VISIBLE
 
-        pb.visibility = View.VISIBLE
+
+
+        swl = root.findViewById<SwipeRefreshLayout>(R.id.swl_meme_world)
+
+        swl.setOnRefreshListener {
+            observeList()
+        }
+
 
         //Create a dialog
         dialog = ProgressDialog(context)
         dialog.setMessage("Loading memes...")
         dialog.show()
 
+
+
         if (ErrorStatesResponse.checkIsNetworkConnected(requireContext())) {
             observeList()
         } else {
             checkConnection()
         }
+
+
+
         comm = activity as Communicator
         dialog.dismiss()
+
+
+
 
         return root
     }
@@ -105,7 +126,18 @@ class MemeWorldFragment : Fragment(), OnItemClickListenerMemeWorld {
         rv.adapter = memeWorldAdapter
         pb.visibility = View.GONE
         dialog.dismiss()
+        swl.isRefreshing = false
 
+    }
+
+    private fun runLayoutAnimation(recyclerView: RecyclerView) {
+        val context = recyclerView.context
+        recyclerView.layoutAnimation = AnimationUtils.loadLayoutAnimation(
+            context,
+            R.anim.layout_fall_down
+        )
+        recyclerView.adapter?.notifyDataSetChanged()
+        recyclerView.scheduleLayoutAnimation()
     }
 
     private fun observeList() {
@@ -115,6 +147,7 @@ class MemeWorldFragment : Fragment(), OnItemClickListenerMemeWorld {
             checkConnection()
         }
 
+        swl.isRefreshing = true
         memeWorldViewModel.getPosts(pr = pb).observe(viewLifecycleOwner, Observer {
             memeWorldAdapter.submitList(it)
         })

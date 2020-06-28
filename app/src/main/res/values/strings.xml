@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">memeJ</string>
+    <string name="app_name">MemeJ</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="login">Login</string>
@@ -7,7 +7,7 @@
     <string name="signin_failed">Unable to sign up at the moment. Please try again later</string>
     <string name="login_failed">Unable to sign in at the moment. Please try again later</string>
     <string name="password">Password</string>
-    <string name="new_to_memejam">New to memeJam?</string>
+    <string name="new_to_memejam">New to MemeJam?</string>
     <string name="signup_instead"> SignUp Instead</string>
     <string name="email">Email</string>
     <string name="lorem_ipsum">the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</string>
@@ -40,8 +40,8 @@
     <string name="add_a_tag">Add a tag</string>
     <string name="add_a_line">Add a line</string>
     <string name="me">Me</string>
+    <string name="successLogin">Login Successful</string>
     <string name="change_avatar">Change Avatar</string>
-    <string name="logout">Logout</string>
     <string name="choose_your_avatar">Choose your avatar</string>
     <string name="total_memes">Total Memes</string>
     <string name="total_likes">Total Likes</string>
@@ -67,6 +67,11 @@
     <string name="error_please_check_internet">Please check your internet connection</string>
     <string name="no_internet_str">\" No Internet Connection\"</string>
     <string name="hello">Hello</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="mismatch">Passwords do not match</string>
+    <string name="under_constuction">Under Constuction</string>
+    <string name="logout">Logout</string>
+    <string name="tag_name">Tag Name</string>
 
 
     <array name="themeColors">

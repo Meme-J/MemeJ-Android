@@ -9,9 +9,17 @@
         app:actionViewClass="android.widget.SearchView"
         app:showAsAction="collapseActionView|ifRoom" />
 
+
+    <!--    <item-->
+    <!--        android:id="@+id/settings_btn"-->
+    <!--        android:icon="@drawable/ic_settings"-->
+    <!--        android:title="@string/settings"-->
+    <!--        app:showAsAction="always" />-->
+
+
     <item
         android:id="@+id/settings_btn"
-        android:icon="@drawable/ic_settings"
-        android:title="@string/settings"
+        android:icon="@drawable/ic_exit_to_app_black_24dp"
+        android:title="@string/logout"
         app:showAsAction="always" />
 </menu>

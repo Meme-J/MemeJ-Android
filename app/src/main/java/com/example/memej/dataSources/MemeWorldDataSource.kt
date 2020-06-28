@@ -1,12 +1,11 @@
 package com.example.memej.dataSources
 
 import android.content.Context
-import android.content.Intent
+import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.paging.PageKeyedDataSource
-import com.example.memej.MainActivity
 import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.entities.queryBody
@@ -17,7 +16,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MemeWorldDataSourcae(val context: Context, val searchQuery: queryBody, val pb: ProgressBar) :
+class MemeWorldDataSource(val context: Context, val searchQuery: queryBody, val pb: ProgressBar) :
     PageKeyedDataSource<String, Meme_World>() {
 
 
@@ -48,12 +47,14 @@ class MemeWorldDataSourcae(val context: Context, val searchQuery: queryBody, val
                     response: Response<memeApiResponses>
                 ) {
 
+
                     if (response.isSuccessful) {
                         val listing = response.body()
 
                         val memeWorldPosts = listing?.memes
                         val size = memeWorldPosts?.size
 
+                        Log.e("MemeWorldDS", response.body().toString())
 
                         if (memeWorldPosts != null && memeWorldPosts.isNotEmpty()) {
 
@@ -135,12 +136,12 @@ class MemeWorldDataSourcae(val context: Context, val searchQuery: queryBody, val
                         if (memePosts?.isEmpty()!!) {
                             Toast.makeText(
                                 context,
-                                "Unable to get meme wioth this tag",
+                                "Unable to get meme with this tag",
                                 Toast.LENGTH_LONG
                             ).show()
                             pb.visibility = View.GONE
-                            val i = Intent(context, MainActivity::class.java)
-                            context.startActivity(i)
+//                            val i = Intent(context, MainActivity::class.java)
+//                            context.startActivity(i)
                         }
                         pb.visibility = View.GONE
 

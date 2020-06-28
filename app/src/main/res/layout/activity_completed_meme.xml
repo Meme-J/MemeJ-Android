@@ -35,10 +35,6 @@
                         android:layout_margin="@dimen/margins"
                         android:orientation="vertical">
 
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/rv_complete_user"
-                            style="@style/recylclerViewAttr"
-                            tools:listitem="@layout/layout_user" />
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/rv_complete_user_tag"
@@ -59,6 +55,12 @@
                                 android:layout_gravity="center" />
 
                         </com.google.android.material.card.MaterialCardView>
+
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rv_complete_user"
+                            style="@style/recylclerViewAttr"
+                            tools:listitem="@layout/layout_user_creators" />
 
 
                         <com.google.android.material.textview.MaterialTextView

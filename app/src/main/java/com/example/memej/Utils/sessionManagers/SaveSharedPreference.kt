@@ -8,6 +8,7 @@ import android.preference.PreferenceManager
 
 const val LOGGED_IN_PREF = "logged_in_status"
 
+//This is not useful when cache is cleared
 class SaveSharedPreference {
 
     fun getPreferences(context: Context?): SharedPreferences? {

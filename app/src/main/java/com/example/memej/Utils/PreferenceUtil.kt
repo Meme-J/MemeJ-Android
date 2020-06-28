@@ -20,6 +20,8 @@ object PreferenceUtil {
     private const val EMAIL = "email"
     private var LIKES = "likes"
 
+    private var hasSeenWalkthrough = false
+
     var _id: String?
         get() = pm.getString(ID, "")
         set(value) {
@@ -84,6 +86,12 @@ object PreferenceUtil {
     fun getNumberOfLikes(): NumLikes {
         val p = PreferenceUtil
         return NumLikes(p.likes!!)
+    }
+
+    fun setStatusOfWalkThroughTrue(): Boolean {
+        val p = PreferenceUtil
+        return p.hasSeenWalkthrough
+
     }
 
 

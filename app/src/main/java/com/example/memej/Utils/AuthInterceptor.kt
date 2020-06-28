@@ -1,4 +1,4 @@
-package com.example.memej.Utils.DiffUtils
+package com.example.memej.Utils
 
 import android.content.Context
 import com.example.memej.Utils.sessionManagers.SessionManager

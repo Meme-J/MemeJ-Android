@@ -29,10 +29,11 @@ android {
 //        }
 //    }
 
+
     buildTypes {
         release {
             //Proguard Techniques
-            minifyEnabled true
+            minifyEnabled false             //Need to add serialized name annotation if enabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }

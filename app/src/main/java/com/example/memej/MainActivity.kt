@@ -17,11 +17,14 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.memej.Utils.Communicator
+import com.example.memej.Utils.PreferenceUtil
+import com.example.memej.Utils.sessionManagers.SaveSharedPreference
 import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.adapters.SearchAdapter
 import com.example.memej.adapters.onClickSearch
 import com.example.memej.responses.SearchResponse
 import com.example.memej.ui.MemeWorld.MemeWorldFragment
+import com.example.memej.ui.auth.LoginActivity
 import com.example.memej.ui.explore.ExploreFragment
 import com.example.memej.ui.home.HomeFragment
 import com.example.memej.ui.home.Searchable
@@ -32,6 +35,7 @@ import com.example.memej.ui.myMemes.MyMemesFragment
 import com.example.memej.ui.profile.ProfileFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.shreyaspatil.MaterialDialog.MaterialDialog
 
 
 class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
@@ -114,6 +118,11 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
     //Initialzie the toolbar
     lateinit var toolbar: androidx.appcompat.widget.Toolbar
     private var atMainActicty = true
+
+    private val preferenceUtils = PreferenceUtil
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -250,7 +259,11 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
         val frag = getFragmnetFromIndex(index)
 
         when (item.itemId) {
-            R.id.settings_btn -> startActivity(i)
+            R.id.settings_btn ->
+                //startActivity(i)
+                //Dialog of logout
+                logout()
+
             R.id.navigation_search -> openSearch(Searchable(searchView), frag)
 
             else ->
@@ -258,6 +271,41 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
         }
         return true
     }
+
+    private fun logout() {
+        //Ask the user
+        val mDialog = MaterialDialog.Builder(this)
+            .setTitle("Logout?")
+            .setMessage("Are you sure want to logout?")
+            .setCancelable(true)
+            .setPositiveButton(
+                "Yes",
+                R.drawable.ic_exit_to_app_black_24dp
+            ) { dialogInterface, which ->
+                logoutDo()
+            }
+            .setNegativeButton(
+                "No"
+            ) { dialogInterface, which -> dialogInterface.dismiss() }
+            .build()
+        mDialog.show()
+
+    }
+
+    private fun logoutDo() {
+        SaveSharedPreference()
+            .setLoggedIn(applicationContext, false)
+
+
+        //Remove the saved profile
+        preferenceUtils.clearPrefData()
+        val i = Intent(this, LoginActivity::class.java)
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+        finishAffinity()
+        startActivity(i)
+
+    }
+
 
     //Exit app
     override fun onBackPressed() {

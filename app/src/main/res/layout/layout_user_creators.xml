@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:id="@+id/card_user_creator"
+    android:layout_width="@dimen/space_6x"
+    android:layout_height="@dimen/space_6x"
     android:layout_margin="@dimen/margins"
     android:elevation="@dimen/card_half"
     app:cardBackgroundColor="@color/teal_50"
-    app:cardCornerRadius="@dimen/space_2x">
+    app:cardCornerRadius="@dimen/space_3x">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
         android:orientation="horizontal">
 
         <TextView
@@ -18,6 +21,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margins"
-            android:text="@string/tag_name" />
+            android:text="@string/tag_name"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
