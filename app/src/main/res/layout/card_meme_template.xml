@@ -17,12 +17,12 @@
         android:elevation="@dimen/card_eleveation_max"
         app:cardCornerRadius="@dimen/margins">
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/cv_memeGroup"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_centerInParent="true"
-                android:src="@drawable/test_image" />
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/cv_memeGroup"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/test_image" />
 
 
     </com.google.android.material.card.MaterialCardView>

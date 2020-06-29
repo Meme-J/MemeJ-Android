@@ -20,8 +20,8 @@
     </fragment>
     <fragment
         android:id="@+id/editMemeContainerFragment"
-        android:label="Edit meme"
         android:name="com.example.memej.ui.home.EditMemeContainerFragment"
+        android:label="Edit meme"
         tools:layout="@layout/edit_meme_container_fragment">
 
 

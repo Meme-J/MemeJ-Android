@@ -232,5 +232,5 @@ dependencies {
 
 //    //SearchView
 //    implementation "com.paulrybitskyi.persistentsearchview:persistentsearchview:1.1.2"
-    compile 'com.miguelcatalan:materialsearchview:1.4.0'
+    implementation 'com.miguelcatalan:materialsearchview:1.4.0'
 }

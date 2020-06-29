@@ -22,6 +22,8 @@ class SplashScreen : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
 
+        //Check the access token here
+
         val intent = if (preferenceManager.authToken!!.isEmpty()) {
             Intent(this, LoginActivity::class.java)
         } else {

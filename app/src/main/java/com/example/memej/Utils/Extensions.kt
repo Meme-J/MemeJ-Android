@@ -41,8 +41,6 @@ fun Activity.shareCacheDirBitmap(uri: Uri?, name: String, bitmap: Bitmap) {
 }
 
 
-
-
 //toString
 //// Extension property to get bitmap from view
 //val View.bitmap: Bitmap

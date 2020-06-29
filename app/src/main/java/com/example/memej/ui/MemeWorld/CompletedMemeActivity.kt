@@ -12,7 +12,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -39,7 +38,6 @@ import com.example.memej.responses.memeWorldResponses.User
 import com.example.memej.textProperties.ConversionUtil
 import com.example.memej.textProperties.lib.ImageEditorView
 import com.example.memej.textProperties.lib.Photo
-import com.example.memej.viewModels.CompletdMemeViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_completed_meme.*
 import retrofit2.Call
@@ -60,7 +58,8 @@ class CompletedMemeActivity : AppCompatActivity(), onUserClickType, onTagClickTy
     //    lateinit var image: LikeButton
 //    lateinit var likes: TextView
     private val preferenceUtils = PreferenceUtil
-    private val viewmodel: CompletdMemeViewModel by viewModels()
+
+    //private val viewmodel: CompletdMemeViewModel by viewModels()
     lateinit var bmp: Bitmap
     lateinit var photoView: ImageEditorView
     lateinit var photoGlobalEditor: Photo

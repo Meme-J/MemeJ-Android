@@ -15,7 +15,6 @@ import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.ProgressBar
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.databinding.DataBindingUtil
@@ -40,7 +39,6 @@ import com.example.memej.textProperties.lib.OnPhotoEditorListener
 import com.example.memej.textProperties.lib.Photo
 import com.example.memej.textProperties.lib.ViewType
 import com.example.memej.textProperties.projectResources
-import com.example.memej.viewModels.EditMemeContainerViewModel
 import com.google.android.material.button.MaterialButton
 import retrofit2.Call
 import retrofit2.Callback
@@ -50,7 +48,7 @@ import kotlin.properties.Delegates
 
 class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagClickType {
 
-    private val viewModel: EditMemeContainerViewModel by viewModels()
+    //private val viewModel: EditMemeContainerViewModel by viewModels()
     private lateinit var root: EditMemeContainerFragmentBinding
     lateinit var arg: Bundle
     lateinit var edt: EditText

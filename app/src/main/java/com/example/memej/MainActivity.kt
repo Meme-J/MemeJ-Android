@@ -60,6 +60,7 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
         transaction.commit()
     }
 
+
     private fun openSearch(
         fragment: Fragment,
         frag: Fragment?
@@ -220,36 +221,6 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
         })
 
 
-        //        srv = toolbar.findViewById(R.id.search_view_lib)
-        //        srv.setCursorDrawable(R.drawable.custom_cursor)
-        //
-        //        srv.setOnQueryTextListener(object : MaterialSearchView.OnQueryTextListener {
-        //            override fun onQueryTextSubmit(query: String): Boolean {
-        //                //Do some magic
-        //                return false
-        //            }
-        //
-        //            override fun onQueryTextChange(newText: String): Boolean {
-        //                val body = searchBody(newText, searchType.toString())
-        //                Log.e("Body", body.toString() + " index" + MainActivity().index)
-        //                fetchSuggestions(body)
-        //                return true
-        //            }
-        //        })
-        //
-        //        srv.setOnSearchViewListener(object : SearchViewListener {
-        //            override fun onSearchViewShown() {
-        //
-        //                //Do some magic
-        //            }
-        //
-        //            override fun onSearchViewClosed() {
-        //                //Do some magic
-        //            }
-        //        })
-        //
-
-
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         sessionManager =
             SessionManager(this)
@@ -367,73 +338,10 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.top_options_menu, menu)
-        // Associate searchable configuration with the SearchView
-
-        //Inflate Menu
-        //val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        //searchView = menu!!.findItem(R.id.navigation_search).actionView as SearchView
-
-        Log.e("SearchX", "In Inflate menu")
-
-        //searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
-        //searchView.isIconifiedByDefault = false
-        //searchView.queryHint = "Search"
-        //searchView.requestFocus()
-        // searchView.setBackgroundColor(resources.getColor(R.color.stoneWhite))
-
-//        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-//            override fun onQueryTextSubmit(query: String?): Boolean {
-//                return false
-//            }
-//
-//            override fun onQueryTextChange(newText: String?): Boolean {
-//                fetchSuggestionsFromSearch(newText.toString())
-//                return true
-//            }
-//        })
-
-
-//        val frag = getFragmnetFromIndex(index)
-//        Log.e("SearchX", "In On Create Options, before close")
-//        searchManager.setOnCancelListener {
-//            Log.e("SearchXM", "Close search")
-//
-//            openFragment(frag!!)
-//        }
-//        searchView.setOnCloseListener(object : SearchView.OnCloseListener {
-//            override fun onClose(): Boolean {
-//
-//                Log.e("SearchX", "In overrriden method of close")
-//                openFragment(frag!!)
-//
-//                return true
-//            }
-//        })
-
-        //      val item = menu?.findItem(R.id.action_search)
-//        srv.setMenuItem(item)
 
         return true
 
     }
-
-//                    val columns = arrayOf(
-//                        BaseColumns._ID,
-//                        SearchManager.SUGGEST_COLUMN_TEXT_1,
-//                        SearchManager.SUGGEST_COLUMN_INTENT_DATA
-//                    )
-//
-//                    val cursor = MatrixCursor(columns)
-//
-//                    for (i in 0 until str.size - 1) {
-//                        val tmp = arrayOf(
-//                            Integer.toString(i),
-//                            str.get(i),
-//                            "COLUMNT_INTENT_DATA"
-//                        )
-//                        cursor.addRow(tmp)
-//                    }
-//                    Log.e("Cursor", cursor.toString())
 
 
     private fun getIndexStringType(index: Int): String? {
@@ -584,6 +492,10 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
 
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
+    }
 
 }
 

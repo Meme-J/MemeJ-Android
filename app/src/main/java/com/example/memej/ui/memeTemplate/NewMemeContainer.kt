@@ -642,6 +642,7 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
         finish()
 
     }
+
     override fun getTagType(_tag: String) {
         TODO("Not yet implemented")
     }
