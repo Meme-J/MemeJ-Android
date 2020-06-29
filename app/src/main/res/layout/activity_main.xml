@@ -25,15 +25,15 @@
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/activityCatalogSearchContainer"
-                android:layout_width="wrap_content"
+                android:layout_width="300dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="4dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginBottom="4dp"
-                app:cardCornerRadius="4dp"
-                app:cardElevation="@dimen/space">
+                app:cardBackgroundColor="@color/colorPrimary"
+                app:cardCornerRadius="4dp">
 
 
                 <SearchView
@@ -43,6 +43,12 @@
                     android:background="@color/garbinaoGrey"
                     android:iconifiedByDefault="false"
                     android:queryHint="Search" />
+
+                <!--                <com.miguelcatalan.materialsearchview.MaterialSearchView-->
+                <!--                    android:id="@+id/search_view_lib"-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="wrap_content" />-->
+
 
             </androidx.cardview.widget.CardView>
 

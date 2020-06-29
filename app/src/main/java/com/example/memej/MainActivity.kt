@@ -1,31 +1,35 @@
 package com.example.memej
 
-import android.app.SearchManager
-import android.content.ComponentName
-import android.content.Context
 import android.content.Intent
 import android.database.Cursor
+import android.database.MatrixCursor
 import android.os.Bundle
+import android.provider.BaseColumns
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.*
+import android.widget.ArrayAdapter
+import android.widget.CursorAdapter
+import android.widget.SearchView
+import android.widget.SimpleCursorAdapter
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
-import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.memej.Utils.Communicator
+import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.PreferenceUtil
 import com.example.memej.Utils.sessionManagers.SaveSharedPreference
 import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.adapters.SearchAdapter
 import com.example.memej.adapters.onClickSearch
 import com.example.memej.entities.searchBody
+import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.SearchResponse
 import com.example.memej.ui.MemeWorld.MemeWorldFragment
 import com.example.memej.ui.auth.LoginActivity
@@ -40,7 +44,10 @@ import com.example.memej.ui.profile.ProfileFragment
 import com.example.memej.viewModels.MainActivityViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.miguelcatalan.materialsearchview.MaterialSearchView
 import com.shreyaspatil.MaterialDialog.MaterialDialog
+import retrofit2.Call
+import retrofit2.Response
 
 
 class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
@@ -73,15 +80,23 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
         }
     }
 
+    fun findFragment(): String? {
+        val fm = supportFragmentManager.findFragmentById(R.id.container)
+        val fragmentName: String = fm!!::class.java.simpleName
+        return fragmentName
+    }
 
     //Get the res id
     private val mOnNavigationItemSelectedListener =
         BottomNavigationView.OnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
+
+
                 R.id.navigation_home -> {
                     index = 0
                     openFragment(HomeFragment())
                     return@OnNavigationItemSelectedListener true
+
                 }
                 R.id.navigation_explore -> {
                     index = 1
@@ -128,8 +143,12 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
     lateinit var stringAdapter: ArrayAdapter<String>
     lateinit var mutableList: MutableList<String>
 
-    lateinit var srv: SearchView
+    lateinit var srv: MaterialSearchView
     private val viewModel: MainActivityViewModel by viewModels()
+
+    private var mAdapter: SimpleCursorAdapter? = null
+
+    var searchType: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -141,95 +160,94 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
         setSupportActionBar(toolbar)
 
 
-        //Set up the view pager
-//        val viewPager = findViewById<ViewPager>(R.id.viewpager)
-//        setUpViewPager(viewPager)
+        //val searchType = getIndexStringType(MainActivity().index)
 
+        val from = arrayOf("suggestionList")
+        val to = intArrayOf(android.R.id.text1)
 
-        rv = findViewById(R.id.rv_search_main)
-        adapter = SearchAdapter(this)
-        mutableList = mutableListOf()           //Empty list
-        stringAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line)
-
-        val onItemClickTag =
-            AdapterView.OnItemClickListener { adapterView, view, i, l ->
-                mutableList.add(adapterView.getItemAtPosition(i).toString())
-                //NAvigate to the search result with the parameters
-            }
-
-        //find the search bar and activists
-
-        srv = toolbar.findViewById<SearchView>(R.id.activityCatalogSearch)
-        srv.queryHint = getString(R.string.search_hint)
-
-        val searchManager =
-            getSystemService(Context.SEARCH_SERVICE) as SearchManager
-
-        val componentName = ComponentName(this, SearchResultActivity::class.java)
-        srv.setSearchableInfo(searchManager.getSearchableInfo(componentName))
-
-        //Start after the first character is typed
-//        val mQueryTextView = srv.findViewById(R.id.search_src_text) as AutoCompleteTextView
-//        mQueryTextView.threshold = 1
-
-        //Cursor
-        val suggestionAdapter: CursorAdapter = SimpleCursorAdapter(
+        mAdapter = SimpleCursorAdapter(
             this,
             android.R.layout.simple_list_item_1,
+//           R.layout.list_suggestionn,
             null,
-            arrayOf(SearchManager.SUGGEST_COLUMN_TEXT_1),
-            intArrayOf(android.R.id.text1),
-            0
+            from,
+            to,
+            CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER
         )
 
+        searchView = toolbar.findViewById(R.id.activityCatalogSearch) as SearchView
+        searchView.suggestionsAdapter = mAdapter
+        searchView.isIconifiedByDefault = false
 
-        val searchType = getIndexStringType(MainActivity().index)
+        searchView.setOnSuggestionListener(object : SearchView.OnSuggestionListener {
+            override fun onSuggestionSelect(position: Int): Boolean {
+                return true
+            }
 
-        srv.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onSuggestionClick(position: Int): Boolean {
+
+                val cursor: Cursor = mAdapter!!.getItem(position) as Cursor
+                val txt = cursor.getString(cursor.getColumnIndex("suggestionList"))
+
+                val bundle = bundleOf(
+                    "tag" to txt,
+                    "type" to searchType
+                )
+                val i = Intent(this@MainActivity, SearchResultActivity::class.java)
+                i.putExtra("tag", txt)
+                i.putExtra("type", searchType)
+                i.putExtra("bundle", bundle)
+                startActivity(i)
+
+
+
+                return true
+
+
+            }
+        })
+
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return false
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-
-                val body = searchBody(newText.toString(), searchType.toString())
-
-                viewModel.fetchSuggestions(body = body)
-                    .observe(this@MainActivity, Observer { suggestionList ->
-                        initSearchCursor(suggestionList)
-
-                    })
-
-                srv.suggestionsAdapter = suggestionAdapter
-                return true
-            }
-        })
-
-
-        //On suggestion click listener
-        srv.setOnSuggestionListener(object : SearchView.OnSuggestionListener {
-            override fun onSuggestionSelect(position: Int): Boolean {
+                fetchSuggestions(newText.toString())
                 return false
             }
-
-            override fun onSuggestionClick(position: Int): Boolean {
-                //Start Intent
-                val cursor = srv.suggestionsAdapter.getItem(position) as Cursor
-                val selection =
-                    cursor.getString(cursor.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1))
-                srv.setQuery(selection, false)
-
-                //Selection is the value
-
-                // Do something with selection
-                return true
-            }
         })
 
 
-        val pbar = findViewById<ProgressBar>(R.id.pb_main)
-
-        //Dont set it in Profile section
+        //        srv = toolbar.findViewById(R.id.search_view_lib)
+        //        srv.setCursorDrawable(R.drawable.custom_cursor)
+        //
+        //        srv.setOnQueryTextListener(object : MaterialSearchView.OnQueryTextListener {
+        //            override fun onQueryTextSubmit(query: String): Boolean {
+        //                //Do some magic
+        //                return false
+        //            }
+        //
+        //            override fun onQueryTextChange(newText: String): Boolean {
+        //                val body = searchBody(newText, searchType.toString())
+        //                Log.e("Body", body.toString() + " index" + MainActivity().index)
+        //                fetchSuggestions(body)
+        //                return true
+        //            }
+        //        })
+        //
+        //        srv.setOnSearchViewListener(object : SearchViewListener {
+        //            override fun onSearchViewShown() {
+        //
+        //                //Do some magic
+        //            }
+        //
+        //            override fun onSearchViewClosed() {
+        //                //Do some magic
+        //            }
+        //        })
+        //
 
 
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
@@ -256,11 +274,11 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
                 .commit()
         }
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
-        //Reselect as wee
 
-//        navView.setOnNavigationItemReselectedListener {
-//            //Do nothing
-//        }
+
+        //        navView.setOnNavigationItemReselectedListener {
+        //            //Do nothing
+        //        }
 
         //OnClickListener On FAB
         val fab: FloatingActionButton = findViewById(R.id.fab_add)
@@ -282,45 +300,70 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
 
     }
 
-//    private fun setUpViewPager(viewPager: ViewPager?) {
-//
-//        val adapter: ViewPagerAdapter = ViewPagerAdapter(supportFragmentManager)
-//        adapter.addFragment(HomeFragment(), "Home")
-//        adapter.addFragment(ExploreFragment(), "Explore")
-//        adapter.addFragment(MemeWorldFragment(), "MemeWorld")
-//        adapter.addFragment(MyMemesFragment(), "MemeWorld")
-//        adapter.addFragment(ProfileFragment(), "MemeWorld")
-//
-//        viewPager!!.adapter = adapter
-//    }
-//
-//
-//    internal inner class ViewPagerAdapter(manager: FragmentManager) :
-//        FragmentPagerAdapter(manager) {
-//        private val mFragmentList = ArrayList<Fragment>()
-//        private val mFragmentTitleList = ArrayList<String>()
-//
-//        override fun getItem(position: Int): Fragment {
-//            return mFragmentList[position]
-//        }
-//
-//        override fun getCount(): Int {
-//            return mFragmentList.size
-//        }
-//
-//        fun addFragment(fragment: Fragment, title: String) {
-//            mFragmentList.add(fragment)
-//            mFragmentTitleList.add(title)
-//        }
-//
-//        override fun getPageTitle(position: Int): CharSequence {
-//            return mFragmentTitleList[position]
-//        }
-//    }
 
-    private fun initSearchCursor(suggestionList: String?) {
+    fun getTypeFromCurrentFragmnet(fragment: String?): String {
+
+        var type: String = ""
+        when (fragment) {
+            "HomeFragment" -> type = "ongoing"
+            "ExploreFragment" -> type = "ongoing"
+            "MemeWorldFragment" -> type = "complete"
+            "MyMemesFragment" -> type = "ongoing"
+            "ProfileFragment" -> type = "complete"
+
+        }
+
+        return type
 
     }
+
+    private fun fetchSuggestions(str: String) {
+
+        val frag = findFragment()
+        val type = getTypeFromCurrentFragmnet(frag)
+        searchType = type
+        Log.e("Frag", frag.toString())
+        val body = searchBody(str, type)
+        val memeService = RetrofitClient.makeCallsForMemes(this)
+        memeService.getSuggestions(
+            accessToken = "Bearer ${sessionManager.fetchAcessToken()}",
+            info = body
+        ).enqueue(object : retrofit2.Callback<SearchResponse> {
+            override fun onFailure(call: Call<SearchResponse>, t: Throwable) {
+
+                val message = ErrorStatesResponse.returnStateMessageForThrowable(t)
+
+            }
+
+            override fun onResponse(
+                call: Call<SearchResponse>,
+                response: Response<SearchResponse>
+            ) {
+
+                if (response.isSuccessful) {
+                    val str = mutableListOf<String>()
+                    for (y: SearchResponse.Suggestion in response.body()!!.suggestions) {
+                        str.add(y.tag)
+                    }
+
+                    Log.e("STr", str.toString())
+
+                    val c =
+                        MatrixCursor(arrayOf(BaseColumns._ID, "suggestionList"))
+                    for (i in 0 until str.size) {
+                        c.addRow(arrayOf(i, str[i]))
+                    }
+
+                    mAdapter?.changeCursor(c)
+                }
+
+
+            }
+        })
+
+
+    }
+
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.top_options_menu, menu)
@@ -366,6 +409,9 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
 //                return true
 //            }
 //        })
+
+        //      val item = menu?.findItem(R.id.action_search)
+//        srv.setMenuItem(item)
 
         return true
 
@@ -471,12 +517,6 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
 
     }
 
-
-    //Exit app
-    override fun onBackPressed() {
-        finish()
-
-    }
 
     //Communicator Classes
     override fun passDataFromHome(bundle: Bundle) {
