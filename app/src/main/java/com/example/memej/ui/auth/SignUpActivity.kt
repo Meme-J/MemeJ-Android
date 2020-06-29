@@ -34,11 +34,13 @@ class SignUpActivity : AppCompatActivity() {
     lateinit var etUserame: TextInputEditText
     lateinit var etPassword: TextInputEditText
     lateinit var etEmail: TextInputEditText
+    lateinit var etCnfPwd: TextInputEditText
 
     lateinit var tName: TextInputLayout
     lateinit var tUname: TextInputLayout
     lateinit var temail: TextInputLayout
     lateinit var tpassword: TextInputLayout
+    lateinit var tConf: TextInputLayout
 
     lateinit var pb: ProgressBar
     lateinit var sessionManager: SessionManager
@@ -51,12 +53,13 @@ class SignUpActivity : AppCompatActivity() {
         etUserame = findViewById(R.id.etUsername)
         etPassword = findViewById(R.id.etPassword)
         etEmail = findViewById(R.id.etEmail)
+        etCnfPwd = findViewById(R.id.etConfPassword)
 
         tName = findViewById(R.id.tilName)
         tUname = findViewById(R.id.tilUsername)
         tpassword = findViewById(R.id.tilPassword)
         temail = findViewById(R.id.tilEmail)
-
+        tConf = findViewById(R.id.tilConfPassword)
 
         pb = findViewById(R.id.pb_signUp)
         sessionManager =
@@ -224,6 +227,14 @@ class SignUpActivity : AppCompatActivity() {
         }
 
 
+        if (etPassword.text.toString() != etCnfPwd.text.toString()) {
+            isValid = false
+            tConf.error = getString(R.string.mismatch)
+        } else {
+            tConf.error = null
+        }
+
+
 
         return isValid
     }
@@ -231,12 +242,8 @@ class SignUpActivity : AppCompatActivity() {
     private fun validateName(string: String): Boolean {
         //Check if the name has only alphabets and not special characters or numbers
 
-        Log.e("This", "char is " + string)
         for (c in string) {
-            Log.e("This", "char is " + c)
             if (c !in 'A'..'Z' && c !in 'a'..'z' && c != ' ') {
-
-                Log.e("This", "in if")
                 return false
             }
         }
@@ -251,7 +258,6 @@ class SignUpActivity : AppCompatActivity() {
 
     }
 
-//Validity
 
     fun String.checkPasswordSecurity(str: String): Boolean {
         var containsSmallLetter = false
@@ -275,9 +281,7 @@ class SignUpActivity : AppCompatActivity() {
     }
 
 
-    //
     private fun validateUsername(string: String): Boolean {
-        //Check the validity of the username
         for (c in string) {
             if (c !in 'A'..'Z' && c !in 'a'..'z' && c !in '0'..'9') {
                 return false

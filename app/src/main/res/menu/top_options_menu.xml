@@ -1,17 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item
-        android:id="@+id/navigation_search"
-        android:icon="@drawable/ic_search"
-        android:title="@string/search"
-        android:visible="true"
-        app:actionViewClass="android.widget.SearchView"
-        app:showAsAction="collapseActionView|ifRoom" />
+    <!--    <item-->
+    <!--        android:id="@+id/navigation_search"-->
+    <!--        android:icon="@drawable/ic_search"-->
+    <!--        android:title="@string/search"-->
+    <!--        android:visible="true"-->
+    <!--        app:actionViewClass="android.widget.SearchView"-->
+    <!--        app:showAsAction="collapseActionView|ifRoom" />-->
+
+
+    <!--    <item-->
+    <!--        android:id="@+id/settings_btn"-->
+    <!--        android:icon="@drawable/ic_settings"-->
+    <!--        android:title="@string/settings"-->
+    <!--        app:showAsAction="always" />-->
+
 
     <item
         android:id="@+id/settings_btn"
-        android:icon="@drawable/ic_settings"
-        android:title="@string/settings"
+        android:icon="@drawable/ic_exit_to_app_black_24dp"
+        android:title="@string/logout"
         app:showAsAction="always" />
 </menu>

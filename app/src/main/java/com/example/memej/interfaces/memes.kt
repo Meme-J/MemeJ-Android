@@ -101,6 +101,24 @@ interface memes {
     ): Call<editMemeApiResponse>
 
 
+    @Headers("Content-Type:application/json")
+    @POST("api/template/search")
+    fun getSearchedTemplates(
+        @Query("limit") loadSize: Int = 20,              //Test it with this value
+        @Header("Authorization") accessToken: String?,
+        @Body info: searchTemplate
+    ): Call<EmptyTemplateResponse>
+
+
+    //##This should be like getSuggestions
+    @Headers("Content-Type:application/json")
+    @POST("api/template/autocomplete")
+    fun getTemplateSuggestions(
+        @Header("Authorization") accessToken: String?,
+        @Body info: searchTemplate
+    ): Call<SearchResponse>
+
+
     //## get my memes ( I have contributed into)
     //Response will be moxed of meme world, and ongoing
     //But It will come mixed

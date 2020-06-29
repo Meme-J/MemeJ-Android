@@ -18,6 +18,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margins"
-            android:text="Tag Name" />
+            android:text="@string/tag_name" />
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

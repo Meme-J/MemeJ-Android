@@ -13,6 +13,7 @@ import com.example.memej.R
 import com.example.memej.Utils.ApplicationUtil
 import com.example.memej.Utils.DiffUtils.DiffUtilsHomeMeme
 import com.example.memej.responses.homeMememResponses.Meme_Home
+import com.example.memej.textProperties.ConversionUtil
 import com.example.memej.textProperties.lib.ImageEditorView
 import com.example.memej.textProperties.lib.Photo
 import com.google.android.material.textview.MaterialTextView
@@ -33,7 +34,6 @@ class HomeMemeAdapter(val itemClickListener: OnItemClickListenerHome) :
 
 
         getItem(position)?.let { holder.bindPost(it, itemClickListener) }
-        //Detach as well on scrolling
         holder.setIsRecyclable(false)
 
     }
@@ -49,7 +49,7 @@ class HomeMemeAdapter(val itemClickListener: OnItemClickListenerHome) :
 
         fun bindPost(_homeMeme: Meme_Home, clickListener: OnItemClickListenerHome) {
 
-            memeTimeLU.text = _homeMeme.lastUpdated.toString()
+            memeTimeLU.text = ConversionUtil.convertTimeToEpoch(_homeMeme.lastUpdated.toString())
 
             //Load the Image here
             load.visibility = View.VISIBLE

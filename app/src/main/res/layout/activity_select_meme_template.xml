@@ -6,7 +6,7 @@
         android:id="@+id/container_select_template"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/stoneWhite"
+        android:background="@color/garbinaoGrey"
         android:orientation="vertical">
 
 
@@ -41,17 +41,43 @@
             android:id="@+id/pb_template"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/card_half"
             android:layout_gravity="center"
-            android:indeterminate="true" />
+            android:layout_marginTop="@dimen/card_half"
+            android:visibility="gone" />
 
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/activityCatalogSearchContainer"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/space"
+            app:cardBackgroundColor="@color/stoneWhite"
+            app:cardCornerRadius="4dp">
+
+
+            <SearchView
+                android:id="@+id/activityTemplateSearch"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/garbinaoGrey"
+                android:iconifiedByDefault="false"
+                android:padding="@dimen/space"
+                android:queryHint="Search" />
+
+            <!--                <com.miguelcatalan.materialsearchview.MaterialSearchView-->
+            <!--                    android:id="@+id/search_view_lib"-->
+            <!--                    android:layout_width="match_parent"-->
+            <!--                    android:layout_height="wrap_content" />-->
+
+
+        </androidx.cardview.widget.CardView>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_memeGroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margins"
-            android:layout_marginTop="?attr/actionBarSize"
             android:layout_marginEnd="@dimen/margins" />
 
 

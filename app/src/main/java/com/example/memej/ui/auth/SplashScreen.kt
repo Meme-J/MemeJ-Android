@@ -6,41 +6,45 @@ import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
 import com.example.memej.MainActivity
 import com.example.memej.R
-import com.example.memej.Utils.sessionManagers.SaveSharedPreference
+import com.example.memej.Utils.sessionManagers.PreferenceManager
 
 
 class SplashScreen : AppCompatActivity() {
 
 
-    lateinit var handler: Handler
+    private lateinit var handler: Handler
+    private lateinit var runnable: Runnable
+    private var splash_display_time: Long = 1000
+    private val preferenceManager: PreferenceManager = PreferenceManager()
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
 
+        //Check the access token here
 
-        handler = Handler()
-        handler.postDelayed({
+        val intent = if (preferenceManager.authToken!!.isEmpty()) {
+            Intent(this, LoginActivity::class.java)
+        } else {
+            Intent(this, MainActivity::class.java)
+        }
 
-            //We ll write some lines of code in this to see weather the user is logged in or not
-            //To redirect to signUp/Login Page or go to the home page fragment
-
-
-            // Test for going to the login activity
-            //Incase save shared prefernce
-            if (SaveSharedPreference().getLoggedStatus(applicationContext)) {
-                val intent = Intent(applicationContext, MainActivity::class.java)
-                startActivity(intent)
-            } else {
-                val i = Intent(applicationContext, LoginActivity::class.java)
-                startActivity(i)
-            }
-
+        //Refactor to using access token
+        runnable = Runnable {
+            startActivity(intent)
             finish()
+        }
+        handler = Handler()
+        handler.postDelayed(runnable, splash_display_time)
 
 
-        }, 1000)     //2 seconds delay
+    }
 
 
+    override fun onDestroy() {
+        super.onDestroy()
+        handler.removeCallbacks(runnable)
     }
 }
 

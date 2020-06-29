@@ -1,15 +1,20 @@
 package com.example.memej
 
-import android.app.SearchManager
-import android.content.Context
 import android.content.Intent
+import android.database.Cursor
+import android.database.MatrixCursor
 import android.os.Bundle
+import android.provider.BaseColumns
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.ProgressBar
+import android.widget.ArrayAdapter
+import android.widget.CursorAdapter
 import android.widget.SearchView
+import android.widget.SimpleCursorAdapter
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.navigation.NavController
@@ -17,21 +22,32 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.memej.Utils.Communicator
+import com.example.memej.Utils.ErrorStatesResponse
+import com.example.memej.Utils.PreferenceUtil
+import com.example.memej.Utils.sessionManagers.SaveSharedPreference
 import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.adapters.SearchAdapter
 import com.example.memej.adapters.onClickSearch
+import com.example.memej.entities.searchBody
+import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.SearchResponse
 import com.example.memej.ui.MemeWorld.MemeWorldFragment
+import com.example.memej.ui.auth.LoginActivity
 import com.example.memej.ui.explore.ExploreFragment
 import com.example.memej.ui.home.HomeFragment
-import com.example.memej.ui.home.Searchable
+import com.example.memej.ui.home.SearchResultActivity
 import com.example.memej.ui.home.SettingsScreen
 import com.example.memej.ui.memeTemplate.SelectMemeTemplateActivity
 import com.example.memej.ui.memes.MemeByTag
 import com.example.memej.ui.myMemes.MyMemesFragment
 import com.example.memej.ui.profile.ProfileFragment
+import com.example.memej.viewModels.MainActivityViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.miguelcatalan.materialsearchview.MaterialSearchView
+import com.shreyaspatil.MaterialDialog.MaterialDialog
+import retrofit2.Call
+import retrofit2.Response
 
 
 class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
@@ -43,6 +59,7 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
         transaction.addToBackStack(null)
         transaction.commit()
     }
+
 
     private fun openSearch(
         fragment: Fragment,
@@ -64,15 +81,23 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
         }
     }
 
+    fun findFragment(): String? {
+        val fm = supportFragmentManager.findFragmentById(R.id.container)
+        val fragmentName: String = fm!!::class.java.simpleName
+        return fragmentName
+    }
 
     //Get the res id
     private val mOnNavigationItemSelectedListener =
         BottomNavigationView.OnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
+
+
                 R.id.navigation_home -> {
                     index = 0
                     openFragment(HomeFragment())
                     return@OnNavigationItemSelectedListener true
+
                 }
                 R.id.navigation_explore -> {
                     index = 1
@@ -113,6 +138,19 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
 
     //Initialzie the toolbar
     lateinit var toolbar: androidx.appcompat.widget.Toolbar
+    private var atMainActicty = true
+
+    private val preferenceUtils = PreferenceUtil
+    lateinit var stringAdapter: ArrayAdapter<String>
+    lateinit var mutableList: MutableList<String>
+
+    lateinit var srv: MaterialSearchView
+    private val viewModel: MainActivityViewModel by viewModels()
+
+    private var mAdapter: SimpleCursorAdapter? = null
+
+    var searchType: String = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -121,7 +159,66 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
         toolbar = androidx.appcompat.widget.Toolbar(this)
         toolbar = findViewById(R.id.toolbar_main)
         setSupportActionBar(toolbar)
-        val pbar = findViewById<ProgressBar>(R.id.pb_main)
+
+
+        //val searchType = getIndexStringType(MainActivity().index)
+
+        val from = arrayOf("suggestionList")
+        val to = intArrayOf(android.R.id.text1)
+
+        mAdapter = SimpleCursorAdapter(
+            this,
+            android.R.layout.simple_list_item_1,
+//           R.layout.list_suggestionn,
+            null,
+            from,
+            to,
+            CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER
+        )
+
+        searchView = toolbar.findViewById(R.id.activityCatalogSearch) as SearchView
+        searchView.suggestionsAdapter = mAdapter
+        searchView.isIconifiedByDefault = false
+
+        searchView.setOnSuggestionListener(object : SearchView.OnSuggestionListener {
+            override fun onSuggestionSelect(position: Int): Boolean {
+                return true
+            }
+
+            override fun onSuggestionClick(position: Int): Boolean {
+
+                val cursor: Cursor = mAdapter!!.getItem(position) as Cursor
+                val txt = cursor.getString(cursor.getColumnIndex("suggestionList"))
+
+                val bundle = bundleOf(
+                    "tag" to txt,
+                    "type" to searchType
+                )
+                val i = Intent(this@MainActivity, SearchResultActivity::class.java)
+                i.putExtra("tag", txt)
+                i.putExtra("type", searchType)
+                i.putExtra("bundle", bundle)
+                startActivity(i)
+
+
+
+                return true
+
+
+            }
+        })
+
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                fetchSuggestions(newText.toString())
+                return false
+            }
+        })
 
 
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
@@ -148,11 +245,11 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
                 .commit()
         }
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
-        //Reselect as wee
 
-//        navView.setOnNavigationItemReselectedListener {
-//            //Do nothing
-//        }
+
+        //        navView.setOnNavigationItemReselectedListener {
+        //            //Do nothing
+        //        }
 
         //OnClickListener On FAB
         val fab: FloatingActionButton = findViewById(R.id.fab_add)
@@ -174,39 +271,73 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
 
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.top_options_menu, menu)
-        // Associate searchable configuration with the SearchView
 
-        //Inflate Menu
-        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        searchView = menu!!.findItem(R.id.navigation_search).actionView as SearchView
+    fun getTypeFromCurrentFragmnet(fragment: String?): String {
 
-        Log.e("SearchX", "In Inflate menu")
+        var type: String = ""
+        when (fragment) {
+            "HomeFragment" -> type = "ongoing"
+            "ExploreFragment" -> type = "ongoing"
+            "MemeWorldFragment" -> type = "complete"
+            "MyMemesFragment" -> type = "ongoing"
+            "ProfileFragment" -> type = "complete"
 
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
-        searchView.isIconifiedByDefault = false
-        searchView.queryHint = "Search"
-        searchView.requestFocus()
-        searchView.setBackgroundColor(resources.getColor(R.color.stoneWhite))
-
-
-        val frag = getFragmnetFromIndex(index)
-        Log.e("SearchX", "In On Create Options, before close")
-        searchManager.setOnCancelListener {
-            Log.e("SearchXM", "Close search")
-
-            openFragment(frag!!)
         }
-        searchView.setOnCloseListener(object : SearchView.OnCloseListener {
-            override fun onClose(): Boolean {
 
-                Log.e("SearchX", "In overrriden method of close")
-                openFragment(frag!!)
+        return type
 
-                return true
+    }
+
+    private fun fetchSuggestions(str: String) {
+
+        val frag = findFragment()
+        val type = getTypeFromCurrentFragmnet(frag)
+        searchType = type
+        Log.e("Frag", frag.toString())
+        val body = searchBody(str, type)
+        val memeService = RetrofitClient.makeCallsForMemes(this)
+        memeService.getSuggestions(
+            accessToken = "Bearer ${sessionManager.fetchAcessToken()}",
+            info = body
+        ).enqueue(object : retrofit2.Callback<SearchResponse> {
+            override fun onFailure(call: Call<SearchResponse>, t: Throwable) {
+
+                val message = ErrorStatesResponse.returnStateMessageForThrowable(t)
+
+            }
+
+            override fun onResponse(
+                call: Call<SearchResponse>,
+                response: Response<SearchResponse>
+            ) {
+
+                if (response.isSuccessful) {
+                    val str = mutableListOf<String>()
+                    for (y: SearchResponse.Suggestion in response.body()!!.suggestions) {
+                        str.add(y.tag)
+                    }
+
+                    Log.e("STr", str.toString())
+
+                    val c =
+                        MatrixCursor(arrayOf(BaseColumns._ID, "suggestionList"))
+                    for (i in 0 until str.size) {
+                        c.addRow(arrayOf(i, str[i]))
+                    }
+
+                    mAdapter?.changeCursor(c)
+                }
+
+
             }
         })
+
+
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.top_options_menu, menu)
 
         return true
 
@@ -247,8 +378,12 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
         val frag = getFragmnetFromIndex(index)
 
         when (item.itemId) {
-            R.id.settings_btn -> startActivity(i)
-            R.id.navigation_search -> openSearch(Searchable(searchView), frag)
+            R.id.settings_btn ->
+                //startActivity(i)
+                //Dialog of logout
+                logout()
+
+            //    R.id.navigation_search -> openSearch(Searchable(searchView), frag)
 
             else ->
                 return super.onOptionsItemSelected(item)
@@ -256,10 +391,40 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
         return true
     }
 
-    //Exit app
-    override fun onBackPressed(): Unit {
-        finish()
+    private fun logout() {
+        //Ask the user
+        val mDialog = MaterialDialog.Builder(this)
+            .setTitle("Logout?")
+            .setMessage("Are you sure want to logout?")
+            .setCancelable(true)
+            .setPositiveButton(
+                "Yes",
+                R.drawable.ic_exit_to_app_black_24dp
+            ) { dialogInterface, which ->
+                logoutDo()
+            }
+            .setNegativeButton(
+                "No"
+            ) { dialogInterface, which -> dialogInterface.dismiss() }
+            .build()
+        mDialog.show()
+
     }
+
+    private fun logoutDo() {
+        SaveSharedPreference()
+            .setLoggedIn(applicationContext, false)
+
+
+        //Remove the saved profile
+        preferenceUtils.clearPrefData()
+        val i = Intent(this, LoginActivity::class.java)
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+        finishAffinity()
+        startActivity(i)
+
+    }
+
 
     //Communicator Classes
     override fun passDataFromHome(bundle: Bundle) {
@@ -327,6 +492,10 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
 
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
+    }
 
 }
 

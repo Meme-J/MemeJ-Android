@@ -44,7 +44,9 @@ import kotlin.properties.Delegates
 
 class RandomMemeAdapter(private val clickListener: RandomListener) :
     RecyclerView.Adapter<RandomMemeAdapter.MyViewHolder>(),
-    CardStackListener {
+    CardStackListener,
+    onUserClickType,
+    onTagClickType {
 
     private var random: List<Meme_Home>? = listOf()     //Empty List
     private var state = CardStackState()
@@ -62,8 +64,8 @@ class RandomMemeAdapter(private val clickListener: RandomListener) :
 
 
         val photoView: ImageEditorView = itemView.findViewById(R.id.photoViewRandom)
-//        val rvTag = itemView.findViewById<RecyclerView>(R.id.rv_tag_random)
-//        val rvUsers = itemView.findViewById<RecyclerView>(R.id.rv_user_random)
+        val rvTag = itemView.findViewById<RecyclerView>(R.id.rv_explore_tag)
+        val rvUsers = itemView.findViewById<RecyclerView>(R.id.rv_explore_user)
 
 
         //Styles ATTribut
@@ -178,17 +180,8 @@ class RandomMemeAdapter(private val clickListener: RandomListener) :
                 //Additio of text
 
 
-                //No init required for the users or usernames
+                initFrame(_meme, itemView.context)
 
-//                color.setOnClickListener {
-//                    //Create a variable instance
-//                    paint_chosen = StylePickAttributes.choosePaint(itemView.context, whichPaint)
-//                    whichPaint = paint_chosen
-//                    colorIndicator.setCardBackgroundColor(whichPaint)
-//                }
-//
-
-                //Send post as well
                 sendPost.setOnClickListener {
 
                     val service = RetrofitClient.makeCallsForMemes(itemView.context)
@@ -258,6 +251,66 @@ class RandomMemeAdapter(private val clickListener: RandomListener) :
                 }
 
             }
+
+        }
+
+        private fun initFrame(_meme: Meme_Home, context: Context) {
+
+            //Layout Manager
+            val HorizontalLayout: LinearLayoutManager = LinearLayoutManager(
+                context,
+                LinearLayoutManager.HORIZONTAL,
+                false
+            )
+            //Load image tags
+
+            val txt = _meme.tags
+            val txt2 = _meme.templateId.tags
+
+            //This is a array basically
+            //Create an array list  to call these tags
+
+            //Check for these being blank in case of initialization/add meme
+            val tagsStr = mutableListOf<String>()
+            for (i in txt) {
+                tagsStr.add(i)
+            }
+
+
+//            for (i in txt2) {
+//                tagsStr.add(i)
+//            }
+
+            //Get the rv and adapter for the user and the tags already existing
+            val tagAdapter = TagAdapter(itemClick = object : onTagClickType {
+                override fun getTagType(_tag: String) {
+
+                }
+            })
+            Log.e("Random", tagsStr.toString())
+
+            tagAdapter.tagType = tagsStr
+            rvTag.layoutManager = HorizontalLayout
+            rvTag.adapter = tagAdapter
+
+
+            //Populate the users in the same way
+            val u = _meme.users
+            val userStr = mutableListOf<String>()
+            for (i in u!!) {
+                userStr.add(i.username)
+            }
+
+            //SecondLayout
+            val HorizontalUser = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            val userAdater = UserAdapter(itemClick = object : onUserClickType {
+                override fun getUserType(_user: String) {
+
+                }
+            })
+            userAdater.userType = userStr
+            rvUsers.layoutManager = HorizontalUser
+            rvUsers.adapter = userAdater
 
         }
 
@@ -553,6 +606,13 @@ class RandomMemeAdapter(private val clickListener: RandomListener) :
 
     override fun onCardRewound() {
         //Nothing to be done
+    }
+
+    override fun getUserType(_user: String) {
+
+    }
+
+    override fun getTagType(_tag: String) {
     }
 
 

@@ -2,12 +2,14 @@ package com.example.memej.textProperties
 
 import android.content.Context
 import android.util.DisplayMetrics
-import android.util.Log
 import android.util.TypedValue
 import com.example.memej.Utils.ApplicationUtil.Companion.getContext
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 object ConversionUtil {
+
     fun dpToPx(context: Context, dp: Int): Int {
         return TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP,
@@ -19,12 +21,6 @@ object ConversionUtil {
     fun pxToDp(context: Context, px: Int): Float {
         val GESTURE_THRESHOLD_DP = 16.0f
         val scale = context.resources.displayMetrics.density
-        Log.e(
-            "Scale",
-            scale.toString() + context.resources.displayMetrics.densityDpi.toFloat()
-                .toString() + " " + DisplayMetrics.DENSITY_DEFAULT.toString()
-        )
-
         return px / (context.resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
     }
 
@@ -46,10 +42,21 @@ object ConversionUtil {
         ).toInt()
     }
 
-    //Get the density of the device
+    fun convertTimeToEpoch(timestamp: String): String {
+        val calendar = Calendar.getInstance()
+        val timezone = TimeZone.getDefault()
+
+        val sourceFormat =
+            SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+        val destFormat =
+            SimpleDateFormat("yyyy-MM-dd HH:mm")
+
+        sourceFormat.timeZone = timezone
+        val convertedDate = sourceFormat.parse(timestamp)!!
+        return destFormat.format(convertedDate)
 
 
-// will either be DENSITY_LOW, DENSITY_MEDIUM or DENSITY_HIGH
+    }
 
-// will either be DENSITY_LOW, DENSITY_MEDIUM or DENSITY_HIGH
+
 }

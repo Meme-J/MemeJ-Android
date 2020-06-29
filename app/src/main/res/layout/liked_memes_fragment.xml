@@ -5,6 +5,7 @@
     android:id="@+id/container_likedMemes"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorLightGrey"
     tools:context=".ui.MemeWorld.MemeWorldFragment">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -27,20 +28,21 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:visibility="gone" />
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swl_liked_memes"
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="?attr/actionBarSize"
         android:padding="@dimen/margins">
 
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_likedMemes"
-            android:padding="@dimen/margins"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margins"
+            android:padding="@dimen/margins"
             tools:listitem="@layout/card_meme_world" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

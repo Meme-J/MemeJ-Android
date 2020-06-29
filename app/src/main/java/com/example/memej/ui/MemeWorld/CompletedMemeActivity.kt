@@ -12,7 +12,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -36,9 +35,9 @@ import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.LikeOrNotResponse
 import com.example.memej.responses.memeWorldResponses.Coordinate
 import com.example.memej.responses.memeWorldResponses.User
+import com.example.memej.textProperties.ConversionUtil
 import com.example.memej.textProperties.lib.ImageEditorView
 import com.example.memej.textProperties.lib.Photo
-import com.example.memej.viewModels.CompletdMemeViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_completed_meme.*
 import retrofit2.Call
@@ -59,7 +58,8 @@ class CompletedMemeActivity : AppCompatActivity(), onUserClickType, onTagClickTy
     //    lateinit var image: LikeButton
 //    lateinit var likes: TextView
     private val preferenceUtils = PreferenceUtil
-    private val viewmodel: CompletdMemeViewModel by viewModels()
+
+    //private val viewmodel: CompletdMemeViewModel by viewModels()
     lateinit var bmp: Bitmap
     lateinit var photoView: ImageEditorView
     lateinit var photoGlobalEditor: Photo
@@ -205,7 +205,7 @@ class CompletedMemeActivity : AppCompatActivity(), onUserClickType, onTagClickTy
                 Log.e("Save", "In success")
                 val snack = Snackbar.make(
                     container_completeMeme,
-                    "Downloaded successfully",
+                    "Meme will be downloaded successfully",
                     Snackbar.LENGTH_SHORT
                 )
                 snack.show()
@@ -428,38 +428,10 @@ class CompletedMemeActivity : AppCompatActivity(), onUserClickType, onTagClickTy
         rvUser.adapter = userAdater
 
         //Set time stamp
-        root.timeStampMemeW.text = arg.getString("lastUpdated")
+        val strm = arg.getString("lastUpdated")
+        root.timeStampMemeW.text = ConversionUtil.convertTimeToEpoch(strm.toString())
 
         getImage()
-        //Set Image
-
-
-        //Check if the post is liked already or not
-//        val username = preferenceUtils.getUserFromPrefernece().username
-//        val id = preferenceUtils.getUserFromPrefernece()._id
-//        val userIns = com.example.memej.responses.memeWorldResponses.User(id, username)
-//        val user_likers = arg.getParcelableArrayList<User>("likedBy")
-//
-//
-//        Log.e("Adapter", userIns.toString() + user_likers.toString())
-
-//        if (user_likers != null) {
-//            if (user_likers.contains(userIns)) {
-//                image.isLiked = true
-//            } else if (!user_likers.contains(userIns) || user_likers.isEmpty()) {
-//                image.isLiked = false
-//            }
-//        }
-
-        //He loads the meme and is unable to load an check if this is not real time data
-//        Log.e("likes", likes.text.toString())
-
-        //Check if you have liked the meme or not previously
-        //Set the number of likes
-        //Likes is not referenced
-//        likes.text = arg.getString("likes")
-//        Log.e("likes", likes.text.toString())
-
 
     }
 

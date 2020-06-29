@@ -3,6 +3,10 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'androidx.navigation.safeargs'
+//apply plugin: 'com.chrisney.enigma'
+
+//enigma.enabled = true
+//enigma.injectFakeKeys = true
 
 android {
     compileSdkVersion 29
@@ -25,9 +29,12 @@ android {
 //        }
 //    }
 
+
     buildTypes {
         release {
-            minifyEnabled false
+            //Proguard Techniques
+            minifyEnabled false             //Need to add serialized name annotation if enabled true
+            //   shrinkResources true              //Needs above to be true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -45,6 +52,11 @@ android {
     }
     dataBinding {
         enabled = true
+    }
+
+    //Decompression of images
+    aaptOptions {
+        cruncherEnabled = false
     }
 
 }
@@ -204,14 +216,21 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0'
 
     //Coil
-    implementation("io.coil-kt:coil:0.8.0")
+//    implementation("io.coil-kt:coil:0.8.0")
     // image.load(File("/path/to/image.jpg")) to load from local storage
     //image.load("https://i.ibb.co/TRTpb0N/download.png")
     //        {
     //            transformations(CircleCropTransformation())
     //        }
 
+    //Sp conversions
     implementation 'com.intuit.ssp:ssp-android:1.0.5'
     implementation 'com.intuit.sdp:sdp-android:1.0.5'
 
+    //Circular Image View
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+
+//    //SearchView
+//    implementation "com.paulrybitskyi.persistentsearchview:persistentsearchview:1.1.2"
+    implementation 'com.miguelcatalan:materialsearchview:1.4.0'
 }

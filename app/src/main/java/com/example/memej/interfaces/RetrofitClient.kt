@@ -1,8 +1,7 @@
 package com.example.memej.interfaces
 
 import android.content.Context
-import android.util.Log
-import com.example.memej.Utils.DiffUtils.AuthInterceptor
+import com.example.memej.Utils.AuthInterceptor
 import com.example.memej.Utils.sessionManagers.TokenAuthenticator
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.OkHttpClient
@@ -18,8 +17,6 @@ object RetrofitClient {
 
     private fun okhttpClient(context: Context): OkHttpClient {
 
-
-        Log.e("Retrofit Client", " In ok http")
 
         return OkHttpClient.Builder()
             .addInterceptor(AuthInterceptor(context))
@@ -42,7 +39,7 @@ object RetrofitClient {
     }
 
     fun getAuthInstance(): Auth {
-        Log.e("Retrofit Client", " Auth ")
+
 
         return Retrofit.Builder()
             .baseUrl(url)
@@ -55,7 +52,7 @@ object RetrofitClient {
 
 
     fun makeCallsForMemes(context: Context): memes {
-        Log.e("Retrofit Client", " In memes client")
+
 
         return Retrofit.Builder()
             .baseUrl(url)
@@ -67,7 +64,7 @@ object RetrofitClient {
     }
 
     fun makeCallForProfileParameters(context: Context): profile {
-        Log.e("Retrofit Client", "prof")
+
 
         return Retrofit.Builder()
             .baseUrl(url)
