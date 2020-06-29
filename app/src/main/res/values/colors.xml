@@ -13,7 +13,8 @@
     <color name="colorPrimary2">#f4511e</color>
     <color name="colorPrimaryDark2">#d84315</color>
     <color name="colorAccent2">#ffd600</color>
-
+    <color name="supereGrey">#f6f6f6</color>
+    <color name="color_transparent">#00FFFFFF</color>
 
     <color name="colorPrimary">@color/useBlue</color>
     <color name="colorPrimaryDark">@color/darkBlue</color>

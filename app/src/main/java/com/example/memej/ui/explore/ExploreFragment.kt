@@ -64,8 +64,9 @@ class ExploreFragment : Fragment(), RandomListener {
 
         //The edit text will be according to
         activity?.window?.setSoftInputMode(
-            WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+            WindowManager.LayoutParams.SOFT_INPUT_MASK_ADJUST
         )
+
 
         val sv = root.findViewById<CardStackView>(R.id.stack_view)
         sv.layoutManager = layoutManager
@@ -76,7 +77,9 @@ class ExploreFragment : Fragment(), RandomListener {
             }
         }
 
-
+//        root.findViewById<TextView>(R.id.load_more).setOnClickListener {
+//            getRandomMemes()
+//        }
 
 
         if (ErrorStatesResponse.checkIsNetworkConnected(requireContext())) {

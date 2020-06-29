@@ -7,23 +7,54 @@
     android:background="@color/garbinaoGrey">
 
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar_main"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/apb_main"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimary"
-        android:elevation="@dimen/space"
-        android:gravity="fill"
-        app:layout_constraintTop_toTopOf="parent"
-        app:titleTextColor="@color/white" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <!--    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="match_parent"-->
-    <!--        android:layout_marginTop="?attr/actionBarSize"-->
-    <!--        android:id="@+id/swl_main"-->
-    <!--        android:padding="@dimen/margins"-->
-    <!--        android:layout_marginBottom="?attr/actionBarSize">-->
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_main"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorPrimary"
+            android:elevation="@dimen/space"
+            android:gravity="fill"
+            app:layout_constraintTop_toTopOf="parent"
+            app:titleTextColor="@color/white">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/activityCatalogSearchContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="4dp"
+                app:cardCornerRadius="4dp"
+                app:cardElevation="@dimen/space">
+
+
+                <SearchView
+                    android:id="@+id/activityCatalogSearch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/garbinaoGrey"
+                    android:iconifiedByDefault="false"
+                    android:queryHint="Search" />
+
+            </androidx.cardview.widget.CardView>
+
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_search_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/apb_main" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav_view"
@@ -36,6 +67,16 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:menu="@menu/bottom_nav_menu" />
+
+    <!--    ViewPAger-->
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_alignParentTop="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:layout_constraintBottom_toTopOf="@id/nav_view"
+        app:layout_constraintTop_toBottomOf="@id/apb_main" />
 
     <ProgressBar
         android:id="@+id/pb_main"

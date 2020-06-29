@@ -74,6 +74,7 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
     lateinit var sessionManager: SessionManager
     lateinit var pb: ProgressBar
     lateinit var adapterTagsAdded: TagEditAdapter
+
     lateinit var stringAdapter: ArrayAdapter<String>
     lateinit var mutableList: MutableList<String>
     lateinit var tagCheck: MaterialButton

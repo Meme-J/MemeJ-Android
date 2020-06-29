@@ -14,7 +14,7 @@ class DiffUtilsMemeWorld : DiffUtil.ItemCallback<Meme_World>() {
 //    }
 
     override fun areItemsTheSame(oldItem: Meme_World, newItem: Meme_World): Boolean {
-        return oldItem._id == newItem._id && oldItem.templateId.numPlaceholders == newItem.templateId.numPlaceholders
+        return oldItem.templateId._id == newItem.templateId._id && oldItem._id == newItem._id
     }
 
     override fun areContentsTheSame(

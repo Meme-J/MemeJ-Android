@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.memej.R
 import com.example.memej.Utils.DiffUtils.DiffUtilsMemeWorld
 import com.example.memej.Utils.ErrorStatesResponse
@@ -77,22 +78,19 @@ class MemeWorldAdapter(val context: Context, val itemClickListener: OnItemClickL
                 val userIns = com.example.memej.responses.memeWorldResponses.User(id, username)
                 val user_likers = _meme.likedBy
 
-                Log.e(
-                    "Users",
-                    user_likers.toString() + userIns.toString() + username.toString() + id
-                )
+
                 if (user_likers.contains(userIns)) {
                     likeDrawIo.isLiked = true
                 } else if (!user_likers.contains(userIns) || user_likers.isEmpty()) {
                     likeDrawIo.isLiked = false
                 }
 
-                //Get the image
-                //Load the Image here
+
                 photoView.source?.let {
                     Glide.with(itemView.context)
                         .load(_meme.templateId.imageUrl)
                         .dontAnimate()
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .dontTransform()
                         .error(R.drawable.icon_placeholder)
                         .into(it)
@@ -110,7 +108,7 @@ class MemeWorldAdapter(val context: Context, val itemClickListener: OnItemClickL
                     }
 
                     override fun unLiked(likeButton: LikeButton?) {
-                        numLikes.text = (numLikes.text.toString().toInt() + 1).toString()
+                        numLikes.text = (numLikes.text.toString().toInt() - 1).toString()
                         likeMeme(_meme)
                     }
                 })

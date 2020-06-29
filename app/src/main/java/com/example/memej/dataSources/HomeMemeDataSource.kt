@@ -1,13 +1,11 @@
 package com.example.memej.dataSources
 
 import android.content.Context
-import android.content.Intent
 import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.paging.PageKeyedDataSource
-import com.example.memej.MainActivity
 import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.entities.queryBody
@@ -147,12 +145,12 @@ class HomeMemeDataSource(val context: Context, val searchquery: queryBody, val p
                         if (homePosts!!.isEmpty()) {
                             Toast.makeText(
                                 context,
-                                "Unable to get meme with this tag",
+                                "Unable to get memes",
                                 Toast.LENGTH_SHORT
                             ).show()
                             pb.visibility = View.GONE
-                            val i = Intent(context, MainActivity::class.java)
-                            context.startActivity(i)
+//                            val i = Intent(context, MainActivity::class.java)
+//                            context.startActivity(i)
                         }
 
 

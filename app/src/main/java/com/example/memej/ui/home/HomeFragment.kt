@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.ProgressBar
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -60,7 +61,7 @@ class HomeFragment : Fragment(), OnItemClickListenerHome {
         }
 
         //Create a dialog
-        dialog = ProgressDialog(activity)
+        dialog = ProgressDialog(context as Activity)
         dialog.setMessage("Loading memes...")
         dialog.show()
 
@@ -120,11 +121,23 @@ class HomeFragment : Fragment(), OnItemClickListenerHome {
         Log.e("Home", "In init list")
         rv.layoutManager = LinearLayoutManager(context)
         rv.adapter = homeMemeAdapter
+        runLayoutAnimation(rv)
         homeMemeAdapter.notifyDataSetChanged()
         pb.visibility = View.GONE
         dialog.dismiss()
         swl.isRefreshing = false
     }
+
+    private fun runLayoutAnimation(recyclerView: RecyclerView) {
+        val context = recyclerView.context
+        recyclerView.layoutAnimation = AnimationUtils.loadLayoutAnimation(
+            context,
+            R.anim.layout_fall_down
+        )
+        recyclerView.adapter?.notifyDataSetChanged()
+        recyclerView.scheduleLayoutAnimation()
+    }
+
 
     private fun observeList() {
 
@@ -140,7 +153,7 @@ class HomeFragment : Fragment(), OnItemClickListenerHome {
             {
 
                 homeMemeAdapter.submitList(it)
-        })
+            })
 
         initList()
     }

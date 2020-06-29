@@ -136,7 +136,7 @@ class MemeWorldDataSource(val context: Context, val searchQuery: queryBody, val 
                         if (memePosts?.isEmpty()!!) {
                             Toast.makeText(
                                 context,
-                                "Unable to get meme with this tag",
+                                "Unable to get memes",
                                 Toast.LENGTH_LONG
                             ).show()
                             pb.visibility = View.GONE

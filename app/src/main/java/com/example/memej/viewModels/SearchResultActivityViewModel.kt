@@ -27,7 +27,7 @@ class SearchResultActivityViewModel(application: Application) : AndroidViewModel
     init {
 
         val config = PagedList.Config.Builder()
-            .setPageSize(20)               //Number of items to load in a page
+            .setInitialLoadSizeHint(5)               //Number of items to load in a page
             .setEnablePlaceholders(false)   //There is holder disabled till the data is loaded
             .build()
         homeResponse = initializedPagedListBuilderOngoing(config).build()

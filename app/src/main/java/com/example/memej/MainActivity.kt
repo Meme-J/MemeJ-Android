@@ -1,17 +1,20 @@
 package com.example.memej
 
 import android.app.SearchManager
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.database.Cursor
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.ProgressBar
-import android.widget.SearchView
+import android.widget.*
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.recyclerview.widget.RecyclerView
@@ -22,17 +25,19 @@ import com.example.memej.Utils.sessionManagers.SaveSharedPreference
 import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.adapters.SearchAdapter
 import com.example.memej.adapters.onClickSearch
+import com.example.memej.entities.searchBody
 import com.example.memej.responses.SearchResponse
 import com.example.memej.ui.MemeWorld.MemeWorldFragment
 import com.example.memej.ui.auth.LoginActivity
 import com.example.memej.ui.explore.ExploreFragment
 import com.example.memej.ui.home.HomeFragment
-import com.example.memej.ui.home.Searchable
+import com.example.memej.ui.home.SearchResultActivity
 import com.example.memej.ui.home.SettingsScreen
 import com.example.memej.ui.memeTemplate.SelectMemeTemplateActivity
 import com.example.memej.ui.memes.MemeByTag
 import com.example.memej.ui.myMemes.MyMemesFragment
 import com.example.memej.ui.profile.ProfileFragment
+import com.example.memej.viewModels.MainActivityViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.shreyaspatil.MaterialDialog.MaterialDialog
@@ -120,8 +125,11 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
     private var atMainActicty = true
 
     private val preferenceUtils = PreferenceUtil
+    lateinit var stringAdapter: ArrayAdapter<String>
+    lateinit var mutableList: MutableList<String>
 
-
+    lateinit var srv: SearchView
+    private val viewModel: MainActivityViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -131,6 +139,94 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
         toolbar = androidx.appcompat.widget.Toolbar(this)
         toolbar = findViewById(R.id.toolbar_main)
         setSupportActionBar(toolbar)
+
+
+        //Set up the view pager
+//        val viewPager = findViewById<ViewPager>(R.id.viewpager)
+//        setUpViewPager(viewPager)
+
+
+        rv = findViewById(R.id.rv_search_main)
+        adapter = SearchAdapter(this)
+        mutableList = mutableListOf()           //Empty list
+        stringAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line)
+
+        val onItemClickTag =
+            AdapterView.OnItemClickListener { adapterView, view, i, l ->
+                mutableList.add(adapterView.getItemAtPosition(i).toString())
+                //NAvigate to the search result with the parameters
+            }
+
+        //find the search bar and activists
+
+        srv = toolbar.findViewById<SearchView>(R.id.activityCatalogSearch)
+        srv.queryHint = getString(R.string.search_hint)
+
+        val searchManager =
+            getSystemService(Context.SEARCH_SERVICE) as SearchManager
+
+        val componentName = ComponentName(this, SearchResultActivity::class.java)
+        srv.setSearchableInfo(searchManager.getSearchableInfo(componentName))
+
+        //Start after the first character is typed
+//        val mQueryTextView = srv.findViewById(R.id.search_src_text) as AutoCompleteTextView
+//        mQueryTextView.threshold = 1
+
+        //Cursor
+        val suggestionAdapter: CursorAdapter = SimpleCursorAdapter(
+            this,
+            android.R.layout.simple_list_item_1,
+            null,
+            arrayOf(SearchManager.SUGGEST_COLUMN_TEXT_1),
+            intArrayOf(android.R.id.text1),
+            0
+        )
+
+
+        val searchType = getIndexStringType(MainActivity().index)
+
+        srv.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+
+                val body = searchBody(newText.toString(), searchType.toString())
+
+                viewModel.fetchSuggestions(body = body)
+                    .observe(this@MainActivity, Observer { suggestionList ->
+                        initSearchCursor(suggestionList)
+
+                    })
+
+                srv.suggestionsAdapter = suggestionAdapter
+                return true
+            }
+        })
+
+
+        //On suggestion click listener
+        srv.setOnSuggestionListener(object : SearchView.OnSuggestionListener {
+            override fun onSuggestionSelect(position: Int): Boolean {
+                return false
+            }
+
+            override fun onSuggestionClick(position: Int): Boolean {
+                //Start Intent
+                val cursor = srv.suggestionsAdapter.getItem(position) as Cursor
+                val selection =
+                    cursor.getString(cursor.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1))
+                srv.setQuery(selection, false)
+
+                //Selection is the value
+
+                // Do something with selection
+                return true
+            }
+        })
+
+
         val pbar = findViewById<ProgressBar>(R.id.pb_main)
 
         //Dont set it in Profile section
@@ -186,43 +282,112 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
 
     }
 
+//    private fun setUpViewPager(viewPager: ViewPager?) {
+//
+//        val adapter: ViewPagerAdapter = ViewPagerAdapter(supportFragmentManager)
+//        adapter.addFragment(HomeFragment(), "Home")
+//        adapter.addFragment(ExploreFragment(), "Explore")
+//        adapter.addFragment(MemeWorldFragment(), "MemeWorld")
+//        adapter.addFragment(MyMemesFragment(), "MemeWorld")
+//        adapter.addFragment(ProfileFragment(), "MemeWorld")
+//
+//        viewPager!!.adapter = adapter
+//    }
+//
+//
+//    internal inner class ViewPagerAdapter(manager: FragmentManager) :
+//        FragmentPagerAdapter(manager) {
+//        private val mFragmentList = ArrayList<Fragment>()
+//        private val mFragmentTitleList = ArrayList<String>()
+//
+//        override fun getItem(position: Int): Fragment {
+//            return mFragmentList[position]
+//        }
+//
+//        override fun getCount(): Int {
+//            return mFragmentList.size
+//        }
+//
+//        fun addFragment(fragment: Fragment, title: String) {
+//            mFragmentList.add(fragment)
+//            mFragmentTitleList.add(title)
+//        }
+//
+//        override fun getPageTitle(position: Int): CharSequence {
+//            return mFragmentTitleList[position]
+//        }
+//    }
+
+    private fun initSearchCursor(suggestionList: String?) {
+
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.top_options_menu, menu)
         // Associate searchable configuration with the SearchView
 
         //Inflate Menu
-        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        searchView = menu!!.findItem(R.id.navigation_search).actionView as SearchView
+        //val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        //searchView = menu!!.findItem(R.id.navigation_search).actionView as SearchView
 
         Log.e("SearchX", "In Inflate menu")
 
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
-        searchView.isIconifiedByDefault = false
-        searchView.queryHint = "Search"
-        searchView.requestFocus()
-        searchView.setBackgroundColor(resources.getColor(R.color.stoneWhite))
+        //searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
+        //searchView.isIconifiedByDefault = false
+        //searchView.queryHint = "Search"
+        //searchView.requestFocus()
+        // searchView.setBackgroundColor(resources.getColor(R.color.stoneWhite))
+
+//        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+//            override fun onQueryTextSubmit(query: String?): Boolean {
+//                return false
+//            }
+//
+//            override fun onQueryTextChange(newText: String?): Boolean {
+//                fetchSuggestionsFromSearch(newText.toString())
+//                return true
+//            }
+//        })
 
 
-        val frag = getFragmnetFromIndex(index)
-        Log.e("SearchX", "In On Create Options, before close")
-        searchManager.setOnCancelListener {
-            Log.e("SearchXM", "Close search")
-
-            openFragment(frag!!)
-        }
-        searchView.setOnCloseListener(object : SearchView.OnCloseListener {
-            override fun onClose(): Boolean {
-
-                Log.e("SearchX", "In overrriden method of close")
-                openFragment(frag!!)
-
-                return true
-            }
-        })
+//        val frag = getFragmnetFromIndex(index)
+//        Log.e("SearchX", "In On Create Options, before close")
+//        searchManager.setOnCancelListener {
+//            Log.e("SearchXM", "Close search")
+//
+//            openFragment(frag!!)
+//        }
+//        searchView.setOnCloseListener(object : SearchView.OnCloseListener {
+//            override fun onClose(): Boolean {
+//
+//                Log.e("SearchX", "In overrriden method of close")
+//                openFragment(frag!!)
+//
+//                return true
+//            }
+//        })
 
         return true
 
     }
+
+//                    val columns = arrayOf(
+//                        BaseColumns._ID,
+//                        SearchManager.SUGGEST_COLUMN_TEXT_1,
+//                        SearchManager.SUGGEST_COLUMN_INTENT_DATA
+//                    )
+//
+//                    val cursor = MatrixCursor(columns)
+//
+//                    for (i in 0 until str.size - 1) {
+//                        val tmp = arrayOf(
+//                            Integer.toString(i),
+//                            str.get(i),
+//                            "COLUMNT_INTENT_DATA"
+//                        )
+//                        cursor.addRow(tmp)
+//                    }
+//                    Log.e("Cursor", cursor.toString())
 
 
     private fun getIndexStringType(index: Int): String? {
@@ -264,7 +429,7 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
                 //Dialog of logout
                 logout()
 
-            R.id.navigation_search -> openSearch(Searchable(searchView), frag)
+            //    R.id.navigation_search -> openSearch(Searchable(searchView), frag)
 
             else ->
                 return super.onOptionsItemSelected(item)

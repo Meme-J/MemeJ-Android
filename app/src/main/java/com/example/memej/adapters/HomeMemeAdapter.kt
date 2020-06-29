@@ -34,7 +34,6 @@ class HomeMemeAdapter(val itemClickListener: OnItemClickListenerHome) :
 
 
         getItem(position)?.let { holder.bindPost(it, itemClickListener) }
-        //Detach as well on scrolling
         holder.setIsRecyclable(false)
 
     }

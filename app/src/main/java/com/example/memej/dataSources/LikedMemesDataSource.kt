@@ -1,8 +1,6 @@
 package com.example.memej.dataSources
 
 import android.content.Context
-import android.view.View
-import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.paging.PageKeyedDataSource
 import com.example.memej.Utils.ApplicationUtil
@@ -15,7 +13,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-class LikedMemesDataSource(val context: Context, val pb: ProgressBar) :
+class LikedMemesDataSource(val context: Context) :
     PageKeyedDataSource<String, Meme_World>() {
 
 
@@ -37,7 +35,7 @@ class LikedMemesDataSource(val context: Context, val pb: ProgressBar) :
             .enqueue(object : Callback<memeApiResponses> {
                 override fun onFailure(call: Call<memeApiResponses>, t: Throwable) {
                     Toast.makeText(context, t.message.toString(), Toast.LENGTH_SHORT).show()
-                    pb.visibility = View.GONE
+
                 }
 
                 override fun onResponse(
@@ -61,7 +59,6 @@ class LikedMemesDataSource(val context: Context, val pb: ProgressBar) :
                     } else {
                         Toast.makeText(context, response.message().toString(), Toast.LENGTH_SHORT)
                             .show()
-                        pb.visibility = View.GONE
                     }
                 }
             }
@@ -82,7 +79,6 @@ class LikedMemesDataSource(val context: Context, val pb: ProgressBar) :
             .enqueue(object : Callback<memeApiResponses> {
                 override fun onFailure(call: Call<memeApiResponses>, t: Throwable) {
                     Toast.makeText(context, t.message.toString(), Toast.LENGTH_SHORT).show()
-                    pb.visibility = View.GONE
                 }
 
                 override fun onResponse(
@@ -104,7 +100,6 @@ class LikedMemesDataSource(val context: Context, val pb: ProgressBar) :
                     } else {
                         Toast.makeText(context, response.errorBody().toString(), Toast.LENGTH_SHORT)
                             .show()
-                        pb.visibility = View.GONE
                     }
                 }
 

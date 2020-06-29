@@ -1,8 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_marginTop="?attr/actionBarSize"
     android:layout_height="match_parent"
+    android:layout_marginTop="?attr/actionBarSize"
     android:layout_marginBottom="?attr/actionBarSize"
     tools:context=".MainActivity">
 
@@ -11,7 +11,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:scrollbars="vertical" />
+
+    <!--    <TextView-->
+    <!--        android:id="@+id/load_more"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_centerInParent="true"-->
+    <!--        android:text="@string/tap_to_load_more"-->
+    <!--        android:textColor="@color/wildColor"-->
+    <!--        android:textSize="@dimen/text_size_16sp"-->
+    <!--        android:textStyle="bold" />-->
 
     <ProgressBar
         android:id="@+id/pb_explore"

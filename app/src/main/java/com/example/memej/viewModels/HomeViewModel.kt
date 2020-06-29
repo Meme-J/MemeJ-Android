@@ -20,7 +20,7 @@ class HomeViewModel : ViewModel() {
     init {
 
         val config = PagedList.Config.Builder()
-            .setInitialLoadSizeHint(30)
+            .setInitialLoadSizeHint(5)
             .setEnablePlaceholders(false)   //There is holder disabled till the data is loaded
             .build()
         postsLiveData = initializedPagedListBuilder(config).build()
@@ -53,3 +53,4 @@ class HomeViewModel : ViewModel() {
 
 
 }
+

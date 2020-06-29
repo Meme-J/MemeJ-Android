@@ -17,6 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+
         <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -36,15 +37,10 @@
                     android:layout_margin="@dimen/margins"
                     android:orientation="vertical">
 
-
-                    <!--                    <androidx.recyclerview.widget.RecyclerView-->
-                    <!--                        android:id="@+id/rv_user_random"-->
-                    <!--                        style="@style/recylclerViewAttr" />-->
-
-
-                    <!--                    <androidx.recyclerview.widget.RecyclerView-->
-                    <!--                        android:id="@+id/rv_tag_random"-->
-                    <!--                        style="@style/recylclerViewAttr" />-->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_explore_tag"
+                        style="@style/recylclerViewAttr"
+                        tools:listitem="@layout/layout_user" />
 
 
                     <com.google.android.material.card.MaterialCardView
@@ -63,6 +59,12 @@
 
 
                     </com.google.android.material.card.MaterialCardView>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_explore_user"
+                        style="@style/recylclerViewAttr"
+                        tools:listitem="@layout/layout_user_creators" />
+
 
                     <!--                    <com.google.android.material.textview.MaterialTextView-->
                     <!--                        android:id="@+id/ts_random"-->
@@ -149,18 +151,18 @@
                         style="@style/recylclerViewAttr"
                         tools:listitem="@layout/layout_tag" />
 
-                    <RelativeLayout
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space"
+                        android:layout_marginBottom="@dimen/space_2x"
                         android:orientation="horizontal">
 
                         <AutoCompleteTextView
                             android:id="@+id/auto_completeTagR"
                             android:layout_width="@dimen/add_line"
-                            android:layout_height="@dimen/boxHt"
+                            android:layout_height="@dimen/space_5x"
                             android:layout_marginStart="@dimen/margins"
-                            android:layout_marginTop="@dimen/margins"
-                            android:layout_marginBottom="@dimen/space_2x"
                             android:hint="@string/add_a_tag" />
 
 
@@ -168,12 +170,12 @@
                             android:id="@+id/tag_editR"
                             android:layout_width="@dimen/card_eleveation_max"
                             android:layout_height="@dimen/card_eleveation_max"
-                            android:layout_alignParentEnd="true"
                             android:layout_gravity="end"
                             android:background="@drawable/ic_check_black_24dp"
                             android:enabled="false"
+                            android:gravity="bottom"
                             app:layout_constraintEnd_toEndOf="parent" />
-                    </RelativeLayout>
+                    </LinearLayout>
 
 
                     <TextView
