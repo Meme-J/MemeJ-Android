@@ -14,6 +14,8 @@
 -keepclasseswithmembers class * {
     native <methods>;
 }
+
+
 # Uncomment this to preserve the line number information for
 # debugging stack traces.
 #-keepattributes SourceFile,LineNumberTable

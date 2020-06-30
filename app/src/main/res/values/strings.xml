@@ -12,7 +12,7 @@
     <string name="email">Email</string>
     <string name="lorem_ipsum">the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</string>
 
-    <style name="unable_meeme_world">Unable to get memes. Please try again later</style>
+    <string name="unable_meeme_world">Unable to get memes. Please try again later</string>
 
     <string name="already_have_an_account">Already have an account?</string>
     <string name="username_empty">Username can not be empty</string>
@@ -74,7 +74,17 @@
     <string name="tag_name">Tag Name</string>
     <string name="tap_to_load_more">Tap to load more</string>
     <string name="liked_memes">Liked Memes</string>
-
+    <string name="intro">Lets get started with MemeJ</string>
+    <string name="page1">Add a line to what others write</string>
+    <string name="page2">Get a random meme and swipe for more</string>
+    <string name="page3">Create a meme to be continued by people</string>
+    <string name="page4">Share and spread the love</string>
+    <string name="title1">Home</string>
+    <string name="title2">Explore</string>
+    <string name="title3">Create Meme</string>
+    <string name="title4">Love the MemeWorld</string>
+    <string name="intro_prefs">intro_prefs</string>
+    <string name="intro_prefs_first_run">intro_prefs_key</string>
 
     <array name="themeColors">
         <item>@color/green_500</item>

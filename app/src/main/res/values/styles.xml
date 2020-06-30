@@ -104,7 +104,7 @@
     </style>
 
     <style name="stylePick">
-        <item name="android:elevation">@dimen/margin_20dp</item>
+        <item name="android:elevation">@dimen/space_2x</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginEnd">12dp</item>

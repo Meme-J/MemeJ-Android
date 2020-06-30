@@ -53,14 +53,14 @@
             android:layout_gravity="center"
             android:layout_margin="@dimen/space"
             app:cardBackgroundColor="@color/stoneWhite"
-            app:cardCornerRadius="4dp">
+            app:cardCornerRadius="@dimen/space_half">
 
 
             <SearchView
                 android:id="@+id/activityTemplateSearch"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/garbinaoGrey"
+                android:background="@color/stoneWhite"
                 android:iconifiedByDefault="false"
                 android:padding="@dimen/space"
                 android:queryHint="Search" />

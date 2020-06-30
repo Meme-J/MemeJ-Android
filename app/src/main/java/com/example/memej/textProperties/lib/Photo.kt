@@ -47,10 +47,7 @@ class Photo private constructor(builder: Builder) :
     private val location = IntArray(2)
     private var outRect: Rect? = null
 
-    //    private val startX: Int
-//    private val startY: Int
-//    private val endY: Int
-//    private val endX: Int
+
     var childCount = 0
 
 

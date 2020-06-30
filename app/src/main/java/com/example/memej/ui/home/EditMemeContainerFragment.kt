@@ -33,12 +33,11 @@ import com.example.memej.responses.SearchResponse
 import com.example.memej.responses.editMemeApiResponse
 import com.example.memej.responses.homeMememResponses.Coordinates
 import com.example.memej.responses.homeMememResponses.HomeUsers
-import com.example.memej.textProperties.ProjectResources
+
 import com.example.memej.textProperties.lib.ImageEditorView
 import com.example.memej.textProperties.lib.OnPhotoEditorListener
 import com.example.memej.textProperties.lib.Photo
 import com.example.memej.textProperties.lib.ViewType
-import com.example.memej.textProperties.projectResources
 import com.google.android.material.button.MaterialButton
 import retrofit2.Call
 import retrofit2.Callback
@@ -88,8 +87,8 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
         super.onCreate(savedInstanceState)
 
         root = DataBindingUtil.setContentView(this, R.layout.edit_meme_container_fragment)
-        projectResources =
-            ProjectResources(resources)
+//        projectResources =
+//            ProjectResources(resources)
 
         //Default Paint, TypeFace. Size
         val tf: Typeface = Typeface.DEFAULT

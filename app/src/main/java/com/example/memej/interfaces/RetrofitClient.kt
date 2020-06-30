@@ -17,8 +17,11 @@ object RetrofitClient {
 
     private fun okhttpClient(context: Context): OkHttpClient {
 
+//        val interceptor = HttpLoggingInterceptor()
+//        interceptor.level = HttpLoggingInterceptor.Level.BODY
 
         return OkHttpClient.Builder()
+            // .addInterceptor(interceptor)
             .addInterceptor(AuthInterceptor(context))
             .followRedirects(false)
             .writeTimeout(20, TimeUnit.SECONDS)
@@ -40,7 +43,11 @@ object RetrofitClient {
 
     fun getAuthInstance(): Auth {
 
-
+        //Moshi class
+//        val moshi = Moshi.Builder()
+//            .add(KotlinJsonAdapterFactory())
+//            .build()
+//
         return Retrofit.Builder()
             .baseUrl(url)
             .addConverterFactory(MoshiConverterFactory.create())

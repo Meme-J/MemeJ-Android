@@ -2,6 +2,7 @@ package com.example.memej.textProperties
 
 import android.content.Context
 import android.util.DisplayMetrics
+import android.util.Log
 import android.util.TypedValue
 import com.example.memej.Utils.ApplicationUtil.Companion.getContext
 import java.text.SimpleDateFormat
@@ -44,8 +45,8 @@ object ConversionUtil {
 
     fun convertTimeToEpoch(timestamp: String): String {
         val calendar = Calendar.getInstance()
-        val timezone = TimeZone.getDefault()
-
+        val timezone = TimeZone.getTimeZone("UTC")
+        val timeDestinationZone = calendar.timeZone
         val sourceFormat =
             SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
         val destFormat =
@@ -53,6 +54,8 @@ object ConversionUtil {
 
         sourceFormat.timeZone = timezone
         val convertedDate = sourceFormat.parse(timestamp)!!
+        destFormat.timeZone = timeDestinationZone
+        Log.e("Timezone", timezone.toString() + timeDestinationZone.toString())
         return destFormat.format(convertedDate)
 
 
