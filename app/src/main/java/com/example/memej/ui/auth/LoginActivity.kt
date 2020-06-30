@@ -1,11 +1,13 @@
 package com.example.memej.ui.auth
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -78,6 +80,7 @@ class LoginActivity : AppCompatActivity() {
                         .show()
                     val intent = Intent(this, MainActivity::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK)
+                    hideKeyboard(this)
                     startActivity(intent)
                     finish()
                 } else {
@@ -112,6 +115,20 @@ class LoginActivity : AppCompatActivity() {
             startActivity(i)
         }
 
+    }
+
+    private fun hideKeyboard(activity: Activity) {
+        val imm =
+            activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        //Find the currently focused view, so we can grab the correct window token from it.
+        //Find the currently focused view, so we can grab the correct window token from it.
+        var view = activity.currentFocus
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = View(activity)
+        }
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
     private fun hideProgressBar() {
