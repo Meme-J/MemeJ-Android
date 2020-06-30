@@ -19,8 +19,7 @@ object PreferenceUtil {
     private const val NAME = "name"
     private const val EMAIL = "email"
     private var LIKES = "likes"
-
-    private var hasSeenWalkthrough = false
+    private var HAS_SEEN_WALKTHROUGH = null
 
     var _id: String?
         get() = pm.getString(ID, "")
@@ -53,6 +52,12 @@ object PreferenceUtil {
             pm.edit().putInt(LIKES, value!!).apply()
         }
 
+
+    var hasSeenWalkthrough: Boolean
+        get() = pm.getBoolean("HAS_SEEN_WALKTHROUGH", false)
+        set(value) {
+            pm.edit().putBoolean("HAS_SEEN_WALKTHROUGH", value).apply()
+        }
 
     fun setUserFromPreference(user: ProfileResponse.Profile) {
         //Instamce of pref util
@@ -88,11 +93,14 @@ object PreferenceUtil {
         return NumLikes(p.likes!!)
     }
 
-    fun setStatusOfWalkThroughTrue(): Boolean {
+    fun getWalkthrough(): Boolean {
         val p = PreferenceUtil
         return p.hasSeenWalkthrough
-
     }
 
+    fun setWalkthroughStatus(hasSeen: Boolean) {
+        val pref = PreferenceUtil
+        pref.hasSeenWalkthrough = hasSeen
+    }
 
 }

@@ -37,7 +37,8 @@ import retrofit2.Call
 import retrofit2.Response
 
 
-class ProfileFragment : Fragment(), OnItemClickListenerLikeMeme {
+class
+ProfileFragment : Fragment(), OnItemClickListenerLikeMeme {
 
     companion object {
         fun newInstance() = ProfileFragment()

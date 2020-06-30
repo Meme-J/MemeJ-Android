@@ -42,7 +42,7 @@ class SearchTemplateActivty : AppCompatActivity(), OnItemClickListenerTemplate {
         pb = findViewById(R.id.pb_searchResultTemplate)
         tagName = arg.getString("tag")
         toolbar.title = tagName
-
+        rv = findViewById(R.id.rv_memes_searchTemplate)
 
         if (ErrorStatesResponse.checkIsNetworkConnected(this)) {
             observeLiveData()

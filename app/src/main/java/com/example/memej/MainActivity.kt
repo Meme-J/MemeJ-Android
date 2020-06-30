@@ -24,6 +24,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.memej.Utils.Communicator
 import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.PreferenceUtil
+import com.example.memej.Utils.sessionManagers.PreferenceManager
 import com.example.memej.Utils.sessionManagers.SaveSharedPreference
 import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.adapters.SearchAdapter
@@ -43,7 +44,6 @@ import com.example.memej.ui.profile.ProfileFragment
 import com.example.memej.viewModels.MainActivityViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.miguelcatalan.materialsearchview.MaterialSearchView
 import com.shreyaspatil.MaterialDialog.MaterialDialog
 import retrofit2.Call
 import retrofit2.Response
@@ -143,12 +143,12 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
     lateinit var stringAdapter: ArrayAdapter<String>
     lateinit var mutableList: MutableList<String>
 
-    lateinit var srv: MaterialSearchView
     private val viewModel: MainActivityViewModel by viewModels()
 
     private var mAdapter: SimpleCursorAdapter? = null
 
     var searchType: String = ""
+    private val preferenceManager: PreferenceManager = PreferenceManager()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -411,17 +411,17 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
     }
 
     private fun logoutDo() {
+
         SaveSharedPreference()
             .setLoggedIn(applicationContext, false)
-
-
-        //Remove the saved profile
         preferenceUtils.clearPrefData()
+        preferenceManager.clear()
+
         val i = Intent(this, LoginActivity::class.java)
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
         finishAffinity()
         startActivity(i)
-
+        finish()
     }
 
 

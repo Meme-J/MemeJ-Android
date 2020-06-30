@@ -124,11 +124,10 @@ class SelectMemeTemplateActivity : AppCompatActivity(), OnItemClickListenerTempl
                 )
 
 
-//                val i = Intent(this@MainActivity, SearchResultActivity::class.java)
-//                i.putExtra("tag", txt)
-//                i.putExtra("type", searchType)
-//                i.putExtra("bundle", bundle)
-//                startActivity(i)
+                val i = Intent(this@SelectMemeTemplateActivity, SearchTemplateActivty::class.java)
+                i.putExtra("tag", txt)
+                i.putExtra("bundle", bundle)
+                startActivity(i)
 
 
                 return true
@@ -192,12 +191,15 @@ class SelectMemeTemplateActivity : AppCompatActivity(), OnItemClickListenerTempl
                     }
 
                     Log.e("STr", strAr.toString())
+                    Log.e("Str", strAr.size.toString())
+
 
                     val c =
                         MatrixCursor(arrayOf(BaseColumns._ID, "suggestionList"))
                     for (i in 0 until strAr.size) {
-                        c.addRow(arrayOf(i, str[i]))
+                        c.addRow(arrayOf(i, strAr[i]))
                     }
+
 
                     mAdapter?.changeCursor(c)
                 }

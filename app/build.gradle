@@ -29,8 +29,14 @@ android {
     buildTypes {
         release {
             //Proguard Techniques
-            minifyEnabled false             //Need to add serialized name annotation if enabled true
+            //minifyEnabled false             //Need to add serialized name annotation if enabled true
             //   shrinkResources true              //Needs above to be true
+
+            minifyEnabled true
+            shrinkResources true
+
+
+
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             manifestPlaceholders = [usesCleartextTraffic: "false"]
         }
@@ -198,5 +204,7 @@ dependencies {
     //Circular Image View
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
-    implementation 'com.miguelcatalan:materialsearchview:1.4.0'
+    //App Intro
+    implementation "com.github.AppIntro:AppIntro:5.1.0"
+
 }
