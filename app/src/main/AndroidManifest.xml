@@ -26,9 +26,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/DarkTheme"
             android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity
-            android:name=".ui.BaseActivityHost"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" /> <!-- Edit this -->
+
         <activity
             android:name=".ui.home.SearchResultActivity"
             android:label="Select Template"
@@ -62,11 +60,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/DarkTheme"
             android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity
-            android:name=".ui.profile.LikedMemes"
-            android:screenOrientation="portrait"
-            android:theme="@style/DarkTheme"
-            android:windowSoftInputMode="stateAlwaysHidden" />
+
         <activity
             android:name=".ui.auth.SignUpActivity"
             android:screenOrientation="portrait"

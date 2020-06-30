@@ -38,7 +38,6 @@ import com.example.memej.ui.home.HomeFragment
 import com.example.memej.ui.home.SearchResultActivity
 import com.example.memej.ui.home.SettingsScreen
 import com.example.memej.ui.memeTemplate.SelectMemeTemplateActivity
-import com.example.memej.ui.memes.MemeByTag
 import com.example.memej.ui.myMemes.MyMemesFragment
 import com.example.memej.ui.profile.ProfileFragment
 import com.example.memej.viewModels.MainActivityViewModel
@@ -439,14 +438,7 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
     }
 
     override fun goToMemesByTagPage(bundle: Bundle) {
-        val transaction = this.supportFragmentManager.beginTransaction()
-        val frag2 = MemeByTag()
 
-        frag2.arguments = bundle
-        transaction.replace(R.id.container, frag2)
-        transaction.addToBackStack(null)
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-        transaction.commit()
 
     }
 
