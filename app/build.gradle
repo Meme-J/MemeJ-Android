@@ -32,8 +32,8 @@ android {
             //minifyEnabled false             //Need to add serialized name annotation if enabled true
             //   shrinkResources true              //Needs above to be true
 
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled false
+//            shrinkResources true
 
 
 

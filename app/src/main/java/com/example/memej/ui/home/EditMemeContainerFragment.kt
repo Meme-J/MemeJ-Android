@@ -480,6 +480,7 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
         rvTag.adapter = tagAdapter
 
 
+        //The name is not sent. Only username is sent
         //Populate the users in the same way
         val u = arg.getParcelableArrayList<HomeUsers>("users")
         val userStr = mutableListOf<String>()

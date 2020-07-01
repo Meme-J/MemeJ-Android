@@ -21,7 +21,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.memej.R
-import com.example.memej.Utils.Communicator
 import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.adapters.HomeMemeAdapter
 import com.example.memej.adapters.OnItemClickListenerHome
@@ -35,7 +34,6 @@ class HomeFragment : Fragment(), OnItemClickListenerHome {
     private lateinit var rv: RecyclerView
     private lateinit var homeMemeAdapter: HomeMemeAdapter
     lateinit var root: View
-    lateinit var comm: Communicator
     lateinit var pb: ProgressBar
     lateinit var itemAnimator: RecyclerView.ItemAnimator
     lateinit var dialog: ProgressDialog
@@ -61,9 +59,8 @@ class HomeFragment : Fragment(), OnItemClickListenerHome {
         }
 
         //Create a dialog
-        dialog = ProgressDialog(context as Activity)
-        dialog.setMessage("Loading memes...")
-        dialog.show()
+        dialog =
+            ProgressDialog.show(activity, null, "Loading...", true)
 
         if (ErrorStatesResponse.checkIsNetworkConnected(requireContext())) {
             observeList()
@@ -72,7 +69,6 @@ class HomeFragment : Fragment(), OnItemClickListenerHome {
         }
 
 
-        comm = activity as Communicator
         dialog.dismiss()
 
         return root
@@ -80,6 +76,7 @@ class HomeFragment : Fragment(), OnItemClickListenerHome {
 
     private fun checkConnection() {
 
+        dialog.dismiss()
         if (!ErrorStatesResponse.checkIsNetworkConnected(requireContext())) {
             //Create a dialog
             pb.visibility = View.GONE
@@ -93,13 +90,14 @@ class HomeFragment : Fragment(), OnItemClickListenerHome {
                     "Retry"
                 ) { dialogInterface, which ->
                     dialogInterface.dismiss()
-
+                    dialog.dismiss()
                     observeList()
                 }
                 .setNegativeButton(
                     "Cancel"
                 ) { dialogInterface, which ->
                     dialogInterface.dismiss()
+                    dialog.dismiss()
                     pb.visibility = View.GONE
 
                 }

@@ -51,11 +51,14 @@ class RandomMemeAdapter(private val clickListener: RandomListener) :
     private var random: List<Meme_Home>? = listOf()     //Empty List
     private var state = CardStackState()
     private var setting = CardStackSetting()
+    var numberItemsLeft: Int = 0
 
 
     //Setting
     fun setRandomPosts(rando: List<Meme_Home>) {
         this.random = rando
+        Log.e("RandomStat", setting.visibleCount.toString())
+
         notifyDataSetChanged()
     }
 
@@ -565,6 +568,12 @@ class RandomMemeAdapter(private val clickListener: RandomListener) :
         return random?.size ?: 0
     }
 
+    fun updateNumberLeft() {
+        numberItemsLeft -= 1
+
+        Log.e("Random", numberItemsLeft.toString())
+    }
+
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         //Get wrt holder class
         random?.get(position)?.let { holder.bindPost(it, clickListener) }
@@ -581,16 +590,19 @@ class RandomMemeAdapter(private val clickListener: RandomListener) :
 
         //Settings to scroll non vertical
         setting.canScrollVertical = false
-
+        Log.e("RandomStat", setting.visibleCount.toString())
         //Returns swipe setting
         if (direction == Direction.Top || direction == Direction.Bottom) {
             state.status = CardStackState.Status.Idle
         }
 
+
     }
 
     override fun onCardSwiped(direction: Direction?) {
         setting.canScrollVertical = false
+        Log.e("Random", numberItemsLeft.toString())
+        updateNumberLeft()
 
     }
 
