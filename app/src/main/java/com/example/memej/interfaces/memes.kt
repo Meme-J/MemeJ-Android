@@ -110,7 +110,7 @@ interface memes {
     ): Call<EmptyTemplateResponse>
 
 
-    //##This should be like getSuggestions
+    //##This should be like getSuggestions of template search
     @Headers("Content-Type:application/json")
     @POST("api/template/autocomplete")
     fun getTemplateSuggestions(
@@ -122,11 +122,12 @@ interface memes {
     //## get my memes ( I have contributed into)
     //Response will be moxed of meme world, and ongoing
     //But It will come mixed
-    @POST("api/meme/myMemes")
+
+    @POST("api/meme/mymemes")
     fun getMyMemes(
         @Query("limit") loadSize: Int = 20,
         @Header("Authorization") accessToken: String?
-    ): Call<homeMemeApiResponse>
+    ): Call<memeApiResponses>
 
 
 }

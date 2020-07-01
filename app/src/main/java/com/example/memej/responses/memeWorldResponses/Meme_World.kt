@@ -7,20 +7,20 @@ data class Meme_World(
 
 
     val _id: String, // 5ec14ed4fdba9567b44adec4
-    @Json(name = "lastUpdated")
+    @field:Json(name = "lastUpdated")
     val lastUpdated: String, // 2020-05-17T14:48:52.261Z
-    @Json(name = "likedBy")
+    @field:Json(name = "likedBy")
     val likedBy: List<User>,
-    @Json(name = "likes")
+    @field:Json(name = "likes")
     var likes: Int, // 0
-    @Json(name = "placeholders")
+    @field:Json(name = "placeholders")
     val placeholders: List<String>,
-    @Json(name = "score")
+    @field:Json(name = "score")
     val score: Double, // 1.1
-    @Json(name = "tags")
+    @field:Json(name = "tags")
     val tags: List<String>,
-    @Json(name = "templateId")
+    @field:Json(name = "templateId")
     val templateId: TemplateId,
-    @Json(name = "users")
+    @field:Json(name = "users")
     val users: List<User>
 )

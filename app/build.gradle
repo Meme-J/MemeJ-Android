@@ -32,9 +32,8 @@ android {
             //minifyEnabled false             //Need to add serialized name annotation if enabled true
             //   shrinkResources true              //Needs above to be true
 
-            minifyEnabled false
-//            shrinkResources true
-
+            minifyEnabled true
+            shrinkResources true
 
 
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'

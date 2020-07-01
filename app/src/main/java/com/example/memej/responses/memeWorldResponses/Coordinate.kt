@@ -6,8 +6,8 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Coordinate(
-    @Json(name = "x")
+    @field:Json(name = "x")
     val x: Int, // 1
-    @Json(name = "y")
+    @field:Json(name = "y")
     val y: Int // 2
 ) : Parcelable
