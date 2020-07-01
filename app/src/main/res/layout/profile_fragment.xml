@@ -114,15 +114,40 @@
                 android:textSize="24sp"
                 tools:visibility="visible" />
 
-            <de.hdodenhof.circleimageview.CircleImageView
+
+            <androidx.cardview.widget.CardView
                 android:id="@+id/imgb_avatar_wrap"
                 android:layout_width="@dimen/image_profile_attr"
                 android:layout_height="@dimen/image_profile_attr"
                 android:layout_gravity="bottom|center_horizontal"
                 android:layout_margin="@dimen/margins"
                 android:src="@drawable/male"
+                app:cardCornerRadius="60dp"
                 app:civ_border_color="@color/colorPrimary"
-                app:civ_border_width="1.5dp" />
+                app:civ_border_width="1.5dp">
+
+                <TextView
+                    android:id="@+id/avatar_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/ka"
+                    android:textColor="@color/white"
+                    android:textSize="50sp" />
+
+
+            </androidx.cardview.widget.CardView>
+
+            <!--            <de.hdodenhof.circleimageview.CircleImageView-->
+            <!--                android:id="@+id/imgb_avatar_wrap"-->
+            <!--                android:layout_width="@dimen/image_profile_attr"-->
+            <!--                android:layout_height="@dimen/image_profile_attr"-->
+            <!--                android:layout_gravity="bottom|center_horizontal"-->
+            <!--                -->
+            <!--                android:layout_margin="@dimen/margins"-->
+            <!--                android:src="@drawable/male"-->
+            <!--                app:civ_border_color="@color/colorPrimary"-->
+            <!--                app:civ_border_width="1.5dp" />-->
 
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>

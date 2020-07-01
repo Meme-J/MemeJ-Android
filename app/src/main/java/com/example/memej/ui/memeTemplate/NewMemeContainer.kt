@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.memej.MainActivity
 import com.example.memej.R
-import com.example.memej.Utils.Communicator2
 import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.adapters.TagAdapter
@@ -60,7 +59,7 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
     var sendButton: Boolean = false
     var saveCount: Int? = 0
     lateinit var sessionManager: SessionManager
-    lateinit var comm: Communicator2
+
     lateinit var pb: ProgressBar
     lateinit var tagCheck: MaterialButton
 

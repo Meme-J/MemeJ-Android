@@ -8,7 +8,6 @@ import android.provider.BaseColumns
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.ArrayAdapter
 import android.widget.CursorAdapter
 import android.widget.SearchView
 import android.widget.SimpleCursorAdapter
@@ -37,7 +36,6 @@ import com.example.memej.ui.auth.LoginActivity
 import com.example.memej.ui.explore.ExploreFragment
 import com.example.memej.ui.home.HomeFragment
 import com.example.memej.ui.home.SearchResultActivity
-import com.example.memej.ui.home.SettingsScreen
 import com.example.memej.ui.memeTemplate.SelectMemeTemplateActivity
 import com.example.memej.ui.myMemes.MyMemesFragment
 import com.example.memej.ui.profile.ProfileFragment
@@ -60,26 +58,6 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
     }
 
 
-    private fun openSearch(
-        fragment: Fragment,
-        frag: Fragment?
-    ) {
-
-        val backstackedVerse = frag?.javaClass?.simpleName
-
-        val manager = supportFragmentManager
-        val fragPopped = manager.popBackStackImmediate(backstackedVerse, 0)
-
-        if (!fragPopped) {
-            val transaction = manager.beginTransaction()
-
-            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-            transaction.replace(R.id.container, fragment)
-            transaction.addToBackStack(null)
-            transaction.commit()
-        }
-    }
-
     fun findFragment(): String? {
         val fm = supportFragmentManager.findFragmentById(R.id.container)
         val fragmentName: String = fm!!::class.java.simpleName
@@ -93,13 +71,13 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
 
 
                 R.id.navigation_home -> {
-                    index = 0
+                    index = 1
                     openFragment(HomeFragment())
                     return@OnNavigationItemSelectedListener true
 
                 }
                 R.id.navigation_explore -> {
-                    index = 1
+                    index = 0
                     openFragment(ExploreFragment())
 
                     return@OnNavigationItemSelectedListener true
@@ -137,11 +115,8 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
 
     //Initialzie the toolbar
     lateinit var toolbar: androidx.appcompat.widget.Toolbar
-    private var atMainActicty = true
 
     private val preferenceUtils = PreferenceUtil
-    lateinit var stringAdapter: ArrayAdapter<String>
-    lateinit var mutableList: MutableList<String>
 
     private val viewModel: MainActivityViewModel by viewModels()
 
@@ -154,13 +129,12 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        //Set up the toolbar
+
         toolbar = androidx.appcompat.widget.Toolbar(this)
         toolbar = findViewById(R.id.toolbar_main)
         setSupportActionBar(toolbar)
+        toolbar.title = ""
 
-
-        //val searchType = getIndexStringType(MainActivity().index)
 
         val from = arrayOf("suggestionList")
         val to = intArrayOf(android.R.id.text1)
@@ -179,6 +153,7 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
         searchView.suggestionsAdapter = mAdapter
         searchView.isIconifiedByDefault = false
 
+
         searchView.setOnSuggestionListener(object : SearchView.OnSuggestionListener {
             override fun onSuggestionSelect(position: Int): Boolean {
                 return true
@@ -193,6 +168,8 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
                     "tag" to txt,
                     "type" to searchType
                 )
+
+                searchView.isIconified = false
                 val i = Intent(this@MainActivity, SearchResultActivity::class.java)
                 i.putExtra("tag", txt)
                 i.putExtra("type", searchType)
@@ -219,6 +196,8 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
             }
         })
 
+        searchView.clearFocus()
+
 
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         sessionManager =
@@ -227,8 +206,8 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
         // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_home,
                 R.id.navigation_explore,
+                R.id.navigation_home,
                 R.id.navigation_memeWorld,
                 R.id.navigation_myMemes,
                 R.id.navigation_profile
@@ -237,8 +216,11 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
 
 
         //Default Fragment
+
         if (savedInstanceState == null) {
-            val fragment = HomeFragment()
+            navView.selectedItemId = R.id.exploreFragment
+
+            val fragment = ExploreFragment()
             supportFragmentManager.beginTransaction()
                 .replace(R.id.container, fragment, fragment.javaClass.simpleName)
                 .commit()
@@ -264,7 +246,7 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
 
 
         //Function for passing data intent
-        val frag = HomeFragment()
+        val frag = ExploreFragment()
         supportFragmentManager.beginTransaction().replace(R.id.container, frag).commit()
 
 
@@ -275,8 +257,8 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
 
         var type: String = ""
         when (fragment) {
-            "HomeFragment" -> type = "ongoing"
             "ExploreFragment" -> type = "ongoing"
+            "HomeFragment" -> type = "ongoing"
             "MemeWorldFragment" -> type = "complete"
             "MyMemesFragment" -> type = "ongoing"
             "ProfileFragment" -> type = "complete"
@@ -343,38 +325,37 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
     }
 
 
-    private fun getIndexStringType(index: Int): String? {
+//    private fun getIndexStringType(index: Int): String? {
+//
+//        var s: String? = null
+//        when (index) {
+//            0 -> s = "ongoing"
+//            1 -> s = "ongoing"
+//            2 -> s = "complete"
+//            3 -> s = "ongoing"
+//            4 -> s = "complete"
+//
+//        }
+//        return s
+//    }
 
-        var s: String? = null
-        when (index) {
-            0 -> s = "ongoing"
-            1 -> s = "ongoing"
-            2 -> s = "complete"
-            3 -> s = "ongoing"
-            4 -> s = "complete"
-
-        }
-        return s
-    }
-
-    private fun getFragmnetFromIndex(index: Int): Fragment? {
-        var s: Fragment? = null
-        when (index) {
-            0 -> s = HomeFragment()
-            1 -> s = ExploreFragment()
-            2 -> s = MemeWorldFragment()
-            3 -> s = MyMemesFragment()
-            4 -> s = ProfileFragment()
-
-        }
-        return s
-
-    }
+//    private fun getFragmnetFromIndex(index: Int): Fragment? {
+//        var s: Fragment? = null
+//        when (index) {
+//            0 -> s = ExploreFragment()
+//            1 -> s = HomeFragment()
+//            2 -> s = MemeWorldFragment()
+//            3 -> s = MyMemesFragment()
+//            4 -> s = ProfileFragment()
+//
+//        }
+//        return s
+//
+//    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val i = Intent(this, SettingsScreen::class.java)
+//        val i = Intent(this, SettingsScreen::class.java)
         //Get index frag
-        val frag = getFragmnetFromIndex(index)
 
         when (item.itemId) {
             R.id.settings_btn ->
@@ -424,51 +405,6 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
         finish()
     }
 
-
-    //Communicator Classes
-    override fun passDataFromHome(bundle: Bundle) {
-
-    }
-
-    override fun passDataToMemeWorld(bundle: Bundle) {
-
-    }
-
-    override fun goToLikedMemesPage() {
-    }
-
-    override fun goToMemesByTagPage(bundle: Bundle) {
-
-
-    }
-
-    override fun goBackToHomePage() {
-        val transaction = this.supportFragmentManager.beginTransaction()
-        val frag2 = HomeFragment()
-        transaction.replace(R.id.container, frag2)
-        transaction.addToBackStack(null)
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-        transaction.commit()
-    }
-
-    override fun goToSearchResult(bundle: Bundle) {
-
-
-    }
-
-    override fun goToProfilePage() {
-        val transaction = this.supportFragmentManager.beginTransaction()
-        val frag2 = ProfileFragment()
-        transaction.replace(R.id.container, frag2)
-        transaction.addToBackStack(null)
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-        transaction.commit()
-
-    }
-
-    override fun openLikedMemeFromActivity(bundle: Bundle) {
-
-    }
 
     override fun goToAFragmnet(fragment: Fragment) {
         val transaction = this.supportFragmentManager.beginTransaction()

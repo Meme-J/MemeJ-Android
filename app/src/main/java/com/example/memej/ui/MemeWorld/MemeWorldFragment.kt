@@ -161,23 +161,23 @@ class MemeWorldFragment : Fragment(), OnItemClickListenerMemeWorld {
     }
 
 
-    override fun onItemClicked(_homeMeme: Meme_World) {
+    override fun onItemClicked(_meme: Meme_World) {
         //Meme World Container
         val bundle = bundleOf(
-            "id" to _homeMeme._id,
-            "lastUpdated" to _homeMeme.lastUpdated,
-            "likedBy" to _homeMeme.likedBy,
-            "likes" to _homeMeme.likes,
-            "placeholders" to _homeMeme.placeholders,
-            "numPlaceholders" to _homeMeme.templateId.numPlaceholders,
-            "tags" to _homeMeme.tags,
-            "users" to _homeMeme.users,
-            "templateIdCoordinates" to _homeMeme.templateId.coordinates,
-            "imageUrl" to _homeMeme.templateId.imageUrl,
-            "imageTags" to _homeMeme.templateId.tags,
-            "imageName" to _homeMeme.templateId.name,
-            "textSize" to _homeMeme.templateId.textSize,
-            "textColor" to _homeMeme.templateId.textColorCode
+            "id" to _meme._id,
+            "lastUpdated" to _meme.lastUpdated,
+            "likedBy" to _meme.likedBy,
+            "likes" to _meme.likes,
+            "placeholders" to _meme.placeholders,
+            "numPlaceholders" to _meme.templateId.numPlaceholders,
+            "tags" to _meme.tags,
+            "users" to _meme.users,
+            "templateIdCoordinates" to _meme.templateId.coordinates,
+            "imageUrl" to _meme.templateId.imageUrl,
+            "imageTags" to _meme.templateId.tags,
+            "imageName" to _meme.templateId.name,
+            "textSize" to _meme.templateId.textSize,
+            "textColor" to _meme.templateId.textColorCode
         )
 
         val i = Intent(activity, CompletedMemeActivity::class.java)

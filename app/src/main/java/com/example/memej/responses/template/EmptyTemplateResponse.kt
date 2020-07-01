@@ -5,27 +5,27 @@ import com.example.memej.responses.homeMememResponses.Coordinates
 import com.squareup.moshi.Json
 
 data class EmptyTemplateResponse(
-    @Json(name = "templates")
+    @field:Json(name = "templates")
     val templates: List<Template>
 ) {
     data class Template(
-        @Json(name = "coordinates")
+        @field:Json(name = "coordinates")
         val coordinates: List<Coordinates>,
-        @Json(name = "_id")
+        @field:Json(name = "_id")
         val _id: String, // 5ed672e0942f0f11e7927fb4
-        @Json(name = "imageUrl")
+        @field:Json(name = "imageUrl")
         val imageUrl: String, // image.com
-        @Json(name = "name")
+        @field:Json(name = "name")
         val name: String, // Kavya
-        @Json(name = "numPlaceholders")
+        @field:Json(name = "numPlaceholders")
         val numPlaceholders: Int, // 4
-        @Json(name = "tags")
+        @field:Json(name = "tags")
         val tags: List<String>,
-        @Json(name = "textColorCode")
+        @field:Json(name = "textColorCode")
         val textColorCode: List<String>,
-        @Json(name = "textSize")
+        @field:Json(name = "textSize")
         val textSize: List<Int>,
-        @Json(name = "__v")
+        @field:Json(name = "__v")
         val v: Int // 0
     )
 }

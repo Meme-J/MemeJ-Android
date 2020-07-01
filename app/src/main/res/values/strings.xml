@@ -85,6 +85,7 @@
     <string name="title4">Love the MemeWorld</string>
     <string name="intro_prefs">intro_prefs</string>
     <string name="intro_prefs_first_run">intro_prefs_key</string>
+    <string name="ka">KA</string>
 
     <array name="themeColors">
         <item>@color/green_500</item>

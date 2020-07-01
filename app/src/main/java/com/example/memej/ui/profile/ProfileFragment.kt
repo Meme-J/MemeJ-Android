@@ -2,14 +2,15 @@ package com.example.memej.ui.profile
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import android.widget.ImageView
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -35,6 +36,7 @@ import com.google.android.material.textview.MaterialTextView
 import com.shreyaspatil.MaterialDialog.MaterialDialog
 import retrofit2.Call
 import retrofit2.Response
+import java.util.*
 
 
 class
@@ -53,7 +55,8 @@ ProfileFragment : Fragment(), OnItemClickListenerLikeMeme {
     private lateinit var root: View
     private val viewModel: ProfileViewModel by viewModels()
 
-    private lateinit var ivUserAvatar: ImageView
+    private lateinit var ivUserAvatar: CardView
+    private lateinit var textAvatar: TextView
     private var EXPAND_AVATAR_SIZE: Float = 0F
     private var COLLAPSE_IMAGE_SIZE: Float = 0F
     private var horizontalToolbarAvatarMargin: Float = 0F
@@ -119,7 +122,7 @@ ProfileFragment : Fragment(), OnItemClickListenerLikeMeme {
 
 
         root.findViewById<TextView>(R.id.textViewNumberTotalLikes).text = likesNum
-
+        //Get the avatar image
 
         //get the liked memes
         rv = root.findViewById<RecyclerView>(R.id.rv_likedMemesProfile)
@@ -129,6 +132,7 @@ ProfileFragment : Fragment(), OnItemClickListenerLikeMeme {
 
         EXPAND_AVATAR_SIZE = resources.getDimension(R.dimen.default_expanded_image_size)
         COLLAPSE_IMAGE_SIZE = resources.getDimension(R.dimen.default_collapsed_image_size)
+
         horizontalToolbarAvatarMargin = resources.getDimension(R.dimen.space)
         /* collapsingAvatarContainer = findViewById(R.id.stuff_container)*/
         appBarLayout = root.findViewById(R.id.app_bar_layout)
@@ -138,6 +142,7 @@ ProfileFragment : Fragment(), OnItemClickListenerLikeMeme {
         titleToolbarTextSingle = root.findViewById(R.id.tv_profile_name_single)
         background = root.findViewById(R.id.fl_background)
         invisibleTextViewWorkAround = root.findViewById(R.id.tv_workaround)
+        textAvatar = root.findViewById(R.id.avatar_text)
 
         (toolbar.height - COLLAPSE_IMAGE_SIZE) * 2
         /**/
@@ -158,6 +163,14 @@ ProfileFragment : Fragment(), OnItemClickListenerLikeMeme {
         titleToolbarText.text = username
         titleToolbarTextSingle.text = username
         invisibleTextViewWorkAround.text = username
+
+        val rnd = Random()
+        val currentColor =
+            Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256))
+        ivUserAvatar.setCardBackgroundColor(currentColor)
+        textAvatar.text = username.take(2).toUpperCase(Locale.ROOT)
+
+
 
 
         return root
@@ -344,6 +357,8 @@ ProfileFragment : Fragment(), OnItemClickListenerLikeMeme {
                                 )
                             )
                             animate().setDuration(250).alpha(1.0F)
+
+                            textAvatar.textSize = 25f
 
                             /* show titles on toolbar with animation*/
                             titleToolbarTextSingle.apply {

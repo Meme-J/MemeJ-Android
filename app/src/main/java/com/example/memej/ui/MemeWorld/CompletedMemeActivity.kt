@@ -55,11 +55,8 @@ class CompletedMemeActivity : AppCompatActivity(), onUserClickType, onTagClickTy
     lateinit var rvTag: RecyclerView
     lateinit var rvUser: RecyclerView
 
-    //    lateinit var image: LikeButton
-//    lateinit var likes: TextView
     private val preferenceUtils = PreferenceUtil
 
-    //private val viewmodel: CompletdMemeViewModel by viewModels()
     lateinit var bmp: Bitmap
     lateinit var photoView: ImageEditorView
     lateinit var photoGlobalEditor: Photo
@@ -74,7 +71,6 @@ class CompletedMemeActivity : AppCompatActivity(), onUserClickType, onTagClickTy
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        //Root is the binding elemnt
 
 
         root = DataBindingUtil.setContentView(this, R.layout.activity_completed_meme)
@@ -391,6 +387,8 @@ class CompletedMemeActivity : AppCompatActivity(), onUserClickType, onTagClickTy
 
         val txt = arg.getStringArrayList("tags")
         val txt2 = arg.getStringArrayList("imageTags")
+
+        Log.e("Search", txt.toString() + txt2.toString())
 
         //This is a array basically
         //Create an array list  to call these tags

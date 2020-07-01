@@ -485,7 +485,6 @@ class Photo private constructor(builder: Builder) :
         val scrheight: Int = displayMetrics.heightPixels
         val scrwidth: Int = displayMetrics.widthPixels
 
-        Log.e("scrWidth", scrwidth.toString())
         //The amount that we have spare to use
         val eff = (scrwidth - 300) / 2
 
@@ -495,12 +494,6 @@ class Photo private constructor(builder: Builder) :
         p.marginStart = marX.toInt()
         p.topMargin = marY.toInt()
 
-        Log.e(
-            "Final Stats Comp",
-            " width and height : " + width.toString() + " " + height.toString() + " \n" +
-                    "dp scaled height and width" + w.toString() + " " + h.toString() + " \n" +
-                    "sp scaled " + w2.toString() + " " + h2.toString()
-        )
 
 
 //        p.setMargins(startX, startY, endX, endY)
