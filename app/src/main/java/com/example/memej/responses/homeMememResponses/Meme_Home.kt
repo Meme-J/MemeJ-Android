@@ -1,7 +1,9 @@
 package com.example.memej.responses.homeMememResponses
 
+import androidx.annotation.Keep
 import com.squareup.moshi.Json
 
+@Keep
 data class Meme_Home(
 
     // @field:Json(name = "_id")

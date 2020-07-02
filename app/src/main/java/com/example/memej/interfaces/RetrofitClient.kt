@@ -1,14 +1,19 @@
 package com.example.memej.interfaces
 
 import android.content.Context
+import androidx.annotation.Keep
 import com.example.memej.Utils.AuthInterceptor
 import com.example.memej.Utils.sessionManagers.TokenAuthenticator
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
 
+
+@Keep
 object RetrofitClient {
 
 
@@ -44,13 +49,13 @@ object RetrofitClient {
     fun getAuthInstance(): Auth {
 
         //Moshi class
-//        val moshi = Moshi.Builder()
-//            .add(KotlinJsonAdapterFactory())
-//            .build()
-//
+        val moshi = Moshi.Builder()
+            .add(KotlinJsonAdapterFactory())
+            .build()
+
         return Retrofit.Builder()
             .baseUrl(url)
-            .addConverterFactory(MoshiConverterFactory.create())
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
             .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .client(authClient())
             .build()
@@ -61,6 +66,9 @@ object RetrofitClient {
     fun makeCallsForMemes(context: Context): memes {
 
 
+//        val moshi = Moshi.Builder()
+//            .add(KotlinJsonAdapterFactory())
+//            .build()
         return Retrofit.Builder()
             .baseUrl(url)
             .addConverterFactory(MoshiConverterFactory.create())

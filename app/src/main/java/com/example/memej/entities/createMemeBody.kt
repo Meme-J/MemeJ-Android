@@ -1,9 +1,11 @@
 package com.example.memej.entities
 
 
+import androidx.annotation.Keep
 import com.squareup.moshi.Json
 
 
+@Keep
 data class createMemeBody(
 
     @field:Json(name = "numPlaceholders")

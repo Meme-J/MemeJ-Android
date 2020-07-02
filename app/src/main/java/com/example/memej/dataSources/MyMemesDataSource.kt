@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.annotation.Keep
 import androidx.paging.PageKeyedDataSource
 import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.SessionManager
@@ -16,6 +17,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 //Get all the memes that are completed and those which are ongoing by me
+@Keep
 class MyMemesDataSource(val context: Context, val pb: ProgressBar) :
     PageKeyedDataSource<String, Meme_World>() {
 
@@ -70,7 +72,7 @@ class MyMemesDataSource(val context: Context, val pb: ProgressBar) :
                         if (memeWorldPosts?.isEmpty()!!) {
                             Toast.makeText(
                                 context,
-                                "Unable to get memes",
+                                "No memes available",
                                 Toast.LENGTH_LONG
                             ).show()
                             pb.visibility = View.GONE

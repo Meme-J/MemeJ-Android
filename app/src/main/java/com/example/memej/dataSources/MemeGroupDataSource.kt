@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.annotation.Keep
 import androidx.paging.PageKeyedDataSource
 import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.SessionManager
@@ -15,6 +16,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 //Create a scope
+@Keep
 class MemeGroupDataSource(val context: Context, val pb: ProgressBar) :
     PageKeyedDataSource<String, EmptyTemplateResponse.Template>() {
 

@@ -16,6 +16,8 @@ android {
         versionName "1.0"
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
+
     }
 
 //    sourceSets {
@@ -29,17 +31,17 @@ android {
     buildTypes {
         release {
             //Proguard Techniques
-            //minifyEnabled false             //Need to add serialized name annotation if enabled true
-            //   shrinkResources true              //Needs above to be true
-
-            minifyEnabled true
+            minifyEnabled true            //Need to add serialized name annotation if enabled true
             shrinkResources true
-
 
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             manifestPlaceholders = [usesCleartextTraffic: "false"]
         }
         debug {
+            minifyEnabled true            //Need to add serialized name annotation if enabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
             manifestPlaceholders = [usesCleartextTraffic: "true"]
         }
     }

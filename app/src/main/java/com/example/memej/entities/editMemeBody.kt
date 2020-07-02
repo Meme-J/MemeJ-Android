@@ -1,8 +1,10 @@
 package com.example.memej.entities
 
 
+import androidx.annotation.Keep
 import com.squareup.moshi.Json
 
+@Keep
 data class editMemeBody(
     //remeber to give memeId, not template ID
     @field:Json(name = "memeId")

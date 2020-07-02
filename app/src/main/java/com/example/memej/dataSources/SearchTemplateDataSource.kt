@@ -3,6 +3,7 @@ package com.example.memej.dataSources
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import androidx.annotation.Keep
 import androidx.paging.PageKeyedDataSource
 import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.SessionManager
@@ -13,6 +14,8 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+
+@Keep
 class SearchTemplateDataSource(val context: Context, val tagName: String) :
     PageKeyedDataSource<String, EmptyTemplateResponse.Template>() {
 

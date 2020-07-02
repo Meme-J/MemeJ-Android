@@ -1,8 +1,10 @@
 package com.example.memej.responses
 
 
+import androidx.annotation.Keep
 import com.squareup.moshi.Json
 
+@Keep
 class ExploreMemes : ArrayList<ExploreMemes.ExploreMemesItem>() {
     data class ExploreMemesItem(
         @field:Json(name = "_id")

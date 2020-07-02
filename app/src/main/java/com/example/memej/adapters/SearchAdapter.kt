@@ -4,11 +4,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.Keep
 import androidx.recyclerview.widget.RecyclerView
 import com.example.memej.R
 import com.example.memej.responses.SearchResponse
 import com.google.android.material.textview.MaterialTextView
 
+@Keep
 class SearchAdapter(val itemClickListener: onClickSearch) :
     RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
 

@@ -2,11 +2,12 @@ package com.example.memej.responses
 
 
 import android.os.Parcelable
+import androidx.annotation.Keep
 import androidx.room.Entity
 import com.squareup.moshi.Json
 import kotlinx.android.parcel.Parcelize
 
-
+@Keep
 data class ProfileResponse(
     @field:Json(name = "profile")
     val profile: Profile

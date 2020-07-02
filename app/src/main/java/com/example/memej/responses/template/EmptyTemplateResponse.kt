@@ -1,9 +1,11 @@
 package com.example.memej.responses.template
 
 
+import androidx.annotation.Keep
 import com.example.memej.responses.homeMememResponses.Coordinates
 import com.squareup.moshi.Json
 
+@Keep
 data class EmptyTemplateResponse(
     @field:Json(name = "templates")
     val templates: List<Template>

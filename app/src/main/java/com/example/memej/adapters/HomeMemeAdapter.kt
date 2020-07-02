@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
+import androidx.annotation.Keep
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -18,6 +19,7 @@ import com.example.memej.textProperties.lib.ImageEditorView
 import com.example.memej.textProperties.lib.Photo
 import com.google.android.material.textview.MaterialTextView
 
+@Keep
 class HomeMemeAdapter(val itemClickListener: OnItemClickListenerHome) :
 
     PagedListAdapter<Meme_Home, HomeMemeAdapter.MyViewHolder>(DiffUtilsHomeMeme()) {
