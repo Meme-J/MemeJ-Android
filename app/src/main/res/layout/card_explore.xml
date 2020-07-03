@@ -54,6 +54,7 @@
                             android:elevation="4dp"
                             app:cardCornerRadius="@dimen/margins">
 
+
                             <com.example.memej.textProperties.lib.ImageEditorView
                                 android:id="@+id/photoViewRandom"
                                 android:layout_width="@dimen/meme_templete_std_height"

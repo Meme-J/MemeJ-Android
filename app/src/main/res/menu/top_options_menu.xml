@@ -19,7 +19,7 @@
 
     <item
         android:id="@+id/settings_btn"
-        android:icon="@drawable/ic_exit_to_app_black_24dp"
+        android:icon="@drawable/drawable_exit_blue"
         android:title="@string/logout"
         app:showAsAction="always" />
 </menu>

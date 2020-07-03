@@ -10,6 +10,7 @@ data class EmptyTemplateResponse(
     @field:Json(name = "templates")
     val templates: List<Template>
 ) {
+    @Keep
     data class Template(
         @field:Json(name = "coordinates")
         val coordinates: List<Coordinates>,

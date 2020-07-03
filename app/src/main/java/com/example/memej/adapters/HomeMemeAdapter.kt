@@ -5,7 +5,6 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
 import androidx.annotation.Keep
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -45,7 +44,6 @@ class HomeMemeAdapter(val itemClickListener: OnItemClickListenerHome) :
 
 
         val memeTimeLU = itemView.findViewById<MaterialTextView>(R.id.home_meme_timestamp)
-        val load = itemView.findViewById<ProgressBar>(R.id.loading_panel)
         val photoView = itemView.findViewById<ImageEditorView>(R.id.photoViewHomeMain)
         val context = ApplicationUtil.getContext()
 
@@ -54,7 +52,7 @@ class HomeMemeAdapter(val itemClickListener: OnItemClickListenerHome) :
             memeTimeLU.text = ConversionUtil.convertTimeToEpoch(_homeMeme.lastUpdated.toString())
 
             //Load the Image here
-            load.visibility = View.VISIBLE
+            //load.visibility = View.VISIBLE
             photoView.source?.let {
                 Glide.with(itemView.context)
                     .load(_homeMeme.templateId.imageUrl)
@@ -64,7 +62,7 @@ class HomeMemeAdapter(val itemClickListener: OnItemClickListenerHome) :
                     .into(it)
             }
 
-            load.visibility = View.GONE
+            //load.visibility = View.GONE
             getCompleteImage(_homeMeme, photoView, itemView.context)
 
             itemView.setOnClickListener {

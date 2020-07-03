@@ -74,6 +74,15 @@
                 android:textSize="@dimen/text_size"
                 android:textStyle="bold" />
 
+            <Button
+                android:id="@+id/shareComplete"
+                android:layout_width="@dimen/space_5x"
+                android:layout_height="@dimen/space_5x"
+                android:layout_gravity="center"
+                android:layout_marginStart="@dimen/space_3x"
+                android:background="@drawable/ic_share"
+                android:elevation="0dp"
+                android:gravity="center" />
 
         </LinearLayout>
 

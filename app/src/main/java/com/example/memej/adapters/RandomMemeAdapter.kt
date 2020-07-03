@@ -231,6 +231,10 @@ class RandomMemeAdapter(private val clickListener: RandomListener) :
 
 
                                     val i = Intent(itemView.context, MainActivity::class.java)
+//                                    val b = bundleOf(
+//                                        "frag" to "home"
+//                                    )
+//                                    i.putExtra("bundleMain", b)
                                     i.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                                     itemView.context.startActivity(i)
 

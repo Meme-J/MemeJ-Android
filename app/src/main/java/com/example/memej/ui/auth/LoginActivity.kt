@@ -81,6 +81,11 @@ class LoginActivity : AppCompatActivity() {
                     val intent = Intent(this, MainActivity::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK)
                     hideKeyboard(this)
+//                    val b = bundleOf(
+//                        "frag" to "explore"
+//                    )
+//                    intent.putExtra("bundleMain", b)
+
                     startActivity(intent)
                     finish()
                 } else {
@@ -158,6 +163,11 @@ class LoginActivity : AppCompatActivity() {
         SaveSharedPreference()
             .setLoggedIn(applicationContext, true)
         val i = Intent(this, MainActivity::class.java)
+//        val b = bundleOf(
+//            "frag" to "explore"
+//        )
+//        i.putExtra("bundleMain", b)
+
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK)
         startActivity(i)
 

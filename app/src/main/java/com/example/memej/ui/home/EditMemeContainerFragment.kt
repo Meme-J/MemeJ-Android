@@ -33,7 +33,6 @@ import com.example.memej.responses.SearchResponse
 import com.example.memej.responses.editMemeApiResponse
 import com.example.memej.responses.homeMememResponses.Coordinates
 import com.example.memej.responses.homeMememResponses.HomeUsers
-
 import com.example.memej.textProperties.lib.ImageEditorView
 import com.example.memej.textProperties.lib.OnPhotoEditorListener
 import com.example.memej.textProperties.lib.Photo
@@ -427,6 +426,11 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
 
 
                         val i = Intent(this@EditMemeContainerFragment, MainActivity::class.java)
+//                        val b = bundleOf(
+//                            "frag" to "home"
+//                        )
+//                        i.putExtra("bundleMain", b)
+
                         startActivity(i)
                         finish()
 

@@ -74,6 +74,7 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
     var whichPaint = Color.BLACK
     var whichProgress = 20
 
+    var memeCreated: Boolean = false
 
     lateinit var adapterTagsAdded: TagEditAdapter
     lateinit var stringAdapter: ArrayAdapter<String>
@@ -391,6 +392,7 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
 
                     dialog.dismiss()
                     val message = ErrorStatesResponse.returnStateMessageForThrowable(t)
+                    memeCreated = false
                     android.app.AlertDialog.Builder(this@NewMemeContainer)
                         .setTitle("Unable to create")
                         .setMessage(message)
@@ -407,7 +409,13 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
                     if (response.body()?.msg == "Meme created successfully") {
 
                         dialog.dismiss()
+                        memeCreated = true
                         val i = Intent(this@NewMemeContainer, MainActivity::class.java)
+//                        val b = bundleOf(
+//                            "frag" to "home"
+//                        )
+//                        i.putExtra("bundleMain", b)
+
                         startActivity(i)
                         finish()
 
@@ -420,7 +428,7 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
                             .setMessage(message)
                             .setPositiveButton(android.R.string.ok) { _, _ -> }
                             .show()
-
+                        memeCreated = false
 
                     }
                 }
