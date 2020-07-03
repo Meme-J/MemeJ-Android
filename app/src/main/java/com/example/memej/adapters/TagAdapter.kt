@@ -4,9 +4,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.annotation.Keep
 import androidx.recyclerview.widget.RecyclerView
 import com.example.memej.R
 
+@Keep
 class TagAdapter(val itemClick: onTagClickType) :
     RecyclerView.Adapter<TagAdapter.MyViewHolder>() {
 

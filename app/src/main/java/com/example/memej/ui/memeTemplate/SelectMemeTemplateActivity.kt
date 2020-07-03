@@ -13,6 +13,7 @@ import android.widget.ProgressBar
 import android.widget.SearchView
 import android.widget.SimpleCursorAdapter
 import androidx.activity.viewModels
+import androidx.annotation.Keep
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
@@ -32,6 +33,7 @@ import com.shreyaspatil.MaterialDialog.MaterialDialog
 import retrofit2.Call
 import retrofit2.Response
 
+@Keep
 class SelectMemeTemplateActivity : AppCompatActivity(), OnItemClickListenerTemplate {
 
 
@@ -90,6 +92,7 @@ class SelectMemeTemplateActivity : AppCompatActivity(), OnItemClickListenerTempl
         dialog.show()
 
         //Get a dialog loader
+        Log.e("Select", "In Select Meme Template Activity")
 
         //Get search View
         searchView = findViewById(R.id.activityTemplateSearch)

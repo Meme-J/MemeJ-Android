@@ -35,9 +35,17 @@ class SplashScreen : AppCompatActivity() {
 
 
             val intent = if (preferenceManager.authToken!!.isEmpty()) {
+
                 Intent(this, LoginActivity::class.java)
             } else {
+
                 Intent(this, MainActivity::class.java)
+//                val b = bundleOf(
+//                    "frag" to "explore"
+//                )
+//                intent.putExtra("bundleMain", b)
+
+
             }
             handler = Handler()
 

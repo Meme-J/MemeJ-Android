@@ -18,8 +18,10 @@
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:background="@color/garbinaoGrey"
+            android:elevation="0dp"
             android:fitsSystemWindows="true"
             app:contentScrim="@color/stoneWhite"
+            app:elevation="0dp"
             app:layout_behavior=".Utils.FlingBehavior"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
@@ -55,8 +57,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:layout_margin="@dimen/space"
-                android:background="@color/stoneWhite"
+                android:background="@color/garbinaoGrey"
+                android:elevation="0dp"
                 android:visibility="invisible"
+                app:elevation="0dp"
                 app:layout_collapseMode="pin" />
 
             <!--            This is titleToolbarText-->

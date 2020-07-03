@@ -15,6 +15,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.EditText
+import androidx.annotation.Keep
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -42,6 +43,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import kotlin.properties.Delegates
 
+@Keep
 class RandomMemeAdapter(private val clickListener: RandomListener) :
     RecyclerView.Adapter<RandomMemeAdapter.MyViewHolder>(),
     CardStackListener,
@@ -229,6 +231,10 @@ class RandomMemeAdapter(private val clickListener: RandomListener) :
 
 
                                     val i = Intent(itemView.context, MainActivity::class.java)
+//                                    val b = bundleOf(
+//                                        "frag" to "home"
+//                                    )
+//                                    i.putExtra("bundleMain", b)
                                     i.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                                     itemView.context.startActivity(i)
 

@@ -1,9 +1,10 @@
 package com.example.memej.entities
 
-import androidx.room.Entity
+import androidx.annotation.Keep
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "Users")
+
+@Keep
 data class Users(
     @PrimaryKey
     val name: String,

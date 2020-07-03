@@ -1,8 +1,10 @@
 package com.example.memej.responses.homeMememResponses
 
 
+import androidx.annotation.Keep
 import com.squareup.moshi.Json
 
+@Keep
 data class TemplateId(
 
     @field:Json(name = "coordinates")

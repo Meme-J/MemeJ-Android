@@ -2,9 +2,11 @@ package com.example.memej.responses.homeMememResponses
 
 
 import android.os.Parcelable
+import androidx.annotation.Keep
 import com.squareup.moshi.Json
 import kotlinx.android.parcel.Parcelize
 
+@Keep
 @Parcelize
 data class HomeUsers(
 

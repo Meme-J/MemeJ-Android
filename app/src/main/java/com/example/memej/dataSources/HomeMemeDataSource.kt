@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.annotation.Keep
 import androidx.paging.PageKeyedDataSource
 import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.SessionManager
@@ -17,6 +18,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
+@Keep
 class HomeMemeDataSource(val context: Context, val searchquery: queryBody, val pb: ProgressBar) :
     PageKeyedDataSource<String, Meme_Home>() {
 
@@ -81,7 +83,7 @@ class HomeMemeDataSource(val context: Context, val searchquery: queryBody, val p
                             Log.e("Query", "In empty query,empty resp")
                             Toast.makeText(
                                 context,
-                                "Unable to get memes",
+                                "No Memes available",
                                 Toast.LENGTH_SHORT
                             ).show()
 //                            pb.visibility = View.GONE
@@ -145,7 +147,7 @@ class HomeMemeDataSource(val context: Context, val searchquery: queryBody, val p
                         if (homePosts!!.isEmpty()) {
                             Toast.makeText(
                                 context,
-                                "Unable to get memes",
+                                "No memes available",
                                 Toast.LENGTH_SHORT
                             ).show()
                             pb.visibility = View.GONE

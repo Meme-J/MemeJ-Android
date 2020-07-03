@@ -1,12 +1,17 @@
 package com.example.memej.adapters
 
+import android.app.Activity
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.Color
+import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
+import androidx.annotation.Keep
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -16,6 +21,7 @@ import com.example.memej.Utils.DiffUtils.DiffUtilsMemeWorld
 import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.PreferenceUtil
 import com.example.memej.Utils.sessionManagers.SessionManager
+import com.example.memej.Utils.shareCacheDirBitmap
 import com.example.memej.entities.likeMemeBody
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.LikeOrNotResponse
@@ -30,8 +36,9 @@ import com.like.OnLikeListener
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.File
 
-
+@Keep
 class MemeWorldAdapter(val context: Context, val itemClickListener: OnItemClickListenerMemeWorld) :
     PagedListAdapter<Meme_World, MemeWorldAdapter.MyViewHolder>(DiffUtilsMemeWorld()) {
 
@@ -62,6 +69,7 @@ class MemeWorldAdapter(val context: Context, val itemClickListener: OnItemClickL
         val photoView = itemView.findViewById<ImageEditorView>(R.id.photoViewMemeWorld)
         val numLikes = itemView.findViewById<TextView>(R.id.num_likes_memeAdapter)
 
+        val share = itemView.findViewById<Button>(R.id.shareComplete)
 
         fun bindPost(_meme: Meme_World, clickListener: OnItemClickListenerMemeWorld) {
 
@@ -78,12 +86,15 @@ class MemeWorldAdapter(val context: Context, val itemClickListener: OnItemClickL
                 val userIns = com.example.memej.responses.memeWorldResponses.User(id, username)
                 val user_likers = _meme.likedBy
 
+                Log.e(
+                    "UserIns",
+                    user_likers.toString() + userIns.toString() + " " + user_likers.isEmpty()
+                        .toString()
+                )
 
-                if (user_likers.contains(userIns)) {
-                    likeDrawIo.isLiked = true
-                } else if (!user_likers.contains(userIns) || user_likers.isEmpty()) {
-                    likeDrawIo.isLiked = false
-                }
+                likeDrawIo.isLiked = user_likers.isNotEmpty()
+
+
 
 
                 photoView.source?.let {
@@ -102,18 +113,35 @@ class MemeWorldAdapter(val context: Context, val itemClickListener: OnItemClickL
                 //Like the meme
                 likeDrawIo.setOnLikeListener(object : OnLikeListener {
                     override fun liked(likeButton: LikeButton?) {
-                        numLikes.text = (numLikes.text.toString().toInt() + 1).toString()
+                        // numLikes.text = (numLikes.text.toString().toInt() + 1).toString()
+                        //Disable this button
+                        likeDrawIo.isEnabled = false
                         likeMeme(_meme)
 
                     }
 
                     override fun unLiked(likeButton: LikeButton?) {
-                        numLikes.text = (numLikes.text.toString().toInt() - 1).toString()
+//                        numLikes.text = (numLikes.text.toString().toInt() - 1).toString()
+                        likeDrawIo.isEnabled = false
                         likeMeme(_meme)
                     }
                 })
 
+                share.setOnClickListener {
 
+                    //  val imageName = arg.getString("imageName") + "_" + arg.getString("lastUpdated")
+                    // val imagePath = imageName + ".jpg"
+
+                    Log.e("Share from main", "In share00")
+
+                    val map = ConvertToBitmap(photoView)
+                    val file = File(itemView.context.externalCacheDir, "images.png")
+                    val uri = Uri.fromFile(file)
+
+                    (itemView.context as Activity).shareCacheDirBitmap(uri, "images", map)
+
+
+                }
 
                 itemView.setOnClickListener {
                     clickListener.onItemClicked(_meme)
@@ -122,6 +150,13 @@ class MemeWorldAdapter(val context: Context, val itemClickListener: OnItemClickL
             }
         }
 
+        private fun ConvertToBitmap(layout: ImageEditorView): Bitmap {
+
+            var map: Bitmap?
+            layout.isDrawingCacheEnabled = true
+            layout.buildDrawingCache()
+            return layout.drawingCache.also({ map = it })
+        }
 
         private fun likeMeme(_meme: Meme_World) {
 
@@ -162,7 +197,8 @@ class MemeWorldAdapter(val context: Context, val itemClickListener: OnItemClickL
                             Log.e("ADapter", "In response, meme unliked")
 
                             likeDrawIo.isLiked = false
-
+                            numLikes.text = (numLikes.text.toString().toInt() - 1).toString()
+                            likeDrawIo.isEnabled = true
                             //Refresh the screen again
 
                         } else if (response.body()?.msg == "Meme liked successfully.") {
@@ -170,7 +206,8 @@ class MemeWorldAdapter(val context: Context, val itemClickListener: OnItemClickL
 
                             Log.e("ADapter", "In  Like")
                             likeDrawIo.isLiked = true
-
+                            numLikes.text = (numLikes.text.toString().toInt() + 1).toString()
+                            likeDrawIo.isEnabled = true
                             //Refresh the screen
 
                         }

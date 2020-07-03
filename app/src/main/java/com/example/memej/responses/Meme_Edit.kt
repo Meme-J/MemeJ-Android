@@ -1,8 +1,10 @@
 package com.example.memej.responses
 
 
+import androidx.annotation.Keep
 import com.squareup.moshi.Json
 
+@Keep
 data class Meme_Edit(
     @field:Json(name = "_id")
     val _id: String, // 5ebb18b91f22b62ebb8dd2e8

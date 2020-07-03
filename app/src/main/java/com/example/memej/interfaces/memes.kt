@@ -1,5 +1,6 @@
 package com.example.memej.interfaces
 
+import androidx.annotation.Keep
 import com.example.memej.entities.*
 import com.example.memej.responses.LikeOrNotResponse
 import com.example.memej.responses.SearchResponse
@@ -10,6 +11,7 @@ import com.example.memej.responses.template.EmptyTemplateResponse
 import retrofit2.Call
 import retrofit2.http.*
 
+@Keep
 interface memes {
 //To use pagination, we need to create data sources
 //Mostly used : page keyed

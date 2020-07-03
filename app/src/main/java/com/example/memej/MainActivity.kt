@@ -12,12 +12,11 @@ import android.widget.CursorAdapter
 import android.widget.SearchView
 import android.widget.SimpleCursorAdapter
 import androidx.activity.viewModels
+import androidx.annotation.Keep
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
-import androidx.navigation.NavController
-import androidx.navigation.ui.AppBarConfiguration
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.memej.Utils.Communicator
@@ -106,7 +105,8 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
 
     lateinit var sessionManager: SessionManager
     lateinit var rv: RecyclerView
-    lateinit var navController: NavController
+
+    //    lateinit var navController: NavController
     lateinit var adapter: SearchAdapter
 
     var index = 0           //Default for HOme (Ongoing Memes)
@@ -130,11 +130,19 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
         setContentView(R.layout.activity_main)
 
 
+
+
+
+
         toolbar = androidx.appcompat.widget.Toolbar(this)
         toolbar = findViewById(R.id.toolbar_main)
         setSupportActionBar(toolbar)
         toolbar.title = ""
 
+
+//        val arg = intent.getBundleExtra("bundleMain")!!
+//        val fragNow = arg.getString("frag")
+//        Log.e("Frag", fragNow.toString())
 
         val from = arrayOf("suggestionList")
         val to = intArrayOf(android.R.id.text1)
@@ -149,10 +157,10 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
             CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER
         )
 
-        searchView = toolbar.findViewById(R.id.activityCatalogSearch) as SearchView
+        searchView = findViewById<SearchView>(R.id.activityCatalogSearch)
         searchView.suggestionsAdapter = mAdapter
         searchView.isIconifiedByDefault = false
-
+        searchView.setBackgroundColor(resources.getColor(R.color.garbinaoGrey))
 
         searchView.setOnSuggestionListener(object : SearchView.OnSuggestionListener {
             override fun onSuggestionSelect(position: Int): Boolean {
@@ -204,27 +212,40 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
             SessionManager(this)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
-        val appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.navigation_explore,
-                R.id.navigation_home,
-                R.id.navigation_memeWorld,
-                R.id.navigation_myMemes,
-                R.id.navigation_profile
-            )
-        )
+//        val appBarConfiguration = AppBarConfiguration(
+//            setOf(
+//                R.id.navigation_explore,
+//                R.id.navigation_home,
+//                R.id.navigation_memeWorld,
+//                R.id.navigation_myMemes,
+//                R.id.navigation_profile
+//            )
+//        )
+
+
+//        if (fragNow == "home") {
+//            openFragment(HomeFragment())
+//            index = 1
+//            navView.selectedItemId = R.id.homeFragment
+//        } else if (fragNow == "explore") {
+//            openFragment(ExploreFragment())
+//            index = 0
+//            navView.selectedItemId = R.id.exploreFragment
+//        }
+
+        val fragOpen = ExploreFragment()
+        supportFragmentManager.beginTransaction().replace(R.id.container, fragOpen).commit()
+        navView.selectedItemId = R.id.exploreFragment
 
 
         //Default Fragment
 
         if (savedInstanceState == null) {
+            val frag = ExploreFragment()
+            supportFragmentManager.beginTransaction().replace(R.id.container, frag).commit()
             navView.selectedItemId = R.id.exploreFragment
-
-            val fragment = ExploreFragment()
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.container, fragment, fragment.javaClass.simpleName)
-                .commit()
         }
+
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
 
@@ -243,6 +264,17 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
             startActivity(i)
 
         }
+
+
+
+
+        Log.e("Saved", savedInstanceState.toString())
+        //Retreat back to home if not null
+//        if (savedInstanceState != null) {
+//            val frag = HomeFragment()
+//            supportFragmentManager.beginTransaction().replace(R.id.container, frag).commit()
+//            navView.selectedItemId = R.id.homeFragment
+//        }
 
 
         //Function for passing data intent
@@ -269,6 +301,7 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
 
     }
 
+    @Keep
     private fun fetchSuggestions(str: String) {
 
         val frag = findFragment()
@@ -324,34 +357,6 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
 
     }
 
-
-//    private fun getIndexStringType(index: Int): String? {
-//
-//        var s: String? = null
-//        when (index) {
-//            0 -> s = "ongoing"
-//            1 -> s = "ongoing"
-//            2 -> s = "complete"
-//            3 -> s = "ongoing"
-//            4 -> s = "complete"
-//
-//        }
-//        return s
-//    }
-
-//    private fun getFragmnetFromIndex(index: Int): Fragment? {
-//        var s: Fragment? = null
-//        when (index) {
-//            0 -> s = ExploreFragment()
-//            1 -> s = HomeFragment()
-//            2 -> s = MemeWorldFragment()
-//            3 -> s = MyMemesFragment()
-//            4 -> s = ProfileFragment()
-//
-//        }
-//        return s
-//
-//    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 //        val i = Intent(this, SettingsScreen::class.java)

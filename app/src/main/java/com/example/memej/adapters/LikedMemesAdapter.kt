@@ -1,12 +1,17 @@
 package com.example.memej.adapters
 
+import android.app.Activity
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.Color
+import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
+import androidx.annotation.Keep
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -15,10 +20,12 @@ import com.example.memej.Utils.DiffUtils.DiffUtilsMemeWorld
 import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.PreferenceUtil
 import com.example.memej.Utils.sessionManagers.SessionManager
+import com.example.memej.Utils.shareCacheDirBitmap
 import com.example.memej.entities.likeMemeBody
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.LikeOrNotResponse
 import com.example.memej.responses.memeWorldResponses.Meme_World
+import com.example.memej.textProperties.ConversionUtil
 import com.example.memej.textProperties.lib.ImageEditorView
 import com.example.memej.textProperties.lib.Photo
 import com.google.android.material.snackbar.Snackbar
@@ -28,7 +35,9 @@ import com.like.OnLikeListener
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.File
 
+@Keep
 class LikedMemesAdapter(val context: Context, val itemClickListener: OnItemClickListenerLikeMeme) :
     PagedListAdapter<Meme_World, LikedMemesAdapter.MyViewHolder>(DiffUtilsMemeWorld()) {
 
@@ -59,13 +68,15 @@ class LikedMemesAdapter(val context: Context, val itemClickListener: OnItemClick
         val photoView = itemView.findViewById<ImageEditorView>(R.id.photoViewMemeWorld)
         val numLikes = itemView.findViewById<TextView>(R.id.num_likes_memeAdapter)
 
+        val share = itemView.findViewById<Button>(R.id.shareComplete)
 
         fun bindPost(_meme: Meme_World, clickListener: OnItemClickListenerLikeMeme) {
 
             with(_meme) {
 
                 //TimeStamp
-                memeTime.text = _meme.lastUpdated             //To get the tag
+                memeTime.text =
+                    ConversionUtil.convertTimeToEpoch(_meme.lastUpdated)            //To get the tag
 
                 //This is not required
 //
@@ -100,23 +111,45 @@ class LikedMemesAdapter(val context: Context, val itemClickListener: OnItemClick
                 //Like the meme
                 likeDrawIo.setOnLikeListener(object : OnLikeListener {
                     override fun liked(likeButton: LikeButton?) {
-                        numLikes.text = (numLikes.text.toString().toInt() + 1).toString()
+                        likeDrawIo.isEnabled = false
                         likeMeme(_meme)
                     }
 
                     override fun unLiked(likeButton: LikeButton?) {
-                        numLikes.text = (numLikes.text.toString().toInt() - 1).toString()
+//                        numLikes.text = (numLikes.text.toString().toInt() - 1).toString()
+                        likeDrawIo.isEnabled = false
                         likeMeme(_meme)
                     }
                 })
 
 
+                share.setOnClickListener {
+                    //  val imageName = arg.getString("imageName") + "_" + arg.getString("lastUpdated")
+                    // val imagePath = imageName + ".jpg"
 
+                    Log.e("Share from main", "In share00")
+
+                    val map = ConvertToBitmap(photoView)
+                    val file = File(itemView.context.externalCacheDir, "images.png")
+                    val uri = Uri.fromFile(file)
+
+                    (itemView.context as Activity).shareCacheDirBitmap(uri, "images", map)
+
+
+                }
                 itemView.setOnClickListener {
                     clickListener.onItemClicked(_meme)
                     //This listener is for the whole item
                 }
             }
+        }
+
+        private fun ConvertToBitmap(layout: ImageEditorView): Bitmap {
+
+            var map: Bitmap?
+            layout.isDrawingCacheEnabled = true
+            layout.buildDrawingCache()
+            return layout.drawingCache.also({ map = it })
         }
 
 
@@ -158,13 +191,16 @@ class LikedMemesAdapter(val context: Context, val itemClickListener: OnItemClick
 
                             Log.e("ADapter", "In  dislike")
                             likeDrawIo.isLiked = false
-
+                            numLikes.text = (numLikes.text.toString().toInt() - 1).toString()
+                            likeDrawIo.isEnabled = true
 
                         } else if (response.body()?.msg == "Meme liked successfully.") {
 
                             Log.e("ADapter", "In  Like")
+                            numLikes.text = (numLikes.text.toString().toInt() + 1).toString()
 
                             likeDrawIo.isLiked = true
+                            likeDrawIo.isEnabled = true
 
                         }
                     }

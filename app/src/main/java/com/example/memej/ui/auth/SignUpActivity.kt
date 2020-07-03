@@ -133,6 +133,15 @@ class SignUpActivity : AppCompatActivity() {
 
                         goToLoginActivity()
 
+                    } else if (response.body()?.msg == "Email alread registered.") {
+                        val snack = Snackbar.make(
+                            container_signUp,
+                            "Email already registered",
+                            Snackbar.LENGTH_SHORT
+                        )
+                        snack.show()
+                        pb.visibility = View.GONE
+
                     } else {
 
                         val snack = Snackbar.make(

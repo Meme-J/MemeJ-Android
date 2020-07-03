@@ -2,6 +2,7 @@ package com.example.memej.dataSources
 
 import android.content.Context
 import android.widget.Toast
+import androidx.annotation.Keep
 import androidx.paging.PageKeyedDataSource
 import com.example.memej.Utils.ApplicationUtil
 import com.example.memej.Utils.sessionManagers.SessionManager
@@ -13,6 +14,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
+@Keep
 class LikedMemesDataSource(val context: Context) :
     PageKeyedDataSource<String, Meme_World>() {
 

@@ -1,5 +1,6 @@
 package com.example.memej.interfaces
 
+import androidx.annotation.Keep
 import com.example.memej.entities.profileSearchBody
 import com.example.memej.responses.NumLikes
 import com.example.memej.responses.UserProfileResponse
@@ -10,6 +11,8 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Query
 
+
+@Keep
 interface profile {
 
     //Get the number of total memes the person has created

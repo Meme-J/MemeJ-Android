@@ -1,5 +1,6 @@
 package com.example.memej.interfaces
 
+import androidx.annotation.Keep
 import com.example.memej.entities.LoginBody
 import com.example.memej.entities.UserBody
 import com.example.memej.responses.LoginResponse
@@ -11,6 +12,8 @@ import retrofit2.http.Header
 import retrofit2.http.Headers
 import retrofit2.http.POST
 
+
+@Keep
 interface Auth {
 
 

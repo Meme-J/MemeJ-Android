@@ -154,6 +154,7 @@ class ExploreFragment : Fragment(), RandomListener {
         service.getRandom(accessToken = "Bearer ${sessionManager.fetchAcessToken()}")
             .enqueue(object : retrofit2.Callback<homeMemeApiResponse> {
                 override fun onFailure(call: Call<homeMemeApiResponse>, t: Throwable) {
+                    Log.e("Throwanle", t.toString())
                     val message = ErrorStatesResponse.returnStateMessageForThrowable(t)
                     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
                 }
