@@ -84,7 +84,7 @@ class ExploreFragment : Fragment(), RandomListener {
 
         layoutManager.setStackFrom(StackFrom.None)
         layoutManager.setDirections(Direction.HORIZONTAL)
-        layoutManager.setSwipeThreshold(0.3f)
+        layoutManager.setSwipeThreshold(0.1f)
         layoutManager.setCanScrollHorizontal(true)
         layoutManager.setCanScrollVertical(true)
 
@@ -106,7 +106,6 @@ class ExploreFragment : Fragment(), RandomListener {
             checkConnection()
         }
 
-        Log.e("Stack", adapter.itemCount.toString() + adapter.numberItemsLeft.toString())
 
         pb.visibility = View.GONE
         dialog.dismiss()

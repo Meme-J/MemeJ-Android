@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.memej.MainActivity
 import com.example.memej.R
@@ -24,26 +25,27 @@ class SplashScreen : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
 
+        handler = Handler()
 
         val preferences =
             getSharedPreferences(getString(R.string.intro_prefs), Context.MODE_PRIVATE)
         val firstRun = preferences.getBoolean(getString(R.string.intro_prefs_first_run), true)
 
+        Log.e("x", "In Splash")
         if (firstRun) {
             startActivity(Intent(this, IntroActivity::class.java))
+            finish()
+
+
         } else {
 
-
+            Log.e("x", "In Else")
             val intent = if (preferenceManager.authToken!!.isEmpty()) {
-
+                Log.e("x", "In no access token")
                 Intent(this, LoginActivity::class.java)
             } else {
-
+                Log.e("x", "In success atoken")
                 Intent(this, MainActivity::class.java)
-//                val b = bundleOf(
-//                    "frag" to "explore"
-//                )
-//                intent.putExtra("bundleMain", b)
 
 
             }
@@ -57,7 +59,8 @@ class SplashScreen : AppCompatActivity() {
             handler.postDelayed(runnable, splash_display_time)
 
         }
-        //Refactor to using access token
+
+
         handler = Handler()
 
         runnable = Runnable {
@@ -72,6 +75,7 @@ class SplashScreen : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         handler.removeCallbacks(runnable)
+
     }
 }
 

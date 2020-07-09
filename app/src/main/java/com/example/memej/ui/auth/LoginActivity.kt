@@ -5,6 +5,7 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -16,7 +17,6 @@ import androidx.lifecycle.Observer
 import com.example.memej.MainActivity
 import com.example.memej.R
 import com.example.memej.Utils.ErrorStatesResponse
-import com.example.memej.Utils.sessionManagers.SaveSharedPreference
 import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.databinding.ActivityLoginBinding
 import com.example.memej.entities.LoginBody
@@ -76,16 +76,13 @@ class LoginActivity : AppCompatActivity() {
             hideProgressBar()
             if (successful != null) {
                 if (successful) {
+                    Log.e("x", "In Login Success")
                     Toast.makeText(this, R.string.successLogin, Toast.LENGTH_LONG)
                         .show()
                     val intent = Intent(this, MainActivity::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK)
                     hideKeyboard(this)
-//                    val b = bundleOf(
-//                        "frag" to "explore"
-//                    )
-//                    intent.putExtra("bundleMain", b)
-
+                    Log.e("x", "In Started all")
                     startActivity(intent)
                     finish()
                 } else {
@@ -156,22 +153,22 @@ class LoginActivity : AppCompatActivity() {
     }
 
 
-    private fun goToMainActivity() {
-
-        pb.visibility = View.GONE
-
-        SaveSharedPreference()
-            .setLoggedIn(applicationContext, true)
-        val i = Intent(this, MainActivity::class.java)
-//        val b = bundleOf(
-//            "frag" to "explore"
-//        )
-//        i.putExtra("bundleMain", b)
-
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK)
-        startActivity(i)
-
-    }
+//    private fun goToMainActivity() {
+//
+//        pb.visibility = View.GONE
+//
+//        SaveSharedPreference()
+//            .setLoggedIn(applicationContext, true)
+//        val i = Intent(this, MainActivity::class.java)
+////        val b = bundleOf(
+////            "frag" to "explore"
+////        )
+////        i.putExtra("bundleMain", b)
+//
+//        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK)
+//        startActivity(i)
+//
+//    }
 
 
     private fun validateDetail(): Boolean {

@@ -101,6 +101,7 @@ class IntroActivity : AppIntro2() {
         super.onSkipPressed(currentFragment)
         startActivity(Intent(this, LoginActivity::class.java))
         finish()
+
         val preferences =
             getSharedPreferences(getString(R.string.intro_prefs), Context.MODE_PRIVATE)
         val editor = preferences.edit()
