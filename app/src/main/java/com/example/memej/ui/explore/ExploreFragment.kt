@@ -82,11 +82,12 @@ class ExploreFragment : Fragment(), RandomListener {
             }
         }
 
+
         layoutManager.setStackFrom(StackFrom.None)
         layoutManager.setDirections(Direction.HORIZONTAL)
         layoutManager.setSwipeThreshold(0.1f)
         layoutManager.setCanScrollHorizontal(true)
-        layoutManager.setCanScrollVertical(true)
+        layoutManager.setCanScrollVertical(false)
 
 
         //Rewind

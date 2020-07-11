@@ -1,5 +1,6 @@
 package com.example.memej
 
+import android.app.Activity
 import android.content.Intent
 import android.database.Cursor
 import android.database.MatrixCursor
@@ -8,6 +9,8 @@ import android.provider.BaseColumns
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.CursorAdapter
 import android.widget.SearchView
 import android.widget.SimpleCursorAdapter
@@ -125,13 +128,10 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
     var searchType: String = ""
     private val preferenceManager: PreferenceManager = PreferenceManager()
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-
-
-
 
 
         toolbar = androidx.appcompat.widget.Toolbar(this)
@@ -139,10 +139,6 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
         setSupportActionBar(toolbar)
         toolbar.title = ""
 
-
-//        val arg = intent.getBundleExtra("bundleMain")!!
-//        val fragNow = arg.getString("frag")
-//        Log.e("Frag", fragNow.toString())
 
         val from = arrayOf("suggestionList")
         val to = intArrayOf(android.R.id.text1)
@@ -177,7 +173,6 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
                     "type" to searchType
                 )
 
-                searchView.isIconified = false
                 val i = Intent(this@MainActivity, SearchResultActivity::class.java)
                 i.putExtra("tag", txt)
                 i.putExtra("type", searchType)
@@ -204,7 +199,21 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
             }
         })
 
-        searchView.clearFocus()
+
+        //Close searchView
+        searchView.setOnCloseListener(object : SearchView.OnCloseListener {
+            override fun onClose(): Boolean {
+
+
+                hideKeyboard(this@MainActivity)
+                searchView.clearFocus()
+                searchView.isIconified = true
+
+                return false
+            }
+        })
+
+
 
 
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
@@ -222,16 +231,6 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
 //            )
 //        )
 
-
-//        if (fragNow == "home") {
-//            openFragment(HomeFragment())
-//            index = 1
-//            navView.selectedItemId = R.id.homeFragment
-//        } else if (fragNow == "explore") {
-//            openFragment(ExploreFragment())
-//            index = 0
-//            navView.selectedItemId = R.id.exploreFragment
-//        }
 
         val fragOpen = ExploreFragment()
         supportFragmentManager.beginTransaction().replace(R.id.container, fragOpen).commit()
@@ -284,6 +283,17 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
 
     }
 
+    fun hideKeyboard(activity: Activity) {
+        val imm: InputMethodManager =
+            activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        //Find the currently focused view, so we can grab the correct window token from it.
+        var view: View? = activity.currentFocus
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = View(activity)
+        }
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
+    }
 
     fun getTypeFromCurrentFragmnet(fragment: String?): String {
 
@@ -428,7 +438,9 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
     override fun onBackPressed() {
         super.onBackPressed()
         finish()
+
     }
+
 
 }
 

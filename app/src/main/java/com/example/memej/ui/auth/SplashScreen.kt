@@ -31,7 +31,6 @@ class SplashScreen : AppCompatActivity() {
             getSharedPreferences(getString(R.string.intro_prefs), Context.MODE_PRIVATE)
         val firstRun = preferences.getBoolean(getString(R.string.intro_prefs_first_run), true)
 
-        Log.e("x", "In Splash")
         if (firstRun) {
             startActivity(Intent(this, IntroActivity::class.java))
             finish()
@@ -39,7 +38,6 @@ class SplashScreen : AppCompatActivity() {
 
         } else {
 
-            Log.e("x", "In Else")
             val intent = if (preferenceManager.authToken!!.isEmpty()) {
                 Log.e("x", "In no access token")
                 Intent(this, LoginActivity::class.java)

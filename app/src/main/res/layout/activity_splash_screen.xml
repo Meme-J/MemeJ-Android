@@ -9,7 +9,7 @@
         android:layout_width="@dimen/splash_img_dim"
         android:layout_height="@dimen/splash_img_dim"
         android:layout_centerInParent="true"
-        android:src="@drawable/logo1" />
+        android:src="@drawable/circle_logo" />
 
 
     <!--    <TextView-->
