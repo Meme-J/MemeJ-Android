@@ -46,6 +46,7 @@ class SearchTemplateActivty : AppCompatActivity(), OnItemClickListenerTemplate {
         toolbar = findViewById(R.id.tb_searchResultTemplate)
         pb = findViewById(R.id.pb_searchResultTemplate)
         tagName = arg.getString("tag")
+        toolbar.title = tagName
         rv = findViewById(R.id.rv_memes_searchTemplate)
 
         Log.e("Arg", arg.toString())
