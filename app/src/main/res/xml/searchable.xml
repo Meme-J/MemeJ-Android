@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <searchable xmlns:android="http://schemas.android.com/apk/res/android"
     android:hint="@string/search"
+    android:imeOptions="actionNone"
+    android:includeInGlobalSearch="true"
     android:label="@string/app_name"
-    android:voiceSearchMode="showVoiceSearchButton|launchRecognizer" />
+    android:searchSuggestAuthority="com.example.memej.Utils.MySuggestionProvider"
+    android:searchSuggestIntentAction="android.intent.action.VIEW"
+    android:searchSuggestSelection=" ?" /><!--    android:voiceSearchMode="showVoiceSearchButton|launchRecognizer" />-->

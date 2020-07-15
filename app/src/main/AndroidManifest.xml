@@ -26,9 +26,18 @@
         <activity
             android:name=".ui.memeTemplate.SearchTemplateActivty"
             android:label="Select Template"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/DarkTheme"
-            android:windowSoftInputMode="stateAlwaysHidden" />
+            android:windowSoftInputMode="stateAlwaysHidden">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+
+        </activity>
         <activity
             android:name=".ui.home.SearchResultActivity"
             android:label="Select Template"
@@ -49,11 +58,8 @@
             android:screenOrientation="portrait"
             android:theme="@style/Containertheme"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".ui.profile.UserProfile" /> <!-- <activity android:name=".ui.home.Searchable"> -->
-        <!-- <meta-data -->
-        <!-- android:name="android.app.default_searchable" -->
-        <!-- android:value=".MainActivity" /> -->
-        <!-- </activity> &lt;!&ndash; <activity android:name=".ui.MemeWorld.CompletedMemeActivity" /> &ndash;&gt; -->
+        <activity android:name=".ui.profile.UserProfile" />
+
         <activity
             android:name=".ui.home.SettingsScreen"
             android:screenOrientation="portrait"
@@ -67,6 +73,7 @@
         <activity
             android:name=".ui.memeTemplate.SelectMemeTemplateActivity"
             android:label="Select Template"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/DarkTheme"
             android:windowSoftInputMode="adjustResize">
@@ -111,7 +118,8 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.memej.MainActivity" />
-        </activity> <!-- Provider for sharing -->
+        </activity>
+        <!-- Provider for sharing -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.memej.FileProvider"
@@ -121,6 +129,13 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
+        <!--        Content Provider for Recent Queries-->
+        <provider
+            android:name=".Utils.MySuggestionProvider"
+            android:authorities="com.example.memej.Utils.MySuggestionProvider" />
+
+
     </application>
 
 </manifest>

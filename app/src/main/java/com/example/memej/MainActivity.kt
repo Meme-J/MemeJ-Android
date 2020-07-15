@@ -214,8 +214,6 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
         })
 
 
-
-
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         sessionManager =
             SessionManager(this)
@@ -282,6 +280,7 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
 
 
     }
+
 
     fun hideKeyboard(activity: Activity) {
         val imm: InputMethodManager =

@@ -1,8 +1,10 @@
 package com.example.memej.ui.memeTemplate
 
 import android.app.ProgressDialog
+import android.app.SearchManager
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import androidx.activity.viewModels
@@ -32,25 +34,61 @@ class SearchTemplateActivty : AppCompatActivity(), OnItemClickListenerTemplate {
     lateinit var pb: ProgressBar
     lateinit var dialog: ProgressDialog
     lateinit var toolbar: androidx.appcompat.widget.Toolbar
+    val VOICE_RECOGNITION_REQUEST_CODE = 1234
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search_template_activty)
 
+        val jargon: Boolean =
+            intent.getBundleExtra(SearchManager.APP_DATA)?.getBoolean("JARGON") ?: false
         arg = intent?.getBundleExtra("bundle")!!
         toolbar = findViewById(R.id.tb_searchResultTemplate)
         pb = findViewById(R.id.pb_searchResultTemplate)
         tagName = arg.getString("tag")
-        toolbar.title = tagName
         rv = findViewById(R.id.rv_memes_searchTemplate)
 
-        if (ErrorStatesResponse.checkIsNetworkConnected(this)) {
-            observeLiveData()
+        Log.e("Arg", arg.toString())
 
-        } else {
-            checkConnection()
+        Log.e(
+            "Arg",
+            Intent.ACTION_SEARCH.toString() + intent.action.toString()
+        )
+
+
+        //Action search from manager
+        if (Intent.ACTION_SEARCH == intent.action) {
+            Log.e("In intent oka", "In intent okay")
+
+
+//            val q = intent.getStringExtra(SearchManager.QUERY)
+
+            Log.e("Query", tagName!!.toString())
+            //Save the recent query
+//            SearchRecentSuggestions(
+//                this,
+//
+//                MySuggestionProvider.AUTHORITY,
+//                MySuggestionProvider.MODE
+//            )
+//                .saveRecentQuery(q, null)
+
+            //Set tagame
+
+            if (ErrorStatesResponse.checkIsNetworkConnected(this)) {
+                observeLiveData()
+
+            } else {
+                checkConnection()
+            }
+
+
         }
 
+        //Option to clear history
+        Log.e("Arg", tagName!!)
+//        SearchRecentSuggestions(this, MySuggestionProvider.AUTHORITY, MySuggestionProvider.MODE)
+//            .clearHistory()
 
     }
 

@@ -1,6 +1,8 @@
 package com.example.memej.ui.memeTemplate
 
 import android.app.ProgressDialog
+import android.app.SearchManager
+import android.content.Context
 import android.content.Intent
 import android.database.Cursor
 import android.database.MatrixCursor
@@ -8,10 +10,8 @@ import android.os.Bundle
 import android.provider.BaseColumns
 import android.util.Log
 import android.view.View
-import android.widget.CursorAdapter
-import android.widget.ProgressBar
-import android.widget.SearchView
-import android.widget.SimpleCursorAdapter
+import android.widget.*
+import android.widget.LinearLayout
 import androidx.activity.viewModels
 import androidx.annotation.Keep
 import androidx.appcompat.app.AppCompatActivity
@@ -33,6 +33,7 @@ import com.shreyaspatil.MaterialDialog.MaterialDialog
 import retrofit2.Call
 import retrofit2.Response
 
+
 @Keep
 class SelectMemeTemplateActivity : AppCompatActivity(), OnItemClickListenerTemplate {
 
@@ -47,6 +48,9 @@ class SelectMemeTemplateActivity : AppCompatActivity(), OnItemClickListenerTempl
     lateinit var dialog: ProgressDialog
     lateinit var searchView: SearchView
     private var mAdapter: SimpleCursorAdapter? = null
+    lateinit var searchManager: SearchManager
+    val VOICE_REC_CODE = 1234
+    private val ACTION_VOICE_SEARCH = "com.google.android.gms.actions.SEARCH_ACTION"
 
     override fun onItemClickedForTemplate(mg: EmptyTemplateResponse.Template) {
 
@@ -68,7 +72,6 @@ class SelectMemeTemplateActivity : AppCompatActivity(), OnItemClickListenerTempl
 
         val i = Intent(this, NewMemeContainer::class.java)
         i.putExtra("bundle", bundle)
-
         startActivity(i)
         finish()
     }
@@ -78,6 +81,7 @@ class SelectMemeTemplateActivity : AppCompatActivity(), OnItemClickListenerTempl
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_select_meme_template)
 
+        //setDefaultKeyMode(DEFAULT_KEYS_SEARCH_LOCAL)
         //BAck NAvigation
         pb = findViewById(R.id.pb_template)
         pb.visibility = View.VISIBLE
@@ -96,8 +100,26 @@ class SelectMemeTemplateActivity : AppCompatActivity(), OnItemClickListenerTempl
 
         //Get search View
         searchView = findViewById(R.id.activityTemplateSearch)
+        //Hide the search mag
+        val magId = resources.getIdentifier("android:id/search_mag_icon", null, null)
+        val magImage = searchView.findViewById<View>(magId) as ImageView
+        magImage.layoutParams = LinearLayout.LayoutParams(0, 0)
+
+        //Hide base line
+        val baseId = resources.getIdentifier("android:id/search_plate", null, null)
+        val baseImage = searchView.findViewById<View>(baseId) as View
+        baseImage.setBackgroundColor(resources.getColor(R.color.stoneWhite))
+
+        magImage.setImageDrawable(null)
+
         val from = arrayOf("suggestionList")
         val to = intArrayOf(android.R.id.text1)
+
+        //Add a searchManager
+        searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
+
+
 
         mAdapter = SimpleCursorAdapter(
             this,
@@ -114,7 +136,7 @@ class SelectMemeTemplateActivity : AppCompatActivity(), OnItemClickListenerTempl
 
         searchView.setOnSuggestionListener(object : SearchView.OnSuggestionListener {
             override fun onSuggestionSelect(position: Int): Boolean {
-                return true
+                return false        //Was true
             }
 
             override fun onSuggestionClick(position: Int): Boolean {
@@ -130,6 +152,7 @@ class SelectMemeTemplateActivity : AppCompatActivity(), OnItemClickListenerTempl
                 val i = Intent(this@SelectMemeTemplateActivity, SearchTemplateActivty::class.java)
                 i.putExtra("tag", txt)
                 i.putExtra("bundle", bundle)
+                i.action = Intent.ACTION_SEARCH
                 startActivity(i)
 
 
@@ -142,6 +165,9 @@ class SelectMemeTemplateActivity : AppCompatActivity(), OnItemClickListenerTempl
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
+                //Returns query
+                //Do nothing here
+
                 return false
             }
 
@@ -152,6 +178,14 @@ class SelectMemeTemplateActivity : AppCompatActivity(), OnItemClickListenerTempl
         })
 
 
+        //Voice Search Implementation
+//        val Voiceintent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+//        Voiceintent.putExtra(
+//            RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+//            RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+//        )
+//        Voiceintent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Voice recognition Demo...")
+//        startActivityForResult(intent, VOICE_REC_CODE)
 
 
         if (ErrorStatesResponse.checkIsNetworkConnected(this)) {
@@ -166,6 +200,19 @@ class SelectMemeTemplateActivity : AppCompatActivity(), OnItemClickListenerTempl
         pb.visibility = View.GONE
 
     }
+
+    //Voice Control
+
+
+    override fun onSearchRequested(): Boolean {
+
+        val appData = Bundle().apply {
+            putBoolean("JARGON", true)
+        }
+        startSearch(null, false, appData, false)
+        return true
+    }
+
 
     private fun fetchSuggestions(str: String) {
 
