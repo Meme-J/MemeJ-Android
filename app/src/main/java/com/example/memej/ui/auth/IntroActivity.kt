@@ -36,7 +36,8 @@ class IntroActivity : AppIntro2() {
             // imageDrawable = R.drawable.ic_fast_forward_black_24dp,
             // titleColor = R.color.stoneWhite,
             //descColor = R.color.stoneWhite,
-            bgColor = R.color.colorPrimary
+            bgColor = R.color.colorPrimary,
+            imageDrawable = R.drawable.start_wk
 
         )
 
@@ -46,7 +47,7 @@ class IntroActivity : AppIntro2() {
             //titleColor = R.color.stoneWhite,
             //descColor = R.color.stoneWhite,
             bgColor = R.color.colorPrimary,
-            imageDrawable = R.drawable.homememe
+            imageDrawable = R.drawable.home_wk
         )
 
         val page2 = SliderPage(
@@ -55,7 +56,7 @@ class IntroActivity : AppIntro2() {
             // descColor = R.color.stoneWhite,
             bgColor = R.color.colorPrimary,
             description = getString(R.string.page2),
-            imageDrawable = R.drawable.exploreandedit
+            imageDrawable = R.drawable.explore_wk
         )
         val page3 = SliderPage(
             title = getString(R.string.title3),
@@ -63,7 +64,7 @@ class IntroActivity : AppIntro2() {
             //titleColor = R.color.stoneWhite,
             //descColor = R.color.stoneWhite,
             bgColor = R.color.colorPrimary,
-            imageDrawable = R.drawable.newmeme
+            imageDrawable = R.drawable.search_wk
         )
         val page4 = SliderPage(
             title = getString(R.string.title4),
@@ -71,7 +72,7 @@ class IntroActivity : AppIntro2() {
             //titleColor = R.color.stoneWhite,
             //descColor = R.color.stoneWhite,
             bgColor = R.color.colorPrimary,
-            imageDrawable = R.drawable.loveshare
+            imageDrawable = R.drawable.share_wk
         )
 
         addSlide(AppIntro2Fragment.newInstance(intro))
