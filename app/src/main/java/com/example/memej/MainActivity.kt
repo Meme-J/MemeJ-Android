@@ -5,6 +5,7 @@ import android.content.Intent
 import android.database.Cursor
 import android.database.MatrixCursor
 import android.os.Bundle
+import android.os.Handler
 import android.provider.BaseColumns
 import android.util.Log
 import android.view.Gravity
@@ -18,6 +19,7 @@ import androidx.annotation.Keep
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.core.os.bundleOf
+import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
@@ -40,6 +42,7 @@ import com.example.memej.responses.ProfileResponse
 import com.example.memej.responses.SearchResponse
 import com.example.memej.ui.MemeWorld.MemeWorldFragment
 import com.example.memej.ui.auth.LoginActivity
+import com.example.memej.ui.drawerItems.ExploreSpacesFragment
 import com.example.memej.ui.explore.ExploreFragment
 import com.example.memej.ui.home.HomeFragment
 import com.example.memej.ui.home.SearchResultActivity
@@ -50,7 +53,14 @@ import com.example.memej.viewModels.MainActivityViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.play.core.appupdate.AppUpdateManager
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.install.InstallState
+import com.google.android.play.core.install.InstallStateUpdatedListener
+import com.google.android.play.core.install.model.InstallStatus
 import com.shreyaspatil.MaterialDialog.MaterialDialog
+import io.reactivex.annotations.Nullable
 import retrofit2.Call
 import retrofit2.Response
 import java.util.*
@@ -74,37 +84,21 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
     }
 
 
-//    private val mOnNavDrawerItemSelectedLister =
-//        NavigationView.OnNavigationItemSelectedListener { menuItem ->
-//            when (menuItem.itemId) {
-//
-//                R.id.nav_drawer_explore_spaces -> {
-//                    openFragment(ExploreSpacesFragment())
-//                    isInDrawerItem = true
-//                    hideItems()
-//                    return@OnNavigationItemSelectedListener true
-//                }
-//
-//
-//            }
-//            false
-//        }
-//
-//    private fun hideItems() {
-//        navView.visibility = View.GONE
-//        toolbar.visibility = View.GONE
-//        fab.visibility = View.GONE
-//        drawer.closeDrawer(Gravity.LEFT)
-//
-//    }
-//
+    private val mOnNavDrawerItemSelectedLister =
+        NavigationView.OnNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
 
-//    private fun showItems() {
-//        navView.visibility = View.VISIBLE
-//        toolbar.visibility = View.VISIBLE
-//        fab.visibility = View.VISIBLE
-//
-//    }
+                R.id.nav_drawer_explore_spaces -> {
+                    openFragment(ExploreSpacesFragment())
+                    drawer.closeDrawer(Gravity.LEFT)
+                    return@OnNavigationItemSelectedListener true
+
+                }
+
+
+            }
+            false
+        }
 
     //Get the res id
     private val mOnNavigationItemSelectedListener =
@@ -164,6 +158,11 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
     lateinit var fab: FloatingActionButton
     lateinit var drawer: DrawerLayout
     private var isInDrawerItem: Boolean = false
+    lateinit var mAppBarConfiguration: AppBarConfiguration
+
+    //App Update
+    private var appUpdateManager: AppUpdateManager? = null
+    private var RC_APP_UPDATE = 1249
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -179,7 +178,7 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
 
         //Initialize the navigation Drawer
         drawer = findViewById<DrawerLayout>(R.id.main_drawer__layout)
-        val mAppBarConfiguration = AppBarConfiguration.Builder(
+        mAppBarConfiguration = AppBarConfiguration.Builder(
             R.id.nav_drawer_explore_spaces,
             R.id.nav_drawer_my_spaces,
             R.id.nav_drawer_invites,
@@ -318,7 +317,21 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
         }
 
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
-//        navDrawerView.setNavigationItemSelectedListener(mOnNavDrawerItemSelectedLister)
+        navDrawerView.setNavigationItemSelectedListener(mOnNavDrawerItemSelectedLister)
+
+        //Add Destination Item elected
+
+
+        navControllerDrawer.addOnDestinationChangedListener { _, destination, _ ->
+
+
+            Log.e("I am in where", destination.id.toString())
+            when (destination.id) {
+                R.id.exploreSpacesFragment -> hideBottomNav()
+                else -> showBottomNav()
+            }
+        }
+
 
         fab = findViewById(R.id.fab_add)
         fab.setBackgroundColor(resources.getColor(R.color.colorAccent))
@@ -338,6 +351,14 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
         supportFragmentManager.beginTransaction().replace(R.id.container, frag).commit()
 
 
+    }
+
+    private fun hideBottomNav() {
+        navView.visibility = View.GONE
+    }
+
+    private fun showBottomNav() {
+        navView.visibility = View.VISIBLE
     }
 
 
@@ -427,6 +448,7 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
 
     }
 
+
     @Keep
     private fun fetchSuggestions(str: String) {
 
@@ -485,16 +507,11 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        val i = Intent(this, SettingsScreen::class.java)
-        //Get index frag
 
         when (item.itemId) {
             R.id.settings_btn ->
-                //startActivity(i)
-                //Dialog of logout
                 logout()
 
-            //    R.id.navigation_search -> openSearch(Searchable(searchView), frag)
 
             else ->
                 return super.onOptionsItemSelected(item)
@@ -551,10 +568,88 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
 
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-        finish()
 
+    //App Update
+
+    private fun updateApp() {
+
+        appUpdateManager = AppUpdateManagerFactory.create(this)
+        appUpdateManager!!.registerListener(installStateUpdatedListener)
+
+    }
+
+    //Install State Listener
+    var installStateUpdatedListener: InstallStateUpdatedListener? =
+        object : InstallStateUpdatedListener {
+            override fun onStateUpdate(state: InstallState) {
+                if (state.installStatus() === InstallStatus.DOWNLOADED) {
+                    //CHECK THIS if AppUpdateType.FLEXIBLE, otherwise you can skip
+                    popupSnackbarForCompleteUpdate()
+                } else if (state.installStatus() === InstallStatus.INSTALLED) {
+                    appUpdateManager?.unregisterListener(this)
+                } else {
+                    Log.i(
+                        "Activity",
+                        "InstallStateUpdatedListener: state: " + state.installStatus()
+                    )
+                }
+            }
+        }
+
+    override fun onActivityResult(
+        requestCode: Int,
+        resultCode: Int,
+        @Nullable data: Intent?
+    ) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == RC_APP_UPDATE) {
+            if (resultCode != Activity.RESULT_OK) {
+                Log.e("Androud", "onActivityResult: app download failed")
+            }
+        }
+    }
+
+    //PopUpView
+    private fun popupSnackbarForCompleteUpdate(): Unit {
+        val snackbar: Snackbar = Snackbar.make(
+            findViewById(R.id.main_drawer__layout),
+            "App has been updated",
+            Snackbar.LENGTH_INDEFINITE
+        )
+        snackbar.setAction("Install") { view ->
+            appUpdateManager?.completeUpdate()
+        }
+        snackbar.setActionTextColor(resources.getColor(R.color.wildColor))
+        snackbar.show()
+    }
+
+
+    //States
+    override fun onResume() {
+        super.onResume()
+        Handler().postDelayed({ updateApp() }, 1000)
+    }
+
+
+    override fun onSupportNavigateUp(): Boolean {
+        val navController =
+            Navigation.findNavController(this, R.id.nav_host_fragment)
+        return (NavigationUI.navigateUp(navController, mAppBarConfiguration)
+                || super.onSupportNavigateUp())
+    }
+
+    override fun onBackPressed() {
+        val drawer = findViewById<DrawerLayout>(R.id.main_drawer__layout)
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START)
+        } else {
+            super.onBackPressed()
+        }
+    }
+
+    override fun onStop() {
+        appUpdateManager?.unregisterListener(installStateUpdatedListener)
+        super.onStop()
     }
 
 

@@ -208,7 +208,10 @@ dependencies {
     //App Intro
     implementation "com.github.AppIntro:AppIntro:5.1.0"
 
-    //Material
+    //Material SearchView
     implementation 'com.github.arimorty:floatingsearchview:2.1.1'
+
+    //APp Update Dependency
+    implementation 'com.google.android.play:core:1.7.3'
 
 }
