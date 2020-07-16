@@ -209,6 +209,6 @@ dependencies {
     implementation "com.github.AppIntro:AppIntro:5.1.0"
 
     //Material
-    compile 'com.github.arimorty:floatingsearchview:2.1.1'
+    implementation 'com.github.arimorty:floatingsearchview:2.1.1'
 
 }

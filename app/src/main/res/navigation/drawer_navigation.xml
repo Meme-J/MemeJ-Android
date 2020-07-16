@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_navigation"
+    app:startDestination="@id/blankFragment">
+    <fragment
+        android:id="@+id/exploreFragment3"
+        android:name="com.example.memej.ui.explore.ExploreFragment"
+        android:label="ExploreFragment"
+        tools:layout="@layout/fragment_blank" />
+    <fragment
+        android:id="@+id/exploreSpacesFragment"
+        android:name="com.example.memej.ui.drawerItems.ExploreSpacesFragment"
+        android:label="explore_spaces_fragment"
+        tools:layout="@layout/explore_spaces_fragment" />
+    <fragment
+        android:id="@+id/invitesFragmnet"
+        android:name="com.example.memej.ui.drawerItems.InvitesFragmnet"
+        android:label="invites_fragmnet_fragment"
+        tools:layout="@layout/invites_fragmnet_fragment" />
+    <fragment
+        android:id="@+id/mySpacesFragmnet"
+        android:name="com.example.memej.ui.drawerItems.MySpacesFragmnet"
+        android:label="my_spaces_fragmnet_fragment"
+        tools:layout="@layout/my_spaces_fragmnet_fragment" />
+    <fragment
+        android:id="@+id/blankFragment"
+        android:name="com.example.memej.ui.drawerItems.blankFragment"
+        android:label="fragment_blank"
+        tools:layout="@layout/fragment_blank" />
+    <activity
+        android:id="@+id/mainActivity"
+        android:name="com.example.memej.MainActivity"
+        android:label="explore_fragment"
+        tools:layout="@layout/explore_fragment" />
+
+
+</navigation>

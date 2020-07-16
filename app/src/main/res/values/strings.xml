@@ -86,6 +86,9 @@
     <string name="intro_prefs">intro_prefs</string>
     <string name="intro_prefs_first_run">intro_prefs_key</string>
     <string name="ka">KA</string>
+    <string name="explore_spaces">Explore Spaces</string>
+    <string name="invites_and_requests">Invites and Requests</string>
+    <string name="my_spaces">My spaces</string>
 
     <array name="themeColors">
         <item>@color/green_500</item>

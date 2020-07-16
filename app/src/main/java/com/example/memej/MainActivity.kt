@@ -7,19 +7,23 @@ import android.database.MatrixCursor
 import android.os.Bundle
 import android.provider.BaseColumns
 import android.util.Log
+import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.CursorAdapter
-import android.widget.SearchView
-import android.widget.SimpleCursorAdapter
+import android.widget.*
 import androidx.activity.viewModels
 import androidx.annotation.Keep
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
 import androidx.core.os.bundleOf
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import androidx.navigation.Navigation
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.memej.Utils.Communicator
@@ -32,6 +36,7 @@ import com.example.memej.adapters.SearchAdapter
 import com.example.memej.adapters.onClickSearch
 import com.example.memej.entities.searchBody
 import com.example.memej.interfaces.RetrofitClient
+import com.example.memej.responses.ProfileResponse
 import com.example.memej.responses.SearchResponse
 import com.example.memej.ui.MemeWorld.MemeWorldFragment
 import com.example.memej.ui.auth.LoginActivity
@@ -44,9 +49,11 @@ import com.example.memej.ui.profile.ProfileFragment
 import com.example.memej.viewModels.MainActivityViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.navigation.NavigationView
 import com.shreyaspatil.MaterialDialog.MaterialDialog
 import retrofit2.Call
 import retrofit2.Response
+import java.util.*
 
 
 class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
@@ -65,6 +72,39 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
         val fragmentName: String = fm!!::class.java.simpleName
         return fragmentName
     }
+
+
+//    private val mOnNavDrawerItemSelectedLister =
+//        NavigationView.OnNavigationItemSelectedListener { menuItem ->
+//            when (menuItem.itemId) {
+//
+//                R.id.nav_drawer_explore_spaces -> {
+//                    openFragment(ExploreSpacesFragment())
+//                    isInDrawerItem = true
+//                    hideItems()
+//                    return@OnNavigationItemSelectedListener true
+//                }
+//
+//
+//            }
+//            false
+//        }
+//
+//    private fun hideItems() {
+//        navView.visibility = View.GONE
+//        toolbar.visibility = View.GONE
+//        fab.visibility = View.GONE
+//        drawer.closeDrawer(Gravity.LEFT)
+//
+//    }
+//
+
+//    private fun showItems() {
+//        navView.visibility = View.VISIBLE
+//        toolbar.visibility = View.VISIBLE
+//        fab.visibility = View.VISIBLE
+//
+//    }
 
     //Get the res id
     private val mOnNavigationItemSelectedListener =
@@ -108,26 +148,22 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
 
     lateinit var sessionManager: SessionManager
     lateinit var rv: RecyclerView
-
-    //    lateinit var navController: NavController
     lateinit var adapter: SearchAdapter
-
     var index = 0           //Default for HOme (Ongoing Memes)
     lateinit var searchView: SearchView
     lateinit var swl: SwipeRefreshLayout
-
-    //Initialzie the toolbar
     lateinit var toolbar: androidx.appcompat.widget.Toolbar
-
     private val preferenceUtils = PreferenceUtil
-
     private val viewModel: MainActivityViewModel by viewModels()
-
     private var mAdapter: SimpleCursorAdapter? = null
-
     var searchType: String = ""
     private val preferenceManager: PreferenceManager = PreferenceManager()
-
+    lateinit var navDrawerView: NavigationView
+    lateinit var navView: BottomNavigationView
+    var username = ""
+    lateinit var fab: FloatingActionButton
+    lateinit var drawer: DrawerLayout
+    private var isInDrawerItem: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -137,8 +173,41 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
         toolbar = androidx.appcompat.widget.Toolbar(this)
         toolbar = findViewById(R.id.toolbar_main)
         setSupportActionBar(toolbar)
-        toolbar.title = ""
 
+        sessionManager = SessionManager(this)
+        //Set the Header of the navigation drawer
+
+        //Initialize the navigation Drawer
+        drawer = findViewById<DrawerLayout>(R.id.main_drawer__layout)
+        val mAppBarConfiguration = AppBarConfiguration.Builder(
+            R.id.nav_drawer_explore_spaces,
+            R.id.nav_drawer_my_spaces,
+            R.id.nav_drawer_invites,
+            R.id.nav_drawer_logout
+        ).setDrawerLayout(drawer)
+            .build()
+
+        //Ref to navigation View
+        navDrawerView = findViewById(R.id.nav_drawer_view)
+
+        //Create a navigation Graph
+        val navControllerDrawer =
+            Navigation.findNavController(this, R.id.nav_host_fragment)
+//        NavigationUI.setupActionBarWithNavController(
+//            this,
+//            navControllerDrawer,
+//            mAppBarConfiguration
+//        )
+
+        NavigationUI.setupWithNavController(navDrawerView, navControllerDrawer)
+
+        //OpenDrawer from button
+        val imenu = findViewById<ImageView>(R.id.nav_menu_icon)
+        imenu.setOnClickListener {
+            drawer.openDrawer(Gravity.LEFT)
+
+        }
+        populateHeaderOfDrawer()
 
         val from = arrayOf("suggestionList")
         val to = intArrayOf(android.R.id.text1)
@@ -146,7 +215,6 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
         mAdapter = SimpleCursorAdapter(
             this,
             android.R.layout.simple_list_item_1,
-//           R.layout.list_suggestionn,
             null,
             from,
             to,
@@ -157,6 +225,18 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
         searchView.suggestionsAdapter = mAdapter
         searchView.isIconifiedByDefault = false
         searchView.setBackgroundColor(resources.getColor(R.color.garbinaoGrey))
+
+        //Hide the search mag
+        val magId = resources.getIdentifier("android:id/search_mag_icon", null, null)
+        val magImage = searchView.findViewById<View>(magId) as ImageView
+        magImage.layoutParams = LinearLayout.LayoutParams(0, 0)
+
+        //Hide base line
+        val baseId = resources.getIdentifier("android:id/search_plate", null, null)
+        val baseImage = searchView.findViewById<View>(baseId) as View
+        baseImage.setBackgroundColor(resources.getColor(R.color.stoneWhite))
+
+        magImage.setImageDrawable(null)
 
         searchView.setOnSuggestionListener(object : SearchView.OnSuggestionListener {
             override fun onSuggestionSelect(position: Int): Boolean {
@@ -178,8 +258,6 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
                 i.putExtra("type", searchType)
                 i.putExtra("bundle", bundle)
                 startActivity(i)
-
-
 
                 return true
 
@@ -214,28 +292,24 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
         })
 
 
-        val navView: BottomNavigationView = findViewById(R.id.nav_view)
+        navView = findViewById(R.id.nav_view)
         sessionManager =
             SessionManager(this)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-//        val appBarConfiguration = AppBarConfiguration(
-//            setOf(
-//                R.id.navigation_explore,
-//                R.id.navigation_home,
-//                R.id.navigation_memeWorld,
-//                R.id.navigation_myMemes,
-//                R.id.navigation_profile
-//            )
-//        )
+        val appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.navigation_explore,
+                R.id.navigation_home,
+                R.id.navigation_memeWorld,
+                R.id.navigation_myMemes,
+                R.id.navigation_profile
+            )
+        )
 
 
         val fragOpen = ExploreFragment()
         supportFragmentManager.beginTransaction().replace(R.id.container, fragOpen).commit()
         navView.selectedItemId = R.id.exploreFragment
 
-
-        //Default Fragment
 
         if (savedInstanceState == null) {
             val frag = ExploreFragment()
@@ -244,41 +318,84 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
         }
 
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+//        navDrawerView.setNavigationItemSelectedListener(mOnNavDrawerItemSelectedLister)
 
-
-        //        navView.setOnNavigationItemReselectedListener {
-        //            //Do nothing
-        //        }
-
-        //OnClickListener On FAB
-        val fab: FloatingActionButton = findViewById(R.id.fab_add)
-        //Sett attr
+        fab = findViewById(R.id.fab_add)
         fab.setBackgroundColor(resources.getColor(R.color.colorAccent))
-
-
         fab.setOnClickListener {
             val i = Intent(this, SelectMemeTemplateActivity::class.java)
             startActivity(i)
 
         }
 
-
-
-
-        Log.e("Saved", savedInstanceState.toString())
-        //Retreat back to home if not null
-//        if (savedInstanceState != null) {
-//            val frag = HomeFragment()
-//            supportFragmentManager.beginTransaction().replace(R.id.container, frag).commit()
-//            navView.selectedItemId = R.id.homeFragment
+//        if (!isInDrawerItem) {
+//            showItems()
+//        } else if (isInDrawerItem) {
+//            hideItems()
 //        }
 
-
-        //Function for passing data intent
         val frag = ExploreFragment()
         supportFragmentManager.beginTransaction().replace(R.id.container, frag).commit()
 
 
+    }
+
+
+    private fun populateHeaderOfDrawer() {
+        if (preferenceUtils.username == "") {
+
+            //Check connection here
+            if (ErrorStatesResponse.checkIsNetworkConnected(this)) {
+                callUser()
+            }
+        } else {
+
+            username = preferenceUtils.getUserFromPrefernece().username
+
+        }
+
+        //After this, we will have the username
+        //Get the ref for the items of the nav drawer
+        val v: View = navDrawerView.getHeaderView(0)
+        username = preferenceUtils.getUserFromPrefernece().username
+
+        //Check the presence of the View
+        (v.findViewById<View>(R.id.nav_header_username) as TextView).text = username
+
+        val x = username.take(2).toUpperCase(Locale.ROOT)
+        val c = (v.findViewById<View>(R.id.nav_header_image_view) as CardView)
+        c.setCardBackgroundColor(resources.getColor(R.color.colorPrimary))
+        val t = v.findViewById<View>(R.id.nav_header_avatar_text) as TextView
+        t.text = x
+
+    }
+
+    private fun callUser() {
+        val service = RetrofitClient.getAuthInstance()
+
+        service.getUser(accessToken = "Bearer ${sessionManager.fetchAcessToken()}")
+            .enqueue(object : retrofit2.Callback<ProfileResponse> {
+                override fun onFailure(call: Call<ProfileResponse>, t: Throwable) {
+
+                }
+
+                override fun onResponse(
+                    call: Call<ProfileResponse>,
+                    response: Response<ProfileResponse>
+                ) {
+
+                    if (response.isSuccessful) {
+
+                        username = response.body()?.profile?.username!!
+                        setPreferencesUser(response.body()?.profile!!)
+                    }
+                }
+            })
+
+    }
+
+    private fun setPreferencesUser(user: ProfileResponse.Profile) {
+        preferenceUtils.setUserFromPreference(user)
     }
 
 

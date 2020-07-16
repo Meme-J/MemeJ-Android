@@ -41,6 +41,7 @@
     <dimen name="default_collapsed_image_size">45dp</dimen>
     <dimen name="default_expanded_image_size">135dp</dimen>
     <dimen name="Explore_card_height">200dp</dimen>
+    <dimen name="toolbar_height">20dp</dimen>
 
 
 </resources>
