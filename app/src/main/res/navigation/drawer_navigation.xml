@@ -3,37 +3,29 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_navigation"
-    app:startDestination="@id/blankFragment">
+    app:startDestination="@id/navigation_home_drawer">
+
+
     <fragment
-        android:id="@+id/exploreFragment3"
-        android:name="com.example.memej.ui.explore.ExploreFragment"
-        android:label="ExploreFragment"
-        tools:layout="@layout/fragment_blank" />
-    <fragment
-        android:id="@+id/exploreSpacesFragment"
+        android:id="@+id/navigation_explore_spaces_fragment"
         android:name="com.example.memej.ui.drawerItems.ExploreSpacesFragment"
         android:label="explore_spaces_fragment"
         tools:layout="@layout/explore_spaces_fragment" />
     <fragment
-        android:id="@+id/invitesFragmnet"
+        android:id="@+id/navigation_invites_fragmnets"
         android:name="com.example.memej.ui.drawerItems.InvitesFragmnet"
         android:label="invites_fragmnet_fragment"
         tools:layout="@layout/invites_fragmnet_fragment" />
     <fragment
-        android:id="@+id/mySpacesFragmnet"
+        android:id="@+id/navigation_my_spaces_fragments"
         android:name="com.example.memej.ui.drawerItems.MySpacesFragmnet"
         android:label="my_spaces_fragmnet_fragment"
         tools:layout="@layout/my_spaces_fragmnet_fragment" />
     <fragment
-        android:id="@+id/blankFragment"
-        android:name="com.example.memej.ui.drawerItems.blankFragment"
-        android:label="fragment_blank"
-        tools:layout="@layout/fragment_blank" />
-    <activity
-        android:id="@+id/mainActivity"
-        android:name="com.example.memej.MainActivity"
-        android:label="explore_fragment"
-        tools:layout="@layout/explore_fragment" />
+        android:id="@+id/navigation_home_drawer"
+        android:name="com.example.memej.ui.home.HomeFragment"
+        android:label="HomeFragment"
+        tools:layout="@layout/fragment_home" />
 
 
 </navigation>

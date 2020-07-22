@@ -1,44 +1,48 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginTop="?attr/actionBarSize"
-    android:layout_marginBottom="?attr/actionBarSize"
-    android:padding="@dimen/margins"
-    tools:context=".MainActivity">
+    android:layout_height="match_parent">
 
-    <com.yuyakaido.android.cardstackview.CardStackView
-
-        android:id="@+id/stack_view"
+    <RelativeLayout xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerInParent="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_marginTop="?attr/actionBarSize"
+        android:layout_marginBottom="?attr/actionBarSize"
+        android:padding="@dimen/margins"
+        tools:context=".MainActivity">
 
-    <!--    <TextView-->
-    <!--        android:id="@+id/load_more"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_centerInParent="true"-->
-    <!--        android:text="@string/tap_to_load_more"-->
-    <!--        android:textColor="@color/wildColor"-->
-    <!--        android:textSize="@dimen/text_size_16sp"-->
-    <!--        android:textStyle="bold" />-->
+        <com.yuyakaido.android.cardstackview.CardStackView
 
-    <ProgressBar
-        android:id="@+id/pb_explore"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:visibility="visible" />
+            android:id="@+id/stack_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:layout_centerHorizontal="true" />
 
-    <!--    <TextView-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_alignParentBottom="true"-->
-    <!--        android:layout_centerHorizontal="true"-->
-    <!--        android:layout_marginBottom="@dimen/margins"-->
-    <!--        android:text="@string/swipe_for_more"-->
-    <!--        android:textSize="@dimen/text_size" />-->
+        <!--    <TextView-->
+        <!--        android:id="@+id/load_more"-->
+        <!--        android:layout_width="wrap_content"-->
+        <!--        android:layout_height="wrap_content"-->
+        <!--        android:layout_centerInParent="true"-->
+        <!--        android:text="@string/tap_to_load_more"-->
+        <!--        android:textColor="@color/wildColor"-->
+        <!--        android:textSize="@dimen/text_size_16sp"-->
+        <!--        android:textStyle="bold" />-->
 
-</RelativeLayout>
+        <ProgressBar
+            android:id="@+id/pb_explore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="visible" />
+
+        <!--    <TextView-->
+        <!--        android:layout_width="wrap_content"-->
+        <!--        android:layout_height="wrap_content"-->
+        <!--        android:layout_alignParentBottom="true"-->
+        <!--        android:layout_centerHorizontal="true"-->
+        <!--        android:layout_marginBottom="@dimen/margins"-->
+        <!--        android:text="@string/swipe_for_more"-->
+        <!--        android:textSize="@dimen/text_size" />-->
+
+    </RelativeLayout>
+</FrameLayout>
