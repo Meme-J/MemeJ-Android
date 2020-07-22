@@ -5,7 +5,6 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -21,6 +20,9 @@ import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.databinding.ActivityLoginBinding
 import com.example.memej.entities.LoginBody
 import com.example.memej.viewModels.LoginActivtyViewModel
+import com.google.android.gms.auth.api.credentials.Credential
+import com.google.android.gms.auth.api.credentials.CredentialsClient
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
@@ -44,6 +46,16 @@ class LoginActivity : AppCompatActivity() {
 
     private val viewModel: LoginActivtyViewModel by viewModels()
     lateinit var binding: ActivityLoginBinding
+
+    //Request Code
+    private val RC_SIGN_IN: Int = 1
+    private val RC_CREDENTIALS_READ = 2
+    private val RC_CREDENTIALS_SAVE = 3
+
+    private val mCredentialsClient: CredentialsClient? = null
+    private val mSignInClient: GoogleSignInClient? = null
+    private val mIsResolving = false
+    private val mCredential: Credential? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,13 +88,19 @@ class LoginActivity : AppCompatActivity() {
             hideProgressBar()
             if (successful != null) {
                 if (successful) {
-                    Log.e("x", "In Login Success")
+
+                    //Create a credentials object
+//                    val credential: Credential = Credential.Builder(etUsername.text.toString())
+//                        .setPassword(etPassword.text.toString())
+//                        .build()
+                    //Done in a slightly different way when using GSI
+
+
                     Toast.makeText(this, R.string.successLogin, Toast.LENGTH_LONG)
                         .show()
                     val intent = Intent(this, MainActivity::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK)
                     hideKeyboard(this)
-                    Log.e("x", "In Started all")
                     startActivity(intent)
                     finish()
                 } else {
@@ -119,6 +137,7 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
+
     private fun hideKeyboard(activity: Activity) {
         val imm =
             activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -151,24 +170,6 @@ class LoginActivity : AppCompatActivity() {
         )
 
     }
-
-
-//    private fun goToMainActivity() {
-//
-//        pb.visibility = View.GONE
-//
-//        SaveSharedPreference()
-//            .setLoggedIn(applicationContext, true)
-//        val i = Intent(this, MainActivity::class.java)
-////        val b = bundleOf(
-////            "frag" to "explore"
-////        )
-////        i.putExtra("bundleMain", b)
-//
-//        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK)
-//        startActivity(i)
-//
-//    }
 
 
     private fun validateDetail(): Boolean {
