@@ -95,8 +95,6 @@ class SelectMemeTemplateActivity : AppCompatActivity(), OnItemClickListenerTempl
         dialog.setMessage("Loading templates...")
         dialog.show()
 
-        //Get a dialog loader
-        Log.e("Select", "In Select Meme Template Activity")
 
         //Get search View
         searchView = findViewById(R.id.activityTemplateSearch)
@@ -124,7 +122,6 @@ class SelectMemeTemplateActivity : AppCompatActivity(), OnItemClickListenerTempl
         mAdapter = SimpleCursorAdapter(
             this,
             android.R.layout.simple_list_item_1,
-//           R.layout.list_suggestionn,
             null,
             from,
             to,
@@ -176,16 +173,6 @@ class SelectMemeTemplateActivity : AppCompatActivity(), OnItemClickListenerTempl
                 return false
             }
         })
-
-
-        //Voice Search Implementation
-//        val Voiceintent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
-//        Voiceintent.putExtra(
-//            RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-//            RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
-//        )
-//        Voiceintent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Voice recognition Demo...")
-//        startActivityForResult(intent, VOICE_REC_CODE)
 
 
         if (ErrorStatesResponse.checkIsNetworkConnected(this)) {
