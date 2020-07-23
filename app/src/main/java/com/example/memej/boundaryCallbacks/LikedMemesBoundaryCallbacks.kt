@@ -5,8 +5,7 @@ import android.util.Log
 import androidx.paging.PagedList
 import com.example.memej.Utils.PagingUtils.PagingRequestHelper
 import com.example.memej.Utils.sessionManagers.SessionManager
-import com.example.memej.databases.MemeWorldDatabse
-import com.example.memej.entities.queryBody
+import com.example.memej.databases.LikedMemesDatabase
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.memeWorldResponses.Meme_World
 import com.example.memej.responses.memeWorldResponses.memeApiResponses
@@ -14,16 +13,14 @@ import retrofit2.Call
 import retrofit2.Response
 import java.util.concurrent.Executors
 
-
-class MemeWorldBoundaryCallback(
-    private val myMemesDb: MemeWorldDatabse,
-    context: Context,
-    private val searchBody: queryBody
+class LikedMemesBoundaryCallbacks(
+    private val myMemesDb: LikedMemesDatabase,
+    context: Context
 ) :
     PagedList.BoundaryCallback<Meme_World>() {
 
 
-    private val api = RetrofitClient.makeCallsForMemes(context)
+    private val api = RetrofitClient.makeCallForProfileParameters(context)
     private val executor = Executors.newSingleThreadExecutor()
     private val helper = PagingRequestHelper(executor)
     private val sessionManager =
@@ -33,14 +30,13 @@ class MemeWorldBoundaryCallback(
         super.onZeroItemsLoaded()
         //1
         helper.runIfNotRunning(PagingRequestHelper.RequestType.INITIAL) { helperCallback ->
-            api.fetchMemeWorldMemes(
+            api.getLikedMemes(
                 loadSize = 30,
-                accessToken = "Bearer ${sessionManager.fetchAcessToken()}",
-                search = searchBody
+                accessToken = "Bearer ${sessionManager.fetchAcessToken()}"
             ).enqueue(object : retrofit2.Callback<memeApiResponses> {
                 override fun onFailure(call: Call<memeApiResponses>, t: Throwable) {
 
-                    Log.e("Failed MemeWorldBoundary", "Falied at zero load")
+                    Log.e("Failed 1", "Falied at zero load")
                     helperCallback.recordFailure(t)
 
                 }
@@ -49,12 +45,16 @@ class MemeWorldBoundaryCallback(
                     call: Call<memeApiResponses>,
                     response: Response<memeApiResponses>
                 ) {
-                    val listing = response.body()
-                    val memeWorldPosts = listing?.memes
 
-                    executor.execute {
-                        myMemesDb.memeWorldDao().insert(memeWorldPosts ?: listOf())
-                        helperCallback.recordSuccess()
+                    if (response.body()?.memes!!.isNotEmpty()) {
+
+                        val listing = response.body()
+                        val memeWorldPosts = listing?.memes
+
+                        executor.execute {
+                            myMemesDb.likedMemesDao().insert(memeWorldPosts ?: listOf())
+                            helperCallback.recordSuccess()
+                        }
                     }
                 }
             })
@@ -65,15 +65,14 @@ class MemeWorldBoundaryCallback(
 
         super.onItemAtEndLoaded(itemAtEnd)
         helper.runIfNotRunning(PagingRequestHelper.RequestType.AFTER) { helperCallback ->
-            api.fetchMemeWorldMemes(
+            api.getLikedMemes(
                 loadSize = 15,
-                accessToken = "Bearer ${sessionManager.fetchAcessToken()}",
-                search = searchBody
+                accessToken = "Bearer ${sessionManager.fetchAcessToken()}"
             )
                 .enqueue(object : retrofit2.Callback<memeApiResponses> {
 
                     override fun onFailure(call: Call<memeApiResponses>?, t: Throwable) {
-                        Log.e("Fail2MemeWorld", "Failed to load data!")
+                        Log.e("Fail2Like", "Failed to load data!")
                         helperCallback.recordFailure(t)
                     }
 
@@ -86,7 +85,7 @@ class MemeWorldBoundaryCallback(
 
 
                         executor.execute {
-                            myMemesDb.memeWorldDao().insert(memeWorldPosts ?: listOf())
+                            myMemesDb.likedMemesDao().insert(memeWorldPosts ?: listOf())
                             helperCallback.recordSuccess()
                         }
                     }

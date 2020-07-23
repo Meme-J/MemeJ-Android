@@ -5,6 +5,8 @@ import androidx.annotation.Keep
 import com.squareup.moshi.Json
 
 @Keep
+//@TypeConverters(value = [RoomConvertor::class])
+//@JsonClass(generateAdapter = true)
 data class TemplateId(
 
     @field:Json(name = "coordinates")

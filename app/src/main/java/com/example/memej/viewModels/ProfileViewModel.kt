@@ -35,7 +35,7 @@ class ProfileViewModel : ViewModel() {
 
     init {
         val config = PagedList.Config.Builder()
-            .setInitialLoadSizeHint(5)               //Number of items to load in a page
+            .setInitialLoadSizeHint(15)
             .setEnablePlaceholders(false)   //There is holder disabled till the data is loaded
             .build()
 
@@ -113,6 +113,7 @@ class ProfileViewModel : ViewModel() {
                 }
             }
         return LivePagedListBuilder(dataSourceFactory, config)
+
     }
 
 

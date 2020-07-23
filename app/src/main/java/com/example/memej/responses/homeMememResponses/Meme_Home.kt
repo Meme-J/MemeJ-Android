@@ -1,13 +1,18 @@
 package com.example.memej.responses.homeMememResponses
 
 import androidx.annotation.Keep
+import androidx.room.PrimaryKey
 import com.squareup.moshi.Json
 
 @Keep
+//@Entity
+//@TypeConverters(value = [RoomConvertor::class])
 data class Meme_Home(
 
     // @field:Json(name = "_id")
+    @PrimaryKey
     val _id: String, // 5ec14e55fdba9567b44adec1
+
     @field:Json(name = "lastUpdated")
     val lastUpdated: String, // 2020-05-17T14:46:45.350Z
 

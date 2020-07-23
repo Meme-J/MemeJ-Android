@@ -9,7 +9,7 @@ import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.example.memej.Utils.ApplicationUtil
 import com.example.memej.boundaryCallbacks.MemeWorldBoundaryCallback
-import com.example.memej.databases.MyMemesDatabase
+import com.example.memej.databases.MemeWorldDatabse
 import com.example.memej.entities.queryBody
 import com.example.memej.responses.memeWorldResponses.Meme_World
 
@@ -45,7 +45,7 @@ class MemeWorldViewModel : ViewModel() {
             LivePagedListBuilder<Int, Meme_World> {
 
         ctx = ApplicationUtil.getContext()
-        val database = MyMemesDatabase.getDatabase(ctx)
+        val database = MemeWorldDatabse.getDatabase(ctx)
         val livePageListBuilder = LivePagedListBuilder<Int, Meme_World>(
             database.memeWorldDao().posts(),
             config

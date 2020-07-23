@@ -12,6 +12,7 @@ import com.squareup.moshi.Json
 @Entity
 @Keep
 @TypeConverters(value = [RoomConvertor::class])
+
 data class Meme_World(
 
     @PrimaryKey

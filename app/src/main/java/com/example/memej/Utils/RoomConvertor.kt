@@ -1,6 +1,8 @@
 package com.example.memej.Utils
 
 import androidx.room.TypeConverter
+import com.example.memej.responses.homeMememResponses.Coordinates
+import com.example.memej.responses.homeMememResponses.HomeUsers
 import com.example.memej.responses.memeWorldResponses.Coordinate
 import com.example.memej.responses.memeWorldResponses.TemplateId
 import com.example.memej.responses.memeWorldResponses.User
@@ -42,6 +44,13 @@ object RoomConvertor {
         return adapter
     }
 
+    fun coordinateHomeAdapter(): JsonAdapter<List<Coordinates>> {
+        val listType = Types.newParameterizedType(List::class.java, Coordinates::class.java)
+        val adapter: JsonAdapter<List<Coordinates>> = moshi.adapter(listType)
+        //val jsonAdapter = RoomConvertor.moshi.adapter(Coordinate::class.java)
+        return adapter
+    }
+
     fun intAdapter(): JsonAdapter<List<Int>> {
         val listOfStringsType = Types.newParameterizedType(List::class.java, String::class.java)
         val adapter: JsonAdapter<List<Int>> = moshi.adapter(listOfStringsType)
@@ -54,8 +63,20 @@ object RoomConvertor {
         return adapter
     }
 
+    fun userHomeAdapter(): JsonAdapter<List<HomeUsers>> {
+        val listType = Types.newParameterizedType(List::class.java, HomeUsers::class.java)
+        val adapter: JsonAdapter<List<HomeUsers>> = moshi.adapter(listType)
+        return adapter
+    }
+
     fun templateAdapter(): JsonAdapter<TemplateId> {
         val adapter: JsonAdapter<TemplateId> = moshi.adapter(TemplateId::class.java)
+        return adapter
+    }
+
+    fun templateHomeAdapter(): JsonAdapter<com.example.memej.responses.homeMememResponses.TemplateId> {
+        val adapter: JsonAdapter<com.example.memej.responses.homeMememResponses.TemplateId> =
+            moshi.adapter(com.example.memej.responses.homeMememResponses.TemplateId::class.java)
         return adapter
     }
 
@@ -66,6 +87,15 @@ object RoomConvertor {
     @TypeConverter
     @JvmStatic
     fun fromJsonCoordinate(string: String): List<Coordinate>? = coordinateAdapter().fromJson(string)
+
+    @TypeConverter
+    @JvmStatic
+    fun toJsonHomeCoordinate(cn: List<Coordinates>): String = coordinateHomeAdapter().toJson(cn)
+
+    @TypeConverter
+    @JvmStatic
+    fun fromJsonHomeCoordinate(string: String): List<Coordinates>? =
+        coordinateHomeAdapter().fromJson(string)
 
 
     @TypeConverter
@@ -96,11 +126,31 @@ object RoomConvertor {
 
     @TypeConverter
     @JvmStatic
+    fun toJSONHomeUser(list: List<HomeUsers>?): String? = userHomeAdapter().toJson(list)
+
+    @TypeConverter
+    @JvmStatic
+    fun fromJsonHomeUser(list: String): List<HomeUsers>? = userHomeAdapter().fromJson(list)
+
+
+    @TypeConverter
+    @JvmStatic
     fun toJSONTemplate(temp: TemplateId): String? = templateAdapter().toJson(temp)
 
     @TypeConverter
     @JvmStatic
     fun fromJsonTemplate(list: String): TemplateId? = templateAdapter().fromJson(list)
+
+
+    @TypeConverter
+    @JvmStatic
+    fun toJSONTemplateHome(temp: com.example.memej.responses.homeMememResponses.TemplateId): String? =
+        templateHomeAdapter().toJson(temp)
+
+    @TypeConverter
+    @JvmStatic
+    fun fromJsonTemplateHome(list: String): com.example.memej.responses.homeMememResponses.TemplateId? =
+        templateHomeAdapter().fromJson(list)
 
 
 }
