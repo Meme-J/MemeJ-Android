@@ -155,8 +155,6 @@ class LikedMemesAdapter(val context: Context, val itemClickListener: OnItemClick
 
         private fun likeMeme(_meme: Meme_World) {
 
-            //Revert the state
-            Log.e("ADapter", "In like meme")
             val inf = likeMemeBody(_meme._id)
             service.likeMeme(
                 inf,
@@ -189,16 +187,13 @@ class LikedMemesAdapter(val context: Context, val itemClickListener: OnItemClick
                         //Notify the data set that it has been chnmaged
                         if (response.body()?.msg == "Meme unliked successfully.") {
 
-                            Log.e("ADapter", "In  dislike")
                             likeDrawIo.isLiked = false
                             numLikes.text = (numLikes.text.toString().toInt() - 1).toString()
                             likeDrawIo.isEnabled = true
 
                         } else if (response.body()?.msg == "Meme liked successfully.") {
 
-                            Log.e("ADapter", "In  Like")
                             numLikes.text = (numLikes.text.toString().toInt() + 1).toString()
-
                             likeDrawIo.isLiked = true
                             likeDrawIo.isEnabled = true
 

@@ -152,9 +152,14 @@ class MyMemesFragment : Fragment(), OnItemClickListenerMemeWorld {
         }
 
         swl.isRefreshing = true
-        memeWorldViewModel.getPosts(pr = pb).observe(viewLifecycleOwner, Observer {
-            memeWorldAdapter.submitList(it)
+//        memeWorldViewModel.getPosts(pr = pb).observe(viewLifecycleOwner, Observer {
+//            memeWorldAdapter.submitList(it)
+//        })
+
+        memeWorldViewModel.getPosts(pb).observe(viewLifecycleOwner, Observer { posts ->
+            if (posts != null) memeWorldAdapter.submitList(posts)
         })
+
 
         initList()
     }
@@ -185,7 +190,6 @@ class MyMemesFragment : Fragment(), OnItemClickListenerMemeWorld {
 
 
     }
-
 
 
 }

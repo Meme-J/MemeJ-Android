@@ -156,7 +156,7 @@ class ExploreFragment : Fragment(), RandomListener {
                 override fun onFailure(call: Call<homeMemeApiResponse>, t: Throwable) {
                     Log.e("Throwanle", t.toString())
                     val message = ErrorStatesResponse.returnStateMessageForThrowable(t)
-                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
                 }
 
                 override fun onResponse(

@@ -24,11 +24,8 @@ fun Activity.shareCacheDirBitmap(uri: Uri?, name: String, bitmap: Bitmap) {
 
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, FileOutputStream(file))
 
-        Log.e("PAckage name", this.packageName)
 
         val contentUri = FileProvider.getUriForFile(this, this.packageName + ".FileProvider", file)
-        Log.e("PAckage name", contentUri.toString())
-//
         val shareIntent = Intent()
         shareIntent.action = Intent.ACTION_SEND
         shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri)
@@ -36,7 +33,7 @@ fun Activity.shareCacheDirBitmap(uri: Uri?, name: String, bitmap: Bitmap) {
         this.startActivity(Intent.createChooser(shareIntent, "Share Image"))
     } catch (e: FileNotFoundException) {
         e.printStackTrace()
-        Log.e("Fail share", e.toString())
+
     }
 }
 

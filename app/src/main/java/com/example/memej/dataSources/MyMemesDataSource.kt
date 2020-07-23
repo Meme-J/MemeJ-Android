@@ -1,7 +1,6 @@
 package com.example.memej.dataSources
 
 import android.content.Context
-import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
@@ -55,7 +54,6 @@ class MyMemesDataSource(val context: Context, val pb: ProgressBar) :
                         val memeWorldPosts = listing?.memes
                         val size = memeWorldPosts?.size
 
-                        Log.e("MemeWorldDS", response.body().toString())
 
                         if (memeWorldPosts != null && memeWorldPosts.isNotEmpty()) {
 
