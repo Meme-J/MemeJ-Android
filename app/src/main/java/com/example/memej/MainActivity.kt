@@ -43,6 +43,8 @@ import com.example.memej.responses.SearchResponse
 import com.example.memej.ui.MemeWorld.MemeWorldFragment
 import com.example.memej.ui.auth.LoginActivity
 import com.example.memej.ui.drawerItems.ExploreSpacesFragment
+import com.example.memej.ui.drawerItems.InvitesFragmnet
+import com.example.memej.ui.drawerItems.MySpacesFragmnet
 import com.example.memej.ui.explore.ExploreFragment
 import com.example.memej.ui.home.HomeFragment
 import com.example.memej.ui.home.SearchResultActivity
@@ -92,7 +94,16 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
                     openFragment(ExploreSpacesFragment())
                     drawer.closeDrawer(Gravity.LEFT)
                     return@OnNavigationItemSelectedListener true
-
+                }
+                R.id.nav_drawer_invites -> {
+                    openFragment(InvitesFragmnet())
+                    drawer.closeDrawer(Gravity.LEFT)
+                    return@OnNavigationItemSelectedListener true
+                }
+                R.id.nav_drawer_my_spaces -> {
+                    openFragment(MySpacesFragmnet())
+                    drawer.closeDrawer(Gravity.LEFT)
+                    return@OnNavigationItemSelectedListener true
                 }
 
 
@@ -192,6 +203,7 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
         //Create a navigation Graph
         val navControllerDrawer =
             Navigation.findNavController(this, R.id.nav_host_fragment)
+
 //        NavigationUI.setupActionBarWithNavController(
 //            this,
 //            navControllerDrawer,
@@ -206,6 +218,7 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
             drawer.openDrawer(Gravity.LEFT)
 
         }
+
         populateHeaderOfDrawer()
 
         val from = arrayOf("suggestionList")
@@ -319,33 +332,32 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
         navDrawerView.setNavigationItemSelectedListener(mOnNavDrawerItemSelectedLister)
 
-        //Add Destination Item elected
 
-
-        navControllerDrawer.addOnDestinationChangedListener { _, destination, _ ->
-
-
-            Log.e("I am in where", destination.id.toString())
-            when (destination.id) {
-                R.id.exploreSpacesFragment -> hideBottomNav()
-                else -> showBottomNav()
-            }
-        }
-
+        //Get current fragment
 
         fab = findViewById(R.id.fab_add)
         fab.setBackgroundColor(resources.getColor(R.color.colorAccent))
         fab.setOnClickListener {
-            val i = Intent(this, SelectMemeTemplateActivity::class.java)
-            startActivity(i)
+            val currentOpnedFragment = findFragment()
+            var state = 0
 
+            when (currentOpnedFragment) {
+                "HomeFragment" -> state = 0
+                "ExploreFragment" -> state = 0
+                "MemeWorldFragment" -> state = 0
+                "MyMemesFragment" -> state = 0
+                "ExploreSpacesFragment" -> state = 1
+                "InvitesFragment" -> state = 1
+                "MySpacesFragment" -> state = 1
+            }
+
+            if (state == 0) {
+                val i = Intent(this, SelectMemeTemplateActivity::class.java)
+                startActivity(i)
+            } else {
+                Toast.makeText(this, "uwdhsk", Toast.LENGTH_SHORT).show()
+            }
         }
-
-//        if (!isInDrawerItem) {
-//            showItems()
-//        } else if (isInDrawerItem) {
-//            hideItems()
-//        }
 
         val frag = ExploreFragment()
         supportFragmentManager.beginTransaction().replace(R.id.container, frag).commit()
@@ -353,19 +365,10 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
 
     }
 
-    private fun hideBottomNav() {
-        navView.visibility = View.GONE
-    }
-
-    private fun showBottomNav() {
-        navView.visibility = View.VISIBLE
-    }
-
 
     private fun populateHeaderOfDrawer() {
         if (preferenceUtils.username == "") {
 
-            //Check connection here
             if (ErrorStatesResponse.checkIsNetworkConnected(this)) {
                 callUser()
             }
