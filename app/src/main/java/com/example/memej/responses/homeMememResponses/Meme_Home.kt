@@ -43,6 +43,7 @@ data class Meme_Home(
     @field:Json(name = "__v")
     val __v: Int, // 0
 
+    //Name of the workspace
     @field:Json(name = "workspace")
     val workspace: String // Global
 )

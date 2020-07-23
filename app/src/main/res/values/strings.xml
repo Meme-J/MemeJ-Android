@@ -89,6 +89,10 @@
     <string name="explore_spaces">Explore Spaces</string>
     <string name="invites_and_requests">Invites and Requests</string>
     <string name="my_spaces">My spaces</string>
+    <string name="workspaces">Workspaces</string>
+    <string name="add_workspace">Add workspace</string>
+    <string name="myWspc">My Workspaces</string>
+    <string name="global_space">Global Space</string>
 
     <array name="themeColors">
         <item>@color/green_500</item>
