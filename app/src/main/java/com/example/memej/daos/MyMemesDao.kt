@@ -27,7 +27,7 @@ interface MyMemesDao {
     fun insert(posts: List<Meme_World>)
 
     @Transaction
-    @Query("SELECT * FROM Meme_World")
+    @Query("SELECT * FROM Meme_World ORDER BY lastUpdated DESC")
     fun posts(): DataSource.Factory<Int, Meme_World>
 
 }

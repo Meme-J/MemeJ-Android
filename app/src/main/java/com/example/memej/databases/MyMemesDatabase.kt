@@ -6,6 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.memej.Utils.RoomConvertor
+import com.example.memej.daos.MemeWorldDao
 import com.example.memej.daos.MyMemesDao
 import com.example.memej.responses.memeWorldResponses.Meme_World
 
@@ -15,6 +16,7 @@ import com.example.memej.responses.memeWorldResponses.Meme_World
 abstract class MyMemesDatabase : RoomDatabase() {
 
     abstract fun myMemesDao(): MyMemesDao
+    abstract fun memeWorldDao(): MemeWorldDao
 
     companion object {
         @Volatile
@@ -29,6 +31,7 @@ abstract class MyMemesDatabase : RoomDatabase() {
 
         private fun buildDatabase(appContext: Context) =
             Room.databaseBuilder(appContext, MyMemesDatabase::class.java, "MY_MEMES_DATABASE")
+                .allowMainThreadQueries()
                 .fallbackToDestructiveMigration()
                 .build()
     }
