@@ -105,6 +105,11 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
                     drawer.closeDrawer(Gravity.LEFT)
                     return@OnNavigationItemSelectedListener true
                 }
+                R.id.nav_drawer_logout -> {
+                    drawer.closeDrawer(Gravity.LEFT)
+                    logout()
+                    return@OnNavigationItemSelectedListener true
+                }
 
 
             }
