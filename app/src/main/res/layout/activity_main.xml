@@ -85,8 +85,30 @@
                             android:padding="@dimen/space_half"
                             android:queryHint="Search"
                             app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/workspace_option_card_view"
                             app:layout_constraintStart_toEndOf="@id/nav_menu_icon" />
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/workspace_option_card_view"
+                            android:layout_width="@dimen/space_5x"
+                            android:layout_height="@dimen/space_5x"
+                            android:layout_margin="@dimen/margins"
+                            app:cardCornerRadius="@dimen/space_4x"
+                            app:civ_border_color="@color/colorPrimary"
+                            app:civ_border_width="1.5dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/activityCatalogSearch"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <com.google.android.material.imageview.ShapeableImageView
+                                android:id="@+id/workspace_option_image_view"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:src="@drawable/circle_logo" />
+
+                        </androidx.cardview.widget.CardView>
+
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 

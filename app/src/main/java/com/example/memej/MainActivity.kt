@@ -9,8 +9,6 @@ import android.os.Handler
 import android.provider.BaseColumns
 import android.util.Log
 import android.view.Gravity
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
@@ -48,6 +46,7 @@ import com.example.memej.ui.drawerItems.MySpacesFragmnet
 import com.example.memej.ui.explore.ExploreFragment
 import com.example.memej.ui.home.HomeFragment
 import com.example.memej.ui.home.SearchResultActivity
+import com.example.memej.ui.home.WorkspaceDialogFragment
 import com.example.memej.ui.memeTemplate.SelectMemeTemplateActivity
 import com.example.memej.ui.myMemes.MyMemesFragment
 import com.example.memej.ui.profile.ProfileFragment
@@ -175,6 +174,7 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
     lateinit var drawer: DrawerLayout
     private var isInDrawerItem: Boolean = false
     lateinit var mAppBarConfiguration: AppBarConfiguration
+    lateinit var switchSpace: CardView
 
     //App Update
     private var appUpdateManager: AppUpdateManager? = null
@@ -191,6 +191,13 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
 
         sessionManager = SessionManager(this)
         //Set the Header of the navigation drawer
+
+        //Option for the switch of spaces
+        switchSpace = findViewById(R.id.workspace_option_card_view)
+        switchSpace.setOnClickListener {
+            openFragment(WorkspaceDialogFragment())
+        }
+
 
         //Initialize the navigation Drawer
         drawer = findViewById<DrawerLayout>(R.id.main_drawer__layout)
@@ -506,26 +513,26 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
     }
 
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.top_options_menu, menu)
-
-        return true
-
-    }
-
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
-        when (item.itemId) {
-            R.id.settings_btn ->
-                logout()
-
-
-            else ->
-                return super.onOptionsItemSelected(item)
-        }
-        return true
-    }
+//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+//        menuInflater.inflate(R.menu.top_options_menu, menu)
+//
+//        return true
+//
+//    }
+//
+//
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//
+//        when (item.itemId) {
+//            R.id.settings_btn ->
+//                logout()
+//
+//
+//            else ->
+//                return super.onOptionsItemSelected(item)
+//        }
+//        return true
+//    }
 
     private fun logout() {
         //Ask the user
