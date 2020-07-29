@@ -1,4 +1,4 @@
-package com.example.memej.ui.drawerItems
+package com.example.memej.ui.workspace
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

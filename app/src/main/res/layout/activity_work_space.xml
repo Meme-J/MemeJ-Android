@@ -6,7 +6,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.drawerItems.WorkSpaceActivity">
+        tools:context=".ui.workspace.WorkSpaceActivity">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/abAdd"
@@ -41,7 +41,6 @@
                     android:layout_height="@dimen/image_profile_attr"
                     android:layout_gravity="bottom|center_horizontal"
                     android:layout_margin="@dimen/margins"
-                    android:src="@drawable/male"
                     app:cardCornerRadius="60dp"
                     app:civ_border_color="@color/colorPrimary"
                     app:civ_border_width="1.5dp"
@@ -51,8 +50,9 @@
 
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/siv_image"
-                        android:layout_width="@dimen/margins"
-                        android:layout_height="match_parent" />
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        tools:src="@drawable/male" />
                 </androidx.cardview.widget.CardView>
 
                 <TextView

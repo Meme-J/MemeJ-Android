@@ -21,7 +21,10 @@
         tools:ignore="LockedOrientationActivity"
         tools:replace="android:icon">
         <activity
-            android:name=".ui.drawerItems.WorkSpaceActivity"
+            android:name=".ui.workspace.CreateWorkspaceActivity"
+            android:theme="@style/DarkTheme" />
+        <activity
+            android:name=".ui.workspace.WorkSpaceActivity"
             android:theme="@style/DarkTheme" />
         <activity
             android:name=".ui.auth.IntroActivity"
