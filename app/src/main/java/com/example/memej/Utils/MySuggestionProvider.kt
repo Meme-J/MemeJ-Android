@@ -2,6 +2,10 @@ package com.example.memej.Utils
 
 import android.content.SearchRecentSuggestionsProvider
 
+
+/**
+ * Provider Class
+ */
 class MySuggestionProvider : SearchRecentSuggestionsProvider() {
 
 

@@ -59,7 +59,11 @@ class LikedMemesDataSource(val context: Context) :
                             )
                         }
                     } else {
-                        Toast.makeText(context, response.message().toString(), Toast.LENGTH_SHORT)
+                        Toast.makeText(
+                            context,
+                            "Unable to get liked memes",
+                            Toast.LENGTH_SHORT
+                        )
                             .show()
                     }
                 }

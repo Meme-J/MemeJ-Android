@@ -182,6 +182,7 @@ class HomeFragment : Fragment(), OnItemClickListenerHome {
         startActivity(i)
         //It will again go in the home bundle
     }
+
 }
 
 //With Room

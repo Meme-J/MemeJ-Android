@@ -95,7 +95,7 @@ class HomeMemeDataSource(val context: Context, val searchquery: queryBody, val p
 
                     } else {
                         val message = response.errorBody().toString()
-                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Unable to get memes", Toast.LENGTH_SHORT).show()
                         pb.visibility = View.GONE
 
                     }
@@ -161,7 +161,7 @@ class HomeMemeDataSource(val context: Context, val searchquery: queryBody, val p
 
                     } else {
                         val message = response.errorBody().toString()
-                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Unable to get memes", Toast.LENGTH_SHORT).show()
                         pb.visibility = View.GONE
                     }
 

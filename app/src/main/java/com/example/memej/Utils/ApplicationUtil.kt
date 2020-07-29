@@ -4,7 +4,9 @@ import android.app.Application
 import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
 
-
+/**
+ * Application Class
+ */
 class ApplicationUtil : Application() {
 
     companion object {
@@ -24,9 +26,9 @@ class ApplicationUtil : Application() {
     override fun onCreate() {
         super.onCreate()
 
-
-
         instance = this
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
+
+
     }
 }
