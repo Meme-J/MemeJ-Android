@@ -1,14 +1,13 @@
 package com.example.memej.Utils
 
-import android.app.Application
 import android.preference.PreferenceManager
 import com.example.memej.responses.NumLikes
 import com.example.memej.responses.ProfileResponse
 
-//Get the context
-val ctx = Application().applicationContext
 
-
+/**
+ * Preference Util to save the data locally in shared preference
+ */
 object PreferenceUtil {
 
 

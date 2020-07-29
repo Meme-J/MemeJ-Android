@@ -130,8 +130,9 @@ class ExploreFragment : Fragment(), RandomListener {
             .setNegativeButton(
                 "Cancel"
             ) { dialogInterface, which ->
-                dialogInterface.dismiss()
 
+                dialogInterface.dismiss()
+                dialog.dismiss()
                 pb.visibility = View.GONE
 
             }
@@ -171,7 +172,7 @@ class ExploreFragment : Fragment(), RandomListener {
 
                     } else {
                         val message = response.errorBody().toString()
-                        Toast.makeText(context, "Unable to create meme", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Unable to get memes", Toast.LENGTH_SHORT).show()
                     }
                 }
             })

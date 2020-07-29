@@ -5,6 +5,9 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.example.memej.Utils.ApplicationUtil
 
+/**
+ * Shared Pref for key and value
+ */
 class PreferenceManager {
 
     companion object {

@@ -4,7 +4,9 @@ import android.content.Context
 import android.util.AttributeSet
 import com.google.android.material.appbar.AppBarLayout
 
-
+/**
+ * Animated behaviour for the scroll of Profile
+ */
 class FlingBehavior : AppBarLayout.Behavior {
     private var isPositive = false
 

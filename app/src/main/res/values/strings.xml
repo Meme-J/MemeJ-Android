@@ -93,6 +93,16 @@
     <string name="add_workspace">Add workspace</string>
     <string name="myWspc">My Workspaces</string>
     <string name="global_space">Global Space</string>
+    <string name="iit_patna">IIT Patna</string>
+    <string name="view_1">View 1</string>
+    <string name="view_2">View 2</string>
+    <string name="view_3">View 3</string>
+    <string name="people">People</string>
+    <string name="memes">Memes</string>
+    <string name="likes">Likes</string>
+    <string name="join">JOIN</string>
+    <string name="invite">Invite</string>
+    <string name="exit">EXIT</string>
 
     <array name="themeColors">
         <item>@color/green_500</item>

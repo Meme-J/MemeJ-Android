@@ -16,6 +16,11 @@ import java.io.FileOutputStream
 
 
 // Extension function to share save bitmap in cache directory and share
+/**
+ *  Converion into bitma and sharing of image.
+ *
+ */
+
 fun Activity.shareCacheDirBitmap(uri: Uri?, name: String, bitmap: Bitmap) {
 
 

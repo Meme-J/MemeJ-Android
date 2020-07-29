@@ -30,6 +30,7 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tilName"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margins"
@@ -49,11 +50,8 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tilUsername"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/tilName"
-                    android:layout_margin="@dimen/margins"
-                    android:padding="@dimen/margins">
+                    style="@style/OutlinedTextBox"
+                    android:layout_below="@id/tilName">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etUsername"
@@ -67,10 +65,10 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tilEmail"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tilUsername"
-
                     android:layout_margin="@dimen/margins"
                     android:padding="@dimen/margins">
 
@@ -92,11 +90,8 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tilPassword"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    style="@style/OutlinedTextBox"
                     android:layout_below="@id/tilEmail"
-                    android:layout_margin="@dimen/margins"
-                    android:padding="@dimen/margins"
                     app:passwordToggleEnabled="true">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -110,11 +105,8 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tilConfPassword"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    style="@style/OutlinedTextBox"
                     android:layout_below="@id/tilPassword"
-                    android:layout_margin="@dimen/margins"
-                    android:padding="@dimen/margins"
                     app:passwordToggleEnabled="true">
 
                     <com.google.android.material.textfield.TextInputEditText

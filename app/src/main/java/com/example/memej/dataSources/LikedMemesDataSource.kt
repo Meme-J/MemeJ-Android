@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.annotation.Keep
 import androidx.paging.PageKeyedDataSource
 import com.example.memej.Utils.ApplicationUtil
+import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.memeWorldResponses.Meme_World
@@ -36,7 +37,8 @@ class LikedMemesDataSource(val context: Context) :
 
             .enqueue(object : Callback<memeApiResponses> {
                 override fun onFailure(call: Call<memeApiResponses>, t: Throwable) {
-                    Toast.makeText(context, t.message.toString(), Toast.LENGTH_SHORT).show()
+                    val message = ErrorStatesResponse.returnStateMessageForThrowable(t)
+                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 
                 }
 
@@ -59,7 +61,11 @@ class LikedMemesDataSource(val context: Context) :
                             )
                         }
                     } else {
-                        Toast.makeText(context, response.message().toString(), Toast.LENGTH_SHORT)
+                        Toast.makeText(
+                            context,
+                            "Unable to get liked memes",
+                            Toast.LENGTH_SHORT
+                        )
                             .show()
                     }
                 }

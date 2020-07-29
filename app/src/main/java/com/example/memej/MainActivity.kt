@@ -19,7 +19,9 @@ import androidx.cardview.widget.CardView
 import androidx.core.os.bundleOf
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
 import androidx.navigation.Navigation
 import androidx.navigation.ui.AppBarConfiguration
@@ -657,9 +659,24 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
         val drawer = findViewById<DrawerLayout>(R.id.main_drawer__layout)
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START)
+        } else if (!hasOpenedDialog(this)) {
+            super.onBackPressed()
+
         } else {
             super.onBackPressed()
         }
+    }
+
+    private fun hasOpenedDialog(activity: FragmentActivity): Boolean {
+        val fragments =
+            activity.supportFragmentManager.fragments
+        for (fragment in fragments) {
+            if (fragment is DialogFragment) {
+                return true
+            }
+        }
+
+        return false
     }
 
     override fun onStop() {

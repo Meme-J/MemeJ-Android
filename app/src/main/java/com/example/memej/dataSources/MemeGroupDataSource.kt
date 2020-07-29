@@ -65,7 +65,8 @@ class MemeGroupDataSource(val context: Context, val pb: ProgressBar) :
                         pb.visibility = View.GONE
                     } else {
                         val message = response.errorBody().toString()
-                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Unable to get memes templates", Toast.LENGTH_SHORT)
+                            .show()
                         pb.visibility = View.GONE
                     }
 
@@ -112,7 +113,8 @@ class MemeGroupDataSource(val context: Context, val pb: ProgressBar) :
                         pb.visibility = View.GONE
                     } else {
                         val message = response.errorBody().toString()
-                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Unable to get memes templates", Toast.LENGTH_SHORT)
+                            .show()
                         pb.visibility = View.GONE
                     }
                 }

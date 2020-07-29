@@ -18,12 +18,9 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilUsername"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            style="@style/OutlinedTextBox"
             android:layout_above="@id/tilPassword"
-            android:layout_centerInParent="true"
-            android:layout_margin="@dimen/margins"
-            android:padding="@dimen/margins">
+            android:layout_centerInParent="true">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etUsername"
@@ -35,11 +32,8 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilPassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            style="@style/OutlinedTextBox"
             android:layout_centerInParent="true"
-            android:layout_margin="@dimen/margins"
-            android:padding="@dimen/margins"
             app:passwordToggleEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
