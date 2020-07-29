@@ -1,13 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.drawerItems.MySpacesFragmnet">
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TextView
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Hello" />
+        tools:context=".ui.drawerItems.MySpacesFragmnet">
 
-</FrameLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar_drawer_element"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/colorPrimary"
+                app:layout_constraintTop_toTopOf="parent"
+                app:navigationIcon="@drawable/ic_arrow"
+                app:titleTextColor="@color/white" />
+
+            <View
+                android:id="@+id/botView"
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:background="@color/garbinaoGrey"
+                app:layout_constraintTop_toBottomOf="@id/toolbar_drawer_element" />
+
+
+            <!--        FAB to create a wokrspace-->
+            <!--        OnClick the Items in the this workspace to go to that activity-->
+
+
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/swl_my_spaces"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/botView">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_my_spaces"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margins"
+                    android:layout_marginEnd="@dimen/margins"
+                    android:scrollbars="vertical"
+                    app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager" />
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </FrameLayout>
+</layout>

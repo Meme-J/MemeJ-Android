@@ -52,6 +52,7 @@ import com.example.memej.ui.home.WorkspaceDialogFragment
 import com.example.memej.ui.memeTemplate.SelectMemeTemplateActivity
 import com.example.memej.ui.myMemes.MyMemesFragment
 import com.example.memej.ui.profile.ProfileFragment
+import com.example.memej.ui.workspace.CreateWorkspaceActivity
 import com.example.memej.viewModels.MainActivityViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -364,7 +365,11 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
                 val i = Intent(this, SelectMemeTemplateActivity::class.java)
                 startActivity(i)
             } else {
-                Toast.makeText(this, "uwdhsk", Toast.LENGTH_SHORT).show()
+
+                //Go to create workspace activity
+                val i = Intent(this, CreateWorkspaceActivity::class.java)
+                startActivity(i)
+
             }
         }
 

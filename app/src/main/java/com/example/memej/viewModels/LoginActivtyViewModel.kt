@@ -80,6 +80,8 @@ class LoginActivtyViewModel : ViewModel() {
                     }
                 } else {
                     successful.value = false
+                    message = response.body()!!.msg
+
                 }
 
             }

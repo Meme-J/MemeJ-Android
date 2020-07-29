@@ -5,6 +5,7 @@ import androidx.annotation.Keep
 import com.squareup.moshi.Json
 
 @Keep
+//Class to show the workspaces a user is part of
 data class UserWorkspaces(
 
     @field:Json(name = "workspaces")

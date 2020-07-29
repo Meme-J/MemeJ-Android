@@ -127,5 +127,17 @@ object RetrofitClient {
             .build().create(profile::class.java)
     }
 
+    fun callWorkspaces(context: Context): workspaces {
+
+        return Retrofit.Builder()
+            .baseUrl(url)
+            .addConverterFactory(MoshiConverterFactory.create())
+            .addCallAdapterFactory(CoroutineCallAdapterFactory())
+            .client(okhttpClient(context))
+            .build().create(workspaces::class.java)
+
+
+    }
+
 
 }
