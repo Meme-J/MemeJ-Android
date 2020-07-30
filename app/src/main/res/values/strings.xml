@@ -106,6 +106,7 @@
     <string name="name_of_the_workspace">Name of the workspace</string>
     <string name="create_space">Create Space</string>
     <string name="workspace_already_exits">Workspace already exists</string>
+    <string name="workspace_empty">Name of the workspace can not be empty</string>
 
     <array name="themeColors">
         <item>@color/green_500</item>

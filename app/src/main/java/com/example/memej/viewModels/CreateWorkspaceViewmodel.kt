@@ -85,9 +85,13 @@ class CreateWorkspaceViewmodel : ViewModel() {
                         messageCreate = "Workspace created successfully."
                     } else {
                         successfulCreate.value = false
-                        messageCreate = response.errorBody().toString()
+                        messageCreate = response.body()!!.msg.toString()
 
                     }
+                } else {
+                    successfulCreate.value = false
+                    messageCreate = response.errorBody()!!.toString()
+
                 }
             }
         })

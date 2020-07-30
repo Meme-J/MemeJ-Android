@@ -28,7 +28,7 @@ class LoginActivtyViewModel : ViewModel() {
     private val preferenceUtils: PreferenceUtil = PreferenceUtil
 
     val successful: MutableLiveData<Boolean> = MutableLiveData()
-    var message: String = ""
+    var message: String? = null
 
     val successProfile: MutableLiveData<Boolean> = MutableLiveData()
     lateinit var messageProfile: String
@@ -76,11 +76,11 @@ class LoginActivtyViewModel : ViewModel() {
 
                     } else {
                         successful.value = false
-                        message = response.body()!!.msg
+                        message = response.body()?.msg
                     }
                 } else {
                     successful.value = false
-                    message = response.body()!!.msg
+                    message = response.body()?.msg
 
                 }
 

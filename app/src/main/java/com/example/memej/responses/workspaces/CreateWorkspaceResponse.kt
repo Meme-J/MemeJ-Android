@@ -8,4 +8,5 @@ import com.squareup.moshi.Json
 data class CreateWorkspaceResponse(
     @field:Json(name = "msg")
     val msg: String // Workspace created successfully.
+    //Or else an error
 )

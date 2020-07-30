@@ -1,29 +1,42 @@
 package com.example.memej.ui.workspace
 
+import android.app.Activity
 import android.app.ProgressDialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.example.memej.R
 import com.example.memej.databinding.ActivityCreateWorkspaceBinding
 import com.example.memej.viewModels.CreateWorkspaceViewmodel
 import com.google.android.material.snackbar.Snackbar
 import com.shreyaspatil.MaterialDialog.MaterialDialog
+import kotlinx.android.synthetic.main.activity_blank_workspace.*
 import kotlinx.android.synthetic.main.activity_create_workspace.*
 
-class CreateWorkspaceActivity : AppCompatActivity() {
+class CreateWorkspaceActivity : Fragment() {
 
     lateinit var b: ActivityCreateWorkspaceBinding
     lateinit var mutableList: MutableList<String>
     private val viewModel: CreateWorkspaceViewmodel by viewModels()
     private var nameExists: Boolean = false
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        b = DataBindingUtil.setContentView(this, R.layout.activity_create_workspace)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        b = DataBindingUtil.inflate(
+            inflater,
+            R.layout.activity_create_workspace,
+            container_blank_space,
+            true
+        )
 
         mutableList = mutableListOf()
         val til = b.tilSpaceName
@@ -31,9 +44,9 @@ class CreateWorkspaceActivity : AppCompatActivity() {
 
         b.etSpaceName.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                if (s!!.length > 1) {
-                    checkExistenceOfWorkSpace(s)
-                }
+//                if (s!!.length > 1) {
+//                    checkExistenceOfWorkSpace(s)
+//                }
 
             }
 
@@ -83,6 +96,7 @@ class CreateWorkspaceActivity : AppCompatActivity() {
         }
 
 
+        return b.root
     }
 
     private fun createSpace() {
@@ -95,7 +109,7 @@ class CreateWorkspaceActivity : AppCompatActivity() {
     private fun createConfirmDialog() {
 
         val name = b.etSpaceName.text.toString()
-        val mDialog = MaterialDialog.Builder(this)
+        val mDialog = MaterialDialog.Builder(context as Activity)
             .setTitle("Create workspace")
             .setMessage("Create a workspace named $name?")
             .setCancelable(true)
@@ -121,7 +135,7 @@ class CreateWorkspaceActivity : AppCompatActivity() {
     private fun postSpace() {
 
         //Create a profress dialog
-        val dialog = ProgressDialog(this)
+        val dialog = ProgressDialog(context as Activity)
         dialog.setMessage("Creating workspace")
         dialog.show()
 
@@ -137,6 +151,7 @@ class CreateWorkspaceActivity : AppCompatActivity() {
             dialog.dismiss()
             //Go to my spaces activty
 
+
         } else {
             dialog.dismiss()
             val snack =
@@ -149,35 +164,33 @@ class CreateWorkspaceActivity : AppCompatActivity() {
     private fun validateName(): Boolean {
         var isValid = false
 
-        isValid = b.etSpaceName.text!!.isNotEmpty()
-        checkExistenceOfWorkSpace(b.etSpaceName as Editable)
-        if (nameExists) {
+        if (b.etSpaceName.text!!.isEmpty()) {
             isValid = false
-            b.tilSpaceName.error = getString(R.string.workspace_already_exits)
-        }
+            b.tilSpaceName.error = getString(R.string.workspace_empty)
 
+        }
         return isValid
 
     }
 
-    private fun checkExistenceOfWorkSpace(s: Editable?) {
+//    private fun checkExistenceOfWorkSpace(s: Editable?) {
+//
+//        nameExists = viewModel.checkSpace(s!!)
+//
+//        updateEndIcon()
+//
+//
+//    }
 
-        nameExists = viewModel.checkSpace(s!!)
-
-        updateEndIcon()
-
-
-    }
-
-    private fun updateEndIcon() {
-        if (nameExists) {
-            b.tilSpaceName.endIconDrawable!!.setTint(resources.getColor(R.color.red_heart))
-            b.tilSpaceName.error = getString(R.string.workspace_already_exits)
-        } else {
-            b.tilSpaceName.endIconDrawable!!.setTint(resources.getColor(R.color.green_700))
-            b.tilSpaceName.error = null
-        }
-    }
+//    private fun updateEndIcon() {
+//        if (nameExists) {
+//            b.tilSpaceName.endIconDrawable!!.setTint(resources.getColor(R.color.red_heart))
+//            b.tilSpaceName.error = getString(R.string.workspace_already_exits)
+//        } else {
+//            b.tilSpaceName.endIconDrawable!!.setTint(resources.getColor(R.color.green_700))
+//            b.tilSpaceName.error = null
+//        }
+//    }
 
 //    private fun addTagToRv() {
 //        val rvTagEdits = b.rvInsertedTagsSpaceCreate
@@ -191,4 +204,6 @@ class CreateWorkspaceActivity : AppCompatActivity() {
 //        rvTagEdits.layoutManager = HorizontalLayoutInsertedTags
 //        rvTagEdits.adapter = adapterTagAdded
 //    }
+
+
 }

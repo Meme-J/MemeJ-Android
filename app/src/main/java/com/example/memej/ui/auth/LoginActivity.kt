@@ -104,8 +104,10 @@ class LoginActivity : AppCompatActivity() {
                     startActivity(intent)
                     finish()
                 } else {
-                    Snackbar.make(signinView, viewModel.message, Snackbar.LENGTH_LONG)
-                        .show()
+                    viewModel.message?.let {
+                        Snackbar.make(signinView, it, Snackbar.LENGTH_LONG)
+                            .show()
+                    }
                 }
             }
         })

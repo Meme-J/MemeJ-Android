@@ -40,6 +40,7 @@ import com.example.memej.entities.searchBody
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.ProfileResponse
 import com.example.memej.responses.SearchResponse
+import com.example.memej.ui.BlankWorkspaceActivity
 import com.example.memej.ui.MemeWorld.MemeWorldFragment
 import com.example.memej.ui.auth.LoginActivity
 import com.example.memej.ui.drawerItems.ExploreSpacesFragment
@@ -52,7 +53,6 @@ import com.example.memej.ui.home.WorkspaceDialogFragment
 import com.example.memej.ui.memeTemplate.SelectMemeTemplateActivity
 import com.example.memej.ui.myMemes.MyMemesFragment
 import com.example.memej.ui.profile.ProfileFragment
-import com.example.memej.ui.workspace.CreateWorkspaceActivity
 import com.example.memej.viewModels.MainActivityViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -367,7 +367,7 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
             } else {
 
                 //Go to create workspace activity
-                val i = Intent(this, CreateWorkspaceActivity::class.java)
+                val i = Intent(this, BlankWorkspaceActivity::class.java)
                 startActivity(i)
 
             }

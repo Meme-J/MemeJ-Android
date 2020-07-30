@@ -20,6 +20,7 @@
         android:usesCleartextTraffic="true"
         tools:ignore="LockedOrientationActivity"
         tools:replace="android:icon">
+        <activity android:name=".ui.BlankWorkspaceActivity"></activity>
         <activity
             android:name=".ui.workspace.CreateWorkspaceActivity"
             android:theme="@style/DarkTheme" />
