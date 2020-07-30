@@ -3,10 +3,14 @@ package com.example.memej.textProperties.lib
 import android.graphics.PointF
 
 
+/**
+ * Holds two float coordinates
+ */
 internal class Vector2D : PointF {
     constructor() : super()
     constructor(x: Float, y: Float) : super(x, y)
 
+    //Distance vectors
     fun normalize() {
         val length = Math.sqrt(x * x + y * y.toDouble()).toFloat()
         x /= length
@@ -14,6 +18,8 @@ internal class Vector2D : PointF {
     }
 
     companion object {
+
+        //Get Angle between two vectors
         fun getAngle(vector1: Vector2D, vector2: Vector2D): Float {
             vector1.normalize()
             vector2.normalize()

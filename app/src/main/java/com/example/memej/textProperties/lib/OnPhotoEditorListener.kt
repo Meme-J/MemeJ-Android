@@ -5,6 +5,7 @@ import android.view.View
 
 //Kotlin
 interface OnPhotoEditorListener {
+
     fun onEditTextChangeListener(
         rootView: View?,
         text: String?,
@@ -17,6 +18,10 @@ interface OnPhotoEditorListener {
     )
 
     fun onRemoveViewListener(numberOfAddedViews: Int)
+
     fun onStartViewChangeListener(viewType: ViewType?)
+
     fun onStopViewChangeListener(viewType: ViewType?)
+
+
 }

@@ -52,6 +52,7 @@ class Photo private constructor(builder: Builder) :
 
 
     fun addImage(desiredImage: Bitmap?) {
+
         val imageRootView =
             getLayout(ViewType.IMAGE)
         val imageView =
@@ -74,6 +75,7 @@ class Photo private constructor(builder: Builder) :
 
             override fun onLongClick() {}
         })
+        //Movable View
         imageRootView.setOnTouchListener(multiTouchListener)
         addViewToParent(imageRootView, ViewType.IMAGE, 0, 0, 0, 0, 0, 0)
     }
@@ -495,7 +497,6 @@ class Photo private constructor(builder: Builder) :
         p.topMargin = marY.toInt()
 
 
-
 //        p.setMargins(startX, startY, endX, endY)
 
         //params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE)
@@ -632,6 +633,8 @@ class Photo private constructor(builder: Builder) :
                     txtTextEmoji.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
                 }
             }
+
+
         }
         if (rootView != null) {
             val imgClose =

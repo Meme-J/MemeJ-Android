@@ -1,6 +1,7 @@
 package com.example.memej.textProperties.lib
 
 interface BrushInterface {
+
     fun onViewAdd(brushDrawingView: BrushView?)
 
     fun onViewRemoved(brushDrawingView: BrushView?)
@@ -8,5 +9,6 @@ interface BrushInterface {
     fun onStartDrawing()
 
     fun onStopDrawing()
+
 
 }

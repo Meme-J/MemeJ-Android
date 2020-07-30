@@ -5,6 +5,7 @@ import android.view.MotionEvent
 import android.view.View
 
 internal class ScaleGestureDetectorKotlin(private val mListener: OnScaleGestureListener) {
+
     /**
      * The listener for receiving notifications when gestures occur.
      * If you want to listen for all the different gestures then implement
@@ -13,6 +14,7 @@ internal class ScaleGestureDetectorKotlin(private val mListener: OnScaleGestureL
      *
      * An application will receive events in the following order:
      */
+
     internal interface OnScaleGestureListener {
         /**
          * Responds to scaling events for a gesture in progress.
@@ -97,7 +99,7 @@ internal class ScaleGestureDetectorKotlin(private val mListener: OnScaleGestureL
     //   private set
     private var mPrevEvent: MotionEvent? = null
     private var mCurrEvent: MotionEvent? = null
-    private val mCurrSpanVector: Vector2D
+    private val mCurrSpanVector: Vector2D = Vector2D()
     private var mFocusX = 0f
     private var mFocusY = 0f
     private var mPrevFingerDiffX = 0f
@@ -485,7 +487,4 @@ internal class ScaleGestureDetectorKotlin(private val mListener: OnScaleGestureL
         private const val PRESSURE_THRESHOLD = 0.67f
     }
 
-    init {
-        mCurrSpanVector = Vector2D()
-    }
 }
