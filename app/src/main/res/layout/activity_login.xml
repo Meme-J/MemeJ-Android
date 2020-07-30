@@ -20,7 +20,8 @@
             android:id="@+id/tilUsername"
             style="@style/OutlinedTextBox"
             android:layout_above="@id/tilPassword"
-            android:layout_centerInParent="true">
+            android:layout_centerInParent="true"
+            app:endIconMode="none">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etUsername"
@@ -34,6 +35,7 @@
             android:id="@+id/tilPassword"
             style="@style/OutlinedTextBox"
             android:layout_centerInParent="true"
+            app:endIconMode="password_toggle"
             app:passwordToggleEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText

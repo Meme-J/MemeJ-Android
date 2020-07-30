@@ -37,7 +37,8 @@
                     android:layout_marginTop="@dimen/space_3x"
                     android:layout_marginEnd="@dimen/margins"
                     android:layout_marginBottom="@dimen/margins"
-                    android:padding="@dimen/margins">
+                    android:padding="@dimen/margins"
+                    app:endIconMode="none">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etName"
@@ -51,7 +52,8 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tilUsername"
                     style="@style/OutlinedTextBox"
-                    android:layout_below="@id/tilName">
+                    android:layout_below="@id/tilName"
+                    app:endIconMode="none">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etUsername"
@@ -70,7 +72,8 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tilUsername"
                     android:layout_margin="@dimen/margins"
-                    android:padding="@dimen/margins">
+                    android:padding="@dimen/margins"
+                    app:endIconMode="none">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etEmail"
@@ -92,6 +95,7 @@
                     android:id="@+id/tilPassword"
                     style="@style/OutlinedTextBox"
                     android:layout_below="@id/tilEmail"
+                    app:endIconMode="password_toggle"
                     app:passwordToggleEnabled="true">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -107,6 +111,7 @@
                     android:id="@+id/tilConfPassword"
                     style="@style/OutlinedTextBox"
                     android:layout_below="@id/tilPassword"
+                    app:endIconMode="password_toggle"
                     app:passwordToggleEnabled="true">
 
                     <com.google.android.material.textfield.TextInputEditText

@@ -84,17 +84,12 @@ class LoginActivity : AppCompatActivity() {
             false
         }
 
+
+
         viewModel.successful.observe(this, Observer { successful ->
             hideProgressBar()
             if (successful != null) {
                 if (successful) {
-
-                    //Create a credentials object
-//                    val credential: Credential = Credential.Builder(etUsername.text.toString())
-//                        .setPassword(etPassword.text.toString())
-//                        .build()
-                    //Done in a slightly different way when using GSI
-
 
                     Toast.makeText(this, R.string.successLogin, Toast.LENGTH_LONG)
                         .show()
