@@ -30,17 +30,17 @@ import retrofit2.Response
 
 class SignUpActivity : AppCompatActivity() {
 
-    lateinit var etName: TextInputEditText
-    lateinit var etUserame: TextInputEditText
-    lateinit var etPassword: TextInputEditText
-    lateinit var etEmail: TextInputEditText
-    lateinit var etCnfPwd: TextInputEditText
+    private lateinit var etName: TextInputEditText
+    private lateinit var etUserame: TextInputEditText
+    private lateinit var etPassword: TextInputEditText
+    private lateinit var etEmail: TextInputEditText
+    private lateinit var etCnfPwd: TextInputEditText
 
-    lateinit var tName: TextInputLayout
-    lateinit var tUname: TextInputLayout
-    lateinit var temail: TextInputLayout
-    lateinit var tpassword: TextInputLayout
-    lateinit var tConf: TextInputLayout
+    private lateinit var tName: TextInputLayout
+    private lateinit var tUname: TextInputLayout
+    private lateinit var temail: TextInputLayout
+    private lateinit var tpassword: TextInputLayout
+    private lateinit var tConf: TextInputLayout
 
     lateinit var pb: ProgressBar
     lateinit var sessionManager: SessionManager
@@ -89,6 +89,7 @@ class SignUpActivity : AppCompatActivity() {
         tl.setOnClickListener {
             val i = Intent(this, LoginActivity::class.java)
             startActivity(i)
+            finish()
         }
 
 
@@ -125,11 +126,9 @@ class SignUpActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
 
                     if (response.body()?.msg == "Registeration successful") {
-                        Toast.makeText(
-                            this@SignUpActivity,
-                            "Registration Successful",
-                            Toast.LENGTH_SHORT
-                        ).show()
+
+                        Toast.makeText(this@SignUpActivity, R.string.successReg, Toast.LENGTH_LONG)
+                            .show()
 
                         goToLoginActivity()
                         finish()
@@ -237,7 +236,10 @@ class SignUpActivity : AppCompatActivity() {
         }
 
 
-        if (etPassword.text.toString() != etCnfPwd.text.toString()) {
+        if (etCnfPwd.length() == 0) {
+            isValid = false
+            tConf.error = getString(R.string.confirm_password_not_empty)
+        } else if (etPassword.text.toString() != etCnfPwd.text.toString()) {
             isValid = false
             tConf.error = getString(R.string.mismatch)
         } else {

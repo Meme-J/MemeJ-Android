@@ -95,7 +95,6 @@
                     android:id="@+id/tilPassword"
                     style="@style/OutlinedTextBox"
                     android:layout_below="@id/tilEmail"
-                    app:endIconMode="password_toggle"
                     app:passwordToggleEnabled="true">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -111,7 +110,6 @@
                     android:id="@+id/tilConfPassword"
                     style="@style/OutlinedTextBox"
                     android:layout_below="@id/tilPassword"
-                    app:endIconMode="password_toggle"
                     app:passwordToggleEnabled="true">
 
                     <com.google.android.material.textfield.TextInputEditText

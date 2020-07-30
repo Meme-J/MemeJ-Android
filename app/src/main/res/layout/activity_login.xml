@@ -35,7 +35,6 @@
             android:id="@+id/tilPassword"
             style="@style/OutlinedTextBox"
             android:layout_centerInParent="true"
-            app:endIconMode="password_toggle"
             app:passwordToggleEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText

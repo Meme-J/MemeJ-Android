@@ -174,11 +174,19 @@ class LoginActivity : AppCompatActivity() {
         if (etUsername.length() == 0) {
             t1.error = getString(R.string.username_empty)
             isValid = false
+            etUsername.error = null
+        } else {
+            t1.error = null
         }
+
         if (etPassword.length() == 0) {
             t2.error = getString(R.string.pwd_empty)
             isValid = false
+            etUsername.error = null
+        } else {
+            t2.error = null
         }
+
 
         return isValid
     }
