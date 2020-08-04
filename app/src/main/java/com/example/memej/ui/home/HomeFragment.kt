@@ -47,6 +47,13 @@ class HomeFragment : Fragment(), OnItemClickListenerHome {
     ): View? {
 
         root = inflater.inflate(R.layout.fragment_home, container, false)
+
+        return root
+    }
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         pb = root.findViewById(R.id.pb_home)
         rv = root.findViewById(R.id.rv_home)
         itemAnimator = DefaultItemAnimator()
@@ -72,9 +79,7 @@ class HomeFragment : Fragment(), OnItemClickListenerHome {
 
         dialog.dismiss()
 
-        return root
     }
-
 
     private fun checkConnection() {
 
@@ -185,7 +190,9 @@ class HomeFragment : Fragment(), OnItemClickListenerHome {
         //It will again go in the home bundle
     }
 
+
 }
+
 
 
 
