@@ -39,6 +39,7 @@ class HomeFragment : Fragment(), OnItemClickListenerHome {
     lateinit var dialog: ProgressDialog
     lateinit var swl: SwipeRefreshLayout
 
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -73,6 +74,7 @@ class HomeFragment : Fragment(), OnItemClickListenerHome {
 
         return root
     }
+
 
     private fun checkConnection() {
 
@@ -184,20 +186,6 @@ class HomeFragment : Fragment(), OnItemClickListenerHome {
     }
 
 }
-
-//With Room
-//    private fun initializedPagedListBuilder(config: PagedList.Config):
-//            LivePagedListBuilder<Int, Meme_Home> {
-//
-//        val database = HomeMemeDataBase.create(requireContext())
-//        val livePageListBuilder = LivePagedListBuilder<Int, Meme_Home>(
-//            database.postDao().posts(),
-//            config)
-//        //Attach a boundary callnack
-//       // livePageListBuilder.setBoundaryCallback(HomeMemeBoundaryCallback(database))
-//        return livePageListBuilder
-//    }
-
 
 
 
