@@ -20,7 +20,8 @@
             android:id="@+id/tilUsername"
             style="@style/OutlinedTextBox"
             android:layout_above="@id/tilPassword"
-            android:layout_centerInParent="true">
+            android:layout_centerInParent="true"
+            app:endIconMode="none">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etUsername"

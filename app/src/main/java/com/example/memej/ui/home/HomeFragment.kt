@@ -39,6 +39,7 @@ class HomeFragment : Fragment(), OnItemClickListenerHome {
     lateinit var dialog: ProgressDialog
     lateinit var swl: SwipeRefreshLayout
 
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -46,6 +47,13 @@ class HomeFragment : Fragment(), OnItemClickListenerHome {
     ): View? {
 
         root = inflater.inflate(R.layout.fragment_home, container, false)
+
+        return root
+    }
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         pb = root.findViewById(R.id.pb_home)
         rv = root.findViewById(R.id.rv_home)
         itemAnimator = DefaultItemAnimator()
@@ -71,7 +79,6 @@ class HomeFragment : Fragment(), OnItemClickListenerHome {
 
         dialog.dismiss()
 
-        return root
     }
 
     private fun checkConnection() {
@@ -183,20 +190,8 @@ class HomeFragment : Fragment(), OnItemClickListenerHome {
         //It will again go in the home bundle
     }
 
-}
 
-//With Room
-//    private fun initializedPagedListBuilder(config: PagedList.Config):
-//            LivePagedListBuilder<Int, Meme_Home> {
-//
-//        val database = HomeMemeDataBase.create(requireContext())
-//        val livePageListBuilder = LivePagedListBuilder<Int, Meme_Home>(
-//            database.postDao().posts(),
-//            config)
-//        //Attach a boundary callnack
-//       // livePageListBuilder.setBoundaryCallback(HomeMemeBoundaryCallback(database))
-//        return livePageListBuilder
-//    }
+}
 
 
 

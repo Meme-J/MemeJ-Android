@@ -20,6 +20,7 @@
         android:usesCleartextTraffic="true"
         tools:ignore="LockedOrientationActivity"
         tools:replace="android:icon">
+        <activity android:name=".ui.BlankWorkspaceActivity"></activity>
         <activity
             android:name=".ui.workspace.CreateWorkspaceActivity"
             android:theme="@style/DarkTheme" />
@@ -133,6 +134,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider> <!-- Content Provider for Recent Queries -->
+
         <provider
             android:name=".Utils.MySuggestionProvider"
             android:authorities="com.example.memej.Utils.MySuggestionProvider" />

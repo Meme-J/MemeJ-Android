@@ -103,6 +103,12 @@
     <string name="join">JOIN</string>
     <string name="invite">Invite</string>
     <string name="exit">EXIT</string>
+    <string name="name_of_the_workspace">Name of the workspace</string>
+    <string name="create_space">Create Space</string>
+    <string name="workspace_already_exits">Workspace already exists</string>
+    <string name="workspace_empty">Name of the workspace can not be empty</string>
+    <string name="confirm_password_not_empty">Confirm password can not be empty</string>
+    <string name="successReg">Registration successful</string>
 
     <array name="themeColors">
         <item>@color/green_500</item>

@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/conatiner_create_workspace"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".ui.workspace.CreateWorkspaceActivity">
+        android:layout_height="match_parent">
 
 
         <androidx.cardview.widget.CardView
@@ -21,6 +20,73 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilSpaceName"
+                        style="@style/OutlinedTextBox"
+                        android:layout_centerInParent="true"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <!--                        app:endIconDrawable="@drawable/ic_brightness_1_black_24dp"-->
+                        <!--                        app:endIconMode="custom"-->
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etSpaceName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/name_of_the_workspace" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+
+                    <!--                        Add tags-->
+                    <!--                    <androidx.recyclerview.widget.RecyclerView-->
+                    <!--                        android:id="@+id/rv_insertedTagsSpaceCreate"-->
+                    <!--                        style="@style/recylclerViewAttr"-->
+                    <!--                        app:layout_constraintStart_toStartOf="parent"-->
+                    <!--                        app:layout_constraintTop_toBottomOf="@id/tilSpaceName"-->
+                    <!--                        tools:listitem="@layout/layout_tag" />-->
+
+                    <!--                    <LinearLayout-->
+                    <!--                        android:id="@+id/ll"-->
+                    <!--                        android:layout_width="match_parent"-->
+                    <!--                        android:layout_height="wrap_content"-->
+                    <!--                        android:layout_marginTop="@dimen/space_2x"-->
+                    <!--                        android:layout_marginBottom="@dimen/space_2x"-->
+                    <!--                        android:orientation="horizontal"-->
+                    <!--                        app:layout_constraintTop_toBottomOf="@id/rv_insertedTagsSpaceCreate">-->
+
+                    <!--                        <AutoCompleteTextView-->
+                    <!--                            android:id="@+id/auto_completeTag_workspace"-->
+                    <!--                            android:layout_width="@dimen/add_line"-->
+                    <!--                            android:layout_height="@dimen/space_5x"-->
+                    <!--                            android:layout_margin="@dimen/space"-->
+                    <!--                            android:gravity="bottom"-->
+                    <!--                            android:hint="@string/add_a_tag"-->
+                    <!--                            android:padding="@dimen/space" />-->
+
+
+                    <!--                        <com.google.android.material.button.MaterialButton-->
+                    <!--                            android:id="@+id/tag_edit_workspace_create"-->
+                    <!--                            android:layout_width="@dimen/space_5x"-->
+                    <!--                            android:layout_height="@dimen/space_5x"-->
+                    <!--                            android:layout_gravity="center"-->
+                    <!--                            android:background="@drawable/ic_check_black_24dp"-->
+                    <!--                            android:enabled="false"-->
+                    <!--                            android:gravity="bottom"-->
+                    <!--                            app:layout_constraintEnd_toEndOf="parent" />-->
+
+                    <!--                    </LinearLayout>-->
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_createSpace"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/space"
+                        android:text="@string/create_space"
+                        app:icon="@drawable/ic_add"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tilSpaceName" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </ScrollView>

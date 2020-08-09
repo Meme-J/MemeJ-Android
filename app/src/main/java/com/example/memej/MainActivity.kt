@@ -30,6 +30,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.memej.Utils.Communicator
 import com.example.memej.Utils.ErrorStatesResponse
+import com.example.memej.Utils.FragmentStateHelper
 import com.example.memej.Utils.PreferenceUtil
 import com.example.memej.Utils.sessionManagers.PreferenceManager
 import com.example.memej.Utils.sessionManagers.SaveSharedPreference
@@ -52,6 +53,7 @@ import com.example.memej.ui.home.WorkspaceDialogFragment
 import com.example.memej.ui.memeTemplate.SelectMemeTemplateActivity
 import com.example.memej.ui.myMemes.MyMemesFragment
 import com.example.memej.ui.profile.ProfileFragment
+import com.example.memej.ui.workspace.CreateWorkspaceActivity
 import com.example.memej.viewModels.MainActivityViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -71,6 +73,12 @@ import java.util.*
 
 class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
 
+    companion object {
+        private const val STATE_SAVE_STATE = "save_state"
+        private const val STATE_KEEP_FRAGS = "keep_frags"
+        private const val STATE_HELPER = "helper"
+    }
+
     private fun openFragment(fragment: Fragment) {
         val transaction = supportFragmentManager.beginTransaction()
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
@@ -87,6 +95,7 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
     }
 
 
+    //Navigation constant for drawer navigation
     private val mOnNavDrawerItemSelectedLister =
         NavigationView.OnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
@@ -117,7 +126,7 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
             false
         }
 
-    //Get the res id
+    //Navigation constant for bottom navigation
     private val mOnNavigationItemSelectedListener =
         BottomNavigationView.OnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
@@ -182,6 +191,13 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
     private var appUpdateManager: AppUpdateManager? = null
     private var RC_APP_UPDATE = 1249
 
+
+    //Saved Instances of fragments
+
+    private lateinit var stateHelper: FragmentStateHelper
+
+    private val fragmentsMap = mutableMapOf<Int, Fragment>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -193,6 +209,10 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
 
         sessionManager = SessionManager(this)
         //Set the Header of the navigation drawer
+
+
+        //Set init for savedInstance of the fragment
+        stateHelper = FragmentStateHelper(supportFragmentManager)
 
         //Option for the switch of spaces
         switchSpace = findViewById(R.id.workspace_option_card_view)
@@ -319,8 +339,6 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
 
 
         navView = findViewById(R.id.nav_view)
-        sessionManager =
-            SessionManager(this)
         val appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.navigation_explore,
@@ -332,30 +350,19 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
         )
 
 
-        val fragOpen = ExploreFragment()
-        supportFragmentManager.beginTransaction().replace(R.id.container, fragOpen).commit()
-        navView.selectedItemId = R.id.exploreFragment
-
-
-        if (savedInstanceState == null) {
-            val frag = ExploreFragment()
-            supportFragmentManager.beginTransaction().replace(R.id.container, frag).commit()
-            navView.selectedItemId = R.id.exploreFragment
-        }
-
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
         navDrawerView.setNavigationItemSelectedListener(mOnNavDrawerItemSelectedLister)
 
 
-        //Get current fragment
 
         fab = findViewById(R.id.fab_add)
         fab.setBackgroundColor(resources.getColor(R.color.colorAccent))
         fab.setOnClickListener {
-            val currentOpnedFragment = findFragment()
+
+            val currentOpenedFragment = findFragment()
             var state = 0
 
-            when (currentOpnedFragment) {
+            when (currentOpenedFragment) {
                 "HomeFragment" -> state = 0
                 "ExploreFragment" -> state = 0
                 "MemeWorldFragment" -> state = 0
@@ -369,12 +376,23 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
                 val i = Intent(this, SelectMemeTemplateActivity::class.java)
                 startActivity(i)
             } else {
-                Toast.makeText(this, "uwdhsk", Toast.LENGTH_SHORT).show()
+
+                //Go to create workspace activity
+                val i = Intent(this, CreateWorkspaceActivity::class.java)
+                startActivity(i)
+
             }
         }
 
-        val frag = ExploreFragment()
-        supportFragmentManager.beginTransaction().replace(R.id.container, frag).commit()
+
+        if (savedInstanceState == null) {
+            val frag = ExploreFragment()
+            supportFragmentManager.beginTransaction().replace(R.id.container, frag).commit()
+            navView.selectedItemId = R.id.exploreFragment
+        } else {
+            val helper = savedInstanceState.getBundle(STATE_HELPER)
+            stateHelper.restoreHelperState(helper!!)
+        }
 
 
     }
@@ -591,7 +609,7 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
     private fun updateApp() {
 
         appUpdateManager = AppUpdateManagerFactory.create(this)
-        appUpdateManager!!.registerListener(installStateUpdatedListener)
+        installStateUpdatedListener?.let { appUpdateManager!!.registerListener(it) }
 
     }
 
@@ -647,6 +665,23 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
         Handler().postDelayed({ updateApp() }, 1000)
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+
+        // Make sure we save the current tab's state too!
+        saveCurrentState()
+
+        outState.putBundle(STATE_HELPER, stateHelper.saveHelperState())
+        super.onSaveInstanceState(outState)
+    }
+
+    private fun saveCurrentState() {
+
+
+        fragmentsMap[navView.selectedItemId]?.let { oldFragment ->
+            stateHelper.saveState(oldFragment, navView.selectedItemId)
+        }
+
+    }
 
     override fun onSupportNavigateUp(): Boolean {
         val navController =
@@ -680,7 +715,7 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
     }
 
     override fun onStop() {
-        appUpdateManager?.unregisterListener(installStateUpdatedListener)
+        installStateUpdatedListener?.let { appUpdateManager?.unregisterListener(it) }
         super.onStop()
     }
 

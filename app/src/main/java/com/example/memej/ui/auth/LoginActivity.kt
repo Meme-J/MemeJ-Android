@@ -84,17 +84,12 @@ class LoginActivity : AppCompatActivity() {
             false
         }
 
+
+
         viewModel.successful.observe(this, Observer { successful ->
             hideProgressBar()
             if (successful != null) {
                 if (successful) {
-
-                    //Create a credentials object
-//                    val credential: Credential = Credential.Builder(etUsername.text.toString())
-//                        .setPassword(etPassword.text.toString())
-//                        .build()
-                    //Done in a slightly different way when using GSI
-
 
                     Toast.makeText(this, R.string.successLogin, Toast.LENGTH_LONG)
                         .show()
@@ -104,8 +99,10 @@ class LoginActivity : AppCompatActivity() {
                     startActivity(intent)
                     finish()
                 } else {
-                    Snackbar.make(signinView, viewModel.message, Snackbar.LENGTH_LONG)
-                        .show()
+                    viewModel.message?.let {
+                        Snackbar.make(signinView, it, Snackbar.LENGTH_LONG)
+                            .show()
+                    }
                 }
             }
         })
@@ -177,11 +174,19 @@ class LoginActivity : AppCompatActivity() {
         if (etUsername.length() == 0) {
             t1.error = getString(R.string.username_empty)
             isValid = false
+            etUsername.error = null
+        } else {
+            t1.error = null
         }
+
         if (etPassword.length() == 0) {
             t2.error = getString(R.string.pwd_empty)
             isValid = false
+            etUsername.error = null
+        } else {
+            t2.error = null
         }
+
 
         return isValid
     }
