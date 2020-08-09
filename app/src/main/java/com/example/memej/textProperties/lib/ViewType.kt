@@ -1,5 +1,5 @@
 package com.example.memej.textProperties.lib
 
 enum class ViewType {
-    TEXT, IMAGE, EMOJI, BRUSH_DRAWING, EDIT_TEXT
+    TEXT, IMAGE, EMOJI, BRUSH_DRAWING, EDIT_TEXT, TEXT_STICKERS
 }
