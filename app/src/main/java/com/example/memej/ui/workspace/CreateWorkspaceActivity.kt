@@ -1,42 +1,33 @@
 package com.example.memej.ui.workspace
 
-import android.app.Activity
+import android.app.AlertDialog
 import android.app.ProgressDialog
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.util.Log
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import com.example.memej.R
 import com.example.memej.databinding.ActivityCreateWorkspaceBinding
 import com.example.memej.viewModels.CreateWorkspaceViewmodel
 import com.google.android.material.snackbar.Snackbar
-import com.shreyaspatil.MaterialDialog.MaterialDialog
-import kotlinx.android.synthetic.main.activity_blank_workspace.*
 import kotlinx.android.synthetic.main.activity_create_workspace.*
 
-class CreateWorkspaceActivity : Fragment() {
+class CreateWorkspaceActivity : AppCompatActivity() {
 
     lateinit var b: ActivityCreateWorkspaceBinding
     lateinit var mutableList: MutableList<String>
     private val viewModel: CreateWorkspaceViewmodel by viewModels()
     private var nameExists: Boolean = false
+    private val TAG = CreateWorkspaceActivity::class.java.simpleName
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        b = DataBindingUtil.inflate(
-            inflater,
-            R.layout.activity_create_workspace,
-            container_blank_space,
-            true
-        )
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        b = DataBindingUtil.setContentView(this, R.layout.activity_create_workspace)
+
 
         mutableList = mutableListOf()
         val til = b.tilSpaceName
@@ -96,38 +87,27 @@ class CreateWorkspaceActivity : Fragment() {
         }
 
 
-        return b.root
     }
 
     private fun createSpace() {
         //Validate name
         if (validateName()) {
+            Log.e(TAG, "In Vakid Id")
             createConfirmDialog()
         }
     }
 
     private fun createConfirmDialog() {
 
-        val name = b.etSpaceName.text.toString()
-        val mDialog = MaterialDialog.Builder(context as Activity)
-            .setTitle("Create workspace")
-            .setMessage("Create a workspace named $name?")
-            .setCancelable(true)
-            .setPositiveButton(
-                "CREATE",
-                R.drawable.ic_add
-            ) { dialogInterface, which ->
-                dialogInterface.dismiss()
-                postSpace()
 
+        val name = b.etSpaceName.text.toString()
+        AlertDialog.Builder(this).setTitle("Confirm")
+            .setMessage("Are you sure you want to create a space named $name?")
+            .setPositiveButton(android.R.string.ok) { _, dialogInterce ->
+                postSpace()
             }
-            .setNegativeButton(
-                "REVIEW"
-            ) { dialogInterface, which ->
-                dialogInterface.dismiss()
-            }
-            .build()
-        mDialog.show()
+            .setNegativeButton(android.R.string.cancel) { _, _ -> }
+            .show()
 
 
     }
@@ -135,7 +115,7 @@ class CreateWorkspaceActivity : Fragment() {
     private fun postSpace() {
 
         //Create a profress dialog
-        val dialog = ProgressDialog(context as Activity)
+        val dialog = ProgressDialog(this)
         dialog.setMessage("Creating workspace")
         dialog.show()
 
@@ -145,11 +125,16 @@ class CreateWorkspaceActivity : Fragment() {
         val postMessage = viewModel.createSpace(space_name, space_initial_tags)
 
         if (postMessage == "Workspace created successfully.") {
+            dialog.dismiss()
+
             val snack =
                 Snackbar.make(conatiner_create_workspace, postMessage, Snackbar.LENGTH_SHORT)
             snack.show()
-            dialog.dismiss()
+            val i = Intent(this, WorkSpaceActivity::class.java)
+            startActivity(i)
+            finish()
             //Go to my spaces activty
+            //Get the Spaces ICON
 
 
         } else {
@@ -162,13 +147,17 @@ class CreateWorkspaceActivity : Fragment() {
     }
 
     private fun validateName(): Boolean {
-        var isValid = false
+        var isValid = true
 
-        if (b.etSpaceName.text!!.isEmpty()) {
+        if (b.etSpaceName.text == null || b.etSpaceName.text!!.isEmpty()) {
             isValid = false
             b.tilSpaceName.error = getString(R.string.workspace_empty)
 
+        } else {
+            isValid = true
         }
+
+
         return isValid
 
     }

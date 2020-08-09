@@ -73,12 +73,18 @@ class CreateWorkspaceViewmodel : ViewModel() {
                 val y = ErrorStatesResponse.returnStateMessageForThrowable(t)
                 messageCreate = y
                 successfulCreate.value = false
+                Log.e(TAG, y)
             }
 
             override fun onResponse(
                 call: Call<CreateWorkspaceResponse>,
                 response: Response<CreateWorkspaceResponse>
             ) {
+
+                Log.e(
+                    TAG,
+                    response.body()?.msg + response.toString() + response.errorBody().toString()
+                )
                 if (response.isSuccessful) {
                     if (response.body()?.msg == "Workspace created successfully.") {
                         successfulCreate.value = true
