@@ -3,6 +3,7 @@ package com.example.memej.Utils
 import android.preference.PreferenceManager
 import com.example.memej.responses.NumLikes
 import com.example.memej.responses.ProfileResponse
+import com.example.memej.responses.workspaces.UserWorkspaces
 
 
 /**
@@ -18,6 +19,7 @@ object PreferenceUtil {
     private const val NAME = "name"
     private const val EMAIL = "email"
     private var LIKES = "likes"
+    private var CURRENT_SPACE = "current_space"
     private var HAS_SEEN_WALKTHROUGH = null
 
     var _id: String?
@@ -44,6 +46,11 @@ object PreferenceUtil {
             pm.edit().putString(EMAIL, value).apply()
         }
 
+    var current_space: String?
+        get() = pm.getString(CURRENT_SPACE, "Global Space")
+        set(value) {
+            pm.edit().putString(CURRENT_SPACE, value).apply()
+        }
 
     var likes: Int?
         get() = pm.getInt(LIKES, 0)
@@ -65,6 +72,17 @@ object PreferenceUtil {
         pref.email = user.email
         pref.username = user.username
         pref.name = user.name
+    }
+
+    fun setCurrentSpaceFromPreference(userWorkspace: UserWorkspaces.Workspace) {
+        val pref = PreferenceUtil
+        pref.current_space = userWorkspace.name
+
+    }
+
+    fun getCurrentSpaceFromPreference(): String? {
+        val prefUtil = PreferenceUtil
+        return prefUtil.current_space
     }
 
     fun getUserFromPrefernece(): ProfileResponse.Profile {

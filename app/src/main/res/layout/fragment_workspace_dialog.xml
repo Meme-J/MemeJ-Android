@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+
+    <RelativeLayout xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.home.WorkspaceDialogFragment">
+        android:background="@color/white">
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical">
 
                 <!--                <TextView-->
@@ -26,10 +28,15 @@
 
                 <!--                View for global workspace-->
                 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/cslt_global"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/margins"
-                    android:layout_marginBottom="@dimen/space">
+                    android:layout_marginBottom="@dimen/space"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="false"
+                    android:padding="@dimen/space">
 
                     <androidx.cardview.widget.CardView
                         android:id="@+id/workspace_dialog_image_view"
@@ -76,19 +83,22 @@
 
                 <LinearLayout
                     android:id="@+id/ll_addWorkspace"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:layout_margin="@dimen/margins"
                     android:gravity="center"
                     android:orientation="horizontal"
                     android:padding="@dimen/margins">
 
                     <ImageView
+                        android:id="@+id/iv_add_space"
                         android:layout_width="@dimen/space_4x"
                         android:layout_height="@dimen/space_4x"
                         android:src="@drawable/ic_add" />
 
                     <TextView
+                        android:id="@+id/tv_add_space"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/add_workspace"
@@ -99,5 +109,5 @@
 
             </LinearLayout>
         </ScrollView>
-    </FrameLayout>
+    </RelativeLayout>
 </layout>

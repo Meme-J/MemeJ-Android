@@ -17,7 +17,7 @@ class SplashScreen : AppCompatActivity() {
 
     private lateinit var handler: Handler
     private lateinit var runnable: Runnable
-    private var splash_display_time: Long = 1000
+    private var splash_display_time: Long = 500
     private val preferenceManager: PreferenceManager = PreferenceManager()
     private val preferencesUtils = PreferenceUtil
 
