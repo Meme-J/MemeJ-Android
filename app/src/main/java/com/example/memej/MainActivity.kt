@@ -105,8 +105,10 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
 //                }
 
                 R.id.nav_drawer_invites -> {
-                    openFragment(InvitesFragmnet())
                     drawer.closeDrawer(Gravity.LEFT)
+                    val i = Intent(this, InvitesFragmnet)
+
+
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.nav_drawer_my_spaces -> {

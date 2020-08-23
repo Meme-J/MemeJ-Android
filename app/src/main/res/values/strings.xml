@@ -112,6 +112,7 @@
     <string name="get_link">Get link</string>
     <string name="val">Val</string>
     <string name="send_invites">SEND INVITES</string>
+    <string name="invites">Invites</string>
 
     <array name="themeColors">
         <item>@color/green_500</item>

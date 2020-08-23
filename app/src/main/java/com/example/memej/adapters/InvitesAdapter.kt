@@ -1,33 +1,52 @@
 package com.example.memej.adapters
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.memej.R
-import com.example.memej.responses.workspaces.UserWorkspaces
+import com.example.memej.responses.workspaces.UserRequestResponse
 
 
 class InvitesAdapter(val itemClick: OnItemClickListenerInvites) :
     RecyclerView.Adapter<InvitesAdapter.MyViewHolder>() {
 
 
-    //Initialize an empty list of the dataclass T
-    var lst: List<UserWorkspaces.Workspace> = listOf()
+    var lst: List<UserRequestResponse.Request> = listOf()
 
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
 
-        val NAME = itemView.findViewById<TextView>(R.id.tv_my_spaces_space_name)
+        val NAME = itemView.findViewById<TextView>(R.id.tv_workspace_name)
+        val SENDER_NAME = itemView.findViewById<TextView>(R.id.tv_workspace_sender)
+
+        val check = itemView.findViewById<ImageView>(R.id.iv_accept_request)
+        val cross = itemView.findViewById<ImageView>(R.id.iv_reject_request)
+
 
         //Bind a single item
-        fun bindPost(_listItem: UserWorkspaces.Workspace, itemClick: OnItemClickListenerInvites) {
+        fun bindPost(
+            _listItem: UserRequestResponse.Request,
+            itemClick: OnItemClickListenerInvites
+        ) {
             with(_listItem) {
 
 
                 NAME.text =
                     _listItem.name
+
+                SENDER_NAME.text = _listItem.from
+
+                check.setOnClickListener {
+                    acceptRequest(itemView.context)
+                }
+
+                cross.setOnClickListener {
+                    rejectRequest(itemView.context)
+                }
 
                 itemView.setOnClickListener {
                     itemClick.clickThisItem(_listItem)
@@ -35,6 +54,14 @@ class InvitesAdapter(val itemClick: OnItemClickListenerInvites) :
 
 
             }
+        }
+
+        private fun rejectRequest(context: Context?) {
+
+        }
+
+        private fun acceptRequest(context: Context?) {
+
         }
 
 
@@ -64,5 +91,5 @@ class InvitesAdapter(val itemClick: OnItemClickListenerInvites) :
 
 
 interface OnItemClickListenerInvites {
-    fun clickThisItem(_listItem: UserWorkspaces.Workspace)
+    fun clickThisItem(_listItem: UserRequestResponse.Request)
 }
