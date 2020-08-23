@@ -1,5 +1,7 @@
 package com.example.memej.adapters
 
+import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -123,6 +125,8 @@ class InvitesAdapter(val itemClick: OnItemClickListenerInvites, val ctx: Context
                     snack.show()
 
                     //Update UI
+
+                    createDialog(position, request, holder)
                     removeAt(position)
 
 
@@ -141,6 +145,30 @@ class InvitesAdapter(val itemClick: OnItemClickListenerInvites, val ctx: Context
 
             }
         })
+
+    }
+
+    private fun createDialog(
+        position: Int,
+        request: UserRequestResponse.Request,
+        holder: InvitesAdapter.MyViewHolder
+    ) {
+
+        //Called when the requests are accepted and we want to ask the user if he wants to switch to this space
+        val dialog = AlertDialog.Builder(ctx as Activity)
+        val name = request.name
+        val WORKSPACE = "Do you want to switch to $name space?"
+        dialog.setMessage(WORKSPACE)
+        dialog.setNegativeButton(R.string.NO) { _, _ ->
+            //Do nothing
+        }
+        dialog.setPositiveButton(R.string.SWITCH) { _, _ ->
+            switchSpace(name, request.id)
+        }
+
+    }
+
+    private fun switchSpace(name: String, id: String) {
 
     }
 

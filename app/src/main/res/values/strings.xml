@@ -115,6 +115,10 @@
     <string name="invites">Invites</string>
     <string name="rejectSuccess">"Request rejected "</string>
     <string name="acceptSuccess">Request accepted</string>
+    <string name="switch_to_space_question">Do you want to switch to $s space?</string>
+    <string name="NO">NO</string>
+    <string name="SWITCH">SWITCH</string>
+
 
     <array name="themeColors">
         <item>@color/green_500</item>
