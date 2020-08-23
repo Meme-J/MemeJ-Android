@@ -27,6 +27,9 @@ class InvitesAdapter(val itemClick: OnItemClickListenerInvites) :
         val cross = itemView.findViewById<ImageView>(R.id.iv_reject_request)
 
 
+        //Class functions
+
+
         //Bind a single item
         fun bindPost(
             _listItem: UserRequestResponse.Request,
