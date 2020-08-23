@@ -80,4 +80,21 @@ interface workspaces {
     ): Call<UserRequestResponse>
 
 
+    //Accept a request from the workspace
+    @POST("api/workspace/join")
+    @Headers("Content-Type:application/json")
+    fun acceptRequests(
+        @Header("Authorization") accessToken: String?,
+        @Body body: AcceptRequestsBody
+    ): Call<AcceptRequestsResponse>
+
+    //Reject a request
+    @POST("api/workspace/reject")
+    @Headers("Content-Type:application/json")
+    fun rejectRequests(
+        @Header("Authorization") accessToken: String?,
+        @Body body: RejectRequestBody
+    ): Call<RejectRequestResponse>
+
+
 }

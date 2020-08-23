@@ -8,26 +8,35 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.memej.R
+import com.example.memej.Utils.ErrorStatesResponse
+import com.example.memej.Utils.sessionManagers.SessionManager
+import com.example.memej.body.RejectRequestBody
+import com.example.memej.interfaces.RetrofitClient
+import com.example.memej.responses.workspaces.RejectRequestResponse
 import com.example.memej.responses.workspaces.UserRequestResponse
+import com.google.android.material.snackbar.Snackbar
+import retrofit2.Call
+import retrofit2.Response
 
 
-class InvitesAdapter(val itemClick: OnItemClickListenerInvites) :
+class InvitesAdapter(val itemClick: OnItemClickListenerInvites, val ctx: Context) :
     RecyclerView.Adapter<InvitesAdapter.MyViewHolder>() {
 
 
-    var lst: List<UserRequestResponse.Request> = listOf()
+    var lst: MutableList<UserRequestResponse.Request> = mutableListOf()
+    val sessionManager =
+        SessionManager(ctx)
+    val workspaceService = RetrofitClient.callWorkspaces(ctx)
 
-    class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class MyViewHolder(itemView: View, context: Context) : RecyclerView.ViewHolder(itemView) {
 
 
         val NAME = itemView.findViewById<TextView>(R.id.tv_workspace_name)
         val SENDER_NAME = itemView.findViewById<TextView>(R.id.tv_workspace_sender)
 
+
         val check = itemView.findViewById<ImageView>(R.id.iv_accept_request)
         val cross = itemView.findViewById<ImageView>(R.id.iv_reject_request)
-
-
-        //Class functions
 
 
         //Bind a single item
@@ -43,28 +52,8 @@ class InvitesAdapter(val itemClick: OnItemClickListenerInvites) :
 
                 SENDER_NAME.text = _listItem.from
 
-                check.setOnClickListener {
-                    acceptRequest(itemView.context)
-                }
-
-                cross.setOnClickListener {
-                    rejectRequest(itemView.context)
-                }
-
-                itemView.setOnClickListener {
-                    itemClick.clickThisItem(_listItem)
-                }
-
 
             }
-        }
-
-        private fun rejectRequest(context: Context?) {
-
-        }
-
-        private fun acceptRequest(context: Context?) {
-
         }
 
 
@@ -75,7 +64,7 @@ class InvitesAdapter(val itemClick: OnItemClickListenerInvites) :
         val view =
             LayoutInflater.from(parent.context)
                 .inflate(R.layout.layout_my_workspaces, parent, false)
-        return InvitesAdapter.MyViewHolder(view)
+        return InvitesAdapter.MyViewHolder(view, ctx)
 
     }
 
@@ -87,12 +76,83 @@ class InvitesAdapter(val itemClick: OnItemClickListenerInvites) :
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
 
         holder.bindPost(lst[position], itemClick)
+        holder.cross.setOnClickListener {
+            rejectRequests(lst[position], position, holder)
+        }
 
     }
+
+    private fun rejectRequests(
+        request: UserRequestResponse.Request,
+        position: Int,
+        holder: MyViewHolder
+    ) {
+        val req = RejectRequestBody.Request(request.from, request.id, request.name)
+        val body = RejectRequestBody(req)
+        workspaceService.rejectRequests(
+            accessToken = "Bearer ${sessionManager.fetchAcessToken()}",
+            body = body
+        ).enqueue(object : retrofit2.Callback<RejectRequestResponse> {
+            override fun onFailure(call: Call<RejectRequestResponse>, t: Throwable) {
+                val message = ErrorStatesResponse.returnStateMessageForThrowable(t)
+                val snack = Snackbar.make(holder.itemView, message, Snackbar.LENGTH_SHORT)
+                snack.show()
+
+            }
+
+            override fun onResponse(
+                call: Call<RejectRequestResponse>,
+                response: Response<RejectRequestResponse>
+            ) {
+                //If the rejection is successful
+                if (response.body()?.msg == "Request rejected successfully.") {
+
+                    //Remove this temporarily
+                    val snack =
+                        Snackbar.make(
+                            holder.itemView,
+                            R.string.rejectSuccess,
+                            Snackbar.LENGTH_SHORT
+                        )
+                    snack.show()
+
+                    //Update UI
+                    removeAt(position)
+
+
+                } else {
+
+                    val snack =
+                        Snackbar.make(
+                            holder.itemView,
+                            response.body()?.msg.toString(),
+                            Snackbar.LENGTH_SHORT
+                        )
+                    snack.show()
+
+                }
+
+
+            }
+        })
+
+
+    }
+
+
+    fun removeAt(position: Int) {
+        lst.removeAt(position)
+        notifyItemRemoved(position)
+        notifyItemRangeChanged(position, lst.size)
+    }
+
 
 }
 
 
 interface OnItemClickListenerInvites {
-    fun clickThisItem(_listItem: UserRequestResponse.Request)
+
+    fun onCrossClick(_listItem: UserRequestResponse.Request)
+    fun onCheckClick(_listItem: UserRequestResponse.Request)
+
 }

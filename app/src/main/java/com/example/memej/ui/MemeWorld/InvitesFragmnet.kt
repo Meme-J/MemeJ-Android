@@ -26,7 +26,6 @@ class InvitesFragmnet : AppCompatActivity(), OnItemClickListenerInvites {
 
     private lateinit var b: InvitesFragmnetFragmentBinding
 
-
     lateinit var adapter: InvitesAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,8 +72,8 @@ class InvitesFragmnet : AppCompatActivity(), OnItemClickListenerInvites {
 
         //Init rv
         val rv = b.rvInvites
-        adapter = InvitesAdapter(this)
-        adapter.lst = response.requests
+        adapter = InvitesAdapter(this, this)
+        adapter.lst = response.requests.toMutableList()
         val layoutManager = LinearLayoutManager(this)
         rv.layoutManager = layoutManager
         runLayoutAnimation(rv)
@@ -107,8 +106,19 @@ class InvitesFragmnet : AppCompatActivity(), OnItemClickListenerInvites {
         finish()
     }
 
-    override fun clickThisItem(_listItem: UserRequestResponse.Request) {
-        //Do nothing in this
+
+    override fun onCrossClick(
+        _listItem: UserRequestResponse.Request
+    ) {
+
+
     }
+
+
+    override fun onCheckClick(
+        _listItem: UserRequestResponse.Request
+    ) {
+    }
+
 
 }

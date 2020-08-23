@@ -18,11 +18,14 @@ class InvitesFragmnetViewModel : ViewModel() {
     val successful: MutableLiveData<Boolean> = MutableLiveData()
     var message: MutableLiveData<String> = MutableLiveData()
 
+
     private val context = ApplicationUtil.getContext()
     private val sessionManager = SessionManager(context)
     private val workspaceService = RetrofitClient.callWorkspaces(context)
 
+
     var invitesResponse: UserRequestResponse? = null
+
 
     fun loadInvites(): UserRequestResponse? {
 
@@ -57,5 +60,6 @@ class InvitesFragmnetViewModel : ViewModel() {
 
 
     }
+
 
 }
