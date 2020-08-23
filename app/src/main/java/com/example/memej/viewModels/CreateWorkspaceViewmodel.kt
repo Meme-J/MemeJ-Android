@@ -21,7 +21,7 @@ class CreateWorkspaceViewmodel : ViewModel() {
     var message: String = ""
 
     val successfulCreate: MutableLiveData<Boolean> = MutableLiveData()
-    var messageCreate: String = ""
+    var messageCreate: MutableLiveData<String> = MutableLiveData()
 
 
     var responseForCheck = false
@@ -61,7 +61,7 @@ class CreateWorkspaceViewmodel : ViewModel() {
 
     }
 
-    fun createSpace(name: String, tags: MutableList<String>): String {
+    fun createSpace(name: String, tags: MutableList<String>): MutableLiveData<String> {
 
         val body = CreateWorkspaceBody(name)
 
@@ -70,10 +70,10 @@ class CreateWorkspaceViewmodel : ViewModel() {
             body = body
         ).enqueue(object : retrofit2.Callback<CreateWorkspaceResponse> {
             override fun onFailure(call: Call<CreateWorkspaceResponse>, t: Throwable) {
-                val y = ErrorStatesResponse.returnStateMessageForThrowable(t)
-                messageCreate = y
+
+                messageCreate.value = ErrorStatesResponse.returnStateMessageForThrowable(t)
                 successfulCreate.value = false
-                Log.e(TAG, y)
+
             }
 
             override fun onResponse(
@@ -88,15 +88,15 @@ class CreateWorkspaceViewmodel : ViewModel() {
                 if (response.isSuccessful) {
                     if (response.body()?.msg == "Workspace created successfully.") {
                         successfulCreate.value = true
-                        messageCreate = "Workspace created successfully."
+                        messageCreate.value = "Workspace created successfully."
                     } else {
                         successfulCreate.value = false
-                        messageCreate = response.body()!!.msg.toString()
+                        messageCreate.value = response.body()!!.msg.toString()
 
                     }
                 } else {
                     successfulCreate.value = false
-                    messageCreate = response.errorBody()!!.toString()
+                    messageCreate.value = response.errorBody()!!.toString()
 
                 }
             }

@@ -1,4 +1,4 @@
-package com.example.memej.ui.drawerItems
+package com.example.memej.ui.MemeWorld
 
 import android.os.Bundle
 import android.view.LayoutInflater

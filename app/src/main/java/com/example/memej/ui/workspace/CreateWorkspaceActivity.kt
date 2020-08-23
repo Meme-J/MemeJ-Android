@@ -122,7 +122,7 @@ class CreateWorkspaceActivity : AppCompatActivity() {
         val space_name = b.etSpaceName.text.toString()
         val space_initial_tags = mutableList
 
-        val postMessage = viewModel.createSpace(space_name, space_initial_tags)
+        val postMessage = viewModel.createSpace(space_name, space_initial_tags).value
 
         if (postMessage == "Workspace created successfully.") {
             dialog.dismiss()
@@ -141,7 +141,11 @@ class CreateWorkspaceActivity : AppCompatActivity() {
         } else {
             dialog.dismiss()
             val snack =
-                Snackbar.make(conatiner_create_workspace, postMessage, Snackbar.LENGTH_SHORT)
+                Snackbar.make(
+                    conatiner_create_workspace,
+                    postMessage.toString(),
+                    Snackbar.LENGTH_SHORT
+                )
             snack.show()
         }
 

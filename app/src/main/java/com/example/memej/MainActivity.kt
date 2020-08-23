@@ -41,9 +41,9 @@ import com.example.memej.body.searchBody
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.ProfileResponse
 import com.example.memej.responses.SearchResponse
+import com.example.memej.ui.MemeWorld.InvitesFragmnet
 import com.example.memej.ui.MemeWorld.MemeWorldFragment
 import com.example.memej.ui.auth.LoginActivity
-import com.example.memej.ui.drawerItems.InvitesFragmnet
 import com.example.memej.ui.explore.ExploreFragment
 import com.example.memej.ui.home.HomeFragment
 import com.example.memej.ui.home.SearchResultActivity
