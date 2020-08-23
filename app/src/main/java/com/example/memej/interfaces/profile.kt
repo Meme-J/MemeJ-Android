@@ -1,7 +1,7 @@
 package com.example.memej.interfaces
 
 import androidx.annotation.Keep
-import com.example.memej.entities.profileSearchBody
+import com.example.memej.body.profileSearchBody
 import com.example.memej.responses.NumLikes
 import com.example.memej.responses.UserProfileResponse
 import com.example.memej.responses.memeWorldResponses.memeApiResponses

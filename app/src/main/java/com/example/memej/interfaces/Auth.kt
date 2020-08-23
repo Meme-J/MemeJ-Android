@@ -1,8 +1,8 @@
 package com.example.memej.interfaces
 
 import androidx.annotation.Keep
-import com.example.memej.entities.LoginBody
-import com.example.memej.entities.UserBody
+import com.example.memej.body.LoginBody
+import com.example.memej.body.UserBody
 import com.example.memej.responses.LoginResponse
 import com.example.memej.responses.ProfileResponse
 import com.example.memej.responses.SignUpResponse

@@ -1,4 +1,4 @@
-package com.example.memej.responses.workspaces
+package com.example.memej.body
 
 import androidx.annotation.Keep
 import com.squareup.moshi.Json

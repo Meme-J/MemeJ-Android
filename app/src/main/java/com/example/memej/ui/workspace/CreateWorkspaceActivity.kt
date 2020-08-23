@@ -131,6 +131,7 @@ class CreateWorkspaceActivity : AppCompatActivity() {
                 Snackbar.make(conatiner_create_workspace, postMessage, Snackbar.LENGTH_SHORT)
             snack.show()
             val i = Intent(this, WorkSpaceActivity::class.java)
+            //Send the name of the workspace formed (UNIQUELY IDENTIFIED)
             startActivity(i)
             finish()
             //Go to my spaces activty
@@ -194,5 +195,14 @@ class CreateWorkspaceActivity : AppCompatActivity() {
 //        rvTagEdits.adapter = adapterTagAdded
 //    }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.successful.value = null
+    }
 
 }

@@ -7,8 +7,8 @@ import androidx.lifecycle.ViewModel
 import com.example.memej.Utils.ApplicationUtil
 import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.SessionManager
+import com.example.memej.body.CreateWorkspaceBody
 import com.example.memej.interfaces.RetrofitClient
-import com.example.memej.responses.workspaces.CreateWorkspaceBody
 import com.example.memej.responses.workspaces.CreateWorkspaceResponse
 import com.example.memej.responses.workspaces.WorkspaceName
 import retrofit2.Call
@@ -56,7 +56,7 @@ class CreateWorkspaceViewmodel : ViewModel() {
 
             }
         })
-
+        Log.e(TAG, responseForCheck.toString())
         return responseForCheck
 
     }

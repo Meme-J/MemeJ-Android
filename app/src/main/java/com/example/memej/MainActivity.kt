@@ -37,15 +37,13 @@ import com.example.memej.Utils.sessionManagers.SaveSharedPreference
 import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.adapters.SearchAdapter
 import com.example.memej.adapters.onClickSearch
-import com.example.memej.entities.searchBody
+import com.example.memej.body.searchBody
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.ProfileResponse
 import com.example.memej.responses.SearchResponse
 import com.example.memej.ui.MemeWorld.MemeWorldFragment
 import com.example.memej.ui.auth.LoginActivity
-import com.example.memej.ui.drawerItems.ExploreSpacesFragment
 import com.example.memej.ui.drawerItems.InvitesFragmnet
-import com.example.memej.ui.drawerItems.MySpacesFragmnet
 import com.example.memej.ui.explore.ExploreFragment
 import com.example.memej.ui.home.HomeFragment
 import com.example.memej.ui.home.SearchResultActivity
@@ -53,7 +51,7 @@ import com.example.memej.ui.home.WorkspaceDialogFragment
 import com.example.memej.ui.memeTemplate.SelectMemeTemplateActivity
 import com.example.memej.ui.myMemes.MyMemesFragment
 import com.example.memej.ui.profile.ProfileFragment
-import com.example.memej.ui.workspace.CreateWorkspaceActivity
+import com.example.memej.ui.workspace.MySpacesFragmnet
 import com.example.memej.viewModels.MainActivityViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -100,19 +98,21 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
         NavigationView.OnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
 
-                R.id.nav_drawer_explore_spaces -> {
-                    openFragment(ExploreSpacesFragment())
-                    drawer.closeDrawer(Gravity.LEFT)
-                    return@OnNavigationItemSelectedListener true
-                }
+//                R.id.nav_drawer_explore_spaces -> {
+//                    openFragment(ExploreSpacesFragment())
+//                    drawer.closeDrawer(Gravity.LEFT)
+//                    return@OnNavigationItemSelectedListener true
+//                }
+
                 R.id.nav_drawer_invites -> {
                     openFragment(InvitesFragmnet())
                     drawer.closeDrawer(Gravity.LEFT)
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.nav_drawer_my_spaces -> {
-                    openFragment(MySpacesFragmnet())
                     drawer.closeDrawer(Gravity.LEFT)
+                    val i = Intent(this, MySpacesFragmnet::class.java)
+                    startActivity(i)
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.nav_drawer_logout -> {
@@ -224,7 +224,7 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
         //Initialize the navigation Drawer
         drawer = findViewById<DrawerLayout>(R.id.main_drawer__layout)
         mAppBarConfiguration = AppBarConfiguration.Builder(
-            R.id.nav_drawer_explore_spaces,
+            //R.id.nav_drawer_explore_spaces,
             R.id.nav_drawer_my_spaces,
             R.id.nav_drawer_invites,
             R.id.nav_drawer_logout
@@ -233,27 +233,14 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
 
         //Ref to navigation View
         navDrawerView = findViewById(R.id.nav_drawer_view)
+        populateHeaderOfDrawer()
 
-        //Create a navigation Graph
-        val navControllerDrawer =
-            Navigation.findNavController(this, R.id.nav_host_fragment)
 
-//        NavigationUI.setupActionBarWithNavController(
-//            this,
-//            navControllerDrawer,
-//            mAppBarConfiguration
-//        )
-
-        NavigationUI.setupWithNavController(navDrawerView, navControllerDrawer)
-
-        //OpenDrawer from button
         val imenu = findViewById<ImageView>(R.id.nav_menu_icon)
         imenu.setOnClickListener {
             drawer.openDrawer(Gravity.LEFT)
 
         }
-
-        populateHeaderOfDrawer()
 
         val from = arrayOf("suggestionList")
         val to = intArrayOf(android.R.id.text1)
@@ -358,30 +345,8 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
         fab = findViewById(R.id.fab_add)
         fab.setBackgroundColor(resources.getColor(R.color.colorAccent))
         fab.setOnClickListener {
-
-            val currentOpenedFragment = findFragment()
-            var state = 0
-
-            when (currentOpenedFragment) {
-                "HomeFragment" -> state = 0
-                "ExploreFragment" -> state = 0
-                "MemeWorldFragment" -> state = 0
-                "MyMemesFragment" -> state = 0
-                "ExploreSpacesFragment" -> state = 1
-                "InvitesFragment" -> state = 1
-                "MySpacesFragment" -> state = 1
-            }
-
-            if (state == 0) {
-                val i = Intent(this, SelectMemeTemplateActivity::class.java)
-                startActivity(i)
-            } else {
-
-                //Go to create workspace activity
-                val i = Intent(this, CreateWorkspaceActivity::class.java)
-                startActivity(i)
-
-            }
+            val i = Intent(this, SelectMemeTemplateActivity::class.java)
+            startActivity(i)
         }
 
 
@@ -694,11 +659,9 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
         val drawer = findViewById<DrawerLayout>(R.id.main_drawer__layout)
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START)
-        } else if (!hasOpenedDialog(this)) {
-            super.onBackPressed()
-
         } else {
             super.onBackPressed()
+            finish()
         }
     }
 

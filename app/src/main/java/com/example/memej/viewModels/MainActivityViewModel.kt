@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.example.memej.Utils.ApplicationUtil
 import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.SessionManager
-import com.example.memej.entities.searchBody
+import com.example.memej.body.searchBody
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.SearchResponse
 import retrofit2.Call

@@ -4,8 +4,9 @@
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
+        android:id="@+id/container_my_spaces"
         android:layout_height="match_parent"
-        tools:context=".ui.drawerItems.MySpacesFragmnet">
+        tools:context=".ui.workspace.MySpacesFragmnet">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -18,28 +19,20 @@
                 android:background="@color/colorPrimary"
                 app:layout_constraintTop_toTopOf="parent"
                 app:navigationIcon="@drawable/ic_arrow"
+                app:title="@string/my_spaces"
                 app:titleTextColor="@color/white" />
-
-            <View
-                android:id="@+id/botView"
-                android:layout_width="match_parent"
-                android:layout_height="10dp"
-                android:background="@color/garbinaoGrey"
-                app:layout_constraintTop_toBottomOf="@id/toolbar_drawer_element" />
-
-
-            <!--        FAB to create a wokrspace-->
-            <!--        OnClick the Items in the this workspace to go to that activity-->
 
 
             <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
                 android:id="@+id/swl_my_spaces"
                 android:layout_width="match_parent"
+
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/botView">
+                app:layout_constraintTop_toBottomOf="@id/toolbar_drawer_element">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_my_spaces"
+                    tools:listitem="@layout/layout_my_workspaces"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margins"
@@ -47,6 +40,22 @@
                     android:scrollbars="vertical"
                     app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager" />
             </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                android:id="@+id/extended_fab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="16dp"
+                android:backgroundTint="@color/white"
+                android:contentDescription="@string/create_space"
+                android:text="@string/create_space"
+                android:textColor="@color/navRed"
+                app:icon="@drawable/ic_add"
+                app:iconTint="@color/navRed"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </FrameLayout>

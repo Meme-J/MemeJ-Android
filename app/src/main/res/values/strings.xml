@@ -109,6 +109,9 @@
     <string name="workspace_empty">Name of the workspace can not be empty</string>
     <string name="confirm_password_not_empty">Confirm password can not be empty</string>
     <string name="successReg">Registration successful</string>
+    <string name="get_link">Get link</string>
+    <string name="val">Val</string>
+    <string name="send_invites">SEND INVITES</string>
 
     <array name="themeColors">
         <item>@color/green_500</item>

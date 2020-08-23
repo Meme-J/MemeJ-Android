@@ -23,8 +23,8 @@ import com.example.memej.MainActivity
 import com.example.memej.R
 import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.SessionManager
-import com.example.memej.entities.editMemeBody
-import com.example.memej.entities.searchBody
+import com.example.memej.body.editMemeBody
+import com.example.memej.body.searchBody
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.SearchResponse
 import com.example.memej.responses.editMemeApiResponse

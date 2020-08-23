@@ -13,8 +13,9 @@ data class UserWorkspaces(
 ) {
     data class Workspace(
         @field:Json(name = "_id")
-        val _id: String, // u
+        val _id: String,
         @field:Json(name = "name")
-        val name: String // secongworkspacee
+        val name: String
+        //TODO:Num of loves, memes, people
     )
 }

@@ -9,7 +9,7 @@ import androidx.annotation.Keep
 import androidx.paging.PageKeyedDataSource
 import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.SessionManager
-import com.example.memej.entities.queryBody
+import com.example.memej.body.queryBody
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.memeWorldResponses.Meme_World
 import com.example.memej.responses.memeWorldResponses.memeApiResponses

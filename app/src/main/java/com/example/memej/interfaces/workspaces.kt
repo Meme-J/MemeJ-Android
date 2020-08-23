@@ -1,9 +1,8 @@
 package com.example.memej.interfaces
 
-import com.example.memej.responses.workspaces.CreateWorkspaceBody
-import com.example.memej.responses.workspaces.CreateWorkspaceResponse
-import com.example.memej.responses.workspaces.UserWorkspaces
-import com.example.memej.responses.workspaces.WorkspaceName
+import com.example.memej.body.*
+import com.example.memej.responses.SearchUserResponses
+import com.example.memej.responses.workspaces.*
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.Header
@@ -30,12 +29,47 @@ interface workspaces {
     ): Call<UserWorkspaces>
 
     //Create workspace
-    @POST("api/user/workspaces")
+    @POST("api/workspace/create")
     @Headers("Content-Type:application/json")
     fun createSpaces(
         @Header("Authorization") accessToken: String?,
         @Body body: CreateWorkspaceBody
     ): Call<CreateWorkspaceResponse>
 
+
+    //Exit the workspace
+    @POST("api/workspace/exit")
+    @Headers("Content-Type:application/json")
+    fun exitSpaces(
+        @Header("Authorization") accessToken: String?,
+        @Body body: ExitWorkspaceBody.Workspace
+    ): Call<ExitWorkspaceResponse>
+
+
+    //Generate Link for joining the space
+    @POST("api/workspace/link")
+    @Headers("Content-Type:application/json")
+    fun generateLink(
+        @Header("Authorization") accessToken: String?,
+        @Body body: GenerateLinkBody
+    ): Call<GenerateLinkResponse>
+
+
+    //Call Users (Search by the usernames)
+    @POST("api/user/autocomplete")
+    @Headers("Content-Type:application/json")
+    fun searchUsers(
+        @Header("Authorization") accessToken: String?,
+        @Body body: searchUserBody
+    ): Call<SearchUserResponses>
+
+
+    //Invite the users
+    @POST("api/workspace/sendrequests")
+    @Headers("Content-Type:application/json")
+    fun inviteUsers(
+        @Header("Authorization") accessToken: String?,
+        @Body body: SendWorkspaceRequestBody
+    ): Call<SendRequestsWorkspaceResponse>
 
 }

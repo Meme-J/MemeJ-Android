@@ -8,8 +8,8 @@ import androidx.paging.DataSource
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.example.memej.Utils.ApplicationUtil
+import com.example.memej.body.queryBody
 import com.example.memej.dataSources.HomeMemeDataSource
-import com.example.memej.entities.queryBody
 import com.example.memej.responses.homeMememResponses.Meme_Home
 
 class HomeViewModel : ViewModel() {

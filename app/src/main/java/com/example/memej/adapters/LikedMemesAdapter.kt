@@ -21,7 +21,7 @@ import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.PreferenceUtil
 import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.Utils.shareCacheDirBitmap
-import com.example.memej.entities.likeMemeBody
+import com.example.memej.body.likeMemeBody
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.LikeOrNotResponse
 import com.example.memej.responses.memeWorldResponses.Meme_World

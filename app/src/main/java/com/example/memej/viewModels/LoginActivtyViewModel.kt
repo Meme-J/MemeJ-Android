@@ -8,7 +8,7 @@ import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.PreferenceUtil
 import com.example.memej.Utils.sessionManagers.PreferenceManager
 import com.example.memej.Utils.sessionManagers.SessionManager
-import com.example.memej.entities.LoginBody
+import com.example.memej.body.LoginBody
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.LoginResponse
 import com.example.memej.responses.ProfileResponse

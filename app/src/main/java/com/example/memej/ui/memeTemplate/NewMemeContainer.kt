@@ -23,8 +23,8 @@ import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.adapters.TagAdapter
 import com.example.memej.adapters.TagEditAdapter
 import com.example.memej.adapters.onTagClickType
-import com.example.memej.entities.createMemeBody
-import com.example.memej.entities.searchBody
+import com.example.memej.body.createMemeBody
+import com.example.memej.body.searchBody
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.SearchResponse
 import com.example.memej.responses.editMemeApiResponse
@@ -380,7 +380,12 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
         //Show the progress bar
         val service = RetrofitClient.makeCallsForMemes(this)
         val inf =
-            createMemeBody(arg.getInt("numPlaceholders"), line, mutableList, arg.getString("id")!!)
+            createMemeBody(
+                arg.getInt("numPlaceholders"),
+                line,
+                mutableList,
+                arg.getString("id")!!
+            )
 
         val dialog = ProgressDialog(this)
         dialog.setMessage("Creating meme")

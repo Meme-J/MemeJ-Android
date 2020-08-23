@@ -29,8 +29,8 @@ import com.example.memej.adapters.TagAdapter
 import com.example.memej.adapters.UserAdapter
 import com.example.memej.adapters.onTagClickType
 import com.example.memej.adapters.onUserClickType
+import com.example.memej.body.likeMemeBody
 import com.example.memej.databinding.ActivityCompletedMemeBinding
-import com.example.memej.entities.likeMemeBody
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.LikeOrNotResponse
 import com.example.memej.responses.memeWorldResponses.Coordinate
