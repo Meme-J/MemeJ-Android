@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.memej.R
 import com.example.memej.responses.workspaces.UserWorkspaces
 
+
 class InvitesAdapter(val itemClick: OnItemClickListenerInvites) :
     RecyclerView.Adapter<InvitesAdapter.MyViewHolder>() {
 
