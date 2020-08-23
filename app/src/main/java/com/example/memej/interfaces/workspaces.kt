@@ -72,4 +72,12 @@ interface workspaces {
         @Body body: SendWorkspaceRequestBody
     ): Call<SendRequestsWorkspaceResponse>
 
+    //Get the request received by the users by other people
+    @POST("api/user/request")
+    @Headers("Content-Type:application/json")
+    fun getRequests(
+        @Header("Authorization") accessToken: String?
+    ): Call<UserRequestResponse>
+
+
 }
