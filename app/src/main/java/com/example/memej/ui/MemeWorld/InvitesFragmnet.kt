@@ -24,7 +24,7 @@ class InvitesFragmnet : AppCompatActivity(), OnItemClickListenerInvites {
 
     private val viewModel: InvitesFragmnetViewModel by viewModels()
 
-    lateinit var b: InvitesFragmnetFragmentBinding
+    private lateinit var b: InvitesFragmnetFragmentBinding
 
 
     lateinit var adapter: InvitesAdapter

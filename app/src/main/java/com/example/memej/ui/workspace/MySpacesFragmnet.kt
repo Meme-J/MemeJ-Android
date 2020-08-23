@@ -2,11 +2,13 @@ package com.example.memej.ui.workspace
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.animation.AnimationUtils
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.memej.R
 import com.example.memej.adapters.MySpacesAdapter
 import com.example.memej.adapters.OnItemClickListenerMySpaces
@@ -79,6 +81,7 @@ class MySpacesFragmnet : AppCompatActivity(), OnItemClickListenerMySpaces {
         adapter.lst = response.workspaces
         val layoutManager = GridLayoutManager(this, 2)
         rv.layoutManager = layoutManager
+        runLayoutAnimation(rv)
         rv.adapter = adapter
         b.swlMySpaces.isRefreshing = false
     }
@@ -92,6 +95,17 @@ class MySpacesFragmnet : AppCompatActivity(), OnItemClickListenerMySpaces {
     override fun onBackPressed() {
         super.onBackPressed()
         finish()
+    }
+
+
+    private fun runLayoutAnimation(recyclerView: RecyclerView) {
+        val context = recyclerView.context
+        recyclerView.layoutAnimation = AnimationUtils.loadLayoutAnimation(
+            context,
+            R.anim.layout_fall_down
+        )
+        recyclerView.adapter?.notifyDataSetChanged()
+        recyclerView.scheduleLayoutAnimation()
     }
 
     override fun clickThisItem(_listItem: UserWorkspaces.Workspace) {
