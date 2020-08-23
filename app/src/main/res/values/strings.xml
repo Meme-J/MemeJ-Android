@@ -114,6 +114,7 @@
     <string name="send_invites">SEND INVITES</string>
     <string name="invites">Invites</string>
     <string name="rejectSuccess">"Request rejected "</string>
+    <string name="acceptSuccess">Request accepted</string>
 
     <array name="themeColors">
         <item>@color/green_500</item>

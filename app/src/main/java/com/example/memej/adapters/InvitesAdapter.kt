@@ -10,8 +10,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.memej.R
 import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.SessionManager
+import com.example.memej.body.AcceptRequestsBody
 import com.example.memej.body.RejectRequestBody
 import com.example.memej.interfaces.RetrofitClient
+import com.example.memej.responses.workspaces.AcceptRequestsResponse
 import com.example.memej.responses.workspaces.RejectRequestResponse
 import com.example.memej.responses.workspaces.UserRequestResponse
 import com.google.android.material.snackbar.Snackbar
@@ -79,6 +81,66 @@ class InvitesAdapter(val itemClick: OnItemClickListenerInvites, val ctx: Context
         holder.cross.setOnClickListener {
             rejectRequests(lst[position], position, holder)
         }
+
+        holder.check.setOnClickListener {
+            acceptRequest(lst[position], position, holder)
+        }
+
+    }
+
+    private fun acceptRequest(
+        request: UserRequestResponse.Request,
+        position: Int,
+        holder: InvitesAdapter.MyViewHolder
+    ) {
+        val req = AcceptRequestsBody.Request(request.from, request.id, request.name)
+        val body = AcceptRequestsBody(req)
+        workspaceService.acceptRequests(
+            accessToken = "Bearer ${sessionManager.fetchAcessToken()}",
+            body = body
+        ).enqueue(object : retrofit2.Callback<AcceptRequestsResponse> {
+            override fun onFailure(call: Call<AcceptRequestsResponse>, t: Throwable) {
+                val message = ErrorStatesResponse.returnStateMessageForThrowable(t)
+                val snack = Snackbar.make(holder.itemView, message, Snackbar.LENGTH_SHORT)
+                snack.show()
+
+            }
+
+            override fun onResponse(
+                call: Call<AcceptRequestsResponse>,
+                response: Response<AcceptRequestsResponse>
+            ) {
+                //If the rejection is successful
+                if (response.body()?.msg == "Workspace joined successfully.") {
+
+                    //Remove this temporarily
+                    val snack =
+                        Snackbar.make(
+                            holder.itemView,
+                            R.string.acceptSuccess,
+                            Snackbar.LENGTH_SHORT
+                        )
+                    snack.show()
+
+                    //Update UI
+                    removeAt(position)
+
+
+                } else {
+
+                    val snack =
+                        Snackbar.make(
+                            holder.itemView,
+                            response.body()?.msg.toString(),
+                            Snackbar.LENGTH_SHORT
+                        )
+                    snack.show()
+
+                }
+
+
+            }
+        })
 
     }
 
