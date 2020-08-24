@@ -3,7 +3,6 @@ package com.example.memej.ui.explore
 import android.app.Activity
 import android.app.ProgressDialog
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -144,7 +143,6 @@ class ExploreFragment : Fragment(), RandomListener {
 
     private fun getRandomMemes() {
 
-        Log.e("Random", "In get Random meme")
         //Recheck for states
         if (!ErrorStatesResponse.checkIsNetworkConnected(requireContext())) {
             checkConnection()
@@ -155,7 +153,7 @@ class ExploreFragment : Fragment(), RandomListener {
         service.getRandom(accessToken = "Bearer ${sessionManager.fetchAcessToken()}")
             .enqueue(object : retrofit2.Callback<homeMemeApiResponse> {
                 override fun onFailure(call: Call<homeMemeApiResponse>, t: Throwable) {
-                    Log.e("Throwanle", t.toString())
+
                     val message = ErrorStatesResponse.returnStateMessageForThrowable(t)
                     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
                 }
@@ -166,7 +164,7 @@ class ExploreFragment : Fragment(), RandomListener {
                 ) {
 
                     if (response.isSuccessful) {
-                        Log.e("Random", response.body()?.memes!!.toString())
+
                         response.body()?.memes?.let { adapter.setRandomPosts(it) }
                         pb.visibility = View.GONE
 
