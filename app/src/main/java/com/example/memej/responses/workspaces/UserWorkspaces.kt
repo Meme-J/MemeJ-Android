@@ -2,10 +2,12 @@ package com.example.memej.responses.workspaces
 
 
 import androidx.annotation.Keep
+import androidx.room.Entity
 import com.squareup.moshi.Json
 
 @Keep
 //Class to show the workspaces a user is part of
+@Entity
 data class UserWorkspaces(
 
     @field:Json(name = "workspaces")
