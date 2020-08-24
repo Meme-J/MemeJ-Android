@@ -36,6 +36,7 @@ import com.example.memej.Utils.sessionManagers.PreferenceManager
 import com.example.memej.Utils.sessionManagers.SaveSharedPreference
 import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.adapters.SearchAdapter
+import com.example.memej.adapters.WorkSpaceDialogAdapter
 import com.example.memej.adapters.onClickSearch
 import com.example.memej.body.searchBody
 import com.example.memej.interfaces.RetrofitClient
@@ -47,7 +48,6 @@ import com.example.memej.ui.auth.LoginActivity
 import com.example.memej.ui.explore.ExploreFragment
 import com.example.memej.ui.home.HomeFragment
 import com.example.memej.ui.home.SearchResultActivity
-import com.example.memej.ui.home.WorkspaceDialogFragment
 import com.example.memej.ui.memeTemplate.SelectMemeTemplateActivity
 import com.example.memej.ui.myMemes.MyMemesFragment
 import com.example.memej.ui.profile.ProfileFragment
@@ -106,8 +106,8 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
 
                 R.id.nav_drawer_invites -> {
                     drawer.closeDrawer(Gravity.LEFT)
-                    val i = Intent(this, InvitesFragmnet)
-
+                    val i = Intent(this, InvitesFragmnet::class.java)
+                    startActivity(i)
 
                     return@OnNavigationItemSelectedListener true
                 }
@@ -200,6 +200,13 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
 
     private val fragmentsMap = mutableMapOf<Int, Fragment>()
 
+
+    //For the dialog in switching the workspaces
+    lateinit var recyclerView: RecyclerView
+    lateinit var adapterSpace: WorkSpaceDialogAdapter
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -219,7 +226,7 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
         //Option for the switch of spaces
         switchSpace = findViewById(R.id.workspace_option_card_view)
         switchSpace.setOnClickListener {
-            openFragment(WorkspaceDialogFragment())
+            openSwitchWorkspaceDialog()
         }
 
 
@@ -360,6 +367,12 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
             val helper = savedInstanceState.getBundle(STATE_HELPER)
             stateHelper.restoreHelperState(helper!!)
         }
+
+
+    }
+
+
+    private fun openSwitchWorkspaceDialog() {
 
 
     }
