@@ -81,31 +81,44 @@
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     tools:listitem="@layout/item_dialog_workspace_list" />
 
-                <LinearLayout
-                    android:id="@+id/ll_addWorkspace"
+                <!--                <LinearLayout-->
+                <!--                    android:id="@+id/ll_addWorkspace"-->
+                <!--                    android:layout_width="wrap_content"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:layout_gravity="center"-->
+                <!--                    android:layout_margin="@dimen/margins"-->
+                <!--                    android:gravity="center"-->
+                <!--                    android:orientation="horizontal"-->
+                <!--                    android:padding="@dimen/margins">-->
+
+                <!--                    <ImageView-->
+                <!--                        android:id="@+id/iv_add_space"-->
+                <!--                        android:layout_width="@dimen/space_4x"-->
+                <!--                        android:layout_height="@dimen/space_4x"-->
+                <!--                        android:src="@drawable/ic_add" />-->
+
+                <!--                    <TextView-->
+                <!--                        android:id="@+id/tv_add_space"-->
+                <!--                        android:layout_width="wrap_content"-->
+                <!--                        android:layout_height="wrap_content"-->
+                <!--                        android:text="@string/add_workspace"-->
+                <!--                        android:textSize="24sp" />-->
+
+                <!--                </LinearLayout>-->
+                <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                    android:id="@+id/extended_fab_main_dialog"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_margin="@dimen/margins"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:padding="@dimen/margins">
-
-                    <ImageView
-                        android:id="@+id/iv_add_space"
-                        android:layout_width="@dimen/space_4x"
-                        android:layout_height="@dimen/space_4x"
-                        android:src="@drawable/ic_add" />
-
-                    <TextView
-                        android:id="@+id/tv_add_space"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/add_workspace"
-                        android:textSize="24sp" />
-
-                </LinearLayout>
-
+                    android:layout_gravity="bottom|center"
+                    android:layout_margin="16dp"
+                    android:backgroundTint="@color/white"
+                    android:contentDescription="@string/create_space"
+                    android:text="@string/create_space"
+                    android:textColor="@color/navRed"
+                    app:icon="@drawable/ic_add"
+                    app:iconTint="@color/navRed"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
 
             </LinearLayout>
         </ScrollView>

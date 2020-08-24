@@ -1,6 +1,7 @@
 package com.example.memej
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.database.Cursor
 import android.database.MatrixCursor
@@ -26,6 +27,7 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.navigation.Navigation
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.memej.Utils.Communicator
@@ -35,6 +37,7 @@ import com.example.memej.Utils.PreferenceUtil
 import com.example.memej.Utils.sessionManagers.PreferenceManager
 import com.example.memej.Utils.sessionManagers.SaveSharedPreference
 import com.example.memej.Utils.sessionManagers.SessionManager
+import com.example.memej.adapters.OnWorkSpaceChangedListener
 import com.example.memej.adapters.SearchAdapter
 import com.example.memej.adapters.WorkSpaceDialogAdapter
 import com.example.memej.adapters.onClickSearch
@@ -42,6 +45,7 @@ import com.example.memej.body.searchBody
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.ProfileResponse
 import com.example.memej.responses.SearchResponse
+import com.example.memej.responses.workspaces.UserWorkspaces
 import com.example.memej.ui.MemeWorld.InvitesFragmnet
 import com.example.memej.ui.MemeWorld.MemeWorldFragment
 import com.example.memej.ui.auth.LoginActivity
@@ -51,9 +55,11 @@ import com.example.memej.ui.home.SearchResultActivity
 import com.example.memej.ui.memeTemplate.SelectMemeTemplateActivity
 import com.example.memej.ui.myMemes.MyMemesFragment
 import com.example.memej.ui.profile.ProfileFragment
+import com.example.memej.ui.workspace.CreateWorkspaceActivity
 import com.example.memej.ui.workspace.MySpacesFragmnet
 import com.example.memej.viewModels.MainActivityViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
@@ -64,12 +70,13 @@ import com.google.android.play.core.install.InstallStateUpdatedListener
 import com.google.android.play.core.install.model.InstallStatus
 import com.shreyaspatil.MaterialDialog.MaterialDialog
 import io.reactivex.annotations.Nullable
+import kotlinx.android.synthetic.main.activity_work_space.*
 import retrofit2.Call
 import retrofit2.Response
 import java.util.*
 
 
-class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
+class MainActivity : AppCompatActivity(), Communicator, onClickSearch, OnWorkSpaceChangedListener {
 
     companion object {
         private const val STATE_SAVE_STATE = "save_state"
@@ -204,8 +211,7 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
     //For the dialog in switching the workspaces
     lateinit var recyclerView: RecyclerView
     lateinit var adapterSpace: WorkSpaceDialogAdapter
-
-
+    lateinit var d: AlertDialog.Builder
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -373,8 +379,58 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
 
 
     private fun openSwitchWorkspaceDialog() {
+        //Create a dialog to swtich the spaces
+        d = AlertDialog.Builder(this)
+        val v = layoutInflater.inflate(R.layout.fragment_workspace_dialog, container_workspace)
+        d.setView(v)
 
 
+        recyclerView = v.findViewById<RecyclerView>(R.id.rv_dialog_workspaces)
+        adapterSpace = WorkSpaceDialogAdapter(this)
+
+        val layoutManager = LinearLayoutManager(this)
+        recyclerView.layoutManager = layoutManager
+        recyclerView.adapter = adapterSpace
+
+        //Load in the dialog
+        loadTheSpaces()
+        val btn = v.findViewById<ExtendedFloatingActionButton>(R.id.extended_fab_main_dialog)
+        btn.setOnClickListener {
+            goToCreateWorkspaces()
+        }
+
+
+    }
+
+    private fun loadTheSpaces() {
+
+        val response = viewModel.getSpacesInDialog()
+        val success = viewModel.successfulSpaces.value
+        val message = viewModel.messageSpace.value
+
+        if (response == null) {
+            //Do nothing
+            Log.e("mAIN aC", message.toString())
+        } else {
+            if (success == null) {
+
+            } else {
+                initAdapterForSpaceDialog(response)
+            }
+
+        }
+
+    }
+
+    private fun initAdapterForSpaceDialog(response: UserWorkspaces) {
+        adapterSpace.workSpacesList = response.workspaces
+        recyclerView.adapter = adapterSpace
+        adapterSpace.notifyDataSetChanged()
+    }
+
+    private fun goToCreateWorkspaces() {
+        val i = Intent(this, CreateWorkspaceActivity::class.java)
+        startActivity(i)
     }
 
 
@@ -575,6 +631,10 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
         transaction.addToBackStack(null)
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
         transaction.commit()
+
+    }
+
+    override fun switchWorkspace(_workspace: UserWorkspaces.Workspace) {
 
     }
 

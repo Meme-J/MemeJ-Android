@@ -6,13 +6,17 @@ import com.example.memej.Utils.ApplicationUtil
 import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.interfaces.RetrofitClient
+import com.example.memej.repositories.MyWorkspacesRepository
 import com.example.memej.responses.workspaces.UserWorkspaces
 import retrofit2.Call
 import retrofit2.Response
 
-class MySpacesFragmnetViewModel : ViewModel() {
+class MySpacesFragmnetViewModel constructor(private val repo: MyWorkspacesRepository) :
+    ViewModel() {
+
 
     val TAG = MySpacesFragmnetViewModel::class.java.simpleName
+
 
     //For exiting the workspace
     val successful: MutableLiveData<Boolean> = MutableLiveData()
@@ -26,6 +30,7 @@ class MySpacesFragmnetViewModel : ViewModel() {
 
     //No body
     fun getMySpaces(): UserWorkspaces? {
+
 
         workspaceService.getUserSpaces(
             accessToken = "Bearer ${sessionManager.fetchAcessToken()}"

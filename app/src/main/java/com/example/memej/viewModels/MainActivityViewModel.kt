@@ -8,20 +8,28 @@ import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.body.searchBody
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.SearchResponse
+import com.example.memej.responses.workspaces.UserWorkspaces
 import retrofit2.Call
 import retrofit2.Response
 
 class MainActivityViewModel : ViewModel() {
 
     var tag = LoginActivtyViewModel::class.java.simpleName
-    val context = ApplicationUtil.getContext()
-    private val sessionManager: SessionManager = SessionManager(context)
     val successful: MutableLiveData<Boolean> = MutableLiveData()
     var message: String = ""
-    val memeService = RetrofitClient.makeCallsForMemes(context)
 
 
     var suggestionList: MutableLiveData<String> = MutableLiveData()
+
+    val context = ApplicationUtil.getContext()
+    private val sessionManager: SessionManager = SessionManager(context)
+    val memeService = RetrofitClient.makeCallsForMemes(context)
+    val workspaceserbice = RetrofitClient.callWorkspaces(context)
+
+
+    var workspaceResponses: UserWorkspaces? = null
+    val successfulSpaces: MutableLiveData<Boolean> = MutableLiveData()
+    val messageSpace: MutableLiveData<String> = MutableLiveData()
 
 
     fun fetchSuggestions(body: searchBody): MutableLiveData<String> {
@@ -57,6 +65,34 @@ class MainActivityViewModel : ViewModel() {
         })
 
         return suggestionList
+    }
+
+    fun getSpacesInDialog(): UserWorkspaces? {
+        workspaceserbice.getUserSpaces(
+            accessToken = "Bearer ${sessionManager.fetchAcessToken()}"
+        ).enqueue(object : retrofit2.Callback<UserWorkspaces> {
+            override fun onFailure(call: Call<UserWorkspaces>, t: Throwable) {
+                successfulSpaces.value = false
+                messageSpace.value = ErrorStatesResponse.returnStateMessageForThrowable(t)
+            }
+
+            override fun onResponse(
+                call: Call<UserWorkspaces>,
+                response: Response<UserWorkspaces>
+            ) {
+                if (response.isSuccessful) {
+                    successfulSpaces.value = true
+                    messageSpace.value = response.message()
+                    workspaceResponses = response.body()
+                } else {
+                    successfulSpaces.value = false
+                    messageSpace.value = response.errorBody().toString()
+                }
+            }
+        })
+
+
+        return workspaceResponses
     }
 
 

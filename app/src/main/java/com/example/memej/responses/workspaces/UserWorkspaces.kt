@@ -13,6 +13,7 @@ data class UserWorkspaces(
     @field:Json(name = "workspaces")
     val workspaces: List<Workspace>
 ) {
+    @Entity
     data class Workspace(
         @field:Json(name = "_id")
         val _id: String,
