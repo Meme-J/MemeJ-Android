@@ -118,6 +118,7 @@
     <string name="switch_to_space_question">Do you want to switch to $s space?</string>
     <string name="NO">NO</string>
     <string name="SWITCH">SWITCH</string>
+    <string name="you_are_not_a_part_of_any_of_the_spaces">You are not a part of any of the spaces.</string>
 
 
     <array name="themeColors">

@@ -3,8 +3,8 @@
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
         android:id="@+id/container_my_spaces"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.workspace.MySpacesFragmnet">
 
@@ -22,23 +22,35 @@
                 app:title="@string/my_spaces"
                 app:titleTextColor="@color/white" />
 
+            <TextView
+                android:id="@+id/tv_no_spaces_exists"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/space"
+                android:gravity="center"
+                android:maxLines="2"
+                android:padding="@dimen/space"
+                android:text="@string/you_are_not_a_part_of_any_of_the_spaces"
+                android:textSize="18sp"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@id/toolbar_drawer_element" />
 
             <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
                 android:id="@+id/swl_my_spaces"
                 android:layout_width="match_parent"
-
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/toolbar_drawer_element">
 
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_my_spaces"
-                    tools:listitem="@layout/layout_my_workspaces"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margins"
                     android:layout_marginEnd="@dimen/margins"
                     android:scrollbars="vertical"
-                    app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager" />
+                    app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
+                    tools:listitem="@layout/layout_my_workspaces" />
             </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
             <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton

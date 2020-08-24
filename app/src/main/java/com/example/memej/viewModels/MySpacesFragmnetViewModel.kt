@@ -26,10 +26,10 @@ class MySpacesFragmnetViewModel constructor(private val repo: MyWorkspacesReposi
     private val sessionManager = SessionManager(context)
     private val workspaceService = RetrofitClient.callWorkspaces(context)
 
-    var mySpacesResponse: UserWorkspaces? = null
+    lateinit var mySpacesResponse: UserWorkspaces
 
     //No body
-    fun getMySpaces(): UserWorkspaces? {
+    fun getMySpaces() {
 
 
         workspaceService.getUserSpaces(
@@ -48,7 +48,7 @@ class MySpacesFragmnetViewModel constructor(private val repo: MyWorkspacesReposi
                 if (response.isSuccessful) {
                     successful.value = true
                     message.value = response.message()
-                    mySpacesResponse = response.body()
+                    mySpacesResponse = response.body()!!
 
                 }
 
@@ -56,7 +56,6 @@ class MySpacesFragmnetViewModel constructor(private val repo: MyWorkspacesReposi
             }
         })
 
-        return mySpacesResponse
     }
 
 

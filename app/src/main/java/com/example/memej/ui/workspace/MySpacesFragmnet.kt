@@ -2,11 +2,13 @@ package com.example.memej.ui.workspace
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.view.animation.AnimationUtils
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.memej.R
@@ -62,16 +64,34 @@ class MySpacesFragmnet : AppCompatActivity(), OnItemClickListenerMySpaces {
 
     private fun getWorkspaces() {
 
-        //Use ViewModels
-        val response = viewModel.getMySpaces()
-        val success = viewModel.successful.value
-        val message = viewModel.message.value
+        viewModel.getMySpaces()
 
-        if (response == null) {
-            createSnackBar(message)
-        } else {
-            initiateAdapter(response)
-        }
+        //Use ViewModels
+        viewModel.successful.observe(this, Observer { successful ->
+            b.swlMySpaces.isRefreshing = false
+
+            if (successful != null) {
+                if (successful) {
+                    if (viewModel.mySpacesResponse.workspaces.isEmpty()) {
+                        //Create a tv, show that there are no workspaces
+                        b.tvNoSpacesExists.apply {
+                            visibility = View.VISIBLE
+                        }
+                    } else {
+                        initiateAdapter(viewModel.mySpacesResponse)
+                    }
+
+
+                } else {
+                    //When the response is false
+                    createSnackBar(viewModel.message.value)
+                }
+
+            }
+
+
+        })
+
 
     }
 
