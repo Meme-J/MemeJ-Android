@@ -2,6 +2,7 @@ package com.example.memej.ui.workspace
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.animation.AnimationUtils
 import androidx.activity.viewModels
@@ -31,7 +32,7 @@ class MySpacesFragmnet : AppCompatActivity(), OnItemClickListenerMySpaces {
 
 
     lateinit var adapter: MySpacesAdapter
-
+    private val TAG = MySpacesFragmnet::class.java.simpleName
 
     override fun onCreate(
         savedInstanceState: Bundle?
@@ -52,6 +53,8 @@ class MySpacesFragmnet : AppCompatActivity(), OnItemClickListenerMySpaces {
             startActivity(i)
         }
 
+
+        Log.e(TAG, "In the my spaces created fragment")
         getWorkspaces()
         //Set refreshing true
         b.swlMySpaces.isRefreshing = false
@@ -64,33 +67,59 @@ class MySpacesFragmnet : AppCompatActivity(), OnItemClickListenerMySpaces {
 
     private fun getWorkspaces() {
 
+        Log.e(TAG, "In get workspaces function. Value of viewmodel is " + viewModel.toString())
+        Log.e(
+            TAG,
+            "Viewmodel responses are " + viewModel.message + viewModel.successful.value.toString() + "\nResponses: " + viewModel.mySpacesResponse.toString()
+        )
+
+
         viewModel.getMySpaces()
 
         //Use ViewModels
         viewModel.successful.observe(this, Observer { successful ->
             b.swlMySpaces.isRefreshing = false
+            Log.e(TAG, "In call viewmodel")
 
             if (successful != null) {
+                Log.e(TAG, "In sucessful not null")
+
                 if (successful) {
-                    if (viewModel.mySpacesResponse.workspaces.isEmpty()) {
+                    Log.e(TAG, "In sucessful true")
+
+                    if (viewModel.mySpacesResponse?.workspaces?.isEmpty()!!) {
                         //Create a tv, show that there are no workspaces
                         b.tvNoSpacesExists.apply {
                             visibility = View.VISIBLE
                         }
+                        Log.e(TAG, "In empty lists")
+
                     } else {
-                        initiateAdapter(viewModel.mySpacesResponse)
+                        viewModel.mySpacesResponse?.let { initiateAdapter(it) }
+                        Log.e(TAG, "In sucessful true with responses")
+
                     }
 
 
                 } else {
+                    Log.e(TAG, "In sucessful false and message is ${viewModel.message}")
+
                     //When the response is false
                     createSnackBar(viewModel.message.value)
                 }
 
             }
 
+            Log.e(TAG, "In sucessful null")
+
 
         })
+
+        Log.e(
+            TAG,
+            "Viewmodel responses later are " + viewModel.message + viewModel.successful.value.toString() + "\nResponses: " + viewModel.mySpacesResponse.toString()
+        )
+        Log.e(TAG, "In end of get workspace")
 
 
     }

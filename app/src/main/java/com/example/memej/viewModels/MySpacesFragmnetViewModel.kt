@@ -1,5 +1,6 @@
 package com.example.memej.viewModels
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.memej.Utils.ApplicationUtil
@@ -26,11 +27,12 @@ class MySpacesFragmnetViewModel constructor(private val repo: MyWorkspacesReposi
     private val sessionManager = SessionManager(context)
     private val workspaceService = RetrofitClient.callWorkspaces(context)
 
-    lateinit var mySpacesResponse: UserWorkspaces
+    var mySpacesResponse: UserWorkspaces? = null
 
     //No body
     fun getMySpaces() {
 
+        Log.e(TAG, "In  egt spaces VM")
 
         workspaceService.getUserSpaces(
             accessToken = "Bearer ${sessionManager.fetchAcessToken()}"
@@ -38,12 +40,19 @@ class MySpacesFragmnetViewModel constructor(private val repo: MyWorkspacesReposi
             override fun onFailure(call: Call<UserWorkspaces>, t: Throwable) {
                 successful.value = false
                 message.value = ErrorStatesResponse.returnStateMessageForThrowable(t)
+                Log.e(TAG, "In failure message is $message")
+
             }
 
             override fun onResponse(
                 call: Call<UserWorkspaces>,
                 response: Response<UserWorkspaces>
             ) {
+
+                Log.e(
+                    TAG,
+                    "In response and values are" + response.message() + "\n" + response.body()?.workspaces.toString()
+                )
 
                 if (response.isSuccessful) {
                     successful.value = true
@@ -52,9 +61,20 @@ class MySpacesFragmnetViewModel constructor(private val repo: MyWorkspacesReposi
 
                 }
 
+                Log.e(
+                    TAG,
+                    "In response and the error body gives " + response.errorBody().toString()
+                )
+
 
             }
         })
+
+        //Finally values
+        Log.e(
+            TAG,
+            "Sucess value $successful and message is $message and responsse is $mySpacesResponse"
+        )
 
     }
 
