@@ -20,6 +20,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.example.memej.R
 import com.example.memej.Utils.sessionManagers.SessionManager
+import com.example.memej.Utils.shareLinkFromWorkspace
 import com.example.memej.adapters.TagEditAdapter
 import com.example.memej.body.ExitWorkspaceBody
 import com.example.memej.body.GenerateLinkBody
@@ -147,23 +148,17 @@ class WorkSpaceActivity : AppCompatActivity() {
     }
 
     private fun shareLinkDialog(link: String) {
-        copyToClipboard(link)
+
+        //copyToClipboard(link)
         createIntent(link)
 
     }
 
     private fun createIntent(link: String) {
-        val share = Intent(Intent.ACTION_SEND)
-        share.type = "text/plain"
-        share.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
-        // Add data to the intent, the receiving app will decide
-        // what to do with it.
+        this.shareLinkFromWorkspace(link)
 
-        // Add data to the intent, the receiving app will decide
-        // what to do with it.
-        share.putExtra(Intent.EXTRA_TEXT, link)
-        startActivity(Intent.createChooser(share, "Share link: "))
+
 
     }
 
@@ -385,7 +380,7 @@ class WorkSpaceActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
-        finish()
+        this.finish()
     }
 
 
