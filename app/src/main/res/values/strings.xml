@@ -122,6 +122,9 @@
     <string name="unableToLoadMySpaces">Unable to get my spaces. Please try again later</string>
     <string name="spaceSucess">Spaces sucessfully loaded</string>
     <string name="no_pending_invites_and_request">No pending invites and request.</string>
+    <string name="noUsers">No users from the editable</string>
+    <string name="failSend">Failed to send the invites</string>
+    <string name="emptyListForUsers">Add some users in the list to send invites</string>
 
 
     <array name="themeColors">

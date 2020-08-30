@@ -27,7 +27,9 @@ import com.example.memej.body.ExitWorkspaceBody
 import com.example.memej.body.GenerateLinkBody
 import com.example.memej.body.SendWorkspaceRequestBody
 import com.example.memej.databinding.ActivityWorkSpaceBinding
+import com.example.memej.responses.SearchUserResponses
 import com.example.memej.responses.workspaces.ExitWorkspaceResponse
+import com.example.memej.responses.workspaces.SendRequestsWorkspaceResponse
 import com.example.memej.viewModels.WorkspaceViewModel
 import com.google.android.flexbox.AlignItems
 import com.google.android.flexbox.FlexWrap
@@ -54,6 +56,9 @@ class WorkSpaceActivity : AppCompatActivity() {
     lateinit var adapterUsersAdded: TagEditAdapter
     lateinit var mutableList: MutableList<String>
     lateinit var stringAdapter: ArrayAdapter<String>
+    lateinit var et: AutoCompleteTextView
+    lateinit var btn: MaterialButton
+
 
     lateinit var d: AlertDialog.Builder
     private val TAG = WorkSpaceActivity::class.java.simpleName
@@ -107,6 +112,8 @@ class WorkSpaceActivity : AppCompatActivity() {
         binding.btnInvite.setOnClickListener {
             inviteByUsers()
         }
+
+        //On returning from create the user
 
         binding.btnLink.setOnClickListener {
             getLink()
@@ -176,8 +183,8 @@ class WorkSpaceActivity : AppCompatActivity() {
 
     private fun inviteByUsers() {
         createEnterUserDialog()
+        //Get the reference to the send invites button
     }
-
 
     private fun exitSpace() {
         createExitDialog()
@@ -198,7 +205,7 @@ class WorkSpaceActivity : AppCompatActivity() {
     private fun createEnterUserDialog() {
 
         d = AlertDialog.Builder(this)
-        val v = layoutInflater.inflate(R.layout.layout_invite_users, container_workspace)
+        val v = layoutInflater.inflate(R.layout.layout_invite_users, null)
         d.setView(v)
 
 
@@ -207,7 +214,7 @@ class WorkSpaceActivity : AppCompatActivity() {
         mutableList = mutableListOf<String>()           //Empty list
         stringAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line)
         val pb = v.findViewById<ProgressBar>(R.id.pb_load_users)
-        val et = v.findViewById<AutoCompleteTextView>(R.id.the_id)
+        et = v.findViewById<AutoCompleteTextView>(R.id.the_id)
 
 
         //OnClickVal
@@ -224,11 +231,16 @@ class WorkSpaceActivity : AppCompatActivity() {
         et.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 //Use the string as the name to search
+                //Nullify the adapter
+                et.setAdapter(null)
                 search(s, et)
                 pb.isVisible = false
+
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                pb.isVisible = true
+
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -237,16 +249,24 @@ class WorkSpaceActivity : AppCompatActivity() {
             }
         })
 
+
+        pb.isVisible = false
         et.onItemClickListener = onItemClickTag
 
         //Get the button
-        val btn = v.findViewById<MaterialButton>(R.id.mtb_send_invites)
-        btn.isEnabled = mutableList.size > 0
+        btn = v.findViewById<MaterialButton>(R.id.mtb_send_invites)
 
+        if (mutableList.size > 0) {
+            btn.isEnabled = true
+        }
         btn.setOnClickListener {
+            Log.e(TAG, mutableList.toString())
             sendInvites()
         }
 
+
+
+        d.create()
         d.show()
 
 
@@ -254,27 +274,49 @@ class WorkSpaceActivity : AppCompatActivity() {
 
     private fun sendInvites() {
 
-        //Use the viewmodel
-        val body = SendWorkspaceRequestBody(mutableList, SPACE_ID, SPACE_NAME)
-        val response = viewModel.inviteUsers(body)
-        val success = viewModel.sendBool.value
-        val message = viewModel.messageSend.value
+        //Check if the list is not empty
+        if (allowSend()) {
 
-        if (response == null) {
+            Log.e(TAG, "In send invites success")
 
-            d.setOnDismissListener { }
+            val body = SendWorkspaceRequestBody(mutableList, SPACE_ID, SPACE_NAME)
+            viewModel.inviteFunction(body).observe(this, Observer { mResponse ->
+                val success = viewModel.sendBool.value
+                if (success != null) {
 
-            createSnackbar(message)
+                    if (success) {
+                        manageInvites(mResponse)
+                    } else {
+                        createSnackbar(viewModel.messageSend.value)
+                    }
+
+
+                }
+            })
         } else {
+            //Show error
+            et.error = getString(R.string.emptyListForUsers)
 
+        }
+
+    }
+
+    private fun allowSend(): Boolean {
+
+        return mutableList.size > 0
+
+    }
+
+    private fun manageInvites(mResponse: SendRequestsWorkspaceResponse?) {
+        val message = mResponse?.msg
+
+        Log.e(TAG, message.toString())
+        if (message == "Requests sent successfully.") {
             createSnackbar(message)
-            //Successfully sent the requests
-            //Close dialog
-            d.setOnDismissListener {
 
-            }
-
-
+            return
+        } else {
+            createSnackbar(message)
         }
 
 
@@ -297,37 +339,43 @@ class WorkSpaceActivity : AppCompatActivity() {
         //Use ViewModel Observables
         val toBeSearchedString = s.toString()
 
-        val response = viewModel.searchUsers(toBeSearchedString)
-        val success = viewModel.inviteBool.value
-        val message = viewModel.messageInvite.value
+        viewModel.searchFunction(toBeSearchedString).observe(this, Observer { mResponse ->
+            val success = viewModel.inviteBool.value
+            if (success != null) {
+                if (success) {
+                    manageSearchResponse(mResponse)
+                } else {
+                    //Log the message
+                    Log.e(TAG, viewModel.message.value.toString())
+                }
 
-        //If the success if false
-        if (response == null) {
-            //Use the message and the false success
-            createSnackbar(message)
-        } else {
 
-            //When response is not null and a list of suggestions
-            val suggestions = response.suggestions
-            val str = mutableListOf<String>()
-            for (y in suggestions) {
-                str.add(y.username)
             }
+        })
 
-            //Reinit the str adapter
-            stringAdapter =
-                ArrayAdapter(
-                    this,
-                    android.R.layout.simple_dropdown_item_1line,
-                    str
-                )
-
-            et.setAdapter(stringAdapter)
-
-        }
 
     }
 
+    private fun manageSearchResponse(mResponse: SearchUserResponses?) {
+
+
+        val suggestions = mResponse?.suggestions
+        val str = mutableListOf<String>()
+        for (y in suggestions!!) {
+            str.add(y.username)
+        }
+
+        //Reinit the str adapter
+        stringAdapter =
+            ArrayAdapter(
+                this,
+                android.R.layout.simple_dropdown_item_1line,
+                str
+            )
+
+        et.setAdapter(stringAdapter)
+
+    }
 
     private fun createSnackbar(message: String?) {
         Snackbar.make(container_workspace, message.toString(), Snackbar.LENGTH_SHORT).show()

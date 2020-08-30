@@ -35,28 +35,6 @@ object RetrofitClient {
         //Create cache
         val mCache = Cache(context.cacheDir, cacheSize)
 
-//        [    .cache(mCache)
-//            .addInterceptor { chain ->
-//                var req = chain.request()
-//                if (ErrorStatesResponse.checkIsNetworkConnected(context)) {
-//                    req = req.newBuilder().header("Cache-Control", "public, max-age=" + 5).build()
-//                    Log.e(TAG, "In yes internet")
-//                } else {
-//                    req = req.newBuilder().header(
-//                        "Cache-Control",
-//                        "public, only-if-cached, max-stale=" + 60 * 60 * 1
-//                    ).build()
-//                }
-//                /**
-//                 *  If there is Internet, get the cache that was stored 5 seconds ago.
-//                 *  If the cache is older than 5 seconds, then discard it,
-//                 *  and indicate an error in fetching the response.
-//                 *  The 'max-age' attribute is responsible for this behavior.
-//                 */
-//                chain.proceed(req)
-//            }
-//
-//        ]
 
 
         return OkHttpClient.Builder()

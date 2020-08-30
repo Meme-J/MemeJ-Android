@@ -3,6 +3,7 @@ package com.example.memej.viewModels
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.memej.R
 import com.example.memej.Utils.ApplicationUtil
 import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.SessionManager
@@ -46,8 +47,8 @@ class WorkspaceViewModel : ViewModel() {
 
     private var exitResponse: MutableLiveData<ExitWorkspaceResponse> = MutableLiveData()
     var generateLinkResponse: MutableLiveData<GenerateLinkResponse> = MutableLiveData()
-    var getSearchedUsersResponse: SearchUserResponses? = null
-    var inviteUsersPesponse: SendRequestsWorkspaceResponse? = null
+    var getSearchedUsersResponse: MutableLiveData<SearchUserResponses> = MutableLiveData()
+    var inviteUsersPesponse: MutableLiveData<SendRequestsWorkspaceResponse> = MutableLiveData()
 
 
     fun exitFunction(body: ExitWorkspaceBody): MutableLiveData<ExitWorkspaceResponse> {
@@ -144,7 +145,14 @@ class WorkspaceViewModel : ViewModel() {
 
     }
 
-    fun searchUsers(s: String): SearchUserResponses? {
+
+    fun searchFunction(s: String): MutableLiveData<SearchUserResponses> {
+        getSearchedUsersResponse = searchUsers(s)
+        return getSearchedUsersResponse
+    }
+
+
+    fun searchUsers(s: String): MutableLiveData<SearchUserResponses> {
 
         val body = searchUserBody(s)
         workspaceService.searchUsers(
@@ -164,7 +172,10 @@ class WorkspaceViewModel : ViewModel() {
                     //When we get a suggestions response
                     inviteBool.value = true
                     messageInvite.value = response.message()
-                    getSearchedUsersResponse = response.body()!!
+                    getSearchedUsersResponse.value = response.body()!!
+                } else {
+                    inviteBool.value = false
+                    messageInvite.value = context.getString(R.string.noUsers)
                 }
 
             }
@@ -174,7 +185,12 @@ class WorkspaceViewModel : ViewModel() {
 
     }
 
-    fun inviteUsers(body: SendWorkspaceRequestBody): SendRequestsWorkspaceResponse? {
+    fun inviteFunction(body: SendWorkspaceRequestBody): MutableLiveData<SendRequestsWorkspaceResponse> {
+        inviteUsersPesponse = inviteUsers(body)
+        return inviteUsersPesponse
+    }
+
+    private fun inviteUsers(body: SendWorkspaceRequestBody): MutableLiveData<SendRequestsWorkspaceResponse> {
 
         workspaceService.inviteUsers(
             accessToken = "Bearer ${sessionManager.fetchAcessToken()}",
@@ -189,11 +205,16 @@ class WorkspaceViewModel : ViewModel() {
                 call: Call<SendRequestsWorkspaceResponse>,
                 response: Response<SendRequestsWorkspaceResponse>
             ) {
+
+                Log.e(TAG, response.body()?.msg + response.message() + response.errorBody())
                 if (response.isSuccessful) {
 
                     sendBool.value = true
-                    messageSend.value = response.message()
-                    inviteUsersPesponse = response.body()!!
+                    messageSend.value = response.body()?.msg
+                    inviteUsersPesponse.value = response.body()!!
+                } else {
+                    sendBool.value = false
+                    messageSend.value = response.body()?.msg
                 }
 
             }
