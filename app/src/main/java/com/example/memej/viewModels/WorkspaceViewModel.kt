@@ -92,6 +92,7 @@ class WorkspaceViewModel : ViewModel() {
 
     }
 
+
     fun generateFunction(body: GenerateLinkBody): MutableLiveData<GenerateLinkResponse> {
 
         generateLinkResponse = generateLink(body)
@@ -109,7 +110,7 @@ class WorkspaceViewModel : ViewModel() {
                 override fun onFailure(call: Call<GenerateLinkResponse>, t: Throwable) {
                     generateLinkBool.value = false
                     messageLink.value = ErrorStatesResponse.returnStateMessageForThrowable(t)
-
+                    //Response is null
                 }
 
                 override fun onResponse(

@@ -334,20 +334,15 @@ class WorkSpaceActivity : AppCompatActivity() {
         Log.e(TAG, "In Confirm exit dialog")
 
         viewModel.exitFunction(body).observe(this, Observer { mResponse ->
-            //If response is null
-            Log.e(
-                TAG,
-                "Returns from all the things and in the body and response received is " + mResponse?.msg.toString()
-            )
 
-            if (mResponse == null) {
-                //Get the message
+            //Check with the sucessful of it
+            if (viewModel.successful.value == false) {
                 createSnackbar(viewModel.message.value)
             } else {
                 manageExitResponses(mResponse)
             }
         })
-        Log.e(TAG, "Returns from all the things")
+
 
 //            //TODO:Update the util data of the space
 //            //TODO:Use room
