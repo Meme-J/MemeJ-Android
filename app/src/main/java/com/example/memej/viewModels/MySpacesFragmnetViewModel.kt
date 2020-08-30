@@ -27,10 +27,18 @@ class MySpacesFragmnetViewModel :
     private val sessionManager = SessionManager(context)
     private val workspaceService = RetrofitClient.callWorkspaces(context)
 
-    var mySpacesResponse: UserWorkspaces? = null
+    private var mySpacesResponse: MutableLiveData<UserWorkspaces> = MutableLiveData()
+
+    fun mySpacesFuction(): MutableLiveData<UserWorkspaces> {
+        //If mySpacesResponses is null
+        mySpacesResponse = getMySpaces()
+        return mySpacesResponse
+
+
+    }
 
     //No body
-    fun getMySpaces() {
+    fun getMySpaces(): MutableLiveData<UserWorkspaces> {
 
         Log.e(TAG, "In  egt spaces VM")
 
@@ -57,7 +65,7 @@ class MySpacesFragmnetViewModel :
                 if (response.isSuccessful) {
                     successful.value = true
                     message.value = context.getString(R.string.spaceSucess)
-                    mySpacesResponse = response.body()!!
+                    mySpacesResponse.value = response.body()!!
 
                 } else {
                     successful.value = false
@@ -68,12 +76,8 @@ class MySpacesFragmnetViewModel :
             }
         })
 
-        //Finally values
-        Log.e(
-            TAG,
-            "Sucess value $successful and message is $message and responsse is $mySpacesResponse"
-        )
 
+        return mySpacesResponse
     }
 
 

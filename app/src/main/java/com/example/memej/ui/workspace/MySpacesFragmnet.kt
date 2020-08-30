@@ -38,9 +38,9 @@ class MySpacesFragmnet : AppCompatActivity(), OnItemClickListenerMySpaces {
         savedInstanceState: Bundle?
     ) {
         super.onCreate(savedInstanceState)
+
         b = DataBindingUtil.setContentView(this, R.layout.my_spaces_fragmnet_fragment)
         val toolbar = b.toolbarDrawerElement
-        b.swlMySpaces.isRefreshing = true
 
         toolbar.setNavigationOnClickListener {
             onBackPressed()
@@ -54,31 +54,7 @@ class MySpacesFragmnet : AppCompatActivity(), OnItemClickListenerMySpaces {
 
         }
 
-        viewModel.successful.observe(this, Observer { successful ->
-            //Refresh is false
-            b.swlMySpaces.isRefreshing = false
-
-            Log.e(
-                TAG,
-                "Returned from VM, and successa dn resp and message are:  ad the response are " + successful.toString() + viewModel.message.value.toString() + "\n" + viewModel.mySpacesResponse.toString()
-            )
-            if (successful != null) {
-                if (successful) {
-
-                    viewModel.mySpacesResponse?.let { initiateAdapter(it) }
-
-
-                } else {
-                    createSnackBar(viewModel.message.value)
-                }
-
-
-            }
-
-
-        })
-
-
+        getWorkspaces()
 
         b.swlMySpaces.setOnRefreshListener {
             getWorkspaces()
@@ -86,15 +62,19 @@ class MySpacesFragmnet : AppCompatActivity(), OnItemClickListenerMySpaces {
         }
 
 
-        b.swlMySpaces.isRefreshing = false
 
 
     }
 
     private fun getWorkspaces() {
 
-        b.swlMySpaces.isRefreshing = true
-        viewModel.getMySpaces()
+        //Load the data
+
+        viewModel.mySpacesFuction().observe(this, Observer { mResponse ->
+            initiateAdapter(mResponse)
+        })
+
+
     }
 
     private fun initiateAdapter(response: UserWorkspaces) {
@@ -110,6 +90,7 @@ class MySpacesFragmnet : AppCompatActivity(), OnItemClickListenerMySpaces {
 
         } else {
 
+            b.tvNoSpacesExists.visibility = View.GONE
             val rv = b.rvMySpaces
             adapter = MySpacesAdapter(this)
             adapter.lst = response.workspaces
@@ -117,8 +98,10 @@ class MySpacesFragmnet : AppCompatActivity(), OnItemClickListenerMySpaces {
             rv.layoutManager = layoutManager
             runLayoutAnimation(rv)
             rv.adapter = adapter
-            b.swlMySpaces.isRefreshing = false
         }
+        b.swlMySpaces.isRefreshing = false
+
+
     }
 
     private fun createSnackBar(message: String?) {

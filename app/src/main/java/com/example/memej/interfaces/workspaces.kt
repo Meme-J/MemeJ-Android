@@ -23,7 +23,6 @@ interface workspaces {
 
     //Get the user workspaces
     @POST("/api/user/workspaces")
-    @Headers("Content-Type:application/json")
     fun getUserSpaces(
         @Header("Authorization") accessToken: String?
     ): Call<UserWorkspaces>
