@@ -51,88 +51,74 @@ class MySpacesFragmnet : AppCompatActivity(), OnItemClickListenerMySpaces {
             //Go to create workspace activity
             val i = Intent(this, CreateWorkspaceActivity::class.java)
             startActivity(i)
+
         }
 
+        viewModel.successful.observe(this, Observer { successful ->
+            //Refresh is false
+            b.swlMySpaces.isRefreshing = false
 
-        Log.e(TAG, "In the my spaces created fragment")
-        getWorkspaces()
-        //Set refreshing true
-        b.swlMySpaces.isRefreshing = false
+            Log.e(
+                TAG,
+                "Returned from VM, and successa dn resp and message are:  ad the response are " + successful.toString() + viewModel.message.value.toString() + "\n" + viewModel.mySpacesResponse.toString()
+            )
+            if (successful != null) {
+                if (successful) {
+
+                    viewModel.mySpacesResponse?.let { initiateAdapter(it) }
+
+
+                } else {
+                    createSnackBar(viewModel.message.value)
+                }
+
+
+            }
+
+
+        })
+
+
 
         b.swlMySpaces.setOnRefreshListener {
             getWorkspaces()
+            b.swlMySpaces.isRefreshing = false
         }
+
+
+        b.swlMySpaces.isRefreshing = false
+
 
     }
 
     private fun getWorkspaces() {
 
-        Log.e(TAG, "In get workspaces function. Value of viewmodel is " + viewModel.toString())
-        Log.e(
-            TAG,
-            "Viewmodel responses are " + viewModel.message + viewModel.successful.value.toString() + "\nResponses: " + viewModel.mySpacesResponse.toString()
-        )
-
-
+        b.swlMySpaces.isRefreshing = true
         viewModel.getMySpaces()
-
-        //Use ViewModels
-        viewModel.successful.observe(this, Observer { successful ->
-            b.swlMySpaces.isRefreshing = false
-            Log.e(TAG, "In call viewmodel")
-
-            if (successful != null) {
-                Log.e(TAG, "In sucessful not null")
-
-                if (successful) {
-                    Log.e(TAG, "In sucessful true")
-
-                    if (viewModel.mySpacesResponse?.workspaces?.isEmpty()!!) {
-                        //Create a tv, show that there are no workspaces
-                        b.tvNoSpacesExists.apply {
-                            visibility = View.VISIBLE
-                        }
-                        Log.e(TAG, "In empty lists")
-
-                    } else {
-                        viewModel.mySpacesResponse?.let { initiateAdapter(it) }
-                        Log.e(TAG, "In sucessful true with responses")
-
-                    }
-
-
-                } else {
-                    Log.e(TAG, "In sucessful false and message is ${viewModel.message}")
-
-                    //When the response is false
-                    createSnackBar(viewModel.message.value)
-                }
-
-            }
-
-            Log.e(TAG, "In sucessful null")
-
-
-        })
-
-        Log.e(
-            TAG,
-            "Viewmodel responses later are " + viewModel.message + viewModel.successful.value.toString() + "\nResponses: " + viewModel.mySpacesResponse.toString()
-        )
-        Log.e(TAG, "In end of get workspace")
-
-
     }
 
     private fun initiateAdapter(response: UserWorkspaces) {
-        val rv = b.rvMySpaces
-        adapter = MySpacesAdapter(this)
-        adapter.lst = response.workspaces
-        val layoutManager = GridLayoutManager(this, 2)
-        rv.layoutManager = layoutManager
-        runLayoutAnimation(rv)
-        rv.adapter = adapter
-        b.swlMySpaces.isRefreshing = false
+
+        Log.e(TAG, " In init adapter " + response.workspaces.toString())
+
+
+        //Check the user response and its null parameters
+        if (response.workspaces.isEmpty()) {
+            b.tvNoSpacesExists.apply {
+                visibility = View.VISIBLE
+            }
+
+        } else {
+
+            val rv = b.rvMySpaces
+            adapter = MySpacesAdapter(this)
+            adapter.lst = response.workspaces
+            val layoutManager = GridLayoutManager(this, 2)
+            rv.layoutManager = layoutManager
+            runLayoutAnimation(rv)
+            rv.adapter = adapter
+            b.swlMySpaces.isRefreshing = false
+        }
     }
 
     private fun createSnackBar(message: String?) {

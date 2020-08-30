@@ -22,11 +22,12 @@ interface workspaces {
 
 
     //Get the user workspaces
-    @POST("api/user/workspaces")
+    @POST("/api/user/workspaces")
     @Headers("Content-Type:application/json")
     fun getUserSpaces(
         @Header("Authorization") accessToken: String?
     ): Call<UserWorkspaces>
+
 
     //Create workspace
     @POST("api/workspace/create")
@@ -73,7 +74,7 @@ interface workspaces {
     ): Call<SendRequestsWorkspaceResponse>
 
     //Get the request received by the users by other people
-    @POST("api/user/request")
+    @POST("api/user/requests")
     @Headers("Content-Type:application/json")
     fun getRequests(
         @Header("Authorization") accessToken: String?

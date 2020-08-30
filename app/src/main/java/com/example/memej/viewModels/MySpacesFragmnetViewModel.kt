@@ -3,16 +3,16 @@ package com.example.memej.viewModels
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.memej.R
 import com.example.memej.Utils.ApplicationUtil
 import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.interfaces.RetrofitClient
-import com.example.memej.repositories.MyWorkspacesRepository
 import com.example.memej.responses.workspaces.UserWorkspaces
 import retrofit2.Call
 import retrofit2.Response
 
-class MySpacesFragmnetViewModel constructor(private val repo: MyWorkspacesRepository) :
+class MySpacesFragmnetViewModel :
     ViewModel() {
 
 
@@ -40,7 +40,7 @@ class MySpacesFragmnetViewModel constructor(private val repo: MyWorkspacesReposi
             override fun onFailure(call: Call<UserWorkspaces>, t: Throwable) {
                 successful.value = false
                 message.value = ErrorStatesResponse.returnStateMessageForThrowable(t)
-                Log.e(TAG, "In failure message is $message")
+                Log.e(TAG, "In failure message is ${message.value}")
 
             }
 
@@ -56,15 +56,13 @@ class MySpacesFragmnetViewModel constructor(private val repo: MyWorkspacesReposi
 
                 if (response.isSuccessful) {
                     successful.value = true
-                    message.value = response.message()
+                    message.value = context.getString(R.string.spaceSucess)
                     mySpacesResponse = response.body()!!
 
+                } else {
+                    successful.value = false
+                    message.value = context.getString(R.string.unableToLoadMySpaces)
                 }
-
-                Log.e(
-                    TAG,
-                    "In response and the error body gives " + response.errorBody().toString()
-                )
 
 
             }

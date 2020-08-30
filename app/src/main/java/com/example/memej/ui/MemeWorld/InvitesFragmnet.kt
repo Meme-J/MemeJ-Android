@@ -1,6 +1,8 @@
 package com.example.memej.ui.MemeWorld
 
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import android.view.animation.AnimationUtils
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -27,6 +29,8 @@ class InvitesFragmnet : AppCompatActivity(), OnItemClickListenerInvites {
     private lateinit var b: InvitesFragmnetFragmentBinding
 
     lateinit var adapter: InvitesAdapter
+    private val TAG = InvitesFragmnet::class.java.simpleName
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,15 +43,19 @@ class InvitesFragmnet : AppCompatActivity(), OnItemClickListenerInvites {
             onBackPressed()
         }
 
-        getInvites()
 
-        b.swlInvites.isRefreshing = false
+        getInvites()
 
         b.swlInvites.setOnRefreshListener {
             getInvites()
+            b.swlInvites.isRefreshing = false
+
         }
 
+        b.swlInvites.isRefreshing = false
+
     }
+
 
     private fun getInvites() {
 
@@ -55,7 +63,14 @@ class InvitesFragmnet : AppCompatActivity(), OnItemClickListenerInvites {
         val success = viewModel.successful.value
         val message = viewModel.message.value
 
-        //Use success
+
+        Log.e(
+            TAG,
+            "The response, success and merge ares" + response.toString() + "\n" + message.toString() + success.toString()
+        )
+
+        //Invalidate
+
         if (success != null) {
             if (response == null) {
                 createSnackbar(message)
@@ -65,21 +80,31 @@ class InvitesFragmnet : AppCompatActivity(), OnItemClickListenerInvites {
             }
         }
 
-        //Do nothing when success is null
+
     }
+
 
     private fun initAdapter(response: UserRequestResponse) {
 
-        //Init rv
-        val rv = b.rvInvites
-        adapter = InvitesAdapter(this, this)
-        adapter.lst = response.requests.toMutableList()
-        val layoutManager = LinearLayoutManager(this)
-        rv.layoutManager = layoutManager
-        runLayoutAnimation(rv)
-        adapter.notifyDataSetChanged()
+        Log.e(TAG, "In init adapter")
+        if (response.requests.isEmpty()) {
+            b.tvEmptyInvites.apply {
+                visibility = View.VISIBLE
+            }
+        } else {
+            b.tvEmptyInvites.visibility = View.GONE
+            val rv = b.rvInvites
+            adapter = InvitesAdapter(this, this)
+            adapter.lst = response.requests.toMutableList()
+            val layoutManager = LinearLayoutManager(this)
+            rv.layoutManager = layoutManager
+            runLayoutAnimation(rv)
+            adapter.notifyDataSetChanged()
+
+        }
 
         b.swlInvites.isRefreshing = false
+
     }
 
 
@@ -120,5 +145,11 @@ class InvitesFragmnet : AppCompatActivity(), OnItemClickListenerInvites {
     ) {
     }
 
+    //Remove observers
+
+
+    /**
+     * Add the delete and accept requests function
+     */
 
 }

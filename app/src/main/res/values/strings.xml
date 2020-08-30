@@ -11,7 +11,7 @@
     <string name="signup_instead"> SignUp Instead</string>
     <string name="email">Email</string>
     <string name="lorem_ipsum">the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</string>
-
+    <string name="getRequestsFailed">"Unable to get the requests at the moment. Please try again later"</string>
     <string name="unable_meeme_world">Unable to get memes. Please try again later</string>
 
     <string name="already_have_an_account">Already have an account?</string>
@@ -119,6 +119,9 @@
     <string name="NO">NO</string>
     <string name="SWITCH">SWITCH</string>
     <string name="you_are_not_a_part_of_any_of_the_spaces">You are not a part of any of the spaces.</string>
+    <string name="unableToLoadMySpaces">Unable to get my spaces. Please try again later</string>
+    <string name="spaceSucess">Spaces sucessfully loaded</string>
+    <string name="no_pending_invites_and_request">No pending invites and request.</string>
 
 
     <array name="themeColors">
@@ -151,5 +154,6 @@
         <item>Robot Reaver</item>
         <item>Fonty</item>
     </string-array>
+
 
 </resources>

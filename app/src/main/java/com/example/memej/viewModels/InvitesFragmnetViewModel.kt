@@ -1,7 +1,9 @@
 package com.example.memej.viewModels
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.memej.R
 import com.example.memej.Utils.ApplicationUtil
 import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.SessionManager
@@ -42,6 +44,12 @@ class InvitesFragmnetViewModel : ViewModel() {
                 response: Response<UserRequestResponse>
             ) {
 
+
+                Log.e(
+                    TAG,
+                    "In the Invites Viewmodel and response is " + response.body()?.requests.toString() + " " + response.body()?.requests?.size + " and the" +
+                            "response code is " + response.message()
+                )
                 if (response.isSuccessful) {
                     successful.value = true
                     message.value = response.message()
@@ -49,7 +57,7 @@ class InvitesFragmnetViewModel : ViewModel() {
 
                 } else {
                     successful.value = false
-                    message.value = response.errorBody().toString()
+                    message.value = context.getString(R.string.getRequestsFailed)
                 }
 
 
