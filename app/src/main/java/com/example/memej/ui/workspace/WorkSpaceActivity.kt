@@ -9,19 +9,23 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.widget.*
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.example.memej.R
 import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.adapters.TagEditAdapter
+import com.example.memej.body.ExitWorkspaceBody
 import com.example.memej.body.GenerateLinkBody
 import com.example.memej.body.SendWorkspaceRequestBody
 import com.example.memej.databinding.ActivityWorkSpaceBinding
+import com.example.memej.responses.workspaces.ExitWorkspaceResponse
 import com.example.memej.viewModels.WorkspaceViewModel
 import com.google.android.flexbox.AlignItems
 import com.google.android.flexbox.FlexWrap
@@ -50,6 +54,7 @@ class WorkSpaceActivity : AppCompatActivity() {
     lateinit var stringAdapter: ArrayAdapter<String>
 
     lateinit var d: AlertDialog.Builder
+    private val TAG = WorkSpaceActivity::class.java.simpleName
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -116,7 +121,7 @@ class WorkSpaceActivity : AppCompatActivity() {
 
         val w = GenerateLinkBody.Workspace(SPACE_ID, SPACE_NAME)
         val body = GenerateLinkBody(w)
-        val response = viewModel.generateLink(body)?.value
+        val response = viewModel.generateLink(body).value
 
         pb.dismiss()
         val success = viewModel.generateLinkBool.value
@@ -316,39 +321,62 @@ class WorkSpaceActivity : AppCompatActivity() {
 
     }
 
+
     private fun createSnackbar(message: String?) {
         Snackbar.make(container_workspace, message.toString(), Snackbar.LENGTH_SHORT).show()
     }
 
-
     private fun confirmExit() {
 
-//        val id = arg.getString()
-//        val name = arg.getString()
-//        val body = ExitWorkspaceBody.Workspace(id, name)
-//        val resp = viewModel.exitSpace(body)
-//
-//        if (resp == null) {
-//            //Unable to exit
-//            val snack = Snackbar.make(
-//                container_workspace,
-//                "Unable to exit the workspace",
-//                Snackbar.LENGTH_SHORT
-//            )
-//            snack.show()
-//        } else {
-//            Toast.makeText(this, "Exited the space", Toast.LENGTH_SHORT).show()
-//
+
+        val b = ExitWorkspaceBody.Workspace(SPACE_ID, SPACE_NAME)
+        val body = ExitWorkspaceBody(b)
+        Log.e(TAG, "In Confirm exit dialog")
+
+        viewModel.exitFunction(body).observe(this, Observer { mResponse ->
+            //If response is null
+            Log.e(
+                TAG,
+                "Returns from all the things and in the body and response received is " + mResponse?.msg.toString()
+            )
+
+            if (mResponse == null) {
+                //Get the message
+                createSnackbar(viewModel.message.value)
+            } else {
+                manageExitResponses(mResponse)
+            }
+        })
+        Log.e(TAG, "Returns from all the things")
+
 //            //TODO:Update the util data of the space
 //            //TODO:Use room
 //
 //            //TODO:Set default to global space
-//            val i = Intent(this, MySpacesFragmnet::class.java)
-//            startActivity(i)
-//            finish()
-//            finishAffinity()
-//        }
 
+    }
+
+    private fun manageExitResponses(mResponse: ExitWorkspaceResponse?) {
+
+
+        val message = mResponse?.msg
+        Log.e(TAG, "In manageExitResponses anf messqga eis $message")
+        if (message == "Workspace exited successfully.") {
+            goToMySpaces()
+        }
+
+        //Else create a snackbar of why we can not exit the space
+        else {
+            createSnackbar(message)
+        }
+
+
+    }
+
+    private fun goToMySpaces() {
+        val i = Intent(this, MySpacesFragmnet::class.java)
+        startActivity(i)
+        finish()
     }
 
     override fun onBackPressed() {

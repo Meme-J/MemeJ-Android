@@ -1,5 +1,6 @@
 package com.example.memej.viewModels
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.memej.Utils.ApplicationUtil
@@ -23,7 +24,7 @@ class WorkspaceViewModel : ViewModel() {
 
     //For exiting the workspace
     val successful: MutableLiveData<Boolean> = MutableLiveData()
-    var message: String = ""
+    var message: MutableLiveData<String> = MutableLiveData()
 
     //For generating the link
     var generateLinkBool: MutableLiveData<Boolean> = MutableLiveData()
@@ -43,12 +44,19 @@ class WorkspaceViewModel : ViewModel() {
     private val sessionManager = SessionManager(context)
     private val workspaceService = RetrofitClient.callWorkspaces(context)
 
-    var exitResponse: ExitWorkspaceResponse? = null
-    var generateLinkResponse: MutableLiveData<GenerateLinkResponse> = MutableLiveData()
+    private var exitResponse: MutableLiveData<ExitWorkspaceResponse> = MutableLiveData()
+    private var generateLinkResponse: MutableLiveData<GenerateLinkResponse> = MutableLiveData()
     var getSearchedUsersResponse: SearchUserResponses? = null
     var inviteUsersPesponse: SendRequestsWorkspaceResponse? = null
 
-    fun exitSpace(body: ExitWorkspaceBody.Workspace): ExitWorkspaceResponse? {
+
+    fun exitFunction(body: ExitWorkspaceBody): MutableLiveData<ExitWorkspaceResponse> {
+        exitResponse = exitSpace(body)
+        return exitResponse
+
+    }
+
+    fun exitSpace(body: ExitWorkspaceBody): MutableLiveData<ExitWorkspaceResponse> {
 
 
         workspaceService.exitSpaces(
@@ -58,7 +66,7 @@ class WorkspaceViewModel : ViewModel() {
             .enqueue(object : retrofit2.Callback<ExitWorkspaceResponse> {
                 override fun onFailure(call: Call<ExitWorkspaceResponse>, t: Throwable) {
                     successful.value = false
-                    message = ErrorStatesResponse.returnStateMessageForThrowable(t)
+                    message.value = ErrorStatesResponse.returnStateMessageForThrowable(t)
 
                 }
 
@@ -66,19 +74,15 @@ class WorkspaceViewModel : ViewModel() {
                     call: Call<ExitWorkspaceResponse>,
                     response: Response<ExitWorkspaceResponse>
                 ) {
+
                     if (response.isSuccessful) {
-                        if (response.body()?.msg == "Workspace exited successfully.") {
-                            successful.value = true
-                            message = "Exit from the workspace successful"
-                            exitResponse = response.body()!!
-
-                        } else {
-                            successful.value = false
-                            message = response.body()!!.msg
-
-                        }
+                        exitResponse.value = response.body()
+                        successful.value = true
+                        Log.e(TAG, response.body().toString())
+                    } else {
+                        successful.value = false
+                        message.value = response.body()?.msg!!
                     }
-
                 }
             })
 
@@ -88,7 +92,14 @@ class WorkspaceViewModel : ViewModel() {
 
     }
 
-    fun generateLink(body: GenerateLinkBody): MutableLiveData<GenerateLinkResponse>? {
+    fun generateFunction(body: GenerateLinkBody): MutableLiveData<GenerateLinkResponse> {
+
+        generateLinkResponse = generateLink(body)
+        return generateLinkResponse
+    }
+
+
+    fun generateLink(body: GenerateLinkBody): MutableLiveData<GenerateLinkResponse> {
 
         workspaceService.generateLink(
             accessToken = "Bearer ${sessionManager.fetchAcessToken()}",

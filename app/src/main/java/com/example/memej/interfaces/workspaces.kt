@@ -42,7 +42,7 @@ interface workspaces {
     @Headers("Content-Type:application/json")
     fun exitSpaces(
         @Header("Authorization") accessToken: String?,
-        @Body body: ExitWorkspaceBody.Workspace
+        @Body body: ExitWorkspaceBody
     ): Call<ExitWorkspaceResponse>
 
 
