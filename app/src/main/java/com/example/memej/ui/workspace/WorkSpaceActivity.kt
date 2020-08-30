@@ -16,6 +16,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.example.memej.R
@@ -149,7 +150,7 @@ class WorkSpaceActivity : AppCompatActivity() {
 
     private fun shareLinkDialog(link: String) {
 
-        //copyToClipboard(link)
+        copyToClipboard(link)
         createIntent(link)
 
     }
@@ -158,7 +159,9 @@ class WorkSpaceActivity : AppCompatActivity() {
 
         this.shareLinkFromWorkspace(link)
 
-
+        //Clear the viewmodels and responses
+        viewModel.generateLinkBool.value = null
+        viewModel.generateLinkResponse = MutableLiveData()
 
     }
 

@@ -45,7 +45,7 @@ class WorkspaceViewModel : ViewModel() {
     private val workspaceService = RetrofitClient.callWorkspaces(context)
 
     private var exitResponse: MutableLiveData<ExitWorkspaceResponse> = MutableLiveData()
-    private var generateLinkResponse: MutableLiveData<GenerateLinkResponse> = MutableLiveData()
+    var generateLinkResponse: MutableLiveData<GenerateLinkResponse> = MutableLiveData()
     var getSearchedUsersResponse: SearchUserResponses? = null
     var inviteUsersPesponse: SendRequestsWorkspaceResponse? = null
 
