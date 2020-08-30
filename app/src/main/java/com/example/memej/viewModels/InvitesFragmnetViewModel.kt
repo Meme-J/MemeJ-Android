@@ -26,10 +26,14 @@ class InvitesFragmnetViewModel : ViewModel() {
     private val workspaceService = RetrofitClient.callWorkspaces(context)
 
 
-    var invitesResponse: UserRequestResponse? = null
+    private var invitesResponse: MutableLiveData<UserRequestResponse> = MutableLiveData()
 
+    fun loadFunction(): MutableLiveData<UserRequestResponse> {
+        invitesResponse = loadInvites()
+        return invitesResponse
+    }
 
-    fun loadInvites(): UserRequestResponse? {
+    fun loadInvites(): MutableLiveData<UserRequestResponse> {
 
         workspaceService.getRequests(
             accessToken = "Bearer ${sessionManager.fetchAcessToken()}"
@@ -53,7 +57,7 @@ class InvitesFragmnetViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     successful.value = true
                     message.value = response.message()
-                    invitesResponse = response.body()
+                    invitesResponse.value = response.body()
 
                 } else {
                     successful.value = false

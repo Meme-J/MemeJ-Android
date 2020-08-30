@@ -7,6 +7,7 @@ import android.view.animation.AnimationUtils
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.memej.R
@@ -59,27 +60,11 @@ class InvitesFragmnet : AppCompatActivity(), OnItemClickListenerInvites {
 
     private fun getInvites() {
 
-        val response = viewModel.loadInvites()
-        val success = viewModel.successful.value
-        val message = viewModel.message.value
-
-
-        Log.e(
-            TAG,
-            "The response, success and merge ares" + response.toString() + "\n" + message.toString() + success.toString()
-        )
-
-        //Invalidate
-
-        if (success != null) {
-            if (response == null) {
-                createSnackbar(message)
-            } else {
-                initAdapter(response)
-
-            }
-        }
-
+        //Check for messages
+        viewModel.loadFunction().observe(this, Observer { mResponse ->
+            //Response is the invites response
+            initAdapter(mResponse)
+        })
 
     }
 
