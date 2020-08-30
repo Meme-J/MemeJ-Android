@@ -1,16 +1,21 @@
 package com.example.memej.body
 
 
+import androidx.annotation.Keep
 import com.squareup.moshi.Json
 
+@Keep
 data class GenerateLinkBody(
-    @Json(name = "workspace")
+
+    @field:Json(name = "workspace")
     val workspace: Workspace
 ) {
+
+    @Keep
     data class Workspace(
-        @Json(name = "_id")
-        val id: String,
-        @Json(name = "name")
+        @field:Json(name = "_id")
+        val _id: String,
+        @field:Json(name = "name")
         val name: String
     )
 }

@@ -117,6 +117,8 @@ class WorkspaceViewModel : ViewModel() {
                     call: Call<GenerateLinkResponse>,
                     response: Response<GenerateLinkResponse>
                 ) {
+
+                    Log.e(TAG, response.message() + response.body()?.msg + response.body()?.link)
                     if (response.isSuccessful) {
                         if (response.body()?.msg == "link created successfully.") {
                             generateLinkBool.value = true
@@ -130,7 +132,7 @@ class WorkspaceViewModel : ViewModel() {
 
                     } else {
                         generateLinkBool.value = false
-                        messageLink.value = response.errorBody().toString()
+                        messageLink.value = response.body()?.msg.toString()
                     }
 
                 }

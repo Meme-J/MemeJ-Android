@@ -9,7 +9,7 @@ data class ExitWorkspaceBody(
 ) {
     data class Workspace(
         @Json(name = "_id")
-        val id: String, // 5ebc29b313fbe833d78dc971
+        val _id: String, // 5ebc29b313fbe833d78dc971
         @Json(name = "name")
         val name: String // secongworkspace
     )

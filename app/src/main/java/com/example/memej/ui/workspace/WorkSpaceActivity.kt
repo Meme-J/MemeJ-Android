@@ -116,25 +116,34 @@ class WorkSpaceActivity : AppCompatActivity() {
         //Create progress dialog
         val pb = ProgressDialog(this)
         pb.setMessage("Generating link")
+        pb.setCancelable(false)
         pb.show()
 
 
         val w = GenerateLinkBody.Workspace(SPACE_ID, SPACE_NAME)
         val body = GenerateLinkBody(w)
-        val response = viewModel.generateLink(body).value
+        Log.e(TAG, body.toString())
+
+
+        binding.swlWorkspace.isRefreshing = true
 
         pb.dismiss()
-        val success = viewModel.generateLinkBool.value
-        val message = viewModel.messageLink.value
 
-        if (response == null) {
-            Snackbar.make(container_workspace, message.toString(), Snackbar.LENGTH_LONG).show()
-        } else {
-            val link = response.link
-            shareLinkDialog(link)
-        }
+        viewModel.generateFunction(body).observe(this, Observer { mResponse ->
+            val success = viewModel.generateLinkBool.value
+
+            if (success != null) {
+                if (success) {
+                    shareLinkDialog(mResponse.link)
+                } else {
+                    createSnackbar(mResponse.msg)
+                }
 
 
+            }
+        })
+
+        binding.swlWorkspace.isRefreshing = false
     }
 
     private fun shareLinkDialog(link: String) {
