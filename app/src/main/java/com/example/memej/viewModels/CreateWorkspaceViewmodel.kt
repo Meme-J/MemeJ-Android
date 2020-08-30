@@ -17,12 +17,16 @@ import retrofit2.Response
 class CreateWorkspaceViewmodel : ViewModel() {
 
     val TAG = CreateWorkspaceViewmodel::class.java.simpleName
+
+    //For checking if the name exists
     val successful: MutableLiveData<Boolean> = MutableLiveData()
     var message: String = ""
 
+    //Booleans for creating the Space
     val successfulCreate: MutableLiveData<Boolean> = MutableLiveData()
     var messageCreate: MutableLiveData<String> = MutableLiveData()
 
+    private var createSpaceResponse: MutableLiveData<CreateWorkspaceResponse> = MutableLiveData()
 
     var responseForCheck = false
 
@@ -61,7 +65,19 @@ class CreateWorkspaceViewmodel : ViewModel() {
 
     }
 
-    fun createSpace(name: String, tags: MutableList<String>): MutableLiveData<String> {
+
+    fun createFunction(
+        name: String,
+        tags: MutableList<String>
+    ): MutableLiveData<CreateWorkspaceResponse> {
+        createSpaceResponse = createSpace(name, tags)
+        return createSpaceResponse
+    }
+
+    fun createSpace(
+        name: String,
+        tags: MutableList<String>
+    ): MutableLiveData<CreateWorkspaceResponse> {
 
         val body = CreateWorkspaceBody(name)
 
@@ -94,6 +110,8 @@ class CreateWorkspaceViewmodel : ViewModel() {
                         messageCreate.value = response.body()!!.msg.toString()
 
                     }
+                    createSpaceResponse.value = response.body()
+
                 } else {
                     successfulCreate.value = false
                     messageCreate.value = response.errorBody()!!.toString()
@@ -102,7 +120,7 @@ class CreateWorkspaceViewmodel : ViewModel() {
             }
         })
 
-        return messageCreate
+        return createSpaceResponse
     }
 
 
