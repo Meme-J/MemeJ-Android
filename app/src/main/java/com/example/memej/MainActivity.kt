@@ -555,8 +555,6 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
     }
 
 
-
-
     override fun getSuggestion(_sug: SearchResponse.Suggestion) {
 
     }
@@ -674,6 +672,11 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
     override fun onStop() {
         installStateUpdatedListener?.let { appUpdateManager?.unregisterListener(it) }
         super.onStop()
+    }
+
+    override fun goToHome() {
+        openFragment(HomeFragment())
+        navView.selectedItemId = R.id.navigation_home
     }
 
 

@@ -2,7 +2,6 @@ package com.example.memej.ui.home
 
 
 import android.app.ProgressDialog
-import android.content.Intent
 import android.graphics.Color
 import android.graphics.Path
 import android.graphics.Typeface
@@ -20,7 +19,6 @@ import androidx.cardview.widget.CardView
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.example.memej.MainActivity
 import com.example.memej.R
 import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.SessionManager
@@ -430,15 +428,9 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
                         Log.e("Edit", "In resp okay")
                         dialog.dismiss()
 
+                        onBackPressed()
 
-                        val i = Intent(this@EditMemeContainerFragment, MainActivity::class.java)
-//                        val b = bundleOf(
-//                            "frag" to "home"
-//                        )
-//                        i.putExtra("bundleMain", b)
 
-                        startActivity(i)
-                        finish()
 
                     } else {
 

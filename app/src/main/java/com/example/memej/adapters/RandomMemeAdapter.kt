@@ -2,7 +2,6 @@ package com.example.memej.adapters
 
 import android.app.ProgressDialog
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
 import android.text.Editable
@@ -19,8 +18,8 @@ import androidx.annotation.Keep
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.memej.MainActivity
 import com.example.memej.R
+import com.example.memej.Utils.Communicator
 import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.body.editMemeBody
@@ -97,6 +96,7 @@ class RandomMemeAdapter(private val clickListener: RandomListener) :
         lateinit var stringAdapter: ArrayAdapter<String>
         lateinit var mutableList: MutableList<String>
 
+        lateinit var comm: Communicator
 
         fun bindPost(_meme: Meme_Home, clickListener: RandomListener) {
             with(_meme) {
@@ -229,11 +229,10 @@ class RandomMemeAdapter(private val clickListener: RandomListener) :
                                     dialog.dismiss()
 
 
-                                    //Use navigations
+                                    //Go to home fragment
+                                    comm = itemView.context as Communicator
+                                    comm.goToHome()
 
-                                    val i = Intent(itemView.context, MainActivity::class.java)
-//                                  i.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                    itemView.context.startActivity(i)
 
                                 } else {
 
