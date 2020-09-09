@@ -1,4 +1,4 @@
-package com.example.memej.Instances
+package com.example.memej.Utils.ui
 
 import android.content.Context
 import androidx.recyclerview.widget.LinearLayoutManager
