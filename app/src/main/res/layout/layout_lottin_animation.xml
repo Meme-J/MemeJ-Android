@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.airbnb.lottie.LottieAnimationView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/anim_explore"
+    android:layout_width="@dimen/space_20x"
+    android:layout_height="@dimen/space_20x"
+    android:layout_centerInParent="true"
+    android:visibility="gone"
+    app:lottie_rawRes="@raw/no_internet"
+    tools:showIn="@layout/explore_fragment" />

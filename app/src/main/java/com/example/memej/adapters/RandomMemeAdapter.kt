@@ -59,8 +59,6 @@ class RandomMemeAdapter(private val clickListener: RandomListener) :
     //Setting
     fun setRandomPosts(rando: List<Meme_Home>) {
         this.random = rando
-        Log.e("RandomStat", setting.visibleCount.toString())
-
         notifyDataSetChanged()
     }
 
@@ -229,13 +227,11 @@ class RandomMemeAdapter(private val clickListener: RandomListener) :
                                     Log.e("Edit", "In resp okay")
                                     dialog.dismiss()
 
+                                    //Use communicators to sucessfully navigate between fragments
+
 
                                     val i = Intent(itemView.context, MainActivity::class.java)
-//                                    val b = bundleOf(
-//                                        "frag" to "home"
-//                                    )
-//                                    i.putExtra("bundleMain", b)
-                                    i.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+//                                  i.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                                     itemView.context.startActivity(i)
 
                                 } else {

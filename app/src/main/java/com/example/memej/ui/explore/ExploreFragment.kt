@@ -1,6 +1,5 @@
 package com.example.memej.ui.explore
 
-import android.app.Activity
 import android.app.ProgressDialog
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,22 +7,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ProgressBar
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.viewpager2.widget.ViewPager2
+import com.airbnb.lottie.LottieAnimationView
 import com.example.memej.R
 import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.SessionManager
+import com.example.memej.Utils.ui.ExplorePagerTransformer
 import com.example.memej.adapters.RandomListener
 import com.example.memej.adapters.RandomMemeAdapter
-import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.homeMememResponses.Meme_Home
 import com.example.memej.responses.homeMememResponses.homeMemeApiResponse
 import com.example.memej.viewModels.ExploreViewModel
-import com.shreyaspatil.MaterialDialog.MaterialDialog
+import com.google.android.material.snackbar.Snackbar
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager
-import retrofit2.Call
-import retrofit2.Response
 
 
 class ExploreFragment : Fragment(), RandomListener {
@@ -36,8 +35,10 @@ class ExploreFragment : Fragment(), RandomListener {
     private lateinit var root: View
     private val viewModel: ExploreViewModel by viewModels()
     lateinit var sessionManager: SessionManager
+
     private lateinit var adapter: RandomMemeAdapter
     private lateinit var layoutManager: CardStackLayoutManager
+    lateinit var viewPager: ViewPager2
     lateinit var pb: ProgressBar
 
     lateinit var dialog: ProgressDialog
@@ -56,6 +57,11 @@ class ExploreFragment : Fragment(), RandomListener {
 
         dialog =
             ProgressDialog.show(activity, null, "Loading...", true)
+
+        //Initiate viewpager
+        viewPager = root.findViewById(R.id.viewpager_explore)
+        viewPager.setPageTransformer(ExplorePagerTransformer())
+
 
         //Card Layout Manager
 //        layoutManager = CardStackLayoutManager(requireContext()).apply {
@@ -102,7 +108,7 @@ class ExploreFragment : Fragment(), RandomListener {
         if (ErrorStatesResponse.checkIsNetworkConnected(requireContext())) {
             getRandomMemes()
         } else {
-            checkConnection()
+            loadAnimations()
         }
 
 
@@ -112,71 +118,69 @@ class ExploreFragment : Fragment(), RandomListener {
         return root
     }
 
-    private fun checkConnection() {
+    private fun loadAnimations() {
 
-        val mDialog = MaterialDialog.Builder(requireContext() as Activity)
-            .setTitle("Oops")
-            .setMessage("No internet connection")
-            .setCancelable(true)
-            .setAnimation(R.raw.inter2)
-            .setPositiveButton(
-                "Retry"
-            ) { dialogInterface, which ->
-                dialogInterface.dismiss()
-                getRandomMemes()
-            }
-            .setNegativeButton(
-                "Cancel"
-            ) { dialogInterface, which ->
+        pb.visibility = View.GONE
+        root.findViewById<LottieAnimationView>(R.id.anim_explore).visibility = View.VISIBLE
 
-                dialogInterface.dismiss()
-                dialog.dismiss()
-                pb.visibility = View.GONE
+        val snack = Snackbar.make(root, R.string.no_internet_str, Snackbar.LENGTH_INDEFINITE)
+        snack.setAction(R.string.retry, View.OnClickListener {
+            //When the retry is clicked
+            //Dismiss the snack
+            snack.dismiss()
+            getRandomMemes()
 
-            }
-            .build()
-        mDialog.show()
+        })
 
+        snack.show()
 
     }
+
 
     private fun getRandomMemes() {
 
         //Recheck for states
+        pb.visibility = View.VISIBLE
         if (!ErrorStatesResponse.checkIsNetworkConnected(requireContext())) {
-            checkConnection()
+            loadAnimations()
         }
 
-        val service = RetrofitClient.makeCallsForMemes(requireContext())
-
-        service.getRandom(accessToken = "Bearer ${sessionManager.fetchAcessToken()}")
-            .enqueue(object : retrofit2.Callback<homeMemeApiResponse> {
-                override fun onFailure(call: Call<homeMemeApiResponse>, t: Throwable) {
-
-                    val message = ErrorStatesResponse.returnStateMessageForThrowable(t)
-                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        viewModel.randomFunction().observe(viewLifecycleOwner, Observer { mResponse ->
+            val success = viewModel.successful.value
+            if (success != null) {
+                if (success) {
+                    initiateAdapter(mResponse)
+                } else {
+                    createSnackbar(viewModel.message.value)
                 }
 
-                override fun onResponse(
-                    call: Call<homeMemeApiResponse>,
-                    response: Response<homeMemeApiResponse>
-                ) {
 
-                    if (response.isSuccessful) {
+            }
+        })
 
-                        response.body()?.memes?.let { adapter.setRandomPosts(it) }
-                        pb.visibility = View.GONE
 
-                    } else {
-                        val message = response.errorBody().toString()
-                        Toast.makeText(context, "Unable to get memes", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            })
+    }
+
+    private fun createSnackbar(value: String?) {
+
+        Snackbar.make(root, value.toString(), Snackbar.LENGTH_SHORT).show()
+        return
+    }
+
+    private fun initiateAdapter(mResponse: homeMemeApiResponse?) {
+
+        if (mResponse != null) {
+
+            val memes = mResponse.memes
+            adapter.setRandomPosts(memes)
+            adapter.notifyDataSetChanged()
+
+        }
+
     }
 
     override fun initRandomMeme(_meme: Meme_Home) {
-        TODO("Not yet implemented")
+
     }
 
 

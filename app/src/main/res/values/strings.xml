@@ -125,6 +125,9 @@
     <string name="noUsers">No users from the editable</string>
     <string name="failSend">Failed to send the invites</string>
     <string name="emptyListForUsers">Add some users in the list to send invites</string>
+    <string name="retry">RETRY</string>
+    <string name="fail_explore">Unable to load memes</string>
+    <string name="exploreSuccess">Sucess explore spaces</string>
 
 
     <array name="themeColors">

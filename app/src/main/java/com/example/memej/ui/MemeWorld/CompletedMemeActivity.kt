@@ -25,6 +25,7 @@ import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.PreferenceUtil
 import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.Utils.shareCacheDirBitmap
+import com.example.memej.Utils.ui.ConversionUtil
 import com.example.memej.adapters.TagAdapter
 import com.example.memej.adapters.UserAdapter
 import com.example.memej.adapters.onTagClickType
@@ -35,7 +36,6 @@ import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.LikeOrNotResponse
 import com.example.memej.responses.memeWorldResponses.Coordinate
 import com.example.memej.responses.memeWorldResponses.User
-import com.example.memej.textProperties.ConversionUtil
 import com.example.memej.textProperties.lib.ImageEditorView
 import com.example.memej.textProperties.lib.Photo
 import com.google.android.material.snackbar.Snackbar

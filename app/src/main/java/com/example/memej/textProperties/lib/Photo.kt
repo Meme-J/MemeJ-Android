@@ -23,7 +23,7 @@ import androidx.annotation.NonNull
 import androidx.annotation.Nullable
 import androidx.annotation.UiThread
 import com.example.memej.R
-import com.example.memej.textProperties.ConversionUtil
+import com.example.memej.Utils.ui.ConversionUtil
 import java.io.File
 import java.io.FileOutputStream
 import java.util.*
