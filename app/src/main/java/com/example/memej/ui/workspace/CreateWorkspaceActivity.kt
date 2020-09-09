@@ -10,8 +10,10 @@ import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import com.example.memej.R
 import com.example.memej.databinding.ActivityCreateWorkspaceBinding
+import com.example.memej.responses.workspaces.CreateWorkspaceResponse
 import com.example.memej.viewModels.CreateWorkspaceViewmodel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_create_workspace.*
@@ -122,28 +124,38 @@ class CreateWorkspaceActivity : AppCompatActivity() {
         val space_name = b.etSpaceName.text.toString()
         val space_initial_tags = mutableList
 
-        val postMessage = viewModel.createSpace(space_name, space_initial_tags)
 
-        if (postMessage == "Workspace created successfully.") {
-            dialog.dismiss()
-
-            val snack =
-                Snackbar.make(conatiner_create_workspace, postMessage, Snackbar.LENGTH_SHORT)
-            snack.show()
-            val i = Intent(this, WorkSpaceActivity::class.java)
-            startActivity(i)
-            finish()
-            //Go to my spaces activty
-            //Get the Spaces ICON
+        viewModel.createFunction(space_name, space_initial_tags)
+            .observe(this, Observer { mResponse ->
+                //The response is of CreateWorkspace response
+                manageCreateResponse(mResponse)
+            })
 
 
+    }
+
+    private fun manageCreateResponse(mResponse: CreateWorkspaceResponse?) {
+        //Check the response
+        val message = mResponse?.msg
+
+        if (message == "Workspace created successfully.") {
+            goToMySpaces()
         } else {
-            dialog.dismiss()
-            val snack =
-                Snackbar.make(conatiner_create_workspace, postMessage, Snackbar.LENGTH_SHORT)
-            snack.show()
+            //Create a snackbar of what is being made
+            createSnackbar(message)
         }
 
+    }
+
+    private fun goToMySpaces() {
+        val i = Intent(this, MySpacesFragmnet::class.java)
+        startActivity(i)
+        finish()
+    }
+
+    private fun createSnackbar(message: String?) {
+        Snackbar.make(conatiner_create_workspace, message.toString(), Snackbar.LENGTH_SHORT).show()
+        return
     }
 
     private fun validateName(): Boolean {
@@ -194,5 +206,14 @@ class CreateWorkspaceActivity : AppCompatActivity() {
 //        rvTagEdits.adapter = adapterTagAdded
 //    }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.successful.value = null
+    }
 
 }

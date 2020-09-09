@@ -7,8 +7,8 @@ import androidx.lifecycle.ViewModel
 import com.example.memej.Utils.ApplicationUtil
 import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.SessionManager
+import com.example.memej.body.CreateWorkspaceBody
 import com.example.memej.interfaces.RetrofitClient
-import com.example.memej.responses.workspaces.CreateWorkspaceBody
 import com.example.memej.responses.workspaces.CreateWorkspaceResponse
 import com.example.memej.responses.workspaces.WorkspaceName
 import retrofit2.Call
@@ -17,12 +17,16 @@ import retrofit2.Response
 class CreateWorkspaceViewmodel : ViewModel() {
 
     val TAG = CreateWorkspaceViewmodel::class.java.simpleName
+
+    //For checking if the name exists
     val successful: MutableLiveData<Boolean> = MutableLiveData()
     var message: String = ""
 
+    //Booleans for creating the Space
     val successfulCreate: MutableLiveData<Boolean> = MutableLiveData()
-    var messageCreate: String = ""
+    var messageCreate: MutableLiveData<String> = MutableLiveData()
 
+    private var createSpaceResponse: MutableLiveData<CreateWorkspaceResponse> = MutableLiveData()
 
     var responseForCheck = false
 
@@ -56,12 +60,24 @@ class CreateWorkspaceViewmodel : ViewModel() {
 
             }
         })
-
+        Log.e(TAG, responseForCheck.toString())
         return responseForCheck
 
     }
 
-    fun createSpace(name: String, tags: MutableList<String>): String {
+
+    fun createFunction(
+        name: String,
+        tags: MutableList<String>
+    ): MutableLiveData<CreateWorkspaceResponse> {
+        createSpaceResponse = createSpace(name, tags)
+        return createSpaceResponse
+    }
+
+    fun createSpace(
+        name: String,
+        tags: MutableList<String>
+    ): MutableLiveData<CreateWorkspaceResponse> {
 
         val body = CreateWorkspaceBody(name)
 
@@ -70,10 +86,10 @@ class CreateWorkspaceViewmodel : ViewModel() {
             body = body
         ).enqueue(object : retrofit2.Callback<CreateWorkspaceResponse> {
             override fun onFailure(call: Call<CreateWorkspaceResponse>, t: Throwable) {
-                val y = ErrorStatesResponse.returnStateMessageForThrowable(t)
-                messageCreate = y
+
+                messageCreate.value = ErrorStatesResponse.returnStateMessageForThrowable(t)
                 successfulCreate.value = false
-                Log.e(TAG, y)
+
             }
 
             override fun onResponse(
@@ -88,21 +104,23 @@ class CreateWorkspaceViewmodel : ViewModel() {
                 if (response.isSuccessful) {
                     if (response.body()?.msg == "Workspace created successfully.") {
                         successfulCreate.value = true
-                        messageCreate = "Workspace created successfully."
+                        messageCreate.value = "Workspace created successfully."
                     } else {
                         successfulCreate.value = false
-                        messageCreate = response.body()!!.msg.toString()
+                        messageCreate.value = response.body()!!.msg.toString()
 
                     }
+                    createSpaceResponse.value = response.body()
+
                 } else {
                     successfulCreate.value = false
-                    messageCreate = response.errorBody()!!.toString()
+                    messageCreate.value = response.errorBody()!!.toString()
 
                 }
             }
         })
 
-        return messageCreate
+        return createSpaceResponse
     }
 
 

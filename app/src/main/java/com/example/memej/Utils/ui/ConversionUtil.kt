@@ -1,4 +1,4 @@
-package com.example.memej.textProperties
+package com.example.memej.Utils.ui
 
 import android.content.Context
 import android.util.DisplayMetrics

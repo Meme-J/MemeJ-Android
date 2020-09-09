@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_insertedUsersForInvite"
+                style="@style/recylclerViewAttr"
+                android:layout_margin="@dimen/space_2x"
+                tools:listitem="@layout/layout_tag" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/space_2x">
+
+                <AutoCompleteTextView
+                    android:id="@+id/the_id"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/space"
+                    android:hint="@string/username"
+                    android:padding="@dimen/space" />
+
+                <ProgressBar
+                    android:id="@+id/pb_load_users"
+                    style="?android:attr/progressBarStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/the_id"
+                    android:layout_alignBottom="@id/the_id"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/space" />
+            </RelativeLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/mtb_send_invites"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/space_half"
+                android:padding="@dimen/space_half"
+                android:text="@string/send_invites" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

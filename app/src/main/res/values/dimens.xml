@@ -43,6 +43,8 @@
     <dimen name="Explore_card_height">200dp</dimen>
     <dimen name="toolbar_height">20dp</dimen>
     <dimen name="space_7x">56dp</dimen>
+    <dimen name="space_15x">120dp</dimen>
+    <dimen name="space_20x">160dp</dimen>
 
 
 </resources>

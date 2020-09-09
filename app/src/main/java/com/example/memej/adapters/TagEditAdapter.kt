@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.Keep
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.memej.R
 
@@ -21,6 +22,7 @@ class TagEditAdapter :
 
         val TAG = itemView.findViewById<TextView>(R.id.getTagName)
         val cross = itemView.findViewById<ImageView>(R.id.getTagCross)
+        val card = itemView.findViewById<CardView>(R.id.container_layout_tag)
 
         fun bindPost(_tag: String) {
 
@@ -64,6 +66,9 @@ class TagEditAdapter :
         holder.cross.setOnClickListener {
             removeAt(position)
         }
+
+
+
         holder.bindPost(tagAdded[position])
 
     }

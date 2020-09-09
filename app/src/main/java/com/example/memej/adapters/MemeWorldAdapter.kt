@@ -19,14 +19,13 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.memej.R
 import com.example.memej.Utils.DiffUtils.DiffUtilsMemeWorld
 import com.example.memej.Utils.ErrorStatesResponse
-import com.example.memej.Utils.PreferenceUtil
 import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.Utils.shareCacheDirBitmap
-import com.example.memej.entities.likeMemeBody
+import com.example.memej.Utils.ui.ConversionUtil
+import com.example.memej.body.likeMemeBody
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.LikeOrNotResponse
 import com.example.memej.responses.memeWorldResponses.Meme_World
-import com.example.memej.textProperties.ConversionUtil
 import com.example.memej.textProperties.lib.ImageEditorView
 import com.example.memej.textProperties.lib.Photo
 import com.google.android.material.snackbar.Snackbar
@@ -62,7 +61,6 @@ class MemeWorldAdapter(val context: Context, val itemClickListener: OnItemClickL
         val sessionManager =
             SessionManager(context)
         val service = RetrofitClient.makeCallsForMemes(context)
-        private val preferenceUtils = PreferenceUtil
 
         val memeTime = itemView.findViewById<MaterialTextView>(R.id.meme_timestamp)
         val likeDrawIo = itemView.findViewById<LikeButton>(R.id.starBtnMeme)
@@ -81,16 +79,8 @@ class MemeWorldAdapter(val context: Context, val itemClickListener: OnItemClickL
                     ConversionUtil.convertTimeToEpoch(_meme.lastUpdated)             //To get the tag
 
 
-                val username = preferenceUtils.getUserFromPrefernece().username
-                val id = preferenceUtils.getUserFromPrefernece()._id
-                val userIns = com.example.memej.responses.memeWorldResponses.User(id, username)
                 val user_likers = _meme.likedBy
 
-                Log.e(
-                    "UserIns",
-                    user_likers.toString() + userIns.toString() + " " + user_likers.isEmpty()
-                        .toString()
-                )
 
                 likeDrawIo.isLiked = user_likers.isNotEmpty()
 
@@ -174,6 +164,7 @@ class MemeWorldAdapter(val context: Context, val itemClickListener: OnItemClickL
                         val message = ErrorStatesResponse.returnStateMessageForThrowable(t)
                         val snack = Snackbar.make(itemView, message, Snackbar.LENGTH_SHORT)
                         snack.show()
+
 
                         //Revert with the state usage
                         //Do nothing with the number of likes

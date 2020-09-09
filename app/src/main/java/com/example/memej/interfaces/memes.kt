@@ -1,7 +1,7 @@
 package com.example.memej.interfaces
 
 import androidx.annotation.Keep
-import com.example.memej.entities.*
+import com.example.memej.body.*
 import com.example.memej.responses.LikeOrNotResponse
 import com.example.memej.responses.SearchResponse
 import com.example.memej.responses.editMemeApiResponse

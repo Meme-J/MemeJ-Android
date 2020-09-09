@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.example.memej.Utils.ApplicationUtil
 import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.SessionManager
-import com.example.memej.entities.searchBody
+import com.example.memej.body.searchBody
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.SearchResponse
 import retrofit2.Call
@@ -13,16 +13,17 @@ import retrofit2.Response
 
 class MainActivityViewModel : ViewModel() {
 
-    var tag = LoginActivtyViewModel::class.java.simpleName
+    var tag = MainActivityViewModel::class.java.simpleName
+    val successful: MutableLiveData<Boolean> = MutableLiveData()
+    var message: MutableLiveData<String> = MutableLiveData()
+
     val context = ApplicationUtil.getContext()
     private val sessionManager: SessionManager = SessionManager(context)
-    val successful: MutableLiveData<Boolean> = MutableLiveData()
-    var message: String = ""
-    val memeService = RetrofitClient.makeCallsForMemes(context)
 
 
     var suggestionList: MutableLiveData<String> = MutableLiveData()
 
+    val memeService = RetrofitClient.makeCallsForMemes(context)
 
     fun fetchSuggestions(body: searchBody): MutableLiveData<String> {
 
@@ -31,7 +32,7 @@ class MainActivityViewModel : ViewModel() {
             info = body
         ).enqueue(object : retrofit2.Callback<SearchResponse> {
             override fun onFailure(call: Call<SearchResponse>, t: Throwable) {
-                message = ErrorStatesResponse.returnStateMessageForThrowable(t)
+                message.value = ErrorStatesResponse.returnStateMessageForThrowable(t)
                 successful.value = false
 
             }
@@ -58,6 +59,8 @@ class MainActivityViewModel : ViewModel() {
 
         return suggestionList
     }
+
+
 
 
 }

@@ -6,8 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.example.memej.R
+import com.example.memej.Utils.PreferenceUtil
 import com.example.memej.responses.workspaces.UserWorkspaces
 import java.util.*
 
@@ -20,13 +22,20 @@ class WorkSpaceDialogAdapter(val itemClick: OnWorkSpaceChangedListener) :
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         val NAME = itemView.findViewById<TextView>(R.id.workspace_dialog_name)
-        val card_view = itemView.findViewById<CardView>(R.id.workspace_dialog_image_view)
+        val card_view = itemView.findViewById<CardView>(R.id.workspace_dialog_image_view_cv)
         val initial = itemView.findViewById<TextView>(R.id.workspace_dialog_avatar_text)
 
+        val backgroundLayout = itemView.findViewById<ConstraintLayout>(R.id.cl_back)
         //Create random colors
+
+
+        private val preferencesUtils = PreferenceUtil
+
+        private val currentSpace = preferencesUtils.getCurrentSpaceFromPreference()
 
         fun bindPost(_workspace: UserWorkspaces.Workspace, itemClick: OnWorkSpaceChangedListener) {
             with(_workspace) {
+
 
                 val x = _workspace.name.take(1).toUpperCase(Locale.ROOT)
                 initial.text = x
@@ -38,6 +47,12 @@ class WorkSpaceDialogAdapter(val itemClick: OnWorkSpaceChangedListener) :
                 card_view.setCardBackgroundColor(currentColor)
 
                 NAME.text = _workspace.name
+
+
+                //Inflate Background if this is the current space
+                if (_workspace == currentSpace) {
+                    backgroundLayout.setBackgroundColor(itemView.context.getColor(R.color.spaceShader))
+                }
 
                 itemView.setOnClickListener {
                     itemClick.switchWorkspace(_workspace)

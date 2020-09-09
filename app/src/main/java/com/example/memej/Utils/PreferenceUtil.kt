@@ -3,6 +3,7 @@ package com.example.memej.Utils
 import android.preference.PreferenceManager
 import com.example.memej.responses.NumLikes
 import com.example.memej.responses.ProfileResponse
+import com.example.memej.responses.workspaces.UserWorkspaces
 
 
 /**
@@ -18,6 +19,9 @@ object PreferenceUtil {
     private const val NAME = "name"
     private const val EMAIL = "email"
     private var LIKES = "likes"
+    private var CURRENT_SPACE = "current_space"
+    private var CURRENT_SPACE_ID = "current_space_id"
+
     private var HAS_SEEN_WALKTHROUGH = null
 
     var _id: String?
@@ -44,6 +48,18 @@ object PreferenceUtil {
             pm.edit().putString(EMAIL, value).apply()
         }
 
+    var current_space: String?
+        get() = pm.getString(CURRENT_SPACE, "Global Space")
+        set(value) {
+            pm.edit().putString(CURRENT_SPACE, value).apply()
+        }
+
+    var current_space_id: String?
+        get() = pm.getString(CURRENT_SPACE_ID, "")
+        set(value) {
+            pm.edit().putString(CURRENT_SPACE_ID, value).apply()
+        }
+
 
     var likes: Int?
         get() = pm.getInt(LIKES, 0)
@@ -67,6 +83,7 @@ object PreferenceUtil {
         pref.name = user.name
     }
 
+
     fun getUserFromPrefernece(): ProfileResponse.Profile {
         val prefUtil = PreferenceUtil
         return ProfileResponse.Profile(
@@ -77,6 +94,26 @@ object PreferenceUtil {
         )
 
     }
+
+    fun setCurrentSpaceFromPreference(userWorkspace: UserWorkspaces.Workspace) {
+        val pref = PreferenceUtil
+        pref.current_space = userWorkspace.name
+        pref.current_space_id = userWorkspace._id
+
+    }
+
+    fun getCurrentSpaceFromPreference(): UserWorkspaces.Workspace? {
+        val prefUtil = PreferenceUtil
+        return prefUtil.current_space_id?.let {
+            prefUtil.current_space?.let { it1 ->
+                UserWorkspaces.Workspace(
+                    it,
+                    it1
+                )
+            }
+        }
+    }
+
 
     fun clearPrefData() {
         pm.edit().clear().apply()

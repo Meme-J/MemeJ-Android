@@ -25,9 +25,9 @@ import com.example.memej.R
 import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.adapters.*
+import com.example.memej.body.editMemeBody
+import com.example.memej.body.searchBody
 import com.example.memej.databinding.EditMemeContainerFragmentBinding
-import com.example.memej.entities.editMemeBody
-import com.example.memej.entities.searchBody
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.SearchResponse
 import com.example.memej.responses.editMemeApiResponse
@@ -167,6 +167,8 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
                     root.tagEdit.isEnabled =
                         false
                 }
+                getTags(s.toString())
+
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -174,7 +176,7 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                getTags(s.toString())
+
             }
         })
 
@@ -359,7 +361,6 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
                     response: Response<SearchResponse>
                 ) {
 
-                    Log.e("Edit", "In tag search response")
 
                     val str = mutableListOf<String>()
                     for (y: SearchResponse.Suggestion in response.body()!!.suggestions) {
@@ -394,7 +395,12 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
         //pb.visibility = View.VISIBLE
         val service = RetrofitClient.makeCallsForMemes(this)
         val inf =
-            editMemeBody(arg.getString("id")!!, line, mutableList, arg.getInt("numPlaceholders"))
+            editMemeBody(
+                arg.getString("id")!!,
+                line,
+                mutableList,
+                arg.getInt("numPlaceholders")
+            )
 
         //Create a profress dialog
         val dialog = ProgressDialog(this)
@@ -721,16 +727,6 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
 
     }
 
-
-//    private fun getCoordunatesOfCustomView(arrayList: MutableList<Int>) {
-//
-//        X1 = arrayList[0]
-//        Y1 = arrayList[1]
-//        X2 = arrayList[2]
-//        Y2 = arrayList[3]
-//
-//        Log.e("Coord", X1.toString() + Y1.toString() + X2.toString() + Y2.toString())
-//    }
 
 
     //Api not yet made

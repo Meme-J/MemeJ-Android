@@ -24,7 +24,7 @@ import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.adapters.MemeGroupAdapter
 import com.example.memej.adapters.OnItemClickListenerTemplate
-import com.example.memej.entities.searchTemplate
+import com.example.memej.body.searchTemplate
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.SearchResponse
 import com.example.memej.responses.template.EmptyTemplateResponse

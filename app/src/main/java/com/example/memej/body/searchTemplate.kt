@@ -1,4 +1,4 @@
-package com.example.memej.entities
+package com.example.memej.body
 
 import androidx.annotation.Keep
 

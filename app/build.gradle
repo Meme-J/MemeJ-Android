@@ -31,15 +31,15 @@ android {
     buildTypes {
         release {
             //Proguard Techniques
-            minifyEnabled true            //Need to add serialized name annotation if enabled true
-            shrinkResources true
+            minifyEnabled false            //Need to add serialized name annotation if enabled true
+            shrinkResources false
 
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             manifestPlaceholders = [usesCleartextTraffic: "false"]
         }
         debug {
-            minifyEnabled true            //Need to add serialized name annotation if enabled true
-            shrinkResources true
+            minifyEnabled false            //Need to add serialized name annotation if enabled true
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
             manifestPlaceholders = [usesCleartextTraffic: "true"]
@@ -154,10 +154,14 @@ dependencies {
     implementation 'com.github.arimorty:floatingsearchview:2.1.1'
 
     //App Update Dependency
-    implementation 'com.google.android.play:core:1.7.3'
+    implementation 'com.google.android.play:core:1.8.0'
 
     //Toast
     implementation 'com.github.GrenderG:Toasty:1.4.2'
+
+    //FlexBox Layout
+    implementation 'com.google.android:flexbox:2.0.0'
+
     /**
      * Networking dependencies
      */

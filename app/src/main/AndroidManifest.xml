@@ -20,7 +20,12 @@
         android:usesCleartextTraffic="true"
         tools:ignore="LockedOrientationActivity"
         tools:replace="android:icon">
-        <activity android:name=".ui.BlankWorkspaceActivity"></activity>
+
+
+        <activity
+            android:name=".ui.workspace.MySpacesFragmnet"
+            android:theme="@style/DarkTheme" />
+
         <activity
             android:name=".ui.workspace.CreateWorkspaceActivity"
             android:theme="@style/DarkTheme" />
@@ -124,7 +129,8 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.memej.MainActivity" />
-        </activity> <!-- Provider for sharing -->
+        </activity>
+        <activity android:name=".ui.MemeWorld.InvitesFragmnet" /> <!-- Provider for sharing -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.memej.FileProvider"

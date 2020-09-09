@@ -15,7 +15,7 @@ import com.example.memej.R
 import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.SaveSharedPreference
 import com.example.memej.Utils.sessionManagers.SessionManager
-import com.example.memej.entities.UserBody
+import com.example.memej.body.UserBody
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.SignUpResponse
 import com.google.android.material.button.MaterialButton
