@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -39,6 +39,9 @@ class ExploreFragment : Fragment(), RandomListener {
     private lateinit var layoutManager: CardStackLayoutManager
     lateinit var viewPager: ViewPager2
     lateinit var pb: ProgressBar
+
+    lateinit var leftNav: ImageView
+    lateinit var rightNav: ImageView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -75,33 +78,51 @@ class ExploreFragment : Fragment(), RandomListener {
 
         pb.visibility = View.GONE
 
-        val leftNav = root.findViewById(R.id.left_nav) as ImageButton
-        val rightNav = root.findViewById(R.id.right_nav) as ImageButton
+        leftNav = root.findViewById(R.id.left_nav)
+        rightNav = root.findViewById(R.id.right_nav)
 
-
-        leftNav.setOnClickListener(View.OnClickListener {
-            var tab = viewPager.currentItem
-            if (tab > 0) {
-                tab--
-                viewPager.currentItem = tab
-            } else if (tab == 0) {
-                viewPager.currentItem = tab
-            }
-        })
 
         rightNav.setOnClickListener(View.OnClickListener {
-            var tab = viewPager.currentItem
-            tab++
-            viewPager.currentItem = tab
+            if (viewPager.currentItem < viewPager.right) {
+                viewPager.setCurrentItem(
+                    viewPager.currentItem + 1,
+                    true
+                )
+                leftNav.visibility = View.VISIBLE
+            }
+
+            //When last item
+            else {
+                rightNav.visibility = View.GONE
+            }
+
+
+        })
+
+        leftNav.setOnClickListener(View.OnClickListener {
+            if (viewPager.currentItem > viewPager.left) {
+                viewPager.setCurrentItem(
+                    viewPager.currentItem - 1,
+                    true
+                )
+
+                rightNav.visibility = View.VISIBLE
+
+            } else {
+                leftNav.visibility = View.GONE
+            }
         })
 
         return root
     }
 
+
     private fun loadAnimations() {
 
         pb.visibility = View.GONE
         root.findViewById<LottieAnimationView>(R.id.anim_explore).visibility = View.VISIBLE
+        leftNav.visibility = View.GONE
+        rightNav.visibility = View.GONE
 
 //        val snack = Snackbar.make(root, R.string.no_internet_str, Snackbar.LENGTH_INDEFINITE)
 //        snack.setAction(R.string.retry, View.OnClickListener {
