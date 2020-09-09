@@ -17,8 +17,8 @@ import androidx.annotation.Keep
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.memej.R
 import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.SessionManager
@@ -73,7 +73,6 @@ class SelectMemeTemplateActivity : AppCompatActivity(), OnItemClickListenerTempl
         val i = Intent(this, NewMemeContainer::class.java)
         i.putExtra("bundle", bundle)
         startActivity(i)
-        finish()
     }
 
 
@@ -293,7 +292,7 @@ class SelectMemeTemplateActivity : AppCompatActivity(), OnItemClickListenerTempl
 
 
     private fun initializeList() {
-        rv.layoutManager = GridLayoutManager(this, 2)
+        rv.layoutManager = StaggeredGridLayoutManager(2, LinearLayout.VERTICAL)
         rv.adapter = memeGroupAdapter
         //After this has been done, close the pb
         pb.visibility = View.GONE
