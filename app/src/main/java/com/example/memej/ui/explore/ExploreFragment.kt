@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.ImageButton
 import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -73,6 +74,26 @@ class ExploreFragment : Fragment(), RandomListener {
 
 
         pb.visibility = View.GONE
+
+        val leftNav = root.findViewById(R.id.left_nav) as ImageButton
+        val rightNav = root.findViewById(R.id.right_nav) as ImageButton
+
+
+        leftNav.setOnClickListener(View.OnClickListener {
+            var tab = viewPager.currentItem
+            if (tab > 0) {
+                tab--
+                viewPager.currentItem = tab
+            } else if (tab == 0) {
+                viewPager.currentItem = tab
+            }
+        })
+
+        rightNav.setOnClickListener(View.OnClickListener {
+            var tab = viewPager.currentItem
+            tab++
+            viewPager.currentItem = tab
+        })
 
         return root
     }
