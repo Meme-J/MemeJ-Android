@@ -10,39 +10,29 @@
         android:padding="@dimen/margins"
         tools:context=".MainActivity">
 
-        <com.yuyakaido.android.cardstackview.CardStackView
+        <!--        <com.yuyakaido.android.cardstackview.CardStackView-->
 
-            android:id="@+id/stack_view"
+        <!--            android:id="@+id/stack_view"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="match_parent"-->
+        <!--            android:layout_centerInParent="true"-->
+        <!--            android:layout_centerHorizontal="true" />-->
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/anim_explore"
+            android:layout_width="@dimen/space_20x"
+            android:layout_height="@dimen/space_20x"
+            android:layout_centerInParent="true"
+            android:visibility="gone" />
+
+        <include layout="@layout/layout_progressbar" />
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/viewpager_home"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_centerInParent="true"
-            android:layout_centerHorizontal="true" />
-
-        <!--    <TextView-->
-        <!--        android:id="@+id/load_more"-->
-        <!--        android:layout_width="wrap_content"-->
-        <!--        android:layout_height="wrap_content"-->
-        <!--        android:layout_centerInParent="true"-->
-        <!--        android:text="@string/tap_to_load_more"-->
-        <!--        android:textColor="@color/wildColor"-->
-        <!--        android:textSize="@dimen/text_size_16sp"-->
-        <!--        android:textStyle="bold" />-->
-
-        <ProgressBar
-            android:id="@+id/pb_explore"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:visibility="visible" />
-
-        <!--    <TextView-->
-        <!--        android:layout_width="wrap_content"-->
-        <!--        android:layout_height="wrap_content"-->
-        <!--        android:layout_alignParentBottom="true"-->
-        <!--        android:layout_centerHorizontal="true"-->
-        <!--        android:layout_marginBottom="@dimen/margins"-->
-        <!--        android:text="@string/swipe_for_more"-->
-        <!--        android:textSize="@dimen/text_size" />-->
+            android:clipToPadding="false"
+            android:padding="@dimen/space_6x" />
 
     </RelativeLayout>
 </FrameLayout>

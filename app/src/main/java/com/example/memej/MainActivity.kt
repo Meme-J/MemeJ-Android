@@ -27,7 +27,6 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.navigation.Navigation
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.memej.Utils.Communicator
@@ -37,7 +36,6 @@ import com.example.memej.Utils.PreferenceUtil
 import com.example.memej.Utils.sessionManagers.PreferenceManager
 import com.example.memej.Utils.sessionManagers.SaveSharedPreference
 import com.example.memej.Utils.sessionManagers.SessionManager
-import com.example.memej.adapters.OnWorkSpaceChangedListener
 import com.example.memej.adapters.SearchAdapter
 import com.example.memej.adapters.WorkSpaceDialogAdapter
 import com.example.memej.adapters.onClickSearch
@@ -45,13 +43,13 @@ import com.example.memej.body.searchBody
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.responses.ProfileResponse
 import com.example.memej.responses.SearchResponse
-import com.example.memej.responses.workspaces.UserWorkspaces
 import com.example.memej.ui.MemeWorld.InvitesFragmnet
 import com.example.memej.ui.MemeWorld.MemeWorldFragment
 import com.example.memej.ui.auth.LoginActivity
 import com.example.memej.ui.explore.ExploreFragment
 import com.example.memej.ui.home.HomeFragment
 import com.example.memej.ui.home.SearchResultActivity
+import com.example.memej.ui.home.WorkspaceDialogFragment
 import com.example.memej.ui.memeTemplate.SelectMemeTemplateActivity
 import com.example.memej.ui.myMemes.MyMemesFragment
 import com.example.memej.ui.profile.ProfileFragment
@@ -59,7 +57,6 @@ import com.example.memej.ui.workspace.CreateWorkspaceActivity
 import com.example.memej.ui.workspace.MySpacesFragmnet
 import com.example.memej.viewModels.MainActivityViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
@@ -70,13 +67,12 @@ import com.google.android.play.core.install.InstallStateUpdatedListener
 import com.google.android.play.core.install.model.InstallStatus
 import com.shreyaspatil.MaterialDialog.MaterialDialog
 import io.reactivex.annotations.Nullable
-import kotlinx.android.synthetic.main.activity_work_space.*
 import retrofit2.Call
 import retrofit2.Response
 import java.util.*
 
 
-class MainActivity : AppCompatActivity(), Communicator, onClickSearch, OnWorkSpaceChangedListener {
+class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
 
     companion object {
         private const val STATE_SAVE_STATE = "save_state"
@@ -105,11 +101,6 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch, OnWorkSpa
         NavigationView.OnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
 
-//                R.id.nav_drawer_explore_spaces -> {
-//                    openFragment(ExploreSpacesFragment())
-//                    drawer.closeDrawer(Gravity.LEFT)
-//                    return@OnNavigationItemSelectedListener true
-//                }
 
                 R.id.nav_drawer_invites -> {
                     drawer.closeDrawer(Gravity.LEFT)
@@ -204,8 +195,8 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch, OnWorkSpa
     //Saved Instances of fragments
 
     private lateinit var stateHelper: FragmentStateHelper
-
     private val fragmentsMap = mutableMapOf<Int, Fragment>()
+    private val TAG = MainActivity::class.java.simpleName
 
 
     //For the dialog in switching the workspaces
@@ -379,56 +370,16 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch, OnWorkSpa
 
 
     private fun openSwitchWorkspaceDialog() {
-        //Create a dialog to swtich the spaces
-        d = AlertDialog.Builder(this)
-        val v = layoutInflater.inflate(R.layout.fragment_workspace_dialog, container_workspace)
-        d.setView(v)
-
-
-        recyclerView = v.findViewById<RecyclerView>(R.id.rv_dialog_workspaces)
-        adapterSpace = WorkSpaceDialogAdapter(this)
-
-        val layoutManager = LinearLayoutManager(this)
-        recyclerView.layoutManager = layoutManager
-        recyclerView.adapter = adapterSpace
-
-        //Load in the dialog
-        loadTheSpaces()
-        val btn = v.findViewById<ExtendedFloatingActionButton>(R.id.extended_fab_main_dialog)
-        btn.setOnClickListener {
-            goToCreateWorkspaces()
-        }
-
+        openFragment(WorkspaceDialogFragment())
 
     }
 
-    private fun loadTheSpaces() {
-
-        val response = viewModel.getSpacesInDialog()
-        val success = viewModel.successfulSpaces.value
-        val message = viewModel.messageSpace.value
-
-        if (response == null) {
-            //Do nothing
-            Log.e("mAIN aC", message.toString())
-        } else {
-            if (success == null) {
-
-            } else {
-                initAdapterForSpaceDialog(response)
-            }
-
-        }
-
-    }
-
-    private fun initAdapterForSpaceDialog(response: UserWorkspaces) {
-        adapterSpace.workSpacesList = response.workspaces
-        recyclerView.adapter = adapterSpace
-        adapterSpace.notifyDataSetChanged()
-    }
 
     private fun goToCreateWorkspaces() {
+
+        val b = d.create()
+        b.dismiss()
+
         val i = Intent(this, CreateWorkspaceActivity::class.java)
         startActivity(i)
     }
@@ -569,27 +520,6 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch, OnWorkSpa
     }
 
 
-//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-//        menuInflater.inflate(R.menu.top_options_menu, menu)
-//
-//        return true
-//
-//    }
-//
-//
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//
-//        when (item.itemId) {
-//            R.id.settings_btn ->
-//                logout()
-//
-//
-//            else ->
-//                return super.onOptionsItemSelected(item)
-//        }
-//        return true
-//    }
-
     private fun logout() {
         //Ask the user
         val mDialog = MaterialDialog.Builder(this)
@@ -625,18 +555,6 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch, OnWorkSpa
     }
 
 
-    override fun goToAFragmnet(fragment: Fragment) {
-        val transaction = this.supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.container, fragment)
-        transaction.addToBackStack(null)
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-        transaction.commit()
-
-    }
-
-    override fun switchWorkspace(_workspace: UserWorkspaces.Workspace) {
-
-    }
 
 
     override fun getSuggestion(_sug: SearchResponse.Suggestion) {
@@ -700,6 +618,7 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch, OnWorkSpa
 
 
     //States
+
     override fun onResume() {
         super.onResume()
         Handler().postDelayed({ updateApp() }, 1000)

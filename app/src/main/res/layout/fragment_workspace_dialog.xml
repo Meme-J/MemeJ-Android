@@ -15,7 +15,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <!--                <TextView-->
@@ -27,7 +27,7 @@
                 <!--                    android:textSize="@dimen/text_size" />-->
 
                 <!--                View for global workspace-->
-                <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cslt_global"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -63,7 +63,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/margins"
                         android:gravity="center"
-                        android:paddingStart="@dimen/space"
+                        android:padding="@dimen/space"
                         android:text="@string/global_space"
                         android:textSize="24sp"
                         app:layout_constraintBottom_toBottomOf="parent"
