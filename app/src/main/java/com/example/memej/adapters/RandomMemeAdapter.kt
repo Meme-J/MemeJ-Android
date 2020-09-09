@@ -51,6 +51,7 @@ class RandomMemeAdapter(private val clickListener: RandomListener) :
     onTagClickType {
 
     private var random: List<Meme_Home>? = listOf()     //Empty List
+
     private var state = CardStackState()
     private var setting = CardStackSetting()
     var numberItemsLeft: Int = 0
@@ -68,7 +69,7 @@ class RandomMemeAdapter(private val clickListener: RandomListener) :
 
         val photoView: ImageEditorView = itemView.findViewById(R.id.photoViewRandom)
         val rvTag = itemView.findViewById<RecyclerView>(R.id.rv_explore_tag)
-        val rvUsers = itemView.findViewById<RecyclerView>(R.id.rv_explore_user)
+//        val rvUsers = itemView.findViewById<RecyclerView>(R.id.rv_explore_user)
 
 
         //Styles ATTribut
@@ -122,7 +123,7 @@ class RandomMemeAdapter(private val clickListener: RandomListener) :
                 size_chosen = 20f
 
 
-                //Additio of tags
+                //Addition of tags
                 adapterTagsAdded = TagEditAdapter()
                 mutableList = mutableListOf()           //Empty list
                 stringAdapter =
@@ -227,8 +228,8 @@ class RandomMemeAdapter(private val clickListener: RandomListener) :
                                     Log.e("Edit", "In resp okay")
                                     dialog.dismiss()
 
-                                    //Use communicators to sucessfully navigate between fragments
 
+                                    //Use navigations
 
                                     val i = Intent(itemView.context, MainActivity::class.java)
 //                                  i.flags = Intent.FLAG_ACTIVITY_NEW_TASK
@@ -281,7 +282,7 @@ class RandomMemeAdapter(private val clickListener: RandomListener) :
                 tagsStr.add(i)
             }
 
-
+            //#In random memes, the tags of image are not sent
 //            for (i in txt2) {
 //                tagsStr.add(i)
 //            }
@@ -299,23 +300,23 @@ class RandomMemeAdapter(private val clickListener: RandomListener) :
             rvTag.adapter = tagAdapter
 
 
-            //Populate the users in the same way
-            val u = _meme.users
-            val userStr = mutableListOf<String>()
-            for (i in u!!) {
-                userStr.add(i.username)
-            }
-
-            //SecondLayout
-            val HorizontalUser = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            val userAdater = UserAdapter(itemClick = object : onUserClickType {
-                override fun getUserType(_user: String) {
-
-                }
-            })
-            userAdater.userType = userStr
-            rvUsers.layoutManager = HorizontalUser
-            rvUsers.adapter = userAdater
+//            //Populate the users in the same way
+//            val u = _meme.users
+//            val userStr = mutableListOf<String>()
+//            for (i in u!!) {
+//                userStr.add(i.username)
+//            }
+//
+//            //SecondLayout
+//            val HorizontalUser = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+//            val userAdater = UserAdapter(itemClick = object : onUserClickType {
+//                override fun getUserType(_user: String) {
+//
+//                }
+//            })
+//            userAdater.userType = userStr
+//            rvUsers.layoutManager = HorizontalUser
+//            rvUsers.adapter = userAdater
 
         }
 

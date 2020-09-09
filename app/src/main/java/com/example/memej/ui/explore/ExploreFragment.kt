@@ -1,6 +1,5 @@
 package com.example.memej.ui.explore
 
-import android.app.ProgressDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,7 +14,6 @@ import com.airbnb.lottie.LottieAnimationView
 import com.example.memej.R
 import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.SessionManager
-import com.example.memej.Utils.ui.ExplorePagerTransformer
 import com.example.memej.adapters.RandomListener
 import com.example.memej.adapters.RandomMemeAdapter
 import com.example.memej.responses.homeMememResponses.Meme_Home
@@ -41,8 +39,6 @@ class ExploreFragment : Fragment(), RandomListener {
     lateinit var viewPager: ViewPager2
     lateinit var pb: ProgressBar
 
-    lateinit var dialog: ProgressDialog
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -55,19 +51,10 @@ class ExploreFragment : Fragment(), RandomListener {
         pb = root.findViewById(R.id.pb_layout)
         pb.visibility = View.VISIBLE
 
-        dialog =
-            ProgressDialog.show(activity, null, "Loading...", true)
 
         //Initiate viewpager
         viewPager = root.findViewById(R.id.viewpager_explore)
-        viewPager.setPageTransformer(ExplorePagerTransformer())
-
-
-        //Card Layout Manager
-//        layoutManager = CardStackLayoutManager(requireContext()).apply {
-//            setSwipeableMethod(SwipeableMethod.Manual)
-//            setOverlayInterpolator(LinearInterpolator())
-//        }
+        viewPager.adapter = adapter
 
 
         //To hide the plus button
@@ -76,33 +63,6 @@ class ExploreFragment : Fragment(), RandomListener {
             WindowManager.LayoutParams.SOFT_INPUT_MASK_ADJUST
         )
 
-
-//        val sv = root.findViewById<CardStackView>(R.id.stack_view)
-//        sv.layoutManager = layoutManager
-//        sv.adapter = adapter
-//        sv.itemAnimator.apply {
-//            if (this is DefaultItemAnimator) {
-//                supportsChangeAnimations = false
-//            }
-//        }
-
-
-//        layoutManager.setStackFrom(StackFrom.None)
-//        layoutManager.setDirections(Direction.HORIZONTAL)
-//        layoutManager.setSwipeThreshold(0.1f)
-//        layoutManager.setCanScrollHorizontal(true)
-//        layoutManager.setCanScrollVertical(false)
-
-
-        //Rewind
-//        sv.rewind()
-
-        //Check if the last item
-
-
-//        root.findViewById<TextView>(R.id.load_more).setOnClickListener {
-//            getRandomMemes()
-//        }
 
 
         if (ErrorStatesResponse.checkIsNetworkConnected(requireContext())) {
@@ -113,7 +73,6 @@ class ExploreFragment : Fragment(), RandomListener {
 
 
         pb.visibility = View.GONE
-        dialog.dismiss()
 
         return root
     }
@@ -123,16 +82,17 @@ class ExploreFragment : Fragment(), RandomListener {
         pb.visibility = View.GONE
         root.findViewById<LottieAnimationView>(R.id.anim_explore).visibility = View.VISIBLE
 
-        val snack = Snackbar.make(root, R.string.no_internet_str, Snackbar.LENGTH_INDEFINITE)
-        snack.setAction(R.string.retry, View.OnClickListener {
-            //When the retry is clicked
-            //Dismiss the snack
-            snack.dismiss()
-            getRandomMemes()
-
-        })
-
-        snack.show()
+//        val snack = Snackbar.make(root, R.string.no_internet_str, Snackbar.LENGTH_INDEFINITE)
+//        snack.setAction(R.string.retry, View.OnClickListener {
+//            //When the retry is clicked
+//            //When the retry is clicked
+//            //Dismiss the snack
+//            snack.dismiss()
+//            getRandomMemes()
+//
+//        })
+//
+//        snack.show()
 
     }
 
@@ -174,6 +134,7 @@ class ExploreFragment : Fragment(), RandomListener {
             val memes = mResponse.memes
             adapter.setRandomPosts(memes)
             adapter.notifyDataSetChanged()
+            viewPager.adapter = adapter
 
         }
 

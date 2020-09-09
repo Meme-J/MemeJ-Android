@@ -24,12 +24,12 @@
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/Explore_card_height"
-                android:padding="@dimen/margins"
+                android:layout_height="match_parent"
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center"
                 android:layout_margin="12dp"
                 android:elevation="@dimen/card_eleveation_max"
+                android:padding="@dimen/margins"
                 app:cardCornerRadius="@dimen/margins">
 
                 <ScrollView
@@ -185,14 +185,6 @@
                         </LinearLayout>
 
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginBottom="@dimen/margins"
-                            android:elevation="@dimen/card_eleveation_max"
-                            android:text="@string/swipe_for_more"
-                            android:textSize="@dimen/text_size" />
 
                     </LinearLayout>
                 </ScrollView>

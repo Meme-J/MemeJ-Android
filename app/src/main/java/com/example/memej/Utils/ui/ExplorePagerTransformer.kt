@@ -2,12 +2,11 @@ package com.example.memej.Utils.ui
 
 import android.content.Context
 import android.view.View
-import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
 
 class ExplorePagerTransformer : ViewPager2.PageTransformer {
     private var maxTranslateOffsetX = 0
-    private var viewPager: ViewPager? = null
+    private var viewPager: ViewPager2? = null
 
     //Init constructor
     fun ExplorePagerTransformer(context: Context) {
@@ -16,7 +15,7 @@ class ExplorePagerTransformer : ViewPager2.PageTransformer {
 
     override fun transformPage(view: View, position: Float) {
         if (viewPager == null) {
-            viewPager = view.parent as ViewPager
+            viewPager = view.parent as ViewPager2
         }
         val leftInScreen = view.left - viewPager!!.scrollX
         val centerXInViewPager = leftInScreen + view.measuredWidth / 2
