@@ -1,5 +1,6 @@
 package com.example.memej.Utils.ui
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.DisplayMetrics
 import android.util.Log
@@ -43,6 +44,7 @@ object ConversionUtil {
         ).toInt()
     }
 
+    @SuppressLint("SimpleDateFormat")
     fun convertTimeToEpoch(timestamp: String): String {
         val calendar = Calendar.getInstance()
         val timezone = TimeZone.getTimeZone("UTC")
