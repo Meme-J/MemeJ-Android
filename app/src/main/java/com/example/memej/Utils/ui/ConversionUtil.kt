@@ -50,7 +50,7 @@ object ConversionUtil {
         val sourceFormat =
             SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
         val destFormat =
-            SimpleDateFormat("yyyy-MM-dd HH:mm")
+            SimpleDateFormat("dd-MMM-yyyy")
 
         sourceFormat.timeZone = timezone
         val convertedDate = sourceFormat.parse(timestamp)!!
