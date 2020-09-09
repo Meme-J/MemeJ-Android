@@ -73,7 +73,6 @@ class SelectMemeTemplateActivity : AppCompatActivity(), OnItemClickListenerTempl
         val i = Intent(this, NewMemeContainer::class.java)
         i.putExtra("bundle", bundle)
         startActivity(i)
-        finish()
     }
 
 

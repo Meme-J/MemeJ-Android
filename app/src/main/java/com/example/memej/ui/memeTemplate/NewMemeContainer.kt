@@ -86,6 +86,9 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
     //    lateinit var photoView: PhotoEditorView
     lateinit var photoView: ImageEditorView
 
+    private var state_meme_made: Boolean = false
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.new_meme_container_fragment)
@@ -403,7 +406,7 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
                         .setMessage(message)
                         .setPositiveButton(android.R.string.ok) { _, _ -> }
                         .show()
-
+                    state_meme_made = false
                 }
 
                 override fun onResponse(
@@ -414,13 +417,8 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
                     if (response.body()?.msg == "Meme created successfully") {
 
                         dialog.dismiss()
-                        memeCreated = true
+                        state_meme_made = true
                         val i = Intent(this@NewMemeContainer, MainActivity::class.java)
-//                        val b = bundleOf(
-//                            "frag" to "home"
-//                        )
-//                        i.putExtra("bundleMain", b)
-
                         startActivity(i)
                         finish()
 
@@ -433,7 +431,8 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
                             .setMessage(message)
                             .setPositiveButton(android.R.string.ok) { _, _ -> }
                             .show()
-                        memeCreated = false
+
+                        state_meme_made = false
 
                     }
                 }
