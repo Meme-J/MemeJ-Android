@@ -141,8 +141,8 @@
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/send_post_editR"
-                                android:layout_width="50dp"
-                                android:layout_height="50dp"
+                                android:layout_width="@dimen/space_5x"
+                                android:layout_height="@dimen/space_5x"
                                 android:layout_alignParentEnd="true"
                                 android:layout_gravity="end"
                                 android:background="@drawable/ic_send"
@@ -175,15 +175,15 @@
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/tag_editR"
-                                android:layout_width="@dimen/card_eleveation_max"
-                                android:layout_height="@dimen/card_eleveation_max"
+                                android:layout_width="@dimen/space_4x"
+                                android:layout_height="@dimen/space_4x"
                                 android:layout_gravity="end"
                                 android:background="@drawable/ic_check_black_24dp"
                                 android:enabled="false"
                                 android:gravity="bottom"
+                                app:iconTint="@color/checkGreen"
                                 app:layout_constraintEnd_toEndOf="parent" />
                         </LinearLayout>
-
 
 
                     </LinearLayout>
