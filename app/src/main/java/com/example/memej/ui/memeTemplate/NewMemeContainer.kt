@@ -569,6 +569,7 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
 
 
         edt.addTextChangedListener(object : TextWatcher {
+
             override fun afterTextChanged(s: Editable?) {
 
                 if (edt.text.isNotEmpty()) {

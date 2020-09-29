@@ -45,7 +45,7 @@
     <string name="choose_your_avatar">Choose your avatar</string>
     <string name="total_memes">Total Memes</string>
     <string name="total_likes">Total Likes</string>
-    <string name="sample_timestamp">2020-05-12T21:44:04.883Z</string>
+    <string name="sample_timestamp">2020–05–12T21:44:04.883Z</string>
     <string name="_1000">1000</string>
     <string name="_0">0</string>
     <string name="choose_font">Font</string>
@@ -69,7 +69,7 @@
     <string name="hello">Hello</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="mismatch">Passwords do not match</string>
-    <string name="under_constuction">Under Constuction</string>
+    <string name="under_constuction">Under Construction</string>
     <string name="logout">Logout</string>
     <string name="tag_name">Tag Name</string>
     <string name="tap_to_load_more">Tap to load more</string>
@@ -120,14 +120,14 @@
     <string name="SWITCH">SWITCH</string>
     <string name="you_are_not_a_part_of_any_of_the_spaces">You are not a part of any of the spaces.</string>
     <string name="unableToLoadMySpaces">Unable to get my spaces. Please try again later</string>
-    <string name="spaceSucess">Spaces sucessfully loaded</string>
+    <string name="spaceSucess">Spaces successfully loaded</string>
     <string name="no_pending_invites_and_request">No pending invites and request.</string>
     <string name="noUsers">No users from the editable</string>
     <string name="failSend">Failed to send the invites</string>
     <string name="emptyListForUsers">Add some users in the list to send invites</string>
     <string name="retry">RETRY</string>
     <string name="fail_explore">Unable to load memes</string>
-    <string name="exploreSuccess">Sucess explore spaces</string>
+    <string name="exploreSuccess">Success explore spaces</string>
 
 
     <array name="themeColors">
