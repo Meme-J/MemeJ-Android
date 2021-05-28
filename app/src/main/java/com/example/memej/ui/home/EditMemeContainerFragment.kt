@@ -23,14 +23,14 @@ import com.example.memej.R
 import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.adapters.*
-import com.example.memej.body.editMemeBody
-import com.example.memej.body.searchBody
 import com.example.memej.databinding.EditMemeContainerFragmentBinding
 import com.example.memej.interfaces.RetrofitClient
-import com.example.memej.responses.SearchResponse
-import com.example.memej.responses.editMemeApiResponse
-import com.example.memej.responses.homeMememResponses.Coordinates
-import com.example.memej.responses.homeMememResponses.HomeUsers
+import com.example.memej.models.body.edit.EditMemeBody
+import com.example.memej.models.body.search.SearchBody
+import com.example.memej.models.responses.edit.EditMemeApiResponse
+import com.example.memej.models.responses.home.Coordinates
+import com.example.memej.models.responses.home.HomeUsers
+import com.example.memej.models.responses.search.SearchResponse
 import com.example.memej.textProperties.lib.ImageEditorView
 import com.example.memej.textProperties.lib.OnPhotoEditorListener
 import com.example.memej.textProperties.lib.Photo
@@ -347,7 +347,7 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
     private fun getTags(s: String) {
 
         val service = RetrofitClient.makeCallsForMemes(this)
-        val inf = searchBody(s, "ongoing")
+        val inf = SearchBody(s, "ongoing")
         service.getTags(accessToken = "Bearer ${sessionManager.fetchAcessToken()}", info = inf)
             .enqueue(object : retrofit2.Callback<SearchResponse> {
                 override fun onFailure(call: Call<SearchResponse>, t: Throwable) {
@@ -393,7 +393,7 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
         //pb.visibility = View.VISIBLE
         val service = RetrofitClient.makeCallsForMemes(this)
         val inf =
-            editMemeBody(
+            EditMemeBody(
                 arg.getString("id")!!,
                 line,
                 mutableList,
@@ -406,8 +406,8 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
         dialog.show()
 
         service.editMeme(accessToken = "Bearer ${sessionManager.fetchAcessToken()}", info = inf)
-            .enqueue(object : Callback<editMemeApiResponse> {
-                override fun onFailure(call: Call<editMemeApiResponse>, t: Throwable) {
+            .enqueue(object : Callback<EditMemeApiResponse> {
+                override fun onFailure(call: Call<EditMemeApiResponse>, t: Throwable) {
                     Log.e("Edit", "In failure")
                     dialog.dismiss()
                     val message = ErrorStatesResponse.returnStateMessageForThrowable(t)
@@ -420,8 +420,8 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
                 }
 
                 override fun onResponse(
-                    call: Call<editMemeApiResponse>,
-                    response: Response<editMemeApiResponse>
+                    call: Call<EditMemeApiResponse>,
+                    response: Response<EditMemeApiResponse>
                 ) {
                     //Response will be good if the meme is created
                     if (response.body()!!.msg == "Meme Edited successfully") {
@@ -429,7 +429,6 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
                         dialog.dismiss()
 
                         onBackPressed()
-
 
 
                     } else {
@@ -731,7 +730,7 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
         //Activate the progress bar
 //        pb.visibility = View.VISIBLE
 //        val service = RetrofitClient.makeCallForProfileParameters(requireContext())
-//        val inf = profileSearchBody(_user)
+//        val inf = ProfileSearchBody(_user)
 //        service.getProfileFromUsername(inf)
 //            .enqueue(object : retrofit2.Callback<UserProfileResponse> {
 //                override fun onFailure(call: Call<UserProfileResponse>, t: Throwable) {

@@ -17,7 +17,7 @@ import com.example.memej.R
 import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.adapters.MemeGroupAdapter
 import com.example.memej.adapters.OnItemClickListenerTemplate
-import com.example.memej.responses.template.EmptyTemplateResponse
+import com.example.memej.models.responses.template.EmptyTemplateResponse
 import com.example.memej.viewModels.SearchTemplateViewModel
 import com.shreyaspatil.MaterialDialog.MaterialDialog
 

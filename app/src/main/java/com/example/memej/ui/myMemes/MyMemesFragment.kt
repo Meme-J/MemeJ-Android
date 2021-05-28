@@ -22,7 +22,7 @@ import com.example.memej.Utils.Communicator
 import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.adapters.MemeWorldAdapter
 import com.example.memej.adapters.OnItemClickListenerMemeWorld
-import com.example.memej.responses.memeWorldResponses.Meme_World
+import com.example.memej.models.responses.meme_world.Meme_World
 import com.example.memej.ui.MemeWorld.CompletedMemeActivity
 import com.example.memej.viewModels.MyMemesViewModel
 import com.shreyaspatil.MaterialDialog.MaterialDialog

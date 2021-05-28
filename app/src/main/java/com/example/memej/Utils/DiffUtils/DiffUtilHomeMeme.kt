@@ -2,7 +2,7 @@ package com.example.memej.Utils.DiffUtils
 
 
 import androidx.recyclerview.widget.DiffUtil
-import com.example.memej.responses.homeMememResponses.Meme_Home
+import com.example.memej.models.responses.home.Meme_Home
 
 class DiffUtilsHomeMeme : DiffUtil.ItemCallback<Meme_Home>() {
 

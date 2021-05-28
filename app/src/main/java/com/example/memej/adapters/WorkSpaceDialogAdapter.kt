@@ -10,7 +10,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.example.memej.R
 import com.example.memej.Utils.PreferenceUtil
-import com.example.memej.responses.workspaces.UserWorkspaces
+import com.example.memej.models.responses.workspaces.UserWorkspaces
 import java.util.*
 
 class WorkSpaceDialogAdapter(val itemClick: OnWorkSpaceChangedListener) :

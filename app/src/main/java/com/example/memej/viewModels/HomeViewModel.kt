@@ -8,9 +8,9 @@ import androidx.paging.DataSource
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.example.memej.Utils.ApplicationUtil
-import com.example.memej.body.queryBody
 import com.example.memej.dataSources.HomeMemeDataSource
-import com.example.memej.responses.homeMememResponses.Meme_Home
+import com.example.memej.models.body.search.QueryBody
+import com.example.memej.models.responses.home.Meme_Home
 
 class HomeViewModel : ViewModel() {
 
@@ -44,7 +44,7 @@ class HomeViewModel : ViewModel() {
         val dataSourceFactory = object : DataSource.Factory<String, Meme_Home>() {
             override fun create(): DataSource<String, Meme_Home> {
 
-                val inf = queryBody("")
+                val inf = QueryBody("")
                 return HomeMemeDataSource(ApplicationUtil.getContext(), inf, pb)
             }
         }

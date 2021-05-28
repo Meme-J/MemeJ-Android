@@ -22,10 +22,10 @@ import com.example.memej.Utils.PreferenceUtil
 import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.Utils.shareCacheDirBitmap
 import com.example.memej.Utils.ui.ConversionUtil
-import com.example.memej.body.likeMemeBody
 import com.example.memej.interfaces.RetrofitClient
-import com.example.memej.responses.LikeOrNotResponse
-import com.example.memej.responses.memeWorldResponses.Meme_World
+import com.example.memej.models.body.LikeMemeBody
+import com.example.memej.models.responses.LikeOrNotResponse
+import com.example.memej.models.responses.meme_world.Meme_World
 import com.example.memej.textProperties.lib.ImageEditorView
 import com.example.memej.textProperties.lib.Photo
 import com.google.android.material.snackbar.Snackbar
@@ -82,7 +82,7 @@ class LikedMemesAdapter(val context: Context, val itemClickListener: OnItemClick
 //
 //                val username = preferenceUtils.getUserFromPrefernece().username
 //                val id = preferenceUtils.getUserFromPrefernece()._id
-//                val userIns = com.example.memej.responses.memeWorldResponses.User(id, username)
+//                val userIns = com.example.memej.models.responses.memeWorldResponses.User(id, username)
 //                val user_likers = _meme.likedBy
 //
 //                if (user_likers.contains(userIns)) {
@@ -157,7 +157,7 @@ class LikedMemesAdapter(val context: Context, val itemClickListener: OnItemClick
 
             //Revert the state
             Log.e("ADapter", "In like meme")
-            val inf = likeMemeBody(_meme._id)
+            val inf = LikeMemeBody(_meme._id)
             service.likeMeme(
                 inf,
                 accessToken = "Bearer ${sessionManager.fetchAcessToken()}"

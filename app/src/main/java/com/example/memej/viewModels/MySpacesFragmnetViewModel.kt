@@ -8,7 +8,7 @@ import com.example.memej.Utils.ApplicationUtil
 import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.interfaces.RetrofitClient
-import com.example.memej.responses.workspaces.UserWorkspaces
+import com.example.memej.models.responses.workspaces.UserWorkspaces
 import retrofit2.Call
 import retrofit2.Response
 

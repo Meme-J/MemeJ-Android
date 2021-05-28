@@ -14,7 +14,7 @@ import com.example.memej.R
 import com.example.memej.adapters.InvitesAdapter
 import com.example.memej.adapters.OnItemClickListenerInvites
 import com.example.memej.databinding.InvitesFragmnetFragmentBinding
-import com.example.memej.responses.workspaces.UserRequestResponse
+import com.example.memej.models.responses.workspaces.UserRequestResponse
 import com.example.memej.viewModels.InvitesFragmnetViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.invites_fragmnet_fragment.*

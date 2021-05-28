@@ -24,7 +24,7 @@ class AuthInterceptor(context: Context) : Interceptor {
             requestBuilder.addHeader("Authorization", "Bearer $it")
         }
 
-        Log.e("Auth", "In Auth Intercptor")
+        Log.e("auth", "In auth Intercptor")
 
         return chain.proceed(requestBuilder.build())
     }

@@ -1,13 +1,18 @@
 package com.example.memej.interfaces
 
 import androidx.annotation.Keep
-import com.example.memej.body.*
-import com.example.memej.responses.LikeOrNotResponse
-import com.example.memej.responses.SearchResponse
-import com.example.memej.responses.editMemeApiResponse
-import com.example.memej.responses.homeMememResponses.homeMemeApiResponse
-import com.example.memej.responses.memeWorldResponses.memeApiResponses
-import com.example.memej.responses.template.EmptyTemplateResponse
+import com.example.memej.models.body.LikeMemeBody
+import com.example.memej.models.body.create.CreateMemeBody
+import com.example.memej.models.body.edit.EditMemeBody
+import com.example.memej.models.body.search.QueryBody
+import com.example.memej.models.body.search.SearchBody
+import com.example.memej.models.body.search.SearchTemplateBody
+import com.example.memej.models.responses.LikeOrNotResponse
+import com.example.memej.models.responses.edit.EditMemeApiResponse
+import com.example.memej.models.responses.home.HomeMemeApiResponse
+import com.example.memej.models.responses.meme_world.MemeWorldApiResponses
+import com.example.memej.models.responses.search.SearchResponse
+import com.example.memej.models.responses.template.EmptyTemplateResponse
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -25,16 +30,15 @@ interface memes {
     fun fetchEditableMemes(
         @Query("limit") loadSize: Int = 20,
         @Header("Authorization") accessToken: String?,
-        @Body search: queryBody                  //Default for normal calling, but a separate string incase a new param called
-    ): Call<homeMemeApiResponse>
+        @Body search: QueryBody                  //Default for normal calling, but a separate string incase a new param called
+    ): Call<HomeMemeApiResponse>
 
 
     //Get search suggestions of memes
     @Headers("Content-Type:application/json")
     @POST("api/meme/autocomplete")
     fun getSuggestions(
-        @Header("Authorization") accessToken: String?
-        , @Body info: searchBody
+        @Header("Authorization") accessToken: String?, @Body info: SearchBody
     ): Call<SearchResponse>
 
 
@@ -44,15 +48,15 @@ interface memes {
     fun fetchMemeWorldMemes(
         @Query("limit") loadSize: Int = 20,              //Test it with this value
         @Header("Authorization") accessToken: String?,
-        @Body search: queryBody
-    ): Call<memeApiResponses>
+        @Body search: QueryBody
+    ): Call<MemeWorldApiResponses>
 
 
     //Like or dislike a meme
     @Headers("Content-Type:application/json")
     @POST("api/meme/like")
     fun likeMeme(
-        @Body memeId: likeMemeBody,
+        @Body memeId: LikeMemeBody,
         @Header("Authorization") accessToken: String?
     ): Call<LikeOrNotResponse>
 
@@ -60,7 +64,7 @@ interface memes {
     @POST("api/meme/random")
     fun getRandom(
         @Header("Authorization") accessToken: String?
-    ): Call<homeMemeApiResponse>              //Response will be similar form of home posts
+    ): Call<HomeMemeApiResponse>              //Response will be similar form of home posts
 
 
     //Get an empty meme template
@@ -83,7 +87,7 @@ interface memes {
     @POST("api/meme/autocomplete")
     fun getTags(
         @Header("Authorization") accessToken: String?,
-        @Body info: searchBody
+        @Body info: SearchBody
 
     ): Call<SearchResponse>
 
@@ -92,15 +96,15 @@ interface memes {
     @POST("api/meme/edit")
     fun editMeme(
         @Header("Authorization") accessToken: String?,
-        @Body info: editMemeBody
-    ): Call<editMemeApiResponse>
+        @Body info: EditMemeBody
+    ): Call<EditMemeApiResponse>
 
     @Headers("Content-Type:application/json")
     @POST("api/meme/create")
     fun createMeme(
         @Header("Authorization") accessToken: String?,
-        @Body info: createMemeBody
-    ): Call<editMemeApiResponse>
+        @Body info: CreateMemeBody
+    ): Call<EditMemeApiResponse>
 
 
     @Headers("Content-Type:application/json")
@@ -108,7 +112,7 @@ interface memes {
     fun getSearchedTemplates(
         @Query("limit") loadSize: Int = 20,              //Test it with this value
         @Header("Authorization") accessToken: String?,
-        @Body info: searchTemplate
+        @Body info: SearchTemplateBody
     ): Call<EmptyTemplateResponse>
 
 
@@ -117,7 +121,7 @@ interface memes {
     @POST("api/template/autocomplete")
     fun getTemplateSuggestions(
         @Header("Authorization") accessToken: String?,
-        @Body info: searchTemplate
+        @Body info: SearchTemplateBody
     ): Call<SearchResponse>
 
 
@@ -129,7 +133,7 @@ interface memes {
     fun getMyMemes(
         @Query("limit") loadSize: Int = 20,
         @Header("Authorization") accessToken: String?
-    ): Call<memeApiResponses>
+    ): Call<MemeWorldApiResponses>
 
 
 }

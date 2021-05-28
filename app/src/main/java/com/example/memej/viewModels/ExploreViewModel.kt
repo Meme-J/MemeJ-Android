@@ -8,7 +8,7 @@ import com.example.memej.Utils.ApplicationUtil
 import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.interfaces.RetrofitClient
-import com.example.memej.responses.homeMememResponses.homeMemeApiResponse
+import com.example.memej.models.responses.home.HomeMemeApiResponse
 import retrofit2.Call
 import retrofit2.Response
 
@@ -26,9 +26,9 @@ class ExploreViewModel : ViewModel() {
     private val memeService = RetrofitClient.makeCallsForMemes(context)
 
 
-    private var exploreResponse: MutableLiveData<homeMemeApiResponse> = MutableLiveData()
+    private var exploreResponse: MutableLiveData<HomeMemeApiResponse> = MutableLiveData()
 
-    fun randomFunction(): MutableLiveData<homeMemeApiResponse> {
+    fun randomFunction(): MutableLiveData<HomeMemeApiResponse> {
         //If mySpacesResponses is null
         exploreResponse = getRandom()
         return exploreResponse
@@ -37,14 +37,14 @@ class ExploreViewModel : ViewModel() {
     }
 
     //No body
-    fun getRandom(): MutableLiveData<homeMemeApiResponse> {
+    fun getRandom(): MutableLiveData<HomeMemeApiResponse> {
 
         Log.e(TAG, "In  egt spaces VM")
 
         memeService.getRandom(
             accessToken = "Bearer ${sessionManager.fetchAcessToken()}"
-        ).enqueue(object : retrofit2.Callback<homeMemeApiResponse> {
-            override fun onFailure(call: Call<homeMemeApiResponse>, t: Throwable) {
+        ).enqueue(object : retrofit2.Callback<HomeMemeApiResponse> {
+            override fun onFailure(call: Call<HomeMemeApiResponse>, t: Throwable) {
                 successful.value = false
                 message.value = ErrorStatesResponse.returnStateMessageForThrowable(t)
                 Log.e(TAG, "In failure message is ${message.value}")
@@ -52,8 +52,8 @@ class ExploreViewModel : ViewModel() {
             }
 
             override fun onResponse(
-                call: Call<homeMemeApiResponse>,
-                response: Response<homeMemeApiResponse>
+                call: Call<HomeMemeApiResponse>,
+                response: Response<HomeMemeApiResponse>
             ) {
 
                 Log.e(

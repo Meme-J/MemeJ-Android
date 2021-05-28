@@ -19,7 +19,7 @@ import com.example.memej.Utils.PreferenceUtil
 import com.example.memej.adapters.OnWorkSpaceChangedListener
 import com.example.memej.adapters.WorkSpaceDialogAdapter
 import com.example.memej.databinding.FragmentWorkspaceDialogBinding
-import com.example.memej.responses.workspaces.UserWorkspaces
+import com.example.memej.models.responses.workspaces.UserWorkspaces
 import com.example.memej.ui.workspace.CreateWorkspaceActivity
 import com.example.memej.viewModels.WorkspaceDialogViewModel
 import kotlinx.android.synthetic.main.fragment_workspace_dialog.view.*

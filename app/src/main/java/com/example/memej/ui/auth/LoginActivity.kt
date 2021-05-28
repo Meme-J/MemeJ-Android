@@ -19,8 +19,8 @@ import com.example.memej.R
 import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.PreferenceManager
 import com.example.memej.Utils.sessionManagers.SessionManager
-import com.example.memej.body.LoginBody
 import com.example.memej.databinding.ActivityLoginBinding
+import com.example.memej.models.body.auth.LoginBody
 import com.example.memej.viewModels.LoginActivtyViewModel
 import com.google.android.gms.auth.api.credentials.Credential
 import com.google.android.gms.auth.api.credentials.CredentialsClient

@@ -9,7 +9,7 @@ import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.example.memej.Utils.ApplicationUtil
 import com.example.memej.dataSources.MemeGroupDataSource
-import com.example.memej.responses.template.EmptyTemplateResponse
+import com.example.memej.models.responses.template.EmptyTemplateResponse
 
 class SelectMemeGroupViewModel(application: Application) : AndroidViewModel(application) {
 

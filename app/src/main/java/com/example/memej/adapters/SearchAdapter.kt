@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.annotation.Keep
 import androidx.recyclerview.widget.RecyclerView
 import com.example.memej.R
-import com.example.memej.responses.SearchResponse
+import com.example.memej.models.responses.search.SearchResponse
 import com.google.android.material.textview.MaterialTextView
 
 @Keep

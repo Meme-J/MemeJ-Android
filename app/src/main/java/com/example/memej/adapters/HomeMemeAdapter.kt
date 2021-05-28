@@ -13,7 +13,7 @@ import com.example.memej.R
 import com.example.memej.Utils.ApplicationUtil
 import com.example.memej.Utils.DiffUtils.DiffUtilsHomeMeme
 import com.example.memej.Utils.ui.ConversionUtil
-import com.example.memej.responses.homeMememResponses.Meme_Home
+import com.example.memej.models.responses.home.Meme_Home
 import com.example.memej.textProperties.lib.ImageEditorView
 import com.example.memej.textProperties.lib.Photo
 import com.google.android.material.textview.MaterialTextView

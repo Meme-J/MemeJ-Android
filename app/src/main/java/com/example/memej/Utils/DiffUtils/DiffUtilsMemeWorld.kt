@@ -1,7 +1,7 @@
 package com.example.memej.Utils.DiffUtils
 
 import androidx.recyclerview.widget.DiffUtil
-import com.example.memej.responses.memeWorldResponses.Meme_World
+import com.example.memej.models.responses.meme_world.Meme_World
 
 class DiffUtilsMemeWorld : DiffUtil.ItemCallback<Meme_World>() {
 //    override fun areItemsTheSame(oldItem: memeGroup, newItem: memeGroup): Boolean {

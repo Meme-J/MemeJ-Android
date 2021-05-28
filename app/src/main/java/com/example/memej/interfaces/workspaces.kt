@@ -1,8 +1,9 @@
 package com.example.memej.interfaces
 
-import com.example.memej.body.*
-import com.example.memej.responses.SearchUserResponses
-import com.example.memej.responses.workspaces.*
+import com.example.memej.models.body.search.SearchUserBody
+import com.example.memej.models.body.workspaces.*
+import com.example.memej.models.responses.search.SearchUserResponses
+import com.example.memej.models.responses.workspaces.*
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.Header
@@ -10,15 +11,6 @@ import retrofit2.http.Headers
 import retrofit2.http.POST
 
 interface workspaces {
-
-    //Check if the name exists or not
-    //# Edit this
-    @POST("api/workspace/getname")
-    @Headers("Content-Type:application/json")
-    fun checkWorkspaceName(
-        @Header("Authorization") accessToken: String?,
-        @Body string: String
-    ): Call<WorkspaceName>
 
 
     //Get the user workspaces
@@ -60,7 +52,7 @@ interface workspaces {
     @Headers("Content-Type:application/json")
     fun searchUsers(
         @Header("Authorization") accessToken: String?,
-        @Body body: searchUserBody
+        @Body body: SearchUserBody
     ): Call<SearchUserResponses>
 
 
@@ -85,7 +77,7 @@ interface workspaces {
     @Headers("Content-Type:application/json")
     fun acceptRequests(
         @Header("Authorization") accessToken: String?,
-        @Body body: AcceptRequestsBody
+        @Body body: AcceptWorkspaceRequestBody
     ): Call<AcceptRequestsResponse>
 
     //Reject a request
@@ -93,7 +85,7 @@ interface workspaces {
     @Headers("Content-Type:application/json")
     fun rejectRequests(
         @Header("Authorization") accessToken: String?,
-        @Body body: RejectRequestBody
+        @Body body: RejectWorkspaceRequestBody
     ): Call<RejectRequestResponse>
 
 

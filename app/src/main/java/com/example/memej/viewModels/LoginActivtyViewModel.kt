@@ -9,10 +9,10 @@ import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.PreferenceUtil
 import com.example.memej.Utils.sessionManagers.PreferenceManager
 import com.example.memej.Utils.sessionManagers.SessionManager
-import com.example.memej.body.LoginBody
 import com.example.memej.interfaces.RetrofitClient
-import com.example.memej.responses.LoginResponse
-import com.example.memej.responses.ProfileResponse
+import com.example.memej.models.body.auth.LoginBody
+import com.example.memej.models.responses.auth.LoginResponse
+import com.example.memej.models.responses.auth.ProfileResponse
 import io.reactivex.annotations.NonNull
 import retrofit2.Call
 import retrofit2.Callback

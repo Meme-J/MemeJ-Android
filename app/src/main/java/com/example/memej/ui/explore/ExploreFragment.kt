@@ -17,8 +17,8 @@ import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.adapters.RandomListener
 import com.example.memej.adapters.RandomMemeAdapter
-import com.example.memej.responses.homeMememResponses.Meme_Home
-import com.example.memej.responses.homeMememResponses.homeMemeApiResponse
+import com.example.memej.models.responses.home.HomeMemeApiResponse
+import com.example.memej.models.responses.home.Meme_Home
 import com.example.memej.viewModels.ExploreViewModel
 import com.google.android.material.snackbar.Snackbar
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager
@@ -169,7 +169,7 @@ class ExploreFragment : Fragment(), RandomListener {
         return
     }
 
-    private fun initiateAdapter(mResponse: homeMemeApiResponse?) {
+    private fun initiateAdapter(mResponse: HomeMemeApiResponse?) {
 
         if (mResponse != null) {
 

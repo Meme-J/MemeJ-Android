@@ -16,7 +16,7 @@ import com.example.memej.R
 import com.example.memej.adapters.MySpacesAdapter
 import com.example.memej.adapters.OnItemClickListenerMySpaces
 import com.example.memej.databinding.MySpacesFragmnetFragmentBinding
-import com.example.memej.responses.workspaces.UserWorkspaces
+import com.example.memej.models.responses.workspaces.UserWorkspaces
 import com.example.memej.viewModels.MySpacesFragmnetViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.my_spaces_fragmnet_fragment.*

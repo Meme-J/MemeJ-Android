@@ -2,7 +2,7 @@ package com.example.memej.Utils.DiffUtils
 
 
 import androidx.recyclerview.widget.DiffUtil
-import com.example.memej.responses.template.EmptyTemplateResponse
+import com.example.memej.models.responses.template.EmptyTemplateResponse
 
 class DiffUtilsMemeGroup : DiffUtil.ItemCallback<EmptyTemplateResponse.Template>() {
     override fun areItemsTheSame(

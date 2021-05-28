@@ -22,12 +22,12 @@ import com.example.memej.R
 import com.example.memej.Utils.Communicator
 import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.SessionManager
-import com.example.memej.body.editMemeBody
-import com.example.memej.body.searchBody
 import com.example.memej.interfaces.RetrofitClient
-import com.example.memej.responses.SearchResponse
-import com.example.memej.responses.editMemeApiResponse
-import com.example.memej.responses.homeMememResponses.Meme_Home
+import com.example.memej.models.body.edit.EditMemeBody
+import com.example.memej.models.body.search.SearchBody
+import com.example.memej.models.responses.edit.EditMemeApiResponse
+import com.example.memej.models.responses.home.Meme_Home
+import com.example.memej.models.responses.search.SearchResponse
 import com.example.memej.textProperties.lib.ImageEditorView
 import com.example.memej.textProperties.lib.OnPhotoEditorListener
 import com.example.memej.textProperties.lib.Photo
@@ -190,7 +190,7 @@ class RandomMemeAdapter(private val clickListener: RandomListener) :
 
                     val service = RetrofitClient.makeCallsForMemes(itemView.context)
                     val inf =
-                        editMemeBody(
+                        EditMemeBody(
                             _meme._id,
                             edt.text.toString(),
                             mutableList,
@@ -206,8 +206,8 @@ class RandomMemeAdapter(private val clickListener: RandomListener) :
                         accessToken = "Bearer ${sessionManager.fetchAcessToken()}",
                         info = inf
                     )
-                        .enqueue(object : Callback<editMemeApiResponse> {
-                            override fun onFailure(call: Call<editMemeApiResponse>, t: Throwable) {
+                        .enqueue(object : Callback<EditMemeApiResponse> {
+                            override fun onFailure(call: Call<EditMemeApiResponse>, t: Throwable) {
                                 Log.e("Edit", "In failure")
                                 dialog.dismiss()
                                 val message = ErrorStatesResponse.returnStateMessageForThrowable(t)
@@ -220,8 +220,8 @@ class RandomMemeAdapter(private val clickListener: RandomListener) :
                             }
 
                             override fun onResponse(
-                                call: Call<editMemeApiResponse>,
-                                response: Response<editMemeApiResponse>
+                                call: Call<EditMemeApiResponse>,
+                                response: Response<EditMemeApiResponse>
                             ) {
                                 //Response will be good if the meme is created
                                 if (response.body()!!.msg == "Meme Edited successfully") {
@@ -430,7 +430,7 @@ class RandomMemeAdapter(private val clickListener: RandomListener) :
         private fun getTags(s: String) {
 
             val service = RetrofitClient.makeCallsForMemes(itemView.context)
-            val inf = searchBody(s, "ongoing")
+            val inf = SearchBody(s, "ongoing")
             service.getTags(accessToken = "Bearer ${sessionManager.fetchAcessToken()}", info = inf)
                 .enqueue(object : retrofit2.Callback<SearchResponse> {
                     override fun onFailure(call: Call<SearchResponse>, t: Throwable) {

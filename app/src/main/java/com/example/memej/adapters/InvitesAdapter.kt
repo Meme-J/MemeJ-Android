@@ -12,12 +12,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.memej.R
 import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.SessionManager
-import com.example.memej.body.AcceptRequestsBody
-import com.example.memej.body.RejectRequestBody
 import com.example.memej.interfaces.RetrofitClient
-import com.example.memej.responses.workspaces.AcceptRequestsResponse
-import com.example.memej.responses.workspaces.RejectRequestResponse
-import com.example.memej.responses.workspaces.UserRequestResponse
+import com.example.memej.models.body.workspaces.AcceptWorkspaceRequestBody
+import com.example.memej.models.body.workspaces.RejectWorkspaceRequestBody
+import com.example.memej.models.responses.workspaces.AcceptRequestsResponse
+import com.example.memej.models.responses.workspaces.RejectRequestResponse
+import com.example.memej.models.responses.workspaces.UserRequestResponse
 import com.google.android.material.snackbar.Snackbar
 import retrofit2.Call
 import retrofit2.Response
@@ -95,8 +95,8 @@ class InvitesAdapter(val itemClick: OnItemClickListenerInvites, val ctx: Context
         position: Int,
         holder: InvitesAdapter.MyViewHolder
     ) {
-        val req = AcceptRequestsBody.Request(request.from, request.id, request.name)
-        val body = AcceptRequestsBody(req)
+        val req = AcceptWorkspaceRequestBody.Request(request.from, request.id, request.name)
+        val body = AcceptWorkspaceRequestBody(req)
         workspaceService.acceptRequests(
             accessToken = "Bearer ${sessionManager.fetchAcessToken()}",
             body = body
@@ -177,8 +177,8 @@ class InvitesAdapter(val itemClick: OnItemClickListenerInvites, val ctx: Context
         position: Int,
         holder: MyViewHolder
     ) {
-        val req = RejectRequestBody.Request(request.from, request.id, request.name)
-        val body = RejectRequestBody(req)
+        val req = RejectWorkspaceRequestBody.Request(request.from, request.id, request.name)
+        val body = RejectWorkspaceRequestBody(req)
         workspaceService.rejectRequests(
             accessToken = "Bearer ${sessionManager.fetchAcessToken()}",
             body = body

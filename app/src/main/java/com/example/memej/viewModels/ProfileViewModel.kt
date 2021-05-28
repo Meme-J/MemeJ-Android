@@ -11,9 +11,9 @@ import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.dataSources.LikedMemesDataSource
 import com.example.memej.interfaces.RetrofitClient
-import com.example.memej.responses.NumLikes
-import com.example.memej.responses.ProfileResponse
-import com.example.memej.responses.memeWorldResponses.Meme_World
+import com.example.memej.models.NumLikes
+import com.example.memej.models.responses.auth.ProfileResponse
+import com.example.memej.models.responses.meme_world.Meme_World
 import retrofit2.Call
 import retrofit2.Response
 
