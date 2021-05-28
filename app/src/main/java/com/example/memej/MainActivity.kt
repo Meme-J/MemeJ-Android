@@ -81,6 +81,7 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
     }
 
     private fun openFragment(fragment: Fragment) {
+
         val transaction = supportFragmentManager.beginTransaction()
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
         transaction.replace(R.id.container, fragment)

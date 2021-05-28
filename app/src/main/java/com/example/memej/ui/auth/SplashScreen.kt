@@ -26,7 +26,6 @@ class SplashScreen : AppCompatActivity() {
         setContentView(R.layout.activity_splash_screen)
 
         handler = Handler()
-
         val preferences =
             getSharedPreferences(getString(R.string.intro_prefs), Context.MODE_PRIVATE)
         val firstRun = preferences.getBoolean(getString(R.string.intro_prefs_first_run), true)
@@ -71,6 +70,7 @@ class SplashScreen : AppCompatActivity() {
 
 
     override fun onDestroy() {
+        //Remove handlers
         super.onDestroy()
         handler.removeCallbacks(runnable)
 

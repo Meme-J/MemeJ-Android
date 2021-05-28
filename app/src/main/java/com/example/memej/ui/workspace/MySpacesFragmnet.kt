@@ -72,6 +72,7 @@ class MySpacesFragmnet : AppCompatActivity(), OnItemClickListenerMySpaces {
 
         viewModel.mySpacesFuction().observe(this, Observer { mResponse ->
             initiateAdapter(mResponse)
+
         })
 
 

@@ -46,9 +46,11 @@ class SelectMemeTemplateActivity : AppCompatActivity(), OnItemClickListenerTempl
     lateinit var bundle: Bundle
     lateinit var toolbar: androidx.appcompat.widget.Toolbar
     lateinit var dialog: ProgressDialog
+
     lateinit var searchView: SearchView
     private var mAdapter: SimpleCursorAdapter? = null
     lateinit var searchManager: SearchManager
+
     val VOICE_REC_CODE = 1234
     private val ACTION_VOICE_SEARCH = "com.google.android.gms.actions.SEARCH_ACTION"
 

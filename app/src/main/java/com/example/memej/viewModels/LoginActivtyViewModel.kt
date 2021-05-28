@@ -1,6 +1,7 @@
 package com.example.memej.viewModels
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.memej.Utils.ApplicationUtil
@@ -20,7 +21,7 @@ import retrofit2.Response
 class LoginActivtyViewModel : ViewModel() {
 
 
-    var tag = LoginActivtyViewModel::class.java.simpleName
+    var TAG = LoginActivtyViewModel::class.java.simpleName
 
     private val preferenceManager: PreferenceManager = PreferenceManager()
     private val authDataManager = RetrofitClient.getAuthInstance()
@@ -52,6 +53,8 @@ class LoginActivtyViewModel : ViewModel() {
 
                     if (response.body()?.msg == "Login successful.") {
                         successful.value = true
+
+                        Log.e("Login Response", response.body().toString())
                         sessionManager.saveAuth_access_Token(
                             LoginResponse(
                                 response.body()!!.msg,
@@ -72,6 +75,10 @@ class LoginActivtyViewModel : ViewModel() {
                                 response.body()!!.user
                             )).user.accessToken
                         )
+
+                        Log.e(TAG, "AT: \n" + sessionManager.fetchAcessToken().toString())
+                        Log.e(TAG, "RT: \n" + sessionManager.fetchRefreshToken().toString())
+                        Log.e(TAG, "PT: \n" + preferenceManager.authToken.toString())
 
 
                     } else {

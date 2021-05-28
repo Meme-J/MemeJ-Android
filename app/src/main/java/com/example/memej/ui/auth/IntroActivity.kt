@@ -15,6 +15,8 @@ class IntroActivity : AppIntro2() {
 
 
     private val preferenceUtil = PreferenceUtil
+    //Plane Class extending the walkthrough library
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        setContentView(R.layout.activity_intro)
@@ -34,45 +36,46 @@ class IntroActivity : AppIntro2() {
         val intro = SliderPage(
             title = getString(R.string.intro),
             // imageDrawable = R.drawable.ic_fast_forward_black_24dp,
-            // titleColor = R.color.stoneWhite,
+            titleColor = R.color.ivory,
             //descColor = R.color.stoneWhite,
-            bgColor = R.color.colorPrimary,
-            imageDrawable = R.drawable.start_wk
+            bgColor = R.color.colorAccent,
+            imageDrawable = R.drawable.wk_intro
 
         )
 
         val page1 = SliderPage(
             title = getString(R.string.title1),
             description = getString(R.string.page1),
-            //titleColor = R.color.stoneWhite,
+            titleColor = R.color.colorAccent,
             //descColor = R.color.stoneWhite,
-            bgColor = R.color.colorPrimary,
-            imageDrawable = R.drawable.home_wk
+            bgColor = R.color.ivory,
+            imageDrawable = R.drawable.wk_home
         )
 
         val page2 = SliderPage(
             title = getString(R.string.title2),
-            //titleColor = R.color.stoneWhite,
+            titleColor = R.color.ivory,
             // descColor = R.color.stoneWhite,
-            bgColor = R.color.colorPrimary,
+            bgColor = R.color.colorAccent,
             description = getString(R.string.page2),
-            imageDrawable = R.drawable.explore_wk
+            imageDrawable = R.drawable.wk_explore
         )
         val page3 = SliderPage(
             title = getString(R.string.title3),
             description = getString(R.string.page3),
-            //titleColor = R.color.stoneWhite,
+            titleColor = R.color.colorAccent,
             //descColor = R.color.stoneWhite,
-            bgColor = R.color.colorPrimary,
-            imageDrawable = R.drawable.search_wk
+            bgColor = R.color.ivory,
+            imageDrawable = R.drawable.wk_explore
         )
+
         val page4 = SliderPage(
             title = getString(R.string.title4),
             description = getString(R.string.page4),
-            //titleColor = R.color.stoneWhite,
+            titleColor = R.color.ivory,
             //descColor = R.color.stoneWhite,
-            bgColor = R.color.colorPrimary,
-            imageDrawable = R.drawable.share_wk
+            bgColor = R.color.colorAccent,
+            imageDrawable = R.drawable.wk_love
         )
 
         addSlide(AppIntro2Fragment.newInstance(intro))

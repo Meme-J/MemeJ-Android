@@ -1,6 +1,7 @@
 package com.example.memej.Utils.interceptors
 
 import android.content.Context
+import android.util.Log
 import com.example.memej.Utils.sessionManagers.SessionManager
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -22,6 +23,8 @@ class AuthInterceptor(context: Context) : Interceptor {
         sessionManager.fetchAcessToken()?.let {
             requestBuilder.addHeader("Authorization", "Bearer $it")
         }
+
+        Log.e("Auth", "In Auth Intercptor")
 
         return chain.proceed(requestBuilder.build())
     }

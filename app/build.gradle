@@ -29,6 +29,7 @@ android {
 
 
     buildTypes {
+
         release {
             //Proguard Techniques
             minifyEnabled false            //Need to add serialized name annotation if enabled true
@@ -57,6 +58,7 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
     dataBinding {
         enabled = true
     }
@@ -90,6 +92,7 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
 
+    //Multidex
     implementation 'com.android.support:multidex:1.0.3'
 
     //Test Implementations
