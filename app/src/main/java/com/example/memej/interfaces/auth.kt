@@ -46,7 +46,4 @@ interface auth {
     ): Call<LoginResponse>
 
 
-    //Logout the user
-//    @POST("")
-//    fun logout(): Call<Void?>?
 }
