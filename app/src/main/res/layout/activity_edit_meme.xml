@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@color/ivory"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/ivory">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -76,49 +76,41 @@
         </com.google.android.material.card.MaterialCardView>
 
 
-        <RelativeLayout
-            android:id="@+id/rel"
-            android:layout_width="match_parent"
+        <EditText
+            android:id="@+id/lineAddedEt"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space"
-            android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@id/cv">
-
-            <EditText
-                android:id="@+id/lineAddedEt"
-                android:layout_width="@dimen/add_line"
-                android:layout_height="@dimen/boxHt"
-                android:layout_marginStart="@dimen/space"
-                android:layout_marginTop="4dp"
-                android:gravity="bottom"
-                android:hint="@string/add_a_line"
-                android:maxLines="4"
-                android:minLines="1"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+            android:layout_margin="@dimen/space"
+            android:background="@drawable/rounded_border_tv"
+            android:gravity="bottom"
+            android:hint="@string/add_a_line"
+            android:maxLines="4"
+            android:minLines="1"
+            android:padding="@dimen/space"
+            app:layout_constraintEnd_toStartOf="@id/send_post_edit"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cv" />
 
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/send_post_edit"
-                android:layout_width="45dp"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/send_post_edit"
+            android:layout_width="@dimen/space_4x"
+            android:layout_height="@dimen/space_4x"
+            android:layout_margin="@dimen/space"
+            android:background="@drawable/ic_send"
+            android:enabled="false"
+            app:layout_constraintBottom_toBottomOf="@id/lineAddedEt"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/lineAddedEt"
+            app:layout_constraintTop_toTopOf="@id/lineAddedEt" />
 
-                android:layout_height="45dp"
-                android:layout_alignParentEnd="true"
-                android:layout_gravity="end"
-                android:background="@drawable/ic_send"
-                android:enabled="false"
-                android:gravity="bottom"
-                app:layout_constraintEnd_toEndOf="parent" />
-
-
-        </RelativeLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_insertedTags"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/space"
-            app:layout_constraintTop_toBottomOf="@id/rel"
+            app:layout_constraintTop_toBottomOf="@id/send_post_edit"
             tools:listitem="@layout/layout_tag" />
 
         <LinearLayout
