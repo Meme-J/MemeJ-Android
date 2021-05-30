@@ -119,10 +119,7 @@ class EditMemeActivity : AppCompatActivity(), onUserClickType, onTagClickType {
         edt.requestFocus()
 
 
-        //Tags list
-        //Init the adapter
         stringAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line)
-
 
         val onItemClickTag =
             OnItemClickListener { adapterView, view, i, l ->
@@ -136,20 +133,19 @@ class EditMemeActivity : AppCompatActivity(), onUserClickType, onTagClickType {
 
             override fun afterTextChanged(s: Editable?) {
                 //Activation of button
-                if (tagsEt.length() != 0) {
-                    tagCheck.isEnabled =
-                        true
-                } else if (tagsEt.length() == 0) {
+                if (!s.isNullOrEmpty()) {
+                    tagCheck.isEnabled = true
+                    getTags(s.toString())
 
-                    tagCheck.isEnabled =
-                        false
+                } else {
+
+                    tagCheck.isEnabled = false
                 }
-                getTags(s.toString())
 
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                getTags(s.toString())
+
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -175,13 +171,13 @@ class EditMemeActivity : AppCompatActivity(), onUserClickType, onTagClickType {
     }
 
     private fun setInTagRv() {
+
         val HorizontalLayoutInsertedTags: LinearLayoutManager = LinearLayoutManager(
             this,
             LinearLayoutManager.HORIZONTAL,
             false
         )
         val adapterTagAdded = TagEditAdapter()
-        Log.e("Edit", "Values in Mutable list" + mutableList.toString())
         adapterTagAdded.tagAdded = mutableList
         rvTagEdits.layoutManager = HorizontalLayoutInsertedTags
         rvTagEdits.adapter = adapterTagAdded
@@ -358,13 +354,6 @@ class EditMemeActivity : AppCompatActivity(), onUserClickType, onTagClickType {
         } else {
             rvTagTemplate.visibility = View.GONE
         }
-
-
-        //Get the rv and adapter for the user and the tags already existing
-
-
-        //Set timestamp
-//        root.timestampEdit.text = arg.getString("lastUpdated")
 
 
         getImage()

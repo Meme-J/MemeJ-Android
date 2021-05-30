@@ -20,7 +20,7 @@ class TagEditAdapter :
 
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        val TAG = itemView.findViewById<TextView>(R.id.getTagName)
+        val TAG = itemView.findViewById<TextView>(R.id.getTagNameNew)
         val cross = itemView.findViewById<ImageView>(R.id.getTagCross)
         val card = itemView.findViewById<CardView>(R.id.container_layout_tag)
 

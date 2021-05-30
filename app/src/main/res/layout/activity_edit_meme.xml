@@ -3,11 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="@color/ivory">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
+        android:layout_marginBottom="@dimen/space_3x"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
@@ -86,7 +87,7 @@
             android:hint="@string/add_a_line"
             android:maxLines="4"
             android:minLines="1"
-            android:padding="@dimen/space"
+            android:padding="@dimen/space_2x"
             app:layout_constraintEnd_toStartOf="@id/send_post_edit"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/cv" />
@@ -110,7 +111,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/space"
-            app:layout_constraintTop_toBottomOf="@id/send_post_edit"
+            app:layout_constraintTop_toBottomOf="@id/lineAddedEt"
             tools:listitem="@layout/layout_tag" />
 
         <LinearLayout
@@ -132,13 +133,15 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/tag_edit"
-                android:layout_width="@dimen/space_5x"
-                android:layout_height="@dimen/space_5x"
+                android:layout_width="@dimen/space_4x"
+                android:layout_height="@dimen/space_4x"
                 android:layout_gravity="end"
                 android:background="@drawable/ic_check_black_24dp"
                 android:enabled="false"
                 android:gravity="bottom"
+                app:iconTint="@color/green_A400"
                 app:layout_constraintEnd_toEndOf="parent" />
+
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
