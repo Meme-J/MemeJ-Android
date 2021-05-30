@@ -44,8 +44,8 @@
                     android:id="@+id/rv_invites"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/margins"
-                    android:layout_marginEnd="@dimen/margins"
+                    android:layout_marginStart="@dimen/space"
+                    android:layout_marginEnd="@dimen/space"
                     android:scrollbars="vertical"
                     tools:listitem="@layout/layout_invites" />
             </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

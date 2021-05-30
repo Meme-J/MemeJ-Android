@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.memej.R
 import com.example.memej.Utils.DiffUtils.DiffUtilsMemeGroup
-import com.example.memej.responses.template.EmptyTemplateResponse
+import com.example.memej.models.responses.template.EmptyTemplateResponse
 import com.google.android.material.imageview.ShapeableImageView
 
 @Keep

@@ -7,15 +7,15 @@ import com.example.memej.R
 import com.example.memej.Utils.ApplicationUtil
 import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.SessionManager
-import com.example.memej.body.ExitWorkspaceBody
-import com.example.memej.body.GenerateLinkBody
-import com.example.memej.body.SendWorkspaceRequestBody
-import com.example.memej.body.searchUserBody
 import com.example.memej.interfaces.RetrofitClient
-import com.example.memej.responses.SearchUserResponses
-import com.example.memej.responses.workspaces.ExitWorkspaceResponse
-import com.example.memej.responses.workspaces.GenerateLinkResponse
-import com.example.memej.responses.workspaces.SendRequestsWorkspaceResponse
+import com.example.memej.models.body.search.SearchUserBody
+import com.example.memej.models.body.workspaces.ExitWorkspaceBody
+import com.example.memej.models.body.workspaces.GenerateLinkBody
+import com.example.memej.models.body.workspaces.SendWorkspaceRequestBody
+import com.example.memej.models.responses.search.SearchUserResponses
+import com.example.memej.models.responses.workspaces.ExitWorkspaceResponse
+import com.example.memej.models.responses.workspaces.GenerateLinkResponse
+import com.example.memej.models.responses.workspaces.SendRequestsWorkspaceResponse
 import retrofit2.Call
 import retrofit2.Response
 
@@ -154,7 +154,7 @@ class WorkspaceViewModel : ViewModel() {
 
     fun searchUsers(s: String): MutableLiveData<SearchUserResponses> {
 
-        val body = searchUserBody(s)
+        val body = SearchUserBody(s)
         workspaceService.searchUsers(
             accessToken = "Bearer ${sessionManager.fetchAcessToken()}",
             body = body

@@ -32,13 +32,13 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/margins"
+                        android:layout_margin="@dimen/space"
                         android:orientation="vertical">
 
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/rv_complete_user_tag"
-                            style="@style/recylclerViewAttr"
+                            style="@style/recyclerViewAttr"
                             tools:listitem="@layout/layout_user" />
 
 
@@ -46,7 +46,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/meme_templete_std_height"
                             android:elevation="4dp"
-                            app:cardCornerRadius="@dimen/margins">
+                            app:cardCornerRadius="@dimen/space">
 
                             <com.example.memej.textProperties.lib.ImageEditorView
                                 android:id="@+id/photoView"
@@ -59,7 +59,7 @@
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/rv_complete_user"
-                            style="@style/recylclerViewAttr"
+                            style="@style/recyclerViewAttr"
                             tools:listitem="@layout/layout_user_creators" />
 
 
@@ -68,7 +68,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="end"
-                            android:layout_margin="@dimen/margins"
+                            android:layout_margin="@dimen/space"
                             android:text="@string/sample_timestamp" />
 
 
@@ -92,7 +92,7 @@
                             <!--                                android:layout_width="wrap_content"-->
                             <!--                                android:layout_height="wrap_content"-->
                             <!--                                android:layout_gravity="bottom"-->
-                            <!--                                android:layout_marginStart="@dimen/margins"-->
+                            <!--                                android:layout_marginStart="@dimen/space"-->
                             <!--                                android:text="@string/_0"-->
                             <!--                                android:textStyle="bold" />-->
 

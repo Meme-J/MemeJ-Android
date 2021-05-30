@@ -62,7 +62,7 @@ object RetrofitClient {
             .build()
     }
 
-    fun getAuthInstance(): Auth {
+    fun getAuthInstance(): auth {
 
         //Moshi class
         val moshi = Moshi.Builder()
@@ -75,7 +75,7 @@ object RetrofitClient {
             .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .client(authClient())
             .build()
-            .create(Auth::class.java)
+            .create(auth::class.java)
     }
 
 

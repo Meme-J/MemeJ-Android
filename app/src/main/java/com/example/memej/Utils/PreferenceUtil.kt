@@ -1,9 +1,9 @@
 package com.example.memej.Utils
 
 import android.preference.PreferenceManager
-import com.example.memej.responses.NumLikes
-import com.example.memej.responses.ProfileResponse
-import com.example.memej.responses.workspaces.UserWorkspaces
+import com.example.memej.models.NumLikes
+import com.example.memej.models.responses.auth.ProfileResponse
+import com.example.memej.models.responses.workspaces.UserWorkspaces
 
 
 /**

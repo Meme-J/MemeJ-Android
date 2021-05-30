@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.memej.R
-import com.example.memej.responses.workspaces.UserWorkspaces
+import com.example.memej.models.responses.workspaces.UserWorkspaces
 
 class MySpacesAdapter(val itemClick: OnItemClickListenerMySpaces) :
     RecyclerView.Adapter<MySpacesAdapter.MyViewHolder>() {

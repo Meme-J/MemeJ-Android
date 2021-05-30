@@ -17,7 +17,7 @@
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:background="@color/garbinaoGrey"
+            android:background="@color/bgColor"
             android:elevation="0dp"
             android:fitsSystemWindows="true"
             app:contentScrim="@color/stoneWhite"
@@ -29,7 +29,7 @@
             <FrameLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margins"
+                android:layout_margin="@dimen/space"
                 app:layout_collapseMode="parallax">
 
                 <!--                <ImageView-->
@@ -42,7 +42,7 @@
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/garbinaoGrey" />
+                    android:background="@color/bgColor" />
             </FrameLayout>
 
 
@@ -57,7 +57,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:layout_margin="@dimen/space"
-                android:background="@color/garbinaoGrey"
+                android:background="@color/bgColor"
                 android:elevation="0dp"
                 android:visibility="invisible"
                 app:elevation="0dp"
@@ -106,7 +106,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_margin="@dimen/margins"
+                android:layout_margin="@dimen/space"
                 android:ellipsize="marquee"
                 android:fontFamily="monospace"
                 android:gravity="center"
@@ -114,7 +114,7 @@
                 android:scrollHorizontally="true"
                 android:text="@string/username"
                 android:textAllCaps="true"
-                android:textColor="@color/useBlue"
+                android:textColor="@color/colorPrimary"
                 android:textSize="24sp"
                 tools:visibility="visible" />
 
@@ -124,7 +124,7 @@
                 android:layout_width="@dimen/image_profile_attr"
                 android:layout_height="@dimen/image_profile_attr"
                 android:layout_gravity="bottom|center_horizontal"
-                android:layout_margin="@dimen/margins"
+                android:layout_margin="@dimen/space"
                 android:src="@drawable/male"
                 app:cardCornerRadius="60dp"
                 app:civ_border_color="@color/colorPrimary"
@@ -148,7 +148,7 @@
             <!--                android:layout_height="@dimen/image_profile_attr"-->
             <!--                android:layout_gravity="bottom|center_horizontal"-->
             <!--                -->
-            <!--                android:layout_margin="@dimen/margins"-->
+            <!--                android:layout_margin="@dimen/space"-->
             <!--                android:src="@drawable/male"-->
             <!--                app:civ_border_color="@color/colorPrimary"-->
             <!--                app:civ_border_width="1.5dp" />-->
@@ -230,8 +230,8 @@
                 android:id="@+id/rv_likedMemesProfile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margins"
-                android:padding="@dimen/margins"
+                android:layout_margin="@dimen/space"
+                android:padding="@dimen/space"
                 tools:listitem="@layout/card_meme_world" />
 
             <!--            <TextView-->

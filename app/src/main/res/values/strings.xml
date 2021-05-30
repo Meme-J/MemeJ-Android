@@ -1,4 +1,5 @@
 <resources>
+
     <string name="app_name">MemeJ</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
@@ -11,26 +12,33 @@
     <string name="signup_instead"> SignUp Instead</string>
     <string name="email">Email</string>
     <string name="lorem_ipsum">the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</string>
-    <string name="getRequestsFailed">"Unable to get the requests at the moment. Please try again later"</string>
+    <string name="getRequestsFailed">Unable to get the requests at the moment. Please try again later</string>
     <string name="unable_meeme_world">Unable to get memes. Please try again later</string>
 
     <string name="already_have_an_account">Already have an account?</string>
+
+    <!--    Empty errors-->
     <string name="username_empty">Username can not be empty</string>
     <string name="pwd_empty">Password can not be empty</string>
     <string name="name_empty">Name can not be empty</string>
     <string name="email_empty">Email can not be empty</string>
+
+    <!--    Invalid Errors-->
     <string name="email_invalid">Email is invalid</string>
     <string name="username_invalid">Username is invalid</string>
     <string name="name_invalid">Name is invalid</string>
+    <string name="pwd_invalid">Password must have at least one lower case, one upper case and a numeric digit</string>
+
+    <!--    Length errors-->
     <string name="name_length">Name should be between 2 to 20 characters</string>
     <string name="pwd_length_min">Password must be at least 6 characters</string>
     <string name="pwd_length_max">Password can not be greater than 20 characters</string>
-    <string name="pwd_invalid">Password must have at least one lower case, one upper case and a numeric digit</string>
+
     <string name="search">Search</string>
     <string name="image_tag">#Image Tag</string>
     <string name="my_memes">My memes</string>
     <string name="my_drafts">My Drafts</string>
-    <string name="memeworld">memeWorld</string>
+    <string name="memeworld">Meme World</string>
     <string name="explore">Explore</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="continue_signin_with_google_instead">Continue SignIn with Google Instead</string>
@@ -45,7 +53,7 @@
     <string name="choose_your_avatar">Choose your avatar</string>
     <string name="total_memes">Total Memes</string>
     <string name="total_likes">Total Likes</string>
-    <string name="sample_timestamp">2020-05-12T21:44:04.883Z</string>
+    <string name="sample_timestamp">2020–05–12T21:44:04.883Z</string>
     <string name="_1000">1000</string>
     <string name="_0">0</string>
     <string name="choose_font">Font</string>
@@ -69,7 +77,7 @@
     <string name="hello">Hello</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="mismatch">Passwords do not match</string>
-    <string name="under_constuction">Under Constuction</string>
+    <string name="under_constuction">Under Construction</string>
     <string name="logout">Logout</string>
     <string name="tag_name">Tag Name</string>
     <string name="tap_to_load_more">Tap to load more</string>
@@ -120,14 +128,15 @@
     <string name="SWITCH">SWITCH</string>
     <string name="you_are_not_a_part_of_any_of_the_spaces">You are not a part of any of the spaces.</string>
     <string name="unableToLoadMySpaces">Unable to get my spaces. Please try again later</string>
-    <string name="spaceSucess">Spaces sucessfully loaded</string>
+    <string name="spaceSucess">Spaces successfully loaded</string>
     <string name="no_pending_invites_and_request">No pending invites and request.</string>
     <string name="noUsers">No users from the editable</string>
     <string name="failSend">Failed to send the invites</string>
     <string name="emptyListForUsers">Add some users in the list to send invites</string>
     <string name="retry">RETRY</string>
     <string name="fail_explore">Unable to load memes</string>
-    <string name="exploreSuccess">Sucess explore spaces</string>
+    <string name="exploreSuccess">Success explore spaces</string>
+    <string name="unableToLoad">Unable to load memes. Please try again later</string>
 
 
     <array name="themeColors">

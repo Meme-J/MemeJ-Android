@@ -10,7 +10,7 @@ import androidx.paging.PageKeyedDataSource
 import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.interfaces.RetrofitClient
-import com.example.memej.responses.template.EmptyTemplateResponse
+import com.example.memej.models.responses.template.EmptyTemplateResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

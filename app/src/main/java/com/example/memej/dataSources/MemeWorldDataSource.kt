@@ -9,16 +9,16 @@ import androidx.annotation.Keep
 import androidx.paging.PageKeyedDataSource
 import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.SessionManager
-import com.example.memej.body.queryBody
 import com.example.memej.interfaces.RetrofitClient
-import com.example.memej.responses.memeWorldResponses.Meme_World
-import com.example.memej.responses.memeWorldResponses.memeApiResponses
+import com.example.memej.models.body.search.QueryBody
+import com.example.memej.models.responses.meme_world.MemeWorldApiResponses
+import com.example.memej.models.responses.meme_world.Meme_World
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 @Keep
-class MemeWorldDataSource(val context: Context, val searchQuery: queryBody, val pb: ProgressBar) :
+class MemeWorldDataSource(val context: Context, val searchQuery: QueryBody, val pb: ProgressBar) :
     PageKeyedDataSource<String, Meme_World>() {
 
 
@@ -36,8 +36,8 @@ class MemeWorldDataSource(val context: Context, val searchQuery: queryBody, val 
             accessToken = "Bearer ${sessionManager.fetchAcessToken()}",
             search = searchQuery
         )
-            .enqueue(object : Callback<memeApiResponses> {
-                override fun onFailure(call: Call<memeApiResponses>, t: Throwable) {
+            .enqueue(object : Callback<MemeWorldApiResponses> {
+                override fun onFailure(call: Call<MemeWorldApiResponses>, t: Throwable) {
                     val message = ErrorStatesResponse.returnStateMessageForThrowable(t)
                     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
                     pb.visibility = View.GONE
@@ -45,8 +45,8 @@ class MemeWorldDataSource(val context: Context, val searchQuery: queryBody, val 
                 }
 
                 override fun onResponse(
-                    call: Call<memeApiResponses>,
-                    response: Response<memeApiResponses>
+                    call: Call<MemeWorldApiResponses>,
+                    response: Response<MemeWorldApiResponses>
                 ) {
 
 
@@ -106,8 +106,8 @@ class MemeWorldDataSource(val context: Context, val searchQuery: queryBody, val 
             accessToken = "Bearer " + sessionManager.fetchAcessToken(),
             search = searchQuery
         )
-            .enqueue(object : Callback<memeApiResponses> {
-                override fun onFailure(call: Call<memeApiResponses>, t: Throwable) {
+            .enqueue(object : Callback<MemeWorldApiResponses> {
+                override fun onFailure(call: Call<MemeWorldApiResponses>, t: Throwable) {
 
                     val message = ErrorStatesResponse.returnStateMessageForThrowable(t)
                     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
@@ -116,8 +116,8 @@ class MemeWorldDataSource(val context: Context, val searchQuery: queryBody, val 
                 }
 
                 override fun onResponse(
-                    call: Call<memeApiResponses>,
-                    response: Response<memeApiResponses>
+                    call: Call<MemeWorldApiResponses>,
+                    response: Response<MemeWorldApiResponses>
                 ) {
 
 

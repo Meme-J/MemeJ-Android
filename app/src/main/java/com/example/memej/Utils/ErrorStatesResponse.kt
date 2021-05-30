@@ -3,7 +3,10 @@ package com.example.memej.Utils
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.util.Log
+import android.view.View
 import com.example.memej.R
+import com.google.android.material.snackbar.Snackbar
 import retrofit2.HttpException
 import java.io.IOException
 import java.util.concurrent.TimeoutException
@@ -48,6 +51,18 @@ object ErrorStatesResponse {
         return networkCapabilities != null &&
                 networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
 
+    }
+
+    fun logExceptions(e: Exception, tag: String) {
+        Log.e(tag, "Exception with message and cause ${e.message} and ${e.cause}")
+    }
+
+    fun logThrowables(t: Throwable, tag: String) {
+        Log.e(tag, "Throwabale with message and cause ${t.message} and ${t.cause}")
+    }
+
+    fun createSnackbar(message: String?, mSnackbar: View) {
+        Snackbar.make(mSnackbar, message.toString(), Snackbar.LENGTH_SHORT).show()
     }
 
 

@@ -54,7 +54,7 @@
             android:layout_marginTop="@dimen/space"
             android:background="@color/colorPrimary"
             android:text="@string/login"
-            app:cornerRadius="@dimen/margins" />
+            app:cornerRadius="@dimen/space" />
 
         <!--        <com.google.android.gms.common.SignInButton-->
         <!--            android:id="@+id/google_login"-->
@@ -78,14 +78,14 @@
                 android:id="@+id/tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margins"
+                android:layout_marginTop="@dimen/space"
                 android:text="@string/new_to_memejam" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_signUpInstead"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margins"
+                android:layout_marginTop="@dimen/space"
                 android:paddingStart="4dp"
                 android:text="@string/signup_instead"
                 android:textColor="@color/colorAccent"
@@ -101,7 +101,7 @@
         <!--                    android:layout_height="wrap_content"-->
         <!--                    android:layout_below="@id/ll1"-->
         <!--                    android:layout_centerInParent="true"-->
-        <!--                    android:layout_marginTop="@dimen/margins"-->
+        <!--                    android:layout_marginTop="@dimen/space"-->
         <!--                    android:foregroundGravity="center" />-->
 
     </RelativeLayout>

@@ -17,7 +17,7 @@ class TagAdapter(val itemClick: onTagClickType) :
 
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        val TAG = itemView.findViewById<TextView>(R.id.getUserName)
+        val TAG = itemView.findViewById<TextView>(R.id.getTagName)
 
         fun bindPost(_tag: String, itemClick: onTagClickType) {
             with(_tag) {
@@ -36,7 +36,7 @@ class TagAdapter(val itemClick: onTagClickType) :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
 
         val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.layout_user, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.item_existing_tag, parent, false)
         return TagAdapter.MyViewHolder(view)
 
     }

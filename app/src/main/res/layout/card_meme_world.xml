@@ -4,9 +4,9 @@
     android:id="@+id/card_home_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/margins"
+    android:layout_margin="@dimen/space"
     android:elevation="48dp"
-    app:cardCornerRadius="@dimen/margins">
+    app:cardCornerRadius="@dimen/space">
 
     <LinearLayout
         android:id="@+id/parent_ll"
@@ -43,7 +43,7 @@
                 android:layout_below="@id/photoViewMemeWorld"
                 android:layout_alignParentEnd="true"
                 android:layout_marginTop="12dp"
-                android:layout_marginEnd="@dimen/margins"
+                android:layout_marginEnd="@dimen/space"
                 android:text="@string/time" />
 
 
@@ -58,7 +58,7 @@
                 android:id="@+id/starBtnMeme"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_margin="@dimen/margins"
+                android:layout_margin="@dimen/space"
                 android:elevation="18dp"
                 app:icon_size="10dp"
                 app:icon_type="heart" />
@@ -68,8 +68,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:layout_marginStart="@dimen/margins"
-                android:layout_marginBottom="@dimen/margins"
+                android:layout_marginStart="@dimen/space"
+                android:layout_marginBottom="@dimen/space"
                 android:text="@string/_0"
                 android:textSize="@dimen/text_size"
                 android:textStyle="bold" />

@@ -6,7 +6,7 @@
         android:id="@+id/container_select_template"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/garbinaoGrey"
+        android:background="@color/bgColor"
         android:orientation="vertical">
 
 
@@ -31,9 +31,9 @@
         <!--            android:id="@+id/etSearchMemeTemplate"-->
         <!--            android:layout_width="match_parent"-->
         <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout_marginStart="@dimen/margins"-->
+        <!--            android:layout_marginStart="@dimen/space"-->
         <!--            android:layout_marginTop="?attr/actionBarSize"-->
-        <!--            android:layout_marginEnd="@dimen/margins"-->
+        <!--            android:layout_marginEnd="@dimen/space"-->
         <!--            android:hint="@string/search_hint"-->
         <!--            android:paddingStart="@dimen/card_eleveation_max"-->
         <!--            android:paddingTop="12dp"-->
@@ -92,8 +92,8 @@
                     android:id="@+id/rv_memeGroup"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/margins"
-                    android:layout_marginEnd="@dimen/margins" />
+                    android:layout_marginStart="@dimen/space"
+                    android:layout_marginEnd="@dimen/space" />
             </LinearLayout>
 
         </androidx.core.widget.NestedScrollView>

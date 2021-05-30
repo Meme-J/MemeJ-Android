@@ -30,12 +30,12 @@ import com.example.memej.adapters.TagAdapter
 import com.example.memej.adapters.UserAdapter
 import com.example.memej.adapters.onTagClickType
 import com.example.memej.adapters.onUserClickType
-import com.example.memej.body.likeMemeBody
 import com.example.memej.databinding.ActivityCompletedMemeBinding
 import com.example.memej.interfaces.RetrofitClient
-import com.example.memej.responses.LikeOrNotResponse
-import com.example.memej.responses.memeWorldResponses.Coordinate
-import com.example.memej.responses.memeWorldResponses.User
+import com.example.memej.models.body.LikeMemeBody
+import com.example.memej.models.responses.LikeOrNotResponse
+import com.example.memej.models.responses.meme_world.Coordinate
+import com.example.memej.models.responses.meme_world.MemeWorldUser
 import com.example.memej.textProperties.lib.ImageEditorView
 import com.example.memej.textProperties.lib.Photo
 import com.google.android.material.snackbar.Snackbar
@@ -312,7 +312,7 @@ class CompletedMemeActivity : AppCompatActivity(), onUserClickType, onTagClickTy
             SessionManager(ctx)
 
         Log.e("Like", "InLike")
-        val inf = likeMemeBody(
+        val inf = LikeMemeBody(
             memeId.toString()
         )
 
@@ -411,7 +411,7 @@ class CompletedMemeActivity : AppCompatActivity(), onUserClickType, onTagClickTy
 
 
         //Populate the users in the same way
-        val u = arg.getParcelableArrayList<User>("users")
+        val u = arg.getParcelableArrayList<MemeWorldUser>("users")
         val userStr = mutableListOf<String>()
         for (i in u!!) {
             userStr.add(i.username)

@@ -7,9 +7,9 @@ import androidx.annotation.Keep
 import androidx.paging.PageKeyedDataSource
 import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.SessionManager
-import com.example.memej.body.searchTemplate
 import com.example.memej.interfaces.RetrofitClient
-import com.example.memej.responses.template.EmptyTemplateResponse
+import com.example.memej.models.body.search.SearchTemplateBody
+import com.example.memej.models.responses.template.EmptyTemplateResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -33,7 +33,7 @@ class SearchTemplateDataSource(val context: Context, val tagName: String) :
         apiService.getSearchedTemplates(
             loadSize = params.requestedLoadSize,
             accessToken = "Bearer ${sessionManager.fetchAcessToken()}",
-            info = searchTemplate(tagName)
+            info = SearchTemplateBody(tagName)
         )
             .enqueue(object : Callback<EmptyTemplateResponse> {
                 override fun onFailure(call: Call<EmptyTemplateResponse>, t: Throwable) {

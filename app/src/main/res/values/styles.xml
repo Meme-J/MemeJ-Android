@@ -90,7 +90,7 @@
         <item name="android:layout_width">100dp</item>
         <item name="android:layout_height">@dimen/btn_size</item>
         <item name="android:clickable">true</item>
-        <item name="android:elevation">@dimen/margins</item>
+        <item name="android:elevation">@dimen/space</item>
         <item name="android:focusable">true</item>
         <item name="cornerRadius">30dp</item>
         <item name="android:background">@drawable/round_button</item>
@@ -106,17 +106,17 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginEnd">12dp</item>
-        <item name="android:layout_marginTop">@dimen/margins</item>
-        <item name="android:layout_marginBottom">@dimen/margins</item>
+        <item name="android:layout_marginTop">@dimen/space</item>
+        <item name="android:layout_marginBottom">@dimen/space</item>
 
     </style>
 
-    <style name="recylclerViewAttr">
+    <style name="recyclerViewAttr">
         <item name="android:layout_width">match_parent</item>
         <item name="android:scrollbars">horizontal</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:focusable">true</item>
-        <item name="android:clickable">true</item>
+        <item name="android:clickable">true</item>x
         <item name="android:foreground">?android:attr/selectableItemBackground</item>
 
     </style>
@@ -143,8 +143,40 @@
     <style name="OutlinedTextBox" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_margin">@dimen/margins</item>
-        <item name="android:padding">@dimen/margins</item>
+        <item name="android:layout_margin">@dimen/space</item>
+        <item name="android:padding">@dimen/space</item>
     </style>
+
+    <style name="AppTheme.NoActionBar">
+
+        <!--        <item name="windowActionBar">false</item>-->
+
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+
+        <!--        <item name="android:windowTranslucentStatus">true</item>-->
+        <!--        <item name="android:windowIsTranslucent">true</item>-->
+        <!--        <item name="android:windowDisablePreview">true</item>-->
+
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="drawerArrowStyle">@style/WhiteDrawerIconStyle</item>
+        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
+
+    </style>
+
+    <style name="WhiteDrawerIconStyle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="spinBars">true</item>
+        <item name="color">@android:color/white</item>
+    </style>
+
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Light">
+        <item name="iconTint">@color/white</item>
+    </style>
+
 
 </resources>

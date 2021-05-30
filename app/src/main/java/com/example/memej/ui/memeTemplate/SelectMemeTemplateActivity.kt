@@ -24,10 +24,10 @@ import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.adapters.MemeGroupAdapter
 import com.example.memej.adapters.OnItemClickListenerTemplate
-import com.example.memej.body.searchTemplate
 import com.example.memej.interfaces.RetrofitClient
-import com.example.memej.responses.SearchResponse
-import com.example.memej.responses.template.EmptyTemplateResponse
+import com.example.memej.models.body.search.SearchTemplateBody
+import com.example.memej.models.responses.search.SearchResponse
+import com.example.memej.models.responses.template.EmptyTemplateResponse
 import com.example.memej.viewModels.SelectMemeGroupViewModel
 import com.shreyaspatil.MaterialDialog.MaterialDialog
 import retrofit2.Call
@@ -46,9 +46,11 @@ class SelectMemeTemplateActivity : AppCompatActivity(), OnItemClickListenerTempl
     lateinit var bundle: Bundle
     lateinit var toolbar: androidx.appcompat.widget.Toolbar
     lateinit var dialog: ProgressDialog
+
     lateinit var searchView: SearchView
     private var mAdapter: SimpleCursorAdapter? = null
     lateinit var searchManager: SearchManager
+
     val VOICE_REC_CODE = 1234
     private val ACTION_VOICE_SEARCH = "com.google.android.gms.actions.SEARCH_ACTION"
 
@@ -204,7 +206,7 @@ class SelectMemeTemplateActivity : AppCompatActivity(), OnItemClickListenerTempl
 
         //This is not yet made
         val memeService = RetrofitClient.makeCallsForMemes(this)
-        val st = searchTemplate(str)
+        val st = SearchTemplateBody(str)
         memeService.getTemplateSuggestions(
             accessToken = "Bearer ${sessionManager.fetchAcessToken()}",
             info = st

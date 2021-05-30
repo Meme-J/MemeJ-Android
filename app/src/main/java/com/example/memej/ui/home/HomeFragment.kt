@@ -24,7 +24,7 @@ import com.example.memej.R
 import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.adapters.HomeMemeAdapter
 import com.example.memej.adapters.OnItemClickListenerHome
-import com.example.memej.responses.homeMememResponses.Meme_Home
+import com.example.memej.models.responses.home.Meme_Home
 import com.example.memej.viewModels.HomeViewModel
 import com.shreyaspatil.MaterialDialog.MaterialDialog
 
@@ -184,7 +184,7 @@ class HomeFragment : Fragment(), OnItemClickListenerHome {
 
         )
 
-        val i = Intent(activity, EditMemeContainerFragment::class.java)
+        val i = Intent(activity, EditMemeActivity::class.java)
         i.putExtra("bundle", bundle)
         startActivity(i)
         //It will again go in the home bundle

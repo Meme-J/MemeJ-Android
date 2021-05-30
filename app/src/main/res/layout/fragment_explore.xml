@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swl_explore"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/container_explore"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/space_half">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_explore"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="?attr/actionBarSize"
+            android:layout_centerInParent="true"
+            android:layout_marginBottom="?attr/actionBarSize"
+            android:layout_centerHorizontal="true"
+            app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
+            tools:listitem="@layout/item_explore_front"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!--        <com.yuyakaido.android.cardstackview.CardStackView-->
+        <!--            android:id="@+id/stack_view"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="300dp"-->
+        <!--            android:layout_centerInParent="true"-->
+        <!--            android:layout_centerHorizontal="true"-->
+        <!--            android:layout_marginTop="?attr/actionBarSize"-->
+        <!--            android:layout_marginBottom="?attr/actionBarSize"-->
+        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--            app:layout_constraintTop_toTopOf="parent" />-->
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_refresh_explore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/space"
+            android:src="@drawable/ic_refresh_black_24dp"
+            android:visibility="gone"
+            app:backgroundTint="@color/bgColor"
+            app:fabSize="mini"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="parent"
+            app:tint="@color/colorPrimary" />
+
+        <ProgressBar
+            android:id="@+id/pb_explore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

@@ -9,17 +9,17 @@ import androidx.annotation.Keep
 import androidx.paging.PageKeyedDataSource
 import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.SessionManager
-import com.example.memej.body.queryBody
 import com.example.memej.interfaces.RetrofitClient
-import com.example.memej.responses.homeMememResponses.Meme_Home
-import com.example.memej.responses.homeMememResponses.homeMemeApiResponse
+import com.example.memej.models.body.search.QueryBody
+import com.example.memej.models.responses.home.HomeMemeApiResponse
+import com.example.memej.models.responses.home.Meme_Home
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 
 @Keep
-class HomeMemeDataSource(val context: Context, val searchquery: queryBody, val pb: ProgressBar) :
+class HomeMemeDataSource(val context: Context, val searchquery: QueryBody, val pb: ProgressBar) :
     PageKeyedDataSource<String, Meme_Home>() {
 
     //External variable to point to api client
@@ -38,8 +38,8 @@ class HomeMemeDataSource(val context: Context, val searchquery: queryBody, val p
             accessToken = "Bearer ${sessionManager.fetchAcessToken()}",
             search = searchquery
         )
-            .enqueue(object : Callback<homeMemeApiResponse> {
-                override fun onFailure(call: Call<homeMemeApiResponse>, t: Throwable) {
+            .enqueue(object : Callback<HomeMemeApiResponse> {
+                override fun onFailure(call: Call<HomeMemeApiResponse>, t: Throwable) {
 
                     val message = ErrorStatesResponse.returnStateMessageForThrowable(t)
                     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
@@ -48,8 +48,8 @@ class HomeMemeDataSource(val context: Context, val searchquery: queryBody, val p
                 }
 
                 override fun onResponse(
-                    call: Call<homeMemeApiResponse>,
-                    response: Response<homeMemeApiResponse>
+                    call: Call<HomeMemeApiResponse>,
+                    response: Response<HomeMemeApiResponse>
                 ) {
 
 
@@ -118,8 +118,8 @@ class HomeMemeDataSource(val context: Context, val searchquery: queryBody, val p
             accessToken = "Bearer ${sessionManager.fetchAcessToken()}",
             search = searchquery
         )
-            .enqueue(object : Callback<homeMemeApiResponse> {
-                override fun onFailure(call: Call<homeMemeApiResponse>, t: Throwable) {
+            .enqueue(object : Callback<HomeMemeApiResponse> {
+                override fun onFailure(call: Call<HomeMemeApiResponse>, t: Throwable) {
                     val message = ErrorStatesResponse.returnStateMessageForThrowable(t)
                     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 
@@ -127,8 +127,8 @@ class HomeMemeDataSource(val context: Context, val searchquery: queryBody, val p
                 }
 
                 override fun onResponse(
-                    call: Call<homeMemeApiResponse>,
-                    response: Response<homeMemeApiResponse>
+                    call: Call<HomeMemeApiResponse>,
+                    response: Response<HomeMemeApiResponse>
                 ) {
 
                     Log.e("HomeDataSourceResponse", response.body()?.memes?.size.toString())

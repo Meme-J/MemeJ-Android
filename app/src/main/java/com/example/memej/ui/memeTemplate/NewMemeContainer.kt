@@ -24,12 +24,12 @@ import com.example.memej.Utils.ui.ConversionUtil
 import com.example.memej.adapters.TagAdapter
 import com.example.memej.adapters.TagEditAdapter
 import com.example.memej.adapters.onTagClickType
-import com.example.memej.body.createMemeBody
-import com.example.memej.body.searchBody
 import com.example.memej.interfaces.RetrofitClient
-import com.example.memej.responses.SearchResponse
-import com.example.memej.responses.editMemeApiResponse
-import com.example.memej.responses.homeMememResponses.Coordinates
+import com.example.memej.models.body.create.CreateMemeBody
+import com.example.memej.models.body.search.SearchBody
+import com.example.memej.models.responses.edit.EditMemeApiResponse
+import com.example.memej.models.responses.home.Coordinates
+import com.example.memej.models.responses.search.SearchResponse
 import com.example.memej.textProperties.lib.ImageEditorView
 import com.example.memej.textProperties.lib.OnPhotoEditorListener
 import com.example.memej.textProperties.lib.Photo
@@ -342,7 +342,7 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
     private fun getTags(s: String) {
 
         val service = RetrofitClient.makeCallsForMemes(this)
-        val inf = searchBody(s, "ongoing")
+        val inf = SearchBody(s, "ongoing")
         service.getTags(accessToken = "Bearer ${sessionManager.fetchAcessToken()}", info = inf)
             .enqueue(object : retrofit2.Callback<SearchResponse> {
                 override fun onFailure(call: Call<SearchResponse>, t: Throwable) {
@@ -383,7 +383,7 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
         //Show the progress bar
         val service = RetrofitClient.makeCallsForMemes(this)
         val inf =
-            createMemeBody(
+            CreateMemeBody(
                 arg.getInt("numPlaceholders"),
                 line,
                 mutableList,
@@ -395,8 +395,8 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
         dialog.show()
 
         service.createMeme(accessToken = "Bearer ${sessionManager.fetchAcessToken()}", info = inf)
-            .enqueue(object : Callback<editMemeApiResponse> {
-                override fun onFailure(call: Call<editMemeApiResponse>, t: Throwable) {
+            .enqueue(object : Callback<EditMemeApiResponse> {
+                override fun onFailure(call: Call<EditMemeApiResponse>, t: Throwable) {
 
                     dialog.dismiss()
                     val message = ErrorStatesResponse.returnStateMessageForThrowable(t)
@@ -410,8 +410,8 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
                 }
 
                 override fun onResponse(
-                    call: Call<editMemeApiResponse>,
-                    response: Response<editMemeApiResponse>
+                    call: Call<EditMemeApiResponse>,
+                    response: Response<EditMemeApiResponse>
                 ) {
 
                     if (response.body()?.msg == "Meme created successfully") {
@@ -569,6 +569,7 @@ class NewMemeContainer : AppCompatActivity(), onTagClickType {
 
 
         edt.addTextChangedListener(object : TextWatcher {
+
             override fun afterTextChanged(s: Editable?) {
 
                 if (edt.text.isNotEmpty()) {

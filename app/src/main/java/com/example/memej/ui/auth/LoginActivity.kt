@@ -5,6 +5,7 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -16,9 +17,10 @@ import androidx.lifecycle.Observer
 import com.example.memej.MainActivity
 import com.example.memej.R
 import com.example.memej.Utils.ErrorStatesResponse
+import com.example.memej.Utils.sessionManagers.PreferenceManager
 import com.example.memej.Utils.sessionManagers.SessionManager
-import com.example.memej.body.LoginBody
 import com.example.memej.databinding.ActivityLoginBinding
+import com.example.memej.models.body.auth.LoginBody
 import com.example.memej.viewModels.LoginActivtyViewModel
 import com.google.android.gms.auth.api.credentials.Credential
 import com.google.android.gms.auth.api.credentials.CredentialsClient
@@ -42,7 +44,7 @@ class LoginActivity : AppCompatActivity() {
     lateinit var t2: TextInputLayout
     lateinit var pb: ProgressBar
     private lateinit var sessionManager: SessionManager
-
+    private val preferenceManager = PreferenceManager()
 
     private val viewModel: LoginActivtyViewModel by viewModels()
     lateinit var binding: ActivityLoginBinding
@@ -56,6 +58,8 @@ class LoginActivity : AppCompatActivity() {
     private val mSignInClient: GoogleSignInClient? = null
     private val mIsResolving = false
     private val mCredential: Credential? = null
+
+    private val TAG = LoginActivity::class.java.simpleName
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,6 +97,11 @@ class LoginActivity : AppCompatActivity() {
 
                     Toast.makeText(this, R.string.successLogin, Toast.LENGTH_LONG)
                         .show()
+
+                    Log.e(TAG, "AT: \n" + sessionManager.fetchAcessToken().toString())
+                    Log.e(TAG, "RT: \n" + sessionManager.fetchRefreshToken().toString())
+                    Log.e(TAG, "PT: \n" + preferenceManager.authToken.toString())
+
                     val intent = Intent(this, MainActivity::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK)
                     hideKeyboard(this)

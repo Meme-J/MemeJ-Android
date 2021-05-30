@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/margins"
-    app:cardCornerRadius="@dimen/margins">
+    android:layout_margin="@dimen/space"
+    app:cardCornerRadius="@dimen/space">
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/image_avatar"

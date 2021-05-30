@@ -5,9 +5,9 @@ import androidx.lifecycle.ViewModel
 import com.example.memej.Utils.ApplicationUtil
 import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.SessionManager
-import com.example.memej.body.searchBody
 import com.example.memej.interfaces.RetrofitClient
-import com.example.memej.responses.SearchResponse
+import com.example.memej.models.body.search.SearchBody
+import com.example.memej.models.responses.search.SearchResponse
 import retrofit2.Call
 import retrofit2.Response
 
@@ -25,7 +25,7 @@ class MainActivityViewModel : ViewModel() {
 
     val memeService = RetrofitClient.makeCallsForMemes(context)
 
-    fun fetchSuggestions(body: searchBody): MutableLiveData<String> {
+    fun fetchSuggestions(body: SearchBody): MutableLiveData<String> {
 
         memeService.getSuggestions(
             accessToken = "Bearer ${sessionManager.fetchAcessToken()}",

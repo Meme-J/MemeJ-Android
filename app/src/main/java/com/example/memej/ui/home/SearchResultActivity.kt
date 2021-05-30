@@ -18,8 +18,8 @@ import com.example.memej.adapters.HomeMemeAdapter
 import com.example.memej.adapters.MemeWorldAdapter
 import com.example.memej.adapters.OnItemClickListenerHome
 import com.example.memej.adapters.OnItemClickListenerMemeWorld
-import com.example.memej.responses.homeMememResponses.Meme_Home
-import com.example.memej.responses.memeWorldResponses.Meme_World
+import com.example.memej.models.responses.home.Meme_Home
+import com.example.memej.models.responses.meme_world.Meme_World
 import com.example.memej.ui.MemeWorld.CompletedMemeActivity
 import com.example.memej.viewModels.SearchResultActivityViewModel
 import com.shreyaspatil.MaterialDialog.MaterialDialog
@@ -208,7 +208,7 @@ class SearchResultActivity : AppCompatActivity(), OnItemClickListenerHome,
         )
 
         //Go to the edit link
-        val i = Intent(this, EditMemeContainerFragment::class.java)
+        val i = Intent(this, EditMemeActivity::class.java)
         i.putExtra("bundle", bundle)
         startActivity(i)
 

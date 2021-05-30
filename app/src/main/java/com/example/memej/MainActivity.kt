@@ -39,10 +39,10 @@ import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.adapters.SearchAdapter
 import com.example.memej.adapters.WorkSpaceDialogAdapter
 import com.example.memej.adapters.onClickSearch
-import com.example.memej.body.searchBody
 import com.example.memej.interfaces.RetrofitClient
-import com.example.memej.responses.ProfileResponse
-import com.example.memej.responses.SearchResponse
+import com.example.memej.models.body.search.SearchBody
+import com.example.memej.models.responses.auth.ProfileResponse
+import com.example.memej.models.responses.search.SearchResponse
 import com.example.memej.ui.MemeWorld.InvitesFragmnet
 import com.example.memej.ui.MemeWorld.MemeWorldFragment
 import com.example.memej.ui.auth.LoginActivity
@@ -81,6 +81,7 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
     }
 
     private fun openFragment(fragment: Fragment) {
+
         val transaction = supportFragmentManager.beginTransaction()
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
         transaction.replace(R.id.container, fragment)
@@ -478,7 +479,7 @@ class MainActivity : AppCompatActivity(), Communicator, onClickSearch {
         val type = getTypeFromCurrentFragmnet(frag)
         searchType = type
         Log.e("Frag", frag.toString())
-        val body = searchBody(str, type)
+        val body = SearchBody(str, type)
         val memeService = RetrofitClient.makeCallsForMemes(this)
         memeService.getSuggestions(
             accessToken = "Bearer ${sessionManager.fetchAcessToken()}",

@@ -15,9 +15,9 @@ import com.example.memej.R
 import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.SaveSharedPreference
 import com.example.memej.Utils.sessionManagers.SessionManager
-import com.example.memej.body.UserBody
 import com.example.memej.interfaces.RetrofitClient
-import com.example.memej.responses.SignUpResponse
+import com.example.memej.models.body.auth.SignUpBody
+import com.example.memej.models.responses.auth.SignUpResponse
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
@@ -99,7 +99,7 @@ class SignUpActivity : AppCompatActivity() {
         //Create instances
         val service = RetrofitClient.getAuthInstance()
 
-        val regInfo = UserBody(
+        val regInfo = SignUpBody(
             etName.text.toString(),
             etUserame.text.toString(),
             etEmail.text.toString(),

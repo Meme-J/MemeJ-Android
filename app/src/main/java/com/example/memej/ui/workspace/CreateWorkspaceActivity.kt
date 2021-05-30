@@ -13,7 +13,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.example.memej.R
 import com.example.memej.databinding.ActivityCreateWorkspaceBinding
-import com.example.memej.responses.workspaces.CreateWorkspaceResponse
+import com.example.memej.models.responses.workspaces.CreateWorkspaceResponse
 import com.example.memej.viewModels.CreateWorkspaceViewmodel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_create_workspace.*

@@ -14,7 +14,7 @@
         android:id="@+id/exploreFragment"
         android:name="com.example.memej.ui.explore.ExploreFragment"
         android:label="Explore"
-        tools:layout="@layout/explore_fragment" />
+        tools:layout="@layout/fragment_explore" />
     <fragment
         android:id="@+id/memeWorldFragment"
         android:name="com.example.memej.ui.MemeWorld.MemeWorldFragment"

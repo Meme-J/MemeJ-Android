@@ -1,6 +1,7 @@
 package com.example.memej.Utils.sessionManagers
 
 import android.content.Context
+import android.util.Log
 import com.example.memej.interfaces.RetrofitClient
 import okhttp3.Authenticator
 import okhttp3.Request
@@ -17,10 +18,10 @@ class TokenAuthenticator(val context: Context) : Authenticator {
     @Throws(IOException::class)
     override fun authenticate(route: Route?, response: Response): Request? {
 
-
+        Log.e("Token AUth ", "Returns")
         val newAccessToken =
             service.getAccessToken(refreshToken = sessionManager.fetchRefreshToken().toString())
-
+        Log.e("Token AUth ", "New at reqesut" + newAccessToken.toString())
 
         val resp = response.request.newBuilder()
             .header("Authorization", "Bearer " + newAccessToken.toString())

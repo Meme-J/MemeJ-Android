@@ -8,8 +8,8 @@ import com.example.memej.Utils.ApplicationUtil
 import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.interfaces.RetrofitClient
-import com.example.memej.responses.memeWorldResponses.Meme_World
-import com.example.memej.responses.memeWorldResponses.memeApiResponses
+import com.example.memej.models.responses.meme_world.MemeWorldApiResponses
+import com.example.memej.models.responses.meme_world.Meme_World
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -35,16 +35,16 @@ class LikedMemesDataSource(val context: Context) :
             accessToken = "Bearer ${sessionManager.fetchAcessToken()}"
         )
 
-            .enqueue(object : Callback<memeApiResponses> {
-                override fun onFailure(call: Call<memeApiResponses>, t: Throwable) {
+            .enqueue(object : Callback<MemeWorldApiResponses> {
+                override fun onFailure(call: Call<MemeWorldApiResponses>, t: Throwable) {
                     val message = ErrorStatesResponse.returnStateMessageForThrowable(t)
                     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 
                 }
 
                 override fun onResponse(
-                    call: Call<memeApiResponses>,
-                    response: Response<memeApiResponses>
+                    call: Call<MemeWorldApiResponses>,
+                    response: Response<MemeWorldApiResponses>
                 ) {
 
                     if (response.isSuccessful) {
@@ -84,14 +84,14 @@ class LikedMemesDataSource(val context: Context) :
             loadSize = params.requestedLoadSize,
             accessToken = "Bearer ${sessionManager.fetchAcessToken()}"
         )
-            .enqueue(object : Callback<memeApiResponses> {
-                override fun onFailure(call: Call<memeApiResponses>, t: Throwable) {
+            .enqueue(object : Callback<MemeWorldApiResponses> {
+                override fun onFailure(call: Call<MemeWorldApiResponses>, t: Throwable) {
                     Toast.makeText(context, t.message.toString(), Toast.LENGTH_SHORT).show()
                 }
 
                 override fun onResponse(
-                    call: Call<memeApiResponses>,
-                    response: Response<memeApiResponses>
+                    call: Call<MemeWorldApiResponses>,
+                    response: Response<MemeWorldApiResponses>
                 ) {
 
                     if (response.isSuccessful) {

@@ -1,10 +1,10 @@
 package com.example.memej.interfaces
 
 import androidx.annotation.Keep
-import com.example.memej.body.profileSearchBody
-import com.example.memej.responses.NumLikes
-import com.example.memej.responses.UserProfileResponse
-import com.example.memej.responses.memeWorldResponses.memeApiResponses
+import com.example.memej.models.NumLikes
+import com.example.memej.models.body.search.ProfileSearchBody
+import com.example.memej.models.responses.meme_world.MemeWorldApiResponses
+import com.example.memej.models.responses.search.UserProfileResponse
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.Header
@@ -31,7 +31,7 @@ interface profile {
         @Query("limit") loadSize: Int = 30,              //Test it with this value
         @Header("Authorization") accessToken: String?
         //Response call is same as the meme world
-    ): Call<memeApiResponses>
+    ): Call<MemeWorldApiResponses>
 
 
     //Get user is defined in auth
@@ -40,7 +40,7 @@ interface profile {
     //##other user
     @POST("api/user/profile")
     fun getProfileFromUsername(
-        @Body info: profileSearchBody
+        @Body info: ProfileSearchBody
     ): Call<UserProfileResponse>
 
 

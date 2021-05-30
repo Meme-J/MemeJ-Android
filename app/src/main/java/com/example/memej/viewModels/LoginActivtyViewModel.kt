@@ -1,6 +1,7 @@
 package com.example.memej.viewModels
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.memej.Utils.ApplicationUtil
@@ -8,10 +9,10 @@ import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.PreferenceUtil
 import com.example.memej.Utils.sessionManagers.PreferenceManager
 import com.example.memej.Utils.sessionManagers.SessionManager
-import com.example.memej.body.LoginBody
 import com.example.memej.interfaces.RetrofitClient
-import com.example.memej.responses.LoginResponse
-import com.example.memej.responses.ProfileResponse
+import com.example.memej.models.body.auth.LoginBody
+import com.example.memej.models.responses.auth.LoginResponse
+import com.example.memej.models.responses.auth.ProfileResponse
 import io.reactivex.annotations.NonNull
 import retrofit2.Call
 import retrofit2.Callback
@@ -20,7 +21,7 @@ import retrofit2.Response
 class LoginActivtyViewModel : ViewModel() {
 
 
-    var tag = LoginActivtyViewModel::class.java.simpleName
+    var TAG = LoginActivtyViewModel::class.java.simpleName
 
     private val preferenceManager: PreferenceManager = PreferenceManager()
     private val authDataManager = RetrofitClient.getAuthInstance()
@@ -52,6 +53,8 @@ class LoginActivtyViewModel : ViewModel() {
 
                     if (response.body()?.msg == "Login successful.") {
                         successful.value = true
+
+                        Log.e("Login Response", response.body().toString())
                         sessionManager.saveAuth_access_Token(
                             LoginResponse(
                                 response.body()!!.msg,
@@ -72,6 +75,10 @@ class LoginActivtyViewModel : ViewModel() {
                                 response.body()!!.user
                             )).user.accessToken
                         )
+
+                        Log.e(TAG, "AT: \n" + sessionManager.fetchAcessToken().toString())
+                        Log.e(TAG, "RT: \n" + sessionManager.fetchRefreshToken().toString())
+                        Log.e(TAG, "PT: \n" + preferenceManager.authToken.toString())
 
 
                     } else {
