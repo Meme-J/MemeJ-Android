@@ -184,7 +184,7 @@ class HomeFragment : Fragment(), OnItemClickListenerHome {
 
         )
 
-        val i = Intent(activity, EditMemeContainerFragment::class.java)
+        val i = Intent(activity, EditMemeActivity::class.java)
         i.putExtra("bundle", bundle)
         startActivity(i)
         //It will again go in the home bundle

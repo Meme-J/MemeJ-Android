@@ -12,18 +12,18 @@ import android.util.Log
 import android.view.View
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.EditText
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
-import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.memej.R
 import com.example.memej.Utils.ErrorStatesResponse
 import com.example.memej.Utils.sessionManagers.SessionManager
 import com.example.memej.adapters.*
-import com.example.memej.databinding.EditMemeContainerFragmentBinding
 import com.example.memej.interfaces.RetrofitClient
 import com.example.memej.models.body.edit.EditMemeBody
 import com.example.memej.models.body.search.SearchBody
@@ -36,43 +36,56 @@ import com.example.memej.textProperties.lib.OnPhotoEditorListener
 import com.example.memej.textProperties.lib.Photo
 import com.example.memej.textProperties.lib.ViewType
 import com.google.android.material.button.MaterialButton
+import kotlinx.android.synthetic.main.activity_edit_meme.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import kotlin.properties.Delegates
 
 
-class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagClickType {
+class EditMemeActivity : AppCompatActivity(), onUserClickType, onTagClickType {
 
     //private val viewModel: EditMemeContainerViewModel by viewModels()
-    private lateinit var root: EditMemeContainerFragmentBinding
-    lateinit var arg: Bundle
-    lateinit var edt: EditText
 
-    lateinit var photoVieGlobal: Photo
+
+    private lateinit var arg: Bundle
+
+    private lateinit var edt: EditText
+    private lateinit var sendButton: MaterialButton
 
     //Global to be used
     private var paint_chosen by Delegates.notNull<Int>()
     private lateinit var type_face: Typeface
     private var size_chosen by Delegates.notNull<Float>()
-    lateinit var colorIndicator: CardView
+    private lateinit var colorIndicator: CardView
 
-    var whichFont = 0
-    var whichPaint = Color.BLACK
-    var whichProgress = 20
+    private var whichFont = 0
+    private var whichPaint = Color.BLACK
+    private var whichProgress = 20
 
     val paths = ArrayList<Path>()
     val undonePaths = ArrayList<Path>()
-    var sendButton: Boolean = false
     var saveCount: Int? = 0
-    lateinit var sessionManager: SessionManager
-    lateinit var pb: ProgressBar
-    lateinit var adapterTagsAdded: TagEditAdapter
 
-    lateinit var stringAdapter: ArrayAdapter<String>
-    lateinit var mutableList: MutableList<String>
-    lateinit var tagCheck: MaterialButton
-    lateinit var photoView: ImageEditorView
+
+    private lateinit var sessionManager: SessionManager
+
+    //Tags
+    private lateinit var adapterTagsAdded: TagEditAdapter
+    private lateinit var stringAdapter: ArrayAdapter<String>
+    private lateinit var mutableList: MutableList<String>
+    private lateinit var tagCheck: MaterialButton
+    private lateinit var tagsEt: AutoCompleteTextView
+
+    private lateinit var rvUser: RecyclerView
+    private lateinit var rvTag: RecyclerView
+    private lateinit var rvTagEdits: RecyclerView
+
+    //Image
+    private lateinit var photoVieGlobal: Photo
+    private lateinit var photoView: ImageEditorView
+    private lateinit var pb: ProgressBar
+
 
     var X1: Int = 0
     var Y1: Int = 0
@@ -80,13 +93,13 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
     var Y2: Int = 0
 
 
-    private val TAG = EditMemeContainerFragment::class.java.simpleName
+    private val TAG = EditMemeActivity::class.java.simpleName
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_edit_meme)
 
-        root = DataBindingUtil.setContentView(this, R.layout.edit_meme_container_fragment)
-//        projectResources =
+//          projectResources =
 //            ProjectResources(resources)
 
         //Default Paint, TypeFace. Size
@@ -97,13 +110,24 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
         // colorIndicator = root.colorIndicator
 
         arg = intent?.getBundleExtra("bundle")!!
-        photoView = root.imageViewEditMeme
-        edt = root.lineAddedEt
-        tagCheck = root.tagEdit
+
+        this.apply {
+
+            photoView = imageViewEditMeme
+            edt = lineAddedEt
+            tagCheck = tag_edit
+            pb = loading_panel
+            tagsEt = auto_completeTag
+            sendButton = send_post_edit
+
+            rvUser = rv_edit_user
+            rvTag = rv_edit_tag
+            rvTagEdits = rv_insertedTags
+
+        }
 
         sessionManager =
             SessionManager(this)
-        pb = root.pbEditFragment
 
 
         photoVieGlobal = Photo.Builder(this, photoView)
@@ -145,7 +169,6 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
         stringAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line)
 
 
-        val tagsEt = root.autoCompleteTag
 
         val onItemClickTag =
             OnItemClickListener { adapterView, view, i, l ->
@@ -160,11 +183,11 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
             override fun afterTextChanged(s: Editable?) {
                 //Activation of button
                 if (tagsEt.length() != 0) {
-                    root.tagEdit.isEnabled =
+                    tagCheck.isEnabled =
                         true
                 } else if (tagsEt.length() == 0) {
 
-                    root.tagEdit.isEnabled =
+                    tagCheck.isEnabled =
                         false
                 }
                 getTags(s.toString())
@@ -190,8 +213,7 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
         }
 
         //Send button
-        val btn = root.sendPostEdit
-        btn.setOnClickListener {
+        sendButton.setOnClickListener {
             sendPost(edt.text.toString())
         }
 
@@ -331,7 +353,6 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
 //    }
 
     private fun setInTagRv() {
-        val rvTagEdits = root.rvInsertedTags
         val HorizontalLayoutInsertedTags: LinearLayoutManager = LinearLayoutManager(
             this,
             LinearLayoutManager.HORIZONTAL,
@@ -369,12 +390,12 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
                     }
                     Log.e("Edit", str.toString())
                     val actv =
-                        root.autoCompleteTag
+                        tagsEt
 
 
                     stringAdapter =
                         ArrayAdapter(
-                            this@EditMemeContainerFragment,
+                            this@EditMemeActivity,
                             android.R.layout.simple_dropdown_item_1line,
                             str
                         )
@@ -413,7 +434,7 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
                     Log.e("Edit", "In failure")
                     dialog.dismiss()
                     val message = ErrorStatesResponse.returnStateMessageForThrowable(t)
-                    android.app.AlertDialog.Builder(this@EditMemeContainerFragment)
+                    android.app.AlertDialog.Builder(this@EditMemeActivity)
                         .setTitle("Unable to edit")
                         .setMessage(message)
                         .setPositiveButton(android.R.string.ok) { _, _ -> }
@@ -437,7 +458,7 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
 
                         Log.e("Edit", "In resp not")
                         dialog.dismiss()
-                        android.app.AlertDialog.Builder(this@EditMemeContainerFragment)
+                        android.app.AlertDialog.Builder(this@EditMemeActivity)
                             .setTitle("Unable to edit")
                             .setMessage(response.body()?.msg)
                             .setPositiveButton(android.R.string.ok) { _, _ -> }
@@ -453,6 +474,7 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
     private fun initializeEditFrame(arg: Bundle) {
 
         try {
+
 
 
             val HorizontalLayout: LinearLayoutManager = LinearLayoutManager(
@@ -480,7 +502,6 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
             }
 
             //Get the rv and adapter for the user and the tags already existing
-            val rvTag = root.rvEditTag
             val tagAdapter = TagAdapter(this)
             tagAdapter.tagType = tagsStr
             rvTag.layoutManager = HorizontalLayout
@@ -497,7 +518,7 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
 
             //SecondLayout
             val HorizontalUser = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-            val rvUser = root.rvEditUser
+
             val userAdater = UserAdapter(this)
             userAdater.userType = userStr
             rvUser.layoutManager = HorizontalUser
@@ -608,12 +629,10 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
 
 
                 if (edt.text.isNotEmpty()) {
-                    sendButton = true
-                    root.sendPostEdit.isEnabled =
+                    sendButton.isEnabled =
                         true
                 } else if (edt.text.isEmpty()) {
-                    sendButton = false
-                    root.sendPostEdit.isEnabled =
+                    sendButton.isEnabled =
                         false
                 }
 

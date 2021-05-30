@@ -20,7 +20,7 @@ import com.example.memej.adapters.ExploreMemeAdapter
 import com.example.memej.adapters.RandomListener
 import com.example.memej.models.responses.home.HomeMemeApiResponse
 import com.example.memej.models.responses.home.Meme_Home
-import com.example.memej.ui.home.EditMemeContainerFragment
+import com.example.memej.ui.home.EditMemeActivity
 import com.example.memej.viewModels.ExploreViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
@@ -196,7 +196,7 @@ class ExploreFragment : Fragment(), RandomListener {
 
         )
 
-        val i = Intent(activity, EditMemeContainerFragment::class.java)
+        val i = Intent(activity, EditMemeActivity::class.java)
         i.putExtra("bundle", bundle)
         startActivity(i)
 

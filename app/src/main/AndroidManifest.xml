@@ -61,7 +61,7 @@
             android:theme="@style/Containertheme"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".ui.home.EditMemeContainerFragment"
+            android:name=".ui.home.EditMemeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Containertheme"
             android:windowSoftInputMode="adjustResize" />

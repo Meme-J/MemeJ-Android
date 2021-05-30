@@ -208,7 +208,7 @@ class SearchResultActivity : AppCompatActivity(), OnItemClickListenerHome,
         )
 
         //Go to the edit link
-        val i = Intent(this, EditMemeContainerFragment::class.java)
+        val i = Intent(this, EditMemeActivity::class.java)
         i.putExtra("bundle", bundle)
         startActivity(i)
 
