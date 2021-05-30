@@ -5,13 +5,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.LinearInterpolator
 import android.widget.ProgressBar
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.memej.R
 import com.example.memej.Utils.ErrorStatesResponse
@@ -24,7 +24,8 @@ import com.example.memej.ui.home.EditMemeContainerFragment
 import com.example.memej.viewModels.ExploreViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
-import com.yuyakaido.android.cardstackview.*
+import com.yuyakaido.android.cardstackview.CardStackLayoutManager
+import com.yuyakaido.android.cardstackview.CardStackView
 
 
 class ExploreFragment : Fragment(), RandomListener {
@@ -48,6 +49,8 @@ class ExploreFragment : Fragment(), RandomListener {
     private lateinit var swl: SwipeRefreshLayout
     private lateinit var fabRefresh: FloatingActionButton
 
+    private lateinit var rv: RecyclerView
+
     private val TAG = ExploreFragment::class.java.simpleName
 
 
@@ -58,36 +61,45 @@ class ExploreFragment : Fragment(), RandomListener {
 
         root = inflater.inflate(R.layout.fragment_explore, container, false)
         pb = root.findViewById(R.id.pb_explore)
-        cardStackView = root.findViewById(R.id.stack_view)
+
+        //cardStackView = root.findViewById(R.id.stack_view)
+        rv = root.findViewById(R.id.rv_explore)
+
         swl = root.findViewById(R.id.swl_explore)
         fabRefresh = root.findViewById(R.id.fab_refresh_explore)
 
 
         sessionManager =
             SessionManager(requireContext())
+
         adapter = ExploreMemeAdapter(this)
 
-        layoutManager = CardStackLayoutManager(requireContext()).apply {
-            setSwipeableMethod(SwipeableMethod.Manual)
-            setOverlayInterpolator(LinearInterpolator())
-        }
+        //Get the layout manager
 
+        rv.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+        rv.adapter = adapter
 
-        layoutManager.setStackFrom(StackFrom.None)
-        layoutManager.setDirections(Direction.HORIZONTAL)
-        layoutManager.setDirections(Direction.VERTICAL)
-        layoutManager.setSwipeThreshold(0.2f)
-        layoutManager.setCanScrollHorizontal(true)
-        layoutManager.setCanScrollVertical(true)
-
-        cardStackView.adapter = adapter
-
-        cardStackView.itemAnimator.apply {
-            if (this is DefaultItemAnimator) {
-
-                supportsChangeAnimations = false
-            }
-        }
+//        layoutManager = CardStackLayoutManager(requireContext()).apply {
+//            setSwipeableMethod(SwipeableMethod.Manual)
+//            setOverlayInterpolator(LinearInterpolator())
+//        }
+//
+//
+//        layoutManager.setStackFrom(StackFrom.None)
+//        layoutManager.setDirections(Direction.HORIZONTAL)
+//        layoutManager.setDirections(Direction.VERTICAL)
+//        layoutManager.setSwipeThreshold(0.2f)
+//        layoutManager.setCanScrollHorizontal(true)
+//        layoutManager.setCanScrollVertical(true)
+//
+//        cardStackView.adapter = adapter
+//
+//        cardStackView.itemAnimator.apply {
+//            if (this is DefaultItemAnimator) {
+//
+//                supportsChangeAnimations = false
+//            }
+//        }
 
 
         //Initialization
@@ -151,13 +163,14 @@ class ExploreFragment : Fragment(), RandomListener {
         if (mResponse != null) {
 
             //Show the retry button
-            fabRefresh.visibility = View.VISIBLE
+            //   fabRefresh.visibility = View.VISIBLE
             val memes = mResponse.memes
             adapter.setRandomPosts(memes)
+            adapter.notifyDataSetChanged()
 
 
         } else {
-            fabRefresh.visibility = View.INVISIBLE
+            createSnackbar(resources.getString(R.string.unableToLoad))
         }
 
     }
