@@ -4,19 +4,15 @@ package com.example.memej.ui.home
 import android.app.ProgressDialog
 import android.graphics.Color
 import android.graphics.Path
-import android.graphics.Typeface
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import android.widget.*
 import android.widget.AdapterView.OnItemClickListener
-import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
-import android.widget.EditText
-import android.widget.ProgressBar
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -35,33 +31,23 @@ import com.example.memej.textProperties.lib.ImageEditorView
 import com.example.memej.textProperties.lib.OnPhotoEditorListener
 import com.example.memej.textProperties.lib.Photo
 import com.example.memej.textProperties.lib.ViewType
+import com.example.memej.viewModels.EditMemeContainerViewModel
 import com.google.android.material.button.MaterialButton
 import kotlinx.android.synthetic.main.activity_edit_meme.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import kotlin.properties.Delegates
 
 
 class EditMemeActivity : AppCompatActivity(), onUserClickType, onTagClickType {
 
-    //private val viewModel: EditMemeContainerViewModel by viewModels()
-
+    private val viewModel: EditMemeContainerViewModel by viewModels()
 
     private lateinit var arg: Bundle
 
     private lateinit var edt: EditText
     private lateinit var sendButton: MaterialButton
 
-    //Global to be used
-    private var paint_chosen by Delegates.notNull<Int>()
-    private lateinit var type_face: Typeface
-    private var size_chosen by Delegates.notNull<Float>()
-    private lateinit var colorIndicator: CardView
-
-    private var whichFont = 0
-    private var whichPaint = Color.BLACK
-    private var whichProgress = 20
 
     val paths = ArrayList<Path>()
     val undonePaths = ArrayList<Path>()
@@ -78,7 +64,8 @@ class EditMemeActivity : AppCompatActivity(), onUserClickType, onTagClickType {
     private lateinit var tagsEt: AutoCompleteTextView
 
     private lateinit var rvUser: RecyclerView
-    private lateinit var rvTag: RecyclerView
+    private lateinit var tvTagMeme: TextView
+    private lateinit var rvTagTemplate: RecyclerView
     private lateinit var rvTagEdits: RecyclerView
 
     //Image
@@ -87,29 +74,11 @@ class EditMemeActivity : AppCompatActivity(), onUserClickType, onTagClickType {
     private lateinit var pb: ProgressBar
 
 
-    var X1: Int = 0
-    var Y1: Int = 0
-    var X2: Int = 0
-    var Y2: Int = 0
-
-
     private val TAG = EditMemeActivity::class.java.simpleName
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_meme)
-
-        //Full screen
-
-//          projectResources =
-//            ProjectResources(resources)
-
-        //Default Paint, TypeFace. Size
-        val tf: Typeface = Typeface.DEFAULT
-        type_face = tf
-        paint_chosen = Color.parseColor("#000000")      //Default color
-        size_chosen = 20f
-        // colorIndicator = root.colorIndicator
 
         arg = intent?.getBundleExtra("bundle")!!
 
@@ -123,7 +92,8 @@ class EditMemeActivity : AppCompatActivity(), onUserClickType, onTagClickType {
             sendButton = send_post_edit
 
             rvUser = rv_edit_user
-            rvTag = rv_edit_tag
+            tvTagMeme = tvTagsMeme
+            rvTagTemplate = rvTagsTemplate
             rvTagEdits = rv_insertedTags
 
         }
@@ -136,6 +106,7 @@ class EditMemeActivity : AppCompatActivity(), onUserClickType, onTagClickType {
             .setPinchTextScalable(false)
             .build()
 
+        //For users, meme tags and template tags
         initializeEditFrame(arg)
 
 
@@ -143,27 +114,9 @@ class EditMemeActivity : AppCompatActivity(), onUserClickType, onTagClickType {
         adapterTagsAdded = TagEditAdapter()
         mutableList = mutableListOf()           //Empty list
 
-        //root.rel_layout.setBackgroundColor(getColorWithAlpha(Color.DKGRAY, 0.2f));
-//        val colors = root.chooseColor
-//        val font = root.chooseFont
-//        val size = root.chooseSize
-
 
         //request focus for edt
         edt.requestFocus()
-
-//        colors.setOnClickListener {
-//            chooseColor()
-//        }
-//        font.setOnClickListener {
-//            chooseFont()
-//        }
-//        size.setOnClickListener {
-//            chooseSizeText()
-//        }
-//        colorIndicator.setOnClickListener {
-//            chooseColor()
-//        }
 
 
         //Tags list
@@ -220,138 +173,6 @@ class EditMemeActivity : AppCompatActivity(), onUserClickType, onTagClickType {
 
 
     }
-
-//    private fun chooseSizeText() {
-//        //Use a seek bar
-//
-//        val popDialog =
-//            AlertDialog.Builder(this)
-//
-//
-//        val seek = SeekBar(this)
-//        seek.max = 40
-//        seek.progress = whichProgress
-//        seek.keyProgressIncrement = 2
-//
-//        popDialog.setTitle("Select Size")
-//        popDialog.setView(seek)
-//        popDialog.setMessage("Choose a size")
-//
-//        seek.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-//            override fun onProgressChanged(
-//                seekBar: SeekBar?,
-//                progress: Int,
-//                fromUser: Boolean
-//            ) {
-//                size_chosen = progress.toFloat()
-//                whichProgress = progress
-//            }
-//
-//            override fun onStartTrackingTouch(arg0: SeekBar?) {
-//
-//            }
-//
-//            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-//                Log.e("Size", seek.progress.toString())
-//            }
-//        })
-//
-//        popDialog.setPositiveButton("OK",
-//            object : DialogInterface.OnClickListener {
-//                override fun onClick(dialog: DialogInterface, which: Int) {
-//
-//                    dialog.dismiss()
-//                }
-//            })
-//        popDialog.create()
-//        popDialog.show()
-//
-//
-//    }
-
-    //private fun chooseFont() {
-
-//        var typeface = Typeface.DEFAULT
-//        //Choose Font
-//        val builder = AlertDialog.Builder(this)
-//        builder.setTitle("Choose a font")
-//
-//        //Create List
-//        val font_list = R.array.font_types
-//
-//        val checkedItem = whichFont     //Arial
-//
-//        builder.setSingleChoiceItems(
-//            font_list,
-//            checkedItem
-//        ) { dialog, which ->
-//            // user checked an item
-//            whichFont = which
-//            when (which) {
-//                0 -> typeface = Typeface.createFromAsset(assets, "arial.ttf")
-//                1 -> typeface = Typeface.createFromAsset(assets, "long_fox_font.ttf")
-//                2 -> typeface = Typeface.createFromAsset(assets, "bomb_font.ttf")
-//                3 -> typeface = Typeface.createFromAsset(assets, "romot_reavers_font.ttf")
-//                4 -> typeface = Typeface.createFromAsset(assets, "fonty_font.ttf")
-//            }
-//            type_face = typeface
-//
-//        }
-//
-//        builder.setPositiveButton(
-//            "OK"
-//        ) { dialog, which ->
-//
-//
-//            when (which) {
-//                0 -> typeface = Typeface.createFromAsset(assets, "arial.ttf")
-//                1 -> typeface = Typeface.createFromAsset(assets, "long_fox_font.ttf")
-//                2 -> typeface = Typeface.createFromAsset(assets, "bomb_font.ttf")
-//                3 -> typeface = Typeface.createFromAsset(assets, "romot_reavers_font.ttf")
-//                4 -> typeface = Typeface.createFromAsset(assets, "fonty_font.ttf")
-//            }
-//            type_face = typeface
-//            Log.e("Font", typeface.toString())
-//            dialog.dismiss()
-//
-//        }
-//        builder.setNegativeButton("Cancel", null)
-//
-//        val dialog = builder.create()
-//        dialog.show()
-//
-//
-//    }
-
-//   private fun chooseColor() {
-//
-//        this.let {
-//            MaterialColorPickerDialog
-//                .Builder(it)                                              // Pass Activity Instance
-//                .setColorShape(ColorShape.SQAURE)
-//                .setTitle("Pick a color") // Default ColorShape.CIRCLE
-//                .setPositiveButton("Select")
-//                .setDefaultColor(whichPaint)
-//                .setNegativeButton("Cancel")
-//                .setColorSwatch(ColorSwatch._300)    // Default ColorSwatch._500
-//                .setColorRes(
-//
-//                    resources.getIntArray(R.array.themeColors).toList()
-//                )    // Pass Default Color
-//                .setColorListener { color, colorHex ->
-//                    // Handle Color Selection
-//
-//                    //Set the paint brush to be valued for this color
-//                    //Pass the color hex
-//                    paint_chosen = color
-//                    colorIndicator.setCardBackgroundColor(color)
-//                    whichPaint = color
-//                    Log.e("Color", paint_chosen.toString())
-//                }
-//                .show()
-//        }
-//
-//    }
 
     private fun setInTagRv() {
         val HorizontalLayoutInsertedTags: LinearLayoutManager = LinearLayoutManager(
@@ -474,62 +295,77 @@ class EditMemeActivity : AppCompatActivity(), onUserClickType, onTagClickType {
 
     private fun initializeEditFrame(arg: Bundle) {
 
-        try {
+        //Add previous users if present
+        val u = arg.getParcelableArrayList<HomeUsers>("users")
 
-
-            val HorizontalLayout: LinearLayoutManager = LinearLayoutManager(
-                this,
-                LinearLayoutManager.HORIZONTAL,
-                false
-            )
-            //Load image tags
-
-            val txt = arg.getStringArrayList("tags")
-            val txt2 = arg.getStringArrayList("imageTags")
-
-            //This is a array basically
-            //Create an array list  to call these tags
-
-            //Check for these being blank in case of initialization/add meme
-            val tagsStr = mutableListOf<String>()
-            for (i in txt!!) {
-                tagsStr.add(i)
-            }
-
-            //These are the tags for the original meme are sent only
-            for (i in txt2!!) {
-                tagsStr.add(i)
-            }
-
-            //Get the rv and adapter for the user and the tags already existing
-            val tagAdapter = TagAdapter(this)
-            tagAdapter.tagType = tagsStr
-            rvTag.layoutManager = HorizontalLayout
-            rvTag.adapter = tagAdapter
-
-
-            //The name is not sent. Only username is sent
-            //Populate the users in the same way
-            val u = arg.getParcelableArrayList<HomeUsers>("users")
+        if (u != null) {
             val userStr = mutableListOf<String>()
-            for (i in u!!) {
+            for (i in u) {
                 userStr.add(i.username)
             }
 
-            //SecondLayout
+
             val HorizontalUser = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
-            val userAdater = UserAdapter(this)
-            userAdater.userType = userStr
+            val userAdapter = UserAdapter(this)
+            userAdapter.userType = userStr
             rvUser.layoutManager = HorizontalUser
-            rvUser.adapter = userAdater
+            rvUser.adapter = userAdapter
 
-            //Set timestamp
-//        root.timestampEdit.text = arg.getString("lastUpdated")
-        } catch (e: Exception) {
-            //Unable to initialize frame
-            ErrorStatesResponse.logExceptions(e, TAG)
+        } else {
+            //Hide the user adapter. We can see that this is for the New Meme
+            rvUser.visibility = View.GONE
         }
+
+
+        //Add Meme Tags if present
+        val memeTags = arg.getStringArrayList("tags")
+
+        if (memeTags != null) {
+
+            //Empty string
+            var meme_tag_structure = ""
+
+            for (i in memeTags) {
+                meme_tag_structure += "$i "
+            }
+
+            tvTagMeme.text = meme_tag_structure
+
+        } else {
+            tvTagMeme.visibility = View.GONE
+        }
+
+
+        //Load image tags or template tags
+        val templateTags = arg.getStringArrayList("imageTags")
+
+        if (templateTags != null) {
+
+            val tagsStr = mutableListOf<String>()
+
+            for (i in templateTags) {
+                tagsStr.add(i)
+            }
+
+            val HorizontalTAG = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+
+            val tagAdapter = TagAdapter(this)
+            tagAdapter.tagType = tagsStr
+            rvTagTemplate.layoutManager = HorizontalTAG
+            rvTagTemplate.adapter = tagAdapter
+
+        } else {
+            rvTagTemplate.visibility = View.GONE
+        }
+
+
+        //Get the rv and adapter for the user and the tags already existing
+
+
+        //Set timestamp
+//        root.timestampEdit.text = arg.getString("lastUpdated")
+
 
         getImage()
 
