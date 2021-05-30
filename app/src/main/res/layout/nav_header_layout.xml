@@ -12,7 +12,7 @@
         android:layout_width="@dimen/image_profile_attr"
         android:layout_height="@dimen/image_profile_attr"
         android:layout_gravity="bottom|center_horizontal"
-        android:layout_margin="@dimen/margins"
+        android:layout_margin="@dimen/space"
         android:src="@drawable/male"
         app:cardCornerRadius="60dp"
         app:civ_border_color="@color/colorPrimary"

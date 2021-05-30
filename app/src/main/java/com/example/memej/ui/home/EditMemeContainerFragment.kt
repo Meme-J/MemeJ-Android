@@ -80,6 +80,8 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
     var Y2: Int = 0
 
 
+    private val TAG = EditMemeContainerFragment::class.java.simpleName
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -450,56 +452,63 @@ class EditMemeContainerFragment : AppCompatActivity(), onUserClickType, onTagCli
 
     private fun initializeEditFrame(arg: Bundle) {
 
-        //Layout Manager
-        val HorizontalLayout: LinearLayoutManager = LinearLayoutManager(
-            this,
-            LinearLayoutManager.HORIZONTAL,
-            false
-        )
-        //Load image tags
-
-        val txt = arg.getStringArrayList("tags")
-        val txt2 = arg.getStringArrayList("imageTags")
-
-        //This is a array basically
-        //Create an array list  to call these tags
-
-        //Check for these being blank in case of initialization/add meme
-        val tagsStr = mutableListOf<String>()
-        for (i in txt!!) {
-            tagsStr.add(i)
-        }
-        for (i in txt2!!) {
-            tagsStr.add(i)
-        }
-
-        //Get the rv and adapter for the user and the tags already existing
-        val rvTag = root.rvEditTag
-        val tagAdapter = TagAdapter(this)
-        tagAdapter.tagType = tagsStr
-        rvTag.layoutManager = HorizontalLayout
-        rvTag.adapter = tagAdapter
+        try {
 
 
-        //The name is not sent. Only username is sent
-        //Populate the users in the same way
-        val u = arg.getParcelableArrayList<HomeUsers>("users")
-        val userStr = mutableListOf<String>()
-        for (i in u!!) {
-            userStr.add(i.username)
-        }
+            val HorizontalLayout: LinearLayoutManager = LinearLayoutManager(
+                this,
+                LinearLayoutManager.HORIZONTAL,
+                false
+            )
+            //Load image tags
 
-        //SecondLayout
-        val HorizontalUser = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        val rvUser = root.rvEditUser
-        val userAdater = UserAdapter(this)
-        userAdater.userType = userStr
-        rvUser.layoutManager = HorizontalUser
-        rvUser.adapter = userAdater
+            val txt = arg.getStringArrayList("tags")
+            val txt2 = arg.getStringArrayList("imageTags")
 
-        //Set timestamp
+            //This is a array basically
+            //Create an array list  to call these tags
+
+            //Check for these being blank in case of initialization/add meme
+            val tagsStr = mutableListOf<String>()
+            for (i in txt!!) {
+                tagsStr.add(i)
+            }
+
+            //These are the tags for the original meme are sent only
+            for (i in txt2!!) {
+                tagsStr.add(i)
+            }
+
+            //Get the rv and adapter for the user and the tags already existing
+            val rvTag = root.rvEditTag
+            val tagAdapter = TagAdapter(this)
+            tagAdapter.tagType = tagsStr
+            rvTag.layoutManager = HorizontalLayout
+            rvTag.adapter = tagAdapter
+
+
+            //The name is not sent. Only username is sent
+            //Populate the users in the same way
+            val u = arg.getParcelableArrayList<HomeUsers>("users")
+            val userStr = mutableListOf<String>()
+            for (i in u!!) {
+                userStr.add(i.username)
+            }
+
+            //SecondLayout
+            val HorizontalUser = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+            val rvUser = root.rvEditUser
+            val userAdater = UserAdapter(this)
+            userAdater.userType = userStr
+            rvUser.layoutManager = HorizontalUser
+            rvUser.adapter = userAdater
+
+            //Set timestamp
 //        root.timestampEdit.text = arg.getString("lastUpdated")
-
+        } catch (e: Exception) {
+            //Unable to initialize frame
+            ErrorStatesResponse.logExceptions(e, TAG)
+        }
 
         getImage()
 

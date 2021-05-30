@@ -33,11 +33,11 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/margins"
+                    android:layout_marginStart="@dimen/space"
                     android:layout_marginTop="@dimen/space_3x"
-                    android:layout_marginEnd="@dimen/margins"
-                    android:layout_marginBottom="@dimen/margins"
-                    android:padding="@dimen/margins"
+                    android:layout_marginEnd="@dimen/space"
+                    android:layout_marginBottom="@dimen/space"
+                    android:padding="@dimen/space"
                     app:endIconMode="none">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -71,8 +71,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tilUsername"
-                    android:layout_margin="@dimen/margins"
-                    android:padding="@dimen/margins"
+                    android:layout_margin="@dimen/space"
+                    android:padding="@dimen/space"
                     app:endIconMode="none">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -139,21 +139,21 @@
                     android:layout_height="@dimen/card_eleveation_max"
                     android:layout_below="@id/signUp_btn"
                     android:layout_gravity="center"
-                    android:layout_marginBottom="@dimen/margins"
+                    android:layout_marginBottom="@dimen/space"
                     android:gravity="center">
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margins"
+                        android:layout_marginTop="@dimen/space"
                         android:text="@string/already_have_an_account" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/tv_loginInstead"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margins"
+                        android:layout_marginTop="@dimen/space"
                         android:paddingStart="4dp"
                         android:text="@string/login"
                         android:textColor="@color/colorAccent"

@@ -21,7 +21,7 @@
                 <!--                <TextView-->
                 <!--                    android:layout_width="match_parent"-->
                 <!--                    android:layout_height="wrap_content"-->
-                <!--                    android:layout_margin="@dimen/margins"-->
+                <!--                    android:layout_margin="@dimen/space"-->
                 <!--                    android:gravity="center"-->
                 <!--                    android:text="@string/myWspc"-->
                 <!--                    android:textSize="@dimen/text_size" />-->
@@ -31,7 +31,7 @@
                     android:id="@+id/cslt_global"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/margins"
+                    android:layout_margin="@dimen/space"
                     android:layout_marginBottom="@dimen/space"
                     android:clickable="true"
                     android:focusable="true"
@@ -43,7 +43,7 @@
                         android:layout_width="@dimen/space_8x"
                         android:layout_height="@dimen/space_8x"
                         android:layout_gravity="bottom|center_horizontal"
-                        android:layout_margin="@dimen/margins"
+                        android:layout_margin="@dimen/space"
                         android:src="@drawable/circle_logo"
                         app:cardCornerRadius="@dimen/space_4x"
                         app:civ_border_color="@color/colorPrimary"
@@ -61,7 +61,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/margins"
+                        android:layout_margin="@dimen/space"
                         android:gravity="center"
                         android:padding="@dimen/space"
                         android:text="@string/global_space"
@@ -76,7 +76,7 @@
                     android:id="@+id/rv_dialog_workspaces"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/margins"
+                    android:layout_margin="@dimen/space"
                     android:scrollbars="vertical"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     tools:listitem="@layout/item_dialog_workspace_list" />
@@ -86,10 +86,10 @@
                 <!--                    android:layout_width="wrap_content"-->
                 <!--                    android:layout_height="wrap_content"-->
                 <!--                    android:layout_gravity="center"-->
-                <!--                    android:layout_margin="@dimen/margins"-->
+                <!--                    android:layout_margin="@dimen/space"-->
                 <!--                    android:gravity="center"-->
                 <!--                    android:orientation="horizontal"-->
-                <!--                    android:padding="@dimen/margins">-->
+                <!--                    android:padding="@dimen/space">-->
 
                 <!--                    <ImageView-->
                 <!--                        android:id="@+id/iv_add_space"-->

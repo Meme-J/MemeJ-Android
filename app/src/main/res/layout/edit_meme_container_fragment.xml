@@ -23,7 +23,7 @@
             android:layout_gravity="center"
             android:layout_margin="@dimen/card_half"
             android:elevation="@dimen/card_eleveation_max"
-            app:cardCornerRadius="@dimen/margins">
+            app:cardCornerRadius="@dimen/space">
 
 
             <ScrollView
@@ -33,22 +33,22 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/margins"
+                    android:layout_margin="@dimen/space"
                     android:orientation="vertical">
 
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rv_edit_tag"
-                        style="@style/recylclerViewAttr"
+                        style="@style/recyclerViewAttr"
                         tools:listitem="@layout/layout_user" />
 
 
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/meme_templete_std_height"
-                        android:layout_margin="@dimen/margins"
+                        android:layout_margin="@dimen/space"
                         android:elevation="4dp"
-                        app:cardCornerRadius="@dimen/margins">
+                        app:cardCornerRadius="@dimen/space">
 
                         <RelativeLayout
                             android:layout_width="match_parent"
@@ -75,7 +75,7 @@
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rv_edit_user"
-                        style="@style/recylclerViewAttr"
+                        style="@style/recyclerViewAttr"
                         tools:listitem="@layout/layout_user_creators" />
 
 
@@ -85,21 +85,21 @@
                     <!--                        android:layout_width="wrap_content"-->
                     <!--                        android:layout_height="wrap_content"-->
                     <!--                        android:layout_gravity="end"-->
-                    <!--                        android:layout_margin="@dimen/margins"-->
+                    <!--                        android:layout_margin="@dimen/space"-->
                     <!--                        android:text="@string/sample_timestamp" />-->
 
                     <!--                Style Picker-->
                     <!--                    <LinearLayout-->
                     <!--                        android:layout_width="match_parent"-->
                     <!--                        android:layout_height="wrap_content"-->
-                    <!--                        android:layout_margin="@dimen/margins"-->
+                    <!--                        android:layout_margin="@dimen/space"-->
                     <!--                        android:elevation="@dimen/margin_20dp"-->
                     <!--                        android:orientation="horizontal">-->
 
                     <!--                        <com.google.android.material.textview.MaterialTextView-->
                     <!--                            android:id="@+id/choose_color"-->
                     <!--                            style="@style/stylePick"-->
-                    <!--                            android:layout_marginStart="@dimen/margins"-->
+                    <!--                            android:layout_marginStart="@dimen/space"-->
                     <!--                            android:text="@string/choose_color" />-->
 
                     <!--                        <androidx.cardview.widget.CardView-->
@@ -130,14 +130,14 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margins"
+                        android:layout_marginTop="@dimen/space"
                         android:orientation="horizontal">
 
                         <EditText
                             android:id="@+id/lineAddedEt"
                             android:layout_width="@dimen/add_line"
                             android:layout_height="@dimen/boxHt"
-                            android:layout_marginStart="@dimen/margins"
+                            android:layout_marginStart="@dimen/space"
                             android:layout_marginTop="4dp"
                             android:gravity="bottom"
                             android:hint="@string/add_a_line"
@@ -164,7 +164,7 @@
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rv_insertedTags"
-                        style="@style/recylclerViewAttr"
+                        style="@style/recyclerViewAttr"
                         tools:listitem="@layout/layout_tag" />
 
                     <LinearLayout
@@ -178,7 +178,7 @@
                             android:id="@+id/auto_completeTag"
                             android:layout_width="@dimen/add_line"
                             android:layout_height="@dimen/space_5x"
-                            android:layout_marginStart="@dimen/margins"
+                            android:layout_marginStart="@dimen/space"
                             android:gravity="bottom"
                             android:hint="@string/add_a_tag" />
 

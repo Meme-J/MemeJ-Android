@@ -4,11 +4,11 @@
     android:id="@+id/card_home_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/margins"
+    android:layout_margin="@dimen/space"
     android:clickable="true"
     android:elevation="48dp"
     android:focusable="true"
-    app:cardCornerRadius="@dimen/margins">
+    app:cardCornerRadius="@dimen/space">
 
 
     <LinearLayout
@@ -34,7 +34,7 @@
                 android:layout_width="@dimen/meme_templete_std_height"
                 android:layout_height="@dimen/meme_templete_std_height"
                 android:layout_centerInParent="true"
-                android:layout_marginBottom="@dimen/margins" />
+                android:layout_marginBottom="@dimen/space" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/home_meme_timestamp"
@@ -44,7 +44,7 @@
                 android:layout_below="@id/photoViewHomeMain"
                 android:layout_alignParentEnd="true"
                 android:layout_marginTop="@dimen/space"
-                android:padding="@dimen/margins"
+                android:padding="@dimen/space"
 
                 android:text="@string/time" />
 

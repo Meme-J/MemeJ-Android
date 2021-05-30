@@ -1,8 +1,11 @@
 package com.example.memej.viewModels
 
 import android.util.Log
+import android.view.View
+import android.widget.ProgressBar
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.memej.R
 import com.example.memej.Utils.ApplicationUtil
 import com.example.memej.Utils.ErrorStatesResponse
@@ -28,18 +31,22 @@ class ExploreViewModel : ViewModel() {
 
     private var exploreResponse: MutableLiveData<HomeMemeApiResponse> = MutableLiveData()
 
-    fun randomFunction(): MutableLiveData<HomeMemeApiResponse> {
+    fun randomFunction(
+        mSnackbarBody: SwipeRefreshLayout,
+        pb: ProgressBar
+    ): MutableLiveData<HomeMemeApiResponse> {
         //If mySpacesResponses is null
-        exploreResponse = getRandom()
+        exploreResponse = getRandom(mSnackbarBody, pb)
         return exploreResponse
 
 
     }
 
-    //No body
-    fun getRandom(): MutableLiveData<HomeMemeApiResponse> {
+    private fun getRandom(
+        mSnackbarBody: SwipeRefreshLayout,
+        pb: ProgressBar
+    ): MutableLiveData<HomeMemeApiResponse> {
 
-        Log.e(TAG, "In  egt spaces VM")
 
         memeService.getRandom(
             accessToken = "Bearer ${sessionManager.fetchAcessToken()}"
@@ -47,8 +54,10 @@ class ExploreViewModel : ViewModel() {
             override fun onFailure(call: Call<HomeMemeApiResponse>, t: Throwable) {
                 successful.value = false
                 message.value = ErrorStatesResponse.returnStateMessageForThrowable(t)
-                Log.e(TAG, "In failure message is ${message.value}")
 
+                ErrorStatesResponse.logThrowables(t, TAG)
+                pb.visibility = View.GONE
+                ErrorStatesResponse.createSnackbar(message.value, mSnackbarBody)
             }
 
             override fun onResponse(

@@ -5,7 +5,7 @@ import androidx.annotation.Keep
 import com.squareup.moshi.Json
 
 @Keep
-class ExploreMemes : ArrayList<ExploreMemes.ExploreMemesItem>() {
+class ExploreMemesResponse : ArrayList<ExploreMemesResponse.ExploreMemesItem>() {
     data class ExploreMemesItem(
         @field:Json(name = "_id")
         val id: String, // 5ebb18b21f22b62ebb8dd2e7

@@ -4,7 +4,7 @@
     android:id="@+id/card_user_creator"
     android:layout_width="@dimen/space_6x"
     android:layout_height="@dimen/space_6x"
-    android:layout_margin="@dimen/margins"
+    android:layout_margin="@dimen/space"
     android:elevation="@dimen/card_half"
     app:cardBackgroundColor="@color/teal_50"
     app:cardCornerRadius="@dimen/space_3x">
@@ -20,7 +20,7 @@
             android:id="@+id/getUserName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margins"
+            android:layout_margin="@dimen/space"
             android:text="@string/tag_name"
             android:textColor="@color/white"
             android:textStyle="bold" />

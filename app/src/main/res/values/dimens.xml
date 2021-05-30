@@ -3,7 +3,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="card_half">20dp</dimen>
-    <dimen name="margins">@dimen/space</dimen>
+
     <dimen name="splash_img_dim">100dp</dimen>
     <dimen name="heading_sizeLarge">28sp</dimen>
     <dimen name="text_size">18sp</dimen>

@@ -41,14 +41,14 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/margins">
+                    android:layout_margin="@dimen/space">
 
                     <androidx.cardview.widget.CardView
                         android:id="@+id/cv_shape"
                         android:layout_width="@dimen/image_profile_attr"
                         android:layout_height="@dimen/image_profile_attr"
                         android:layout_gravity="bottom|center_horizontal"
-                        android:layout_margin="@dimen/margins"
+                        android:layout_margin="@dimen/space"
                         app:cardCornerRadius="60dp"
                         app:civ_border_color="@color/colorPrimary"
                         app:civ_border_width="1.5dp"
@@ -69,9 +69,9 @@
                         android:id="@+id/tv_workspace_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/margins"
+                        android:layout_margin="@dimen/space"
                         android:gravity="center"
-                        android:padding="@dimen/margins"
+                        android:padding="@dimen/space"
                         android:textStyle="bold"
                         app:layout_constraintTop_toBottomOf="@id/cv_shape"
                         tools:text="@tools:sample/full_names" />
@@ -118,7 +118,7 @@
                         android:id="@+id/cl_img"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margins"
+                        android:layout_marginTop="@dimen/space"
                         app:layout_constraintHorizontal_chainStyle="spread"
                         app:layout_constraintTop_toBottomOf="@id/cl_inf"
                         app:layout_constraintVertical_chainStyle="spread">
@@ -160,7 +160,7 @@
                         android:id="@+id/cl_val"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margins"
+                        android:layout_marginTop="@dimen/space"
                         android:layout_marginBottom="@dimen/space"
                         app:layout_constraintHorizontal_chainStyle="spread"
                         app:layout_constraintTop_toBottomOf="@id/cl_img"

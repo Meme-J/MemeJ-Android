@@ -18,7 +18,7 @@
             android:id="@+id/getTagName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margins"
+            android:layout_margin="@dimen/space"
             android:text="@string/val" />
 
         <ImageView
@@ -26,7 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="@dimen/margins"
+            android:layout_margin="@dimen/space"
             android:src="@drawable/ic_cancel" />
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

@@ -14,7 +14,7 @@
             android:layout_width="@dimen/space_10x"
             android:layout_height="@dimen/space_10x"
             android:layout_gravity="bottom|center_horizontal"
-            android:layout_margin="@dimen/margins"
+            android:layout_margin="@dimen/space"
             android:src="@drawable/male"
             app:civ_border_color="@color/colorPrimary"
             app:civ_border_width="1.5dp"

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cvExploreFront"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/meme_templete_std_height"
+    android:layout_margin="@dimen/space"
+    android:elevation="4dp"
+    app:cardCornerRadius="@dimen/space">
+
+
+    <com.example.memej.textProperties.lib.ImageEditorView
+        android:id="@+id/photoViewExploreFront"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/meme_templete_std_height"
+        android:layout_gravity="center"
+        android:gravity="center" />
+
+
+</com.google.android.material.card.MaterialCardView>
