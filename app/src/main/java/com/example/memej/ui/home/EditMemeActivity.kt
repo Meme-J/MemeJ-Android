@@ -99,6 +99,8 @@ class EditMemeActivity : AppCompatActivity(), onUserClickType, onTagClickType {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_meme)
 
+        //Full screen
+
 //          projectResources =
 //            ProjectResources(resources)
 
@@ -167,7 +169,6 @@ class EditMemeActivity : AppCompatActivity(), onUserClickType, onTagClickType {
         //Tags list
         //Init the adapter
         stringAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line)
-
 
 
         val onItemClickTag =
@@ -476,7 +477,6 @@ class EditMemeActivity : AppCompatActivity(), onUserClickType, onTagClickType {
         try {
 
 
-
             val HorizontalLayout: LinearLayoutManager = LinearLayoutManager(
                 this,
                 LinearLayoutManager.HORIZONTAL,
@@ -745,7 +745,6 @@ class EditMemeActivity : AppCompatActivity(), onUserClickType, onTagClickType {
 //        getCoordunatesOfCustomView(arrayList)
 
     }
-
 
 
     //Api not yet made
